@@ -69,9 +69,17 @@ struct AssetsView: View {
     private var catalogList: some View {
         List {
             Section {
-                totalCard
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(Color.clear)
+                VStack(spacing: 16) {
+                    totalCard
+                    if !compositionEntries.isEmpty {
+                        compositionCard
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                .padding(.bottom, 8)
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
             }
             Section("내 자산") {
                 ForEach(assets) { asset in
@@ -120,15 +128,6 @@ struct AssetsView: View {
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
 
-            Divider().overlay(Theme.hairline)
-            Text("자산 구성")
-                .font(.caption2)
-                .foregroundStyle(Theme.textSecond)
-            compositionBar
-            Text("\(assets.count)개 자산")
-                .font(.caption2)
-                .foregroundStyle(Theme.textSecond)
-
             if monthlyIncome > 0 || totalGain != 0 {
                 Divider().overlay(Theme.hairline)
                 HStack(spacing: 0) {
@@ -147,8 +146,6 @@ struct AssetsView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
-        .padding(.horizontal, 20)
-        .padding(.top, 8)
     }
 
     private func flowStat(title: String, value: String, tint: Color) -> some View {
@@ -181,22 +178,64 @@ struct AssetsView: View {
         .frame(height: 8)
     }
 
-    // Thin stacked bar showing class composition of the catalog.
-    private var compositionBar: some View {
-        let groups = AssetClass.allCases.compactMap { ac -> (AssetClass, Double)? in
-            let sum = assets.filter { $0.assetClass == ac }.reduce(0) { $0 + $1.netValue }
+    // Positive net value per asset class, for the composition chart.
+    private var compositionEntries: [(assetClass: AssetClass, amount: Double)] {
+        AssetClass.allCases.compactMap { ac in
+            let sum = assets.filter { $0.assetClass == ac }
+                .reduce(0) { $0 + max(0, $1.netValue) }
             return sum > 0 ? (ac, sum) : nil
         }
-        return GeometryReader { geo in
-            HStack(spacing: 2) {
-                ForEach(groups, id: \.0) { item in
-                    Color(hex: item.0.colorHex)
-                        .frame(width: max(2, geo.size.width * (total > 0 ? item.1 / total : 0)))
+    }
+
+    // Donut chart + legend showing how net worth breaks down by class.
+    private var compositionCard: some View {
+        let entries = compositionEntries
+        let sum = entries.reduce(0) { $0 + $1.amount }
+        return VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Text("자산 구성")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                Text("\(assets.count)개 자산")
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            }
+
+            Chart(entries, id: \.assetClass) { item in
+                SectorMark(
+                    angle: .value("금액", item.amount),
+                    innerRadius: .ratio(0.62),
+                    angularInset: 2
+                )
+                .foregroundStyle(Color(hex: item.assetClass.colorHex))
+                .cornerRadius(4)
+            }
+            .frame(height: 170)
+
+            VStack(spacing: 10) {
+                ForEach(entries, id: \.assetClass) { item in
+                    HStack(spacing: 10) {
+                        Circle()
+                            .fill(Color(hex: item.assetClass.colorHex))
+                            .frame(width: 10, height: 10)
+                        Text(item.assetClass.label)
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.textPrimary)
+                        Spacer()
+                        Text("\(Fmt.krw(item.amount))원")
+                            .font(.subheadline.monospacedDigit())
+                            .foregroundStyle(Theme.textSecond)
+                        Text(Fmt.percent(sum > 0 ? item.amount / sum : 0, fraction: 0))
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(Theme.textSecond)
+                            .frame(width: 40, alignment: .trailing)
+                    }
                 }
             }
-            .clipShape(Capsule())
         }
-        .frame(height: 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
     }
 
     private func row(_ asset: Asset) -> some View {

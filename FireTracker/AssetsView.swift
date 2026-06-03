@@ -75,8 +75,7 @@ struct AssetsView: View {
                         compositionCard
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 16)
+                .padding(.top, 8)
                 .padding(.bottom, 8)
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)

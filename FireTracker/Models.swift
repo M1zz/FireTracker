@@ -114,6 +114,9 @@ final class NetWorthSnapshot {
     var monthlyIncome: Double
     // Total monthly expense recorded for this period.
     var monthlyExpense: Double
+    // Net monthly savings (수입 − 지출) entered directly, for when the user
+    // doesn't want to split income/expense. Used when both of those are 0.
+    var monthlyNetSavings: Double = 0
     // Passive cash flow the catalog produced at the time of this record
     // (월세·배당·이자·연금·스테이킹 합계). Captured so the trend can chart it.
     var monthlyPassiveIncome: Double = 0
@@ -128,6 +131,7 @@ final class NetWorthSnapshot {
          note: String = "",
          monthlyIncome: Double = 0,
          monthlyExpense: Double = 0,
+         monthlyNetSavings: Double = 0,
          monthlyPassiveIncome: Double = 0,
          liquidNetWorth: Double = 0,
          entries: [AssetEntry] = []) {
@@ -135,6 +139,7 @@ final class NetWorthSnapshot {
         self.note = note
         self.monthlyIncome = monthlyIncome
         self.monthlyExpense = monthlyExpense
+        self.monthlyNetSavings = monthlyNetSavings
         self.monthlyPassiveIncome = monthlyPassiveIncome
         self.liquidNetWorth = liquidNetWorth
         self.entries = entries
@@ -152,7 +157,10 @@ final class NetWorthSnapshot {
     }
 
     var monthlySavings: Double {
-        monthlyIncome - monthlyExpense
+        if monthlyIncome > 0 || monthlyExpense > 0 {
+            return monthlyIncome - monthlyExpense
+        }
+        return monthlyNetSavings
     }
 
     // Net worth grouped by asset class.
@@ -499,9 +507,14 @@ final class FireSettings {
     var monthlyTakeHome: Double = 0
     // Planned monthly spending used for the savings projection.
     var plannedMonthlyExpense: Double = 0
+    // Net monthly savings (수입 − 지출) entered directly. Takes priority over the
+    // salary/spending breakdown when set, so the user can skip the split.
+    var plannedNetSavings: Double = 0
 
     // Monthly savings used to project forward.
-    var plannedMonthlySavings: Double { monthlyTakeHome - plannedMonthlyExpense }
+    var plannedMonthlySavings: Double {
+        plannedNetSavings != 0 ? plannedNetSavings : monthlyTakeHome - plannedMonthlyExpense
+    }
 
     // Rough annual dividend / passive income entered by hand, for people who
     // don't want to fill in each holding's dividend. Added on top of the
@@ -524,6 +537,7 @@ final class FireSettings {
          displayUnit: Double = 10_000,
          monthlyTakeHome: Double = 0,
          plannedMonthlyExpense: Double = 0,
+         plannedNetSavings: Double = 0,
          manualAnnualDividend: Double = 0,
          finnhubKey: String = "",
          kisAppKey: String = "",
@@ -535,6 +549,7 @@ final class FireSettings {
         self.displayUnit = displayUnit
         self.monthlyTakeHome = monthlyTakeHome
         self.plannedMonthlyExpense = plannedMonthlyExpense
+        self.plannedNetSavings = plannedNetSavings
         self.manualAnnualDividend = manualAnnualDividend
         self.finnhubKey = finnhubKey
         self.kisAppKey = kisAppKey

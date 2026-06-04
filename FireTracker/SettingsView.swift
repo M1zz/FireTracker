@@ -16,6 +16,7 @@ struct SettingsView: View {
     @State private var expectedReturn: Double = 0.05
 
     // Projection (올해 말 예측)
+    @State private var netSavingsPlan: String = ""
     @State private var monthlyTakeHome: String = ""
     @State private var plannedExpense: String = ""
 
@@ -118,6 +119,16 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    moneyField(title: "월 저축 (수입 − 지출)", hint: "차액만 입력", text: $netSavingsPlan)
+                } header: {
+                    Text("올해 말 예측 — 월 저축")
+                } footer: {
+                    Text("매달 얼마를 모으는지(수입 − 지출)를 직접 넣으면 올해 말 자산을 예측합니다. 수입·지출을 따로 관리하려면 아래에 적으세요. 직접 넣은 월 저축이 우선합니다.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
+
+                Section {
                     moneyField(title: "세후 월급", hint: "연봉이면 ÷12", text: $monthlyTakeHome)
                     moneyField(title: "월 지출", hint: "매달 평균 지출", text: $plannedExpense)
                     let income = Double(monthlyTakeHome) ?? 0
@@ -132,9 +143,9 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    Text("올해 말 예측 (월 저축)")
+                    Text("수입 · 지출 따로 (선택)")
                 } footer: {
-                    Text("세후 월급에서 월 지출을 뺀 월 저축으로 올해 말 자산을 예측합니다. 기록 저장 시 이 값이 수입·지출에 자동으로 채워집니다.")
+                    Text("세후 월급에서 월 지출을 뺀 값으로 월 저축을 계산해요(위 칸을 비워둔 경우). 기록 저장 시 수입·지출에 자동으로 채워집니다.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -190,6 +201,7 @@ struct SettingsView: View {
             .onChange(of: kisAppKey) { persist() }
             .onChange(of: kisAppSecret) { persist() }
             .onChange(of: dataGoKey) { persist() }
+            .onChange(of: netSavingsPlan) { persist() }
             .onChange(of: monthlyTakeHome) { persist() }
             .onChange(of: plannedExpense) { persist() }
             .onChange(of: annualDividend) { persist() }
@@ -311,6 +323,7 @@ struct SettingsView: View {
         annualExpense = String(Int(settings.targetAnnualExpense))
         swr = settings.safeWithdrawalRate
         expectedReturn = settings.expectedAnnualReturn
+        netSavingsPlan = settings.plannedNetSavings > 0 ? String(Int(settings.plannedNetSavings)) : ""
         monthlyTakeHome = settings.monthlyTakeHome > 0 ? String(Int(settings.monthlyTakeHome)) : ""
         plannedExpense = settings.plannedMonthlyExpense > 0 ? String(Int(settings.plannedMonthlyExpense)) : ""
         annualDividend = settings.manualAnnualDividend > 0 ? String(Int(settings.manualAnnualDividend)) : ""
@@ -332,6 +345,7 @@ struct SettingsView: View {
         target.targetAnnualExpense = Double(annualExpense) ?? 0
         target.safeWithdrawalRate = swr
         target.expectedAnnualReturn = expectedReturn
+        target.plannedNetSavings = Double(netSavingsPlan) ?? 0
         target.monthlyTakeHome = Double(monthlyTakeHome) ?? 0
         target.plannedMonthlyExpense = Double(plannedExpense) ?? 0
         target.manualAnnualDividend = Double(annualDividend) ?? 0

@@ -992,6 +992,7 @@ struct RecordSheet: View {
     @Query private var settingsList: [FireSettings]
 
     @State private var date = Date()
+    @State private var netSavings = ""
     @State private var income = ""
     @State private var expense = ""
     @State private var note = ""
@@ -1038,10 +1039,38 @@ struct RecordSheet: View {
                         .foregroundStyle(Theme.textSecond)
                 }
                 Section {
+                    HStack {
+                        TextField("수입 − 지출", text: $netSavings.commaGrouped)
+                            .keyboardType(.numberPad)
+                        Text("원").foregroundStyle(Theme.textSecond)
+                    }
+                    if let v = Double(netSavings), v > 0 {
+                        Text("= \(Fmt.wonKo(v))")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                } header: {
+                    Text("이번 달 저축 (수입 − 지출)")
+                } footer: {
+                    Text("수입·지출을 나눠 적기 번거로우면 차액(저축액)만 적으세요. 아래에 수입/지출을 따로 적으면 그 차액이 우선 쓰이고 저축률도 계산됩니다.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
+
+                Section {
                     TextField("월 수입", text: $income.commaGrouped).keyboardType(.numberPad)
                     TextField("월 지출", text: $expense.commaGrouped).keyboardType(.numberPad)
+                    if let inc = Double(income), inc > 0 {
+                        let exp = Double(expense) ?? 0
+                        HStack {
+                            Text("저축률")
+                            Spacer()
+                            Text(Fmt.percent((inc - exp) / inc, fraction: 0))
+                                .foregroundStyle(Theme.accent)
+                        }
+                    }
                 } header: {
-                    Text("수입 / 지출 (원)")
+                    Text("수입 / 지출 따로 (선택 · 저축률용)")
                 } footer: {
                     Text("설정의 세후 월급·월 지출이 자동으로 채워집니다. 이번 달 실제 값으로 수정할 수 있어요.")
                         .font(.caption)
@@ -1062,12 +1091,14 @@ struct RecordSheet: View {
                 }
             }
             .onAppear {
-                // Prefill this month's income/expense from the salary settings.
-                if income.isEmpty, settings.monthlyTakeHome > 0 {
-                    income = String(Int(settings.monthlyTakeHome))
-                }
-                if expense.isEmpty, settings.plannedMonthlyExpense > 0 {
-                    expense = String(Int(settings.plannedMonthlyExpense))
+                // Prefill from settings, matching how the user set up savings:
+                // salary/spending breakdown, or a single net-savings number.
+                guard income.isEmpty, expense.isEmpty, netSavings.isEmpty else { return }
+                if settings.monthlyTakeHome > 0 || settings.plannedMonthlyExpense > 0 {
+                    if settings.monthlyTakeHome > 0 { income = String(Int(settings.monthlyTakeHome)) }
+                    if settings.plannedMonthlyExpense > 0 { expense = String(Int(settings.plannedMonthlyExpense)) }
+                } else if settings.plannedMonthlySavings > 0 {
+                    netSavings = String(Int(settings.plannedMonthlySavings))
                 }
             }
         }
@@ -1080,6 +1111,7 @@ struct RecordSheet: View {
             note: note,
             monthlyIncome: Double(income) ?? 0,
             monthlyExpense: Double(expense) ?? 0,
+            monthlyNetSavings: Double(netSavings) ?? 0,
             monthlyPassiveIncome: passiveIncome,
             liquidNetWorth: liquidTotal
         )

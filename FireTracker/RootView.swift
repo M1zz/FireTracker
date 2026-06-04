@@ -14,21 +14,17 @@ struct RootView: View {
                 .tabItem { Label("대시보드", systemImage: "flame.fill") }
                 .tag(0)
 
-            TrendView()
-                .tabItem { Label("추이", systemImage: "chart.xyaxis.line") }
-                .tag(1)
-
             AssetsView()
                 .tabItem { Label("자산", systemImage: "wonsign.circle.fill") }
-                .tag(2)
+                .tag(1)
 
-            SnapshotsView()
-                .tabItem { Label("기록", systemImage: "list.bullet.rectangle") }
-                .tag(3)
+            TrendView()
+                .tabItem { Label("추이", systemImage: "chart.xyaxis.line") }
+                .tag(2)
 
             SettingsView()
                 .tabItem { Label("설정", systemImage: "gearshape.fill") }
-                .tag(4)
+                .tag(3)
         }
         .tint(Theme.accent)
         .preferredColorScheme(.dark)

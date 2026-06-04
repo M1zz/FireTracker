@@ -19,6 +19,27 @@ private struct AllocationSlice: Identifiable {
     let color: Color
 }
 
+// Traffic-light reading of a single financial signal.
+enum SignalLevel {
+    case good, caution, bad, neutral
+    var color: Color {
+        switch self {
+        case .good:    return Theme.positive
+        case .caution: return Theme.accent
+        case .bad:     return Theme.negative
+        case .neutral: return Theme.textSecond
+        }
+    }
+}
+
+struct FinancialSignal: Identifiable {
+    let title: String
+    let detail: String
+    let level: SignalLevel
+    let symbol: String
+    var id: String { title }
+}
+
 struct DashboardView: View {
     @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
@@ -104,6 +125,89 @@ struct DashboardView: View {
         FireEngine.latestDelta(snapshots: snapshots)
     }
 
+    // --- 재정 신호등 (financial health signals) ---
+    // Monthly savings to read now: the latest recorded month, else the plan.
+    private var monthlySavingsNow: Double {
+        if let s = latest, s.monthlyIncome > 0 || s.monthlyExpense > 0 || s.monthlyNetSavings > 0 {
+            return s.monthlySavings
+        }
+        return settings.plannedMonthlySavings
+    }
+    private var debtRatio: Double { grossAssets > 0 ? totalDebt / grossAssets : 0 }
+
+    private var signals: [FinancialSignal] {
+        var out: [FinancialSignal] = []
+
+        // 1) 자산 추세 — the signal the user cares most about (줄어드는가).
+        if let d = delta {
+            if d > 0 {
+                out.append(.init(title: "자산 추세",
+                                 detail: "지난 기록보다 +\(Fmt.krw(d))원 — 늘고 있어요",
+                                 level: .good, symbol: "arrow.up.right"))
+            } else if d < 0 {
+                out.append(.init(title: "자산 추세",
+                                 detail: "지난 기록보다 \(Fmt.krw(d))원 — 줄고 있어요",
+                                 level: .bad, symbol: "arrow.down.right"))
+            } else {
+                out.append(.init(title: "자산 추세",
+                                 detail: "지난 기록과 비슷해요", level: .caution, symbol: "arrow.right"))
+            }
+        } else {
+            out.append(.init(title: "자산 추세",
+                             detail: "기록 2개부터 늘었는지 줄었는지 알 수 있어요",
+                             level: .neutral, symbol: "chart.xyaxis.line"))
+        }
+
+        // 2) 월 저축 — 버는 것보다 많이 쓰면 경고.
+        let sav = monthlySavingsNow
+        if sav > 0 {
+            out.append(.init(title: "월 저축",
+                             detail: "매달 +\(Fmt.krw(sav))원씩 쌓이는 중", level: .good, symbol: "tray.and.arrow.down.fill"))
+        } else if sav < 0 {
+            out.append(.init(title: "월 저축",
+                             detail: "버는 것보다 \(Fmt.krw(-sav))원 더 써요", level: .bad, symbol: "tray.and.arrow.up.fill"))
+        } else {
+            out.append(.init(title: "월 저축",
+                             detail: "월 저축을 입력하면 신호가 켜져요", level: .neutral, symbol: "tray.fill"))
+        }
+
+        // 3) 패시브 인컴 — 있으면 좋은 신호 (선택의 영역).
+        if monthlyPassiveIncome > 0 {
+            out.append(.init(title: "패시브 인컴",
+                             detail: "월 \(Fmt.krw(monthlyPassiveIncome))원이 들어와요", level: .good, symbol: "dollarsign.arrow.circlepath"))
+        } else {
+            out.append(.init(title: "패시브 인컴",
+                             detail: "배당·월세·이자를 넣으면 들어오는 돈이 보여요", level: .neutral, symbol: "dollarsign.circle"))
+        }
+
+        // 4) 부채 비중 — 총자산 대비 빚이 과한가.
+        if hasDebt {
+            let pct = Fmt.percent(debtRatio, fraction: 0)
+            let level: SignalLevel = debtRatio < 0.4 ? .good : (debtRatio < 0.7 ? .caution : .bad)
+            let tail = debtRatio < 0.4 ? "적정 수준" : (debtRatio < 0.7 ? "다소 높아요" : "부담이 커요")
+            out.append(.init(title: "부채 비중",
+                             detail: "총자산의 \(pct) — \(tail)", level: level, symbol: "creditcard.trianglebadge.exclamationmark"))
+        }
+
+        return out
+    }
+
+    private var overallSignal: SignalLevel {
+        if signals.contains(where: { $0.level == .bad }) { return .bad }
+        if signals.contains(where: { $0.level == .caution }) { return .caution }
+        if signals.contains(where: { $0.level == .good }) { return .good }
+        return .neutral
+    }
+
+    private var overallHeadline: String {
+        switch overallSignal {
+        case .good:    return "재정이 순항 중이에요"
+        case .caution: return "조금 주의가 필요해요"
+        case .bad:     return "점검이 필요한 신호가 있어요"
+        case .neutral: return "기록을 모으면 신호가 켜져요"
+        }
+    }
+
     var body: some View {
         NavigationStack {
             Group {
@@ -112,6 +216,7 @@ struct DashboardView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 20) {
+                            signalCard
                             cashFlowCard
                             NavigationLink {
                                 ProjectionDetailView(startingAssets: projectionBase,
@@ -232,6 +337,53 @@ struct DashboardView: View {
     // Hero: the cash-flow question — does the income my assets produce cover the
     // monthly spending I want? This, not a static asset total, is the real
     // measure of financial independence and current liquidity.
+    // 재정 신호등 — a quick green/yellow/red read on financial health, with the
+    // individual signals behind it. "괜찮은가?" answered at a glance.
+    private var signalCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("재정 신호등")
+                        .font(.headline)
+                        .foregroundStyle(Theme.textPrimary)
+                    Text(overallHeadline)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(overallSignal.color)
+                }
+                Spacer()
+                ZStack {
+                    Circle().fill(overallSignal.color.opacity(0.18)).frame(width: 44, height: 44)
+                    Circle().fill(overallSignal.color).frame(width: 22, height: 22)
+                }
+            }
+
+            VStack(spacing: 12) {
+                ForEach(signals) { sig in
+                    HStack(spacing: 12) {
+                        Image(systemName: sig.symbol)
+                            .font(.system(size: 14))
+                            .foregroundStyle(sig.level.color)
+                            .frame(width: 24, height: 24)
+                            .background(sig.level.color.opacity(0.15))
+                            .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(sig.title)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.textPrimary)
+                            Text(sig.detail)
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                        }
+                        Spacer(minLength: 8)
+                        Circle().fill(sig.level.color).frame(width: 9, height: 9)
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
     private var cashFlowCard: some View {
         VStack(alignment: .leading, spacing: 18) {
             VStack(alignment: .leading, spacing: 2) {

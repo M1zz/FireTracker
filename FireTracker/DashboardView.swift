@@ -73,6 +73,8 @@ struct DashboardView: View {
     private var monthlyPassiveIncome: Double {
         assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } + settings.manualMonthlyDividend
     }
+    // Money debts pull out every month (이자/상환) — the opposite of income.
+    private var monthlyDebtCost: Double { assets.reduce(0) { $0 + $1.monthlyDebtCost } }
     private var incomeCoverage: Double {
         let target = settings.targetAnnualExpense
         guard target > 0 else { return 0 }
@@ -261,7 +263,7 @@ struct DashboardView: View {
             VStack(spacing: 24) {
                 VStack(spacing: 12) {
                     Image(systemName: "flame.fill")
-                        .font(.system(size: 48))
+                        .font(.system(.largeTitle))
                         .foregroundStyle(Theme.accent)
                     Text("FIRE 여정을 시작해볼까요?")
                         .font(.title3.weight(.bold))
@@ -327,7 +329,7 @@ struct DashboardView: View {
             }
             Spacer()
             Image(systemName: symbol)
-                .font(.system(size: 18))
+                .font(.system(.title3))
                 .foregroundStyle(Theme.accent.opacity(0.7))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -361,7 +363,7 @@ struct DashboardView: View {
                 ForEach(signals) { sig in
                     HStack(spacing: 12) {
                         Image(systemName: sig.symbol)
-                            .font(.system(size: 14))
+                            .font(.system(.subheadline))
                             .foregroundStyle(sig.level.color)
                             .frame(width: 24, height: 24)
                             .background(sig.level.color.opacity(0.15))
@@ -400,11 +402,27 @@ struct DashboardView: View {
                 // 월·주 수입을 함께 — 현금이 들어오는 속도감을 보여줌.
                 VStack(alignment: .leading, spacing: 4) {
                     Text("월 \(Fmt.krw(monthlyPassiveIncome))원")
-                        .font(.system(size: 36, weight: .bold, design: .rounded))
+                        .font(.system(.largeTitle, design: .rounded, weight: .bold))
                         .foregroundStyle(Theme.positive)
                     Text("주 \(Fmt.krw(weeklyPassiveIncome))원 · 연 \(Fmt.krw(monthlyPassiveIncome * 12))원")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
+                }
+
+                if monthlyDebtCost > 0 {
+                    HStack {
+                        Text("부채가 가져가는 돈")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.textSecond)
+                        Spacer()
+                        Text("월 −\(Fmt.krw(monthlyDebtCost))원")
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            .foregroundStyle(Theme.negative)
+                    }
+                    let net = monthlyPassiveIncome - monthlyDebtCost
+                    Text("월 순현금흐름 \(net >= 0 ? "+" : "−")\(Fmt.krw(abs(net)))원 (수입 − 부채)")
+                        .font(.caption)
+                        .foregroundStyle(net >= 0 ? Theme.positive : Theme.negative)
                 }
 
                 // 원하는 월 지출을 얼마나 커버하는가 — FIRE 달성의 핵심 지표.
@@ -431,6 +449,17 @@ struct DashboardView: View {
             } else {
                 // 수입이 잡히는 자산이 없을 때 — 입력을 유도.
                 VStack(alignment: .leading, spacing: 6) {
+                    if monthlyDebtCost > 0 {
+                        HStack {
+                            Text("부채가 가져가는 돈")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.textSecond)
+                            Spacer()
+                            Text("월 −\(Fmt.krw(monthlyDebtCost))원")
+                                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                                .foregroundStyle(Theme.negative)
+                        }
+                    }
                     Text("아직 수입이 잡히는 자산이 없어요")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.textPrimary)
@@ -493,7 +522,7 @@ struct DashboardView: View {
                 .foregroundStyle(Theme.accent)
             }
             Text("\(Fmt.krw(projectedYearEnd))원")
-                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Theme.accent)
             Text("= \(Fmt.wonKo(projectedYearEnd))")
                 .font(.caption)
@@ -524,7 +553,7 @@ struct DashboardView: View {
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                     Text("\(Fmt.krw(liquidNetWorth))원")
-                        .font(.system(size: 26, weight: .bold, design: .rounded))
+                        .font(.system(.title, design: .rounded, weight: .bold))
                         .foregroundStyle(Theme.positive)
                 }
                 Spacer()
@@ -603,7 +632,7 @@ struct DashboardView: View {
     private var whatIfCard: some View {
         HStack(spacing: 14) {
             Image(systemName: "arrow.triangle.branch")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(.title3, weight: .semibold))
                 .foregroundStyle(Theme.accent)
                 .frame(width: 40, height: 40)
                 .background(Theme.accentSoft)
@@ -650,7 +679,7 @@ struct DashboardView: View {
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
                 Text("\(Fmt.krw(effectiveMode == .gross ? grossAssets : netAssets))원")
-                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .font(.system(.title, design: .rounded, weight: .bold))
                     .foregroundStyle(effectiveMode == .gross ? Theme.textPrimary : Theme.accent)
                 if hasDebt {
                     Text(effectiveMode == .gross
@@ -713,13 +742,13 @@ struct MetricCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Image(systemName: symbol)
-                .font(.system(size: 16, weight: .semibold))
+                .font(.headline)
                 .foregroundStyle(tint)
                 .frame(width: 34, height: 34)
                 .background(tint.opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             Text(value)
-                .font(.system(size: 19, weight: .bold, design: .rounded))
+                .font(.system(.title3, design: .rounded, weight: .bold))
                 .foregroundStyle(Theme.textPrimary)
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)
@@ -1021,7 +1050,7 @@ struct WhatIfView: View {
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
             Text("+\(Fmt.krw(value))원")
-                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .font(.system(.title3, design: .rounded, weight: .bold))
                 .foregroundStyle(tint)
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)

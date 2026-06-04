@@ -28,6 +28,10 @@ struct RootView: View {
         }
         .tint(Theme.accent)
         .preferredColorScheme(.dark)
+        // Bigger baseline text, but still scales with the system text-size
+        // setting (floor at xLarge, capped before the extreme accessibility
+        // sizes that would break the dense card layouts).
+        .dynamicTypeSize(.xLarge ... .accessibility1)
         // Dismiss the keyboard when switching tabs (e.g. leaving 설정 mid-edit).
         .onChange(of: selectedTab) { _, _ in
             UIApplication.shared.sendAction(
@@ -144,7 +148,7 @@ struct AppLockGate<Content: View>: View {
             Theme.bg.ignoresSafeArea()
             VStack(spacing: 20) {
                 Image(systemName: "lock.shield.fill")
-                    .font(.system(size: 52))
+                    .font(.system(.largeTitle))
                     .foregroundStyle(Theme.accent)
                 VStack(spacing: 6) {
                     Text("자산 정보 보호 중")

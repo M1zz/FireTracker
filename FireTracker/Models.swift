@@ -419,8 +419,8 @@ final class Asset {
         return depositCash + equityLiquid
     }
 
-    // Monthly cash flow the asset produces. Debts don't feed cash flow here —
-    // they only reduce net worth & spendable money.
+    // Monthly cash flow the asset produces. Debts don't feed income here —
+    // they only reduce net worth & spendable money. Their cost is separate.
     var effectiveMonthlyIncome: Double {
         if isDebt { return 0 }
         if monthlyIncome > 0 { return monthlyIncome }
@@ -429,6 +429,15 @@ final class Asset {
     }
 
     var annualIncome: Double { effectiveMonthlyIncome * 12 }
+
+    // Money a debt pulls out every month — 이자/상환. Entered as a direct monthly
+    // amount, or derived from an annual interest rate on the balance.
+    var monthlyDebtCost: Double {
+        guard isDebt else { return 0 }
+        if monthlyIncome > 0 { return monthlyIncome }
+        if annualYieldPct > 0 { return amount * annualYieldPct / 100 / 12 }
+        return 0
+    }
 
     // Capital gain (평가 차익) vs. acquisition cost — value the asset created by
     // appreciating. Zero for debt or when no cost basis is recorded.

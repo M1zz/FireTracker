@@ -48,7 +48,7 @@ struct TrendView: View {
     private var emptyState: some View {
         VStack(spacing: 10) {
             Image(systemName: "chart.xyaxis.line")
-                .font(.system(size: 36))
+                .font(.system(.largeTitle))
                 .foregroundStyle(Theme.textSecond)
             Text("추이를 보려면 기록이\n2개 이상 필요합니다.")
                 .multilineTextAlignment(.center)

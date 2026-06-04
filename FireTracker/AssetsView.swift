@@ -37,6 +37,7 @@ struct AssetsView: View {
     private var monthlyIncome: Double {
         assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } + settings.manualMonthlyDividend
     }
+    private var totalDebtCost: Double { assets.reduce(0) { $0 + $1.monthlyDebtCost } }
     private var totalGain: Double { assets.reduce(0) { $0 + $1.gain } }
 
     var body: some View {
@@ -127,17 +128,26 @@ struct AssetsView: View {
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
             Text("\(Fmt.krw(liquidTotal))원")
-                .font(.system(size: 32, weight: .bold, design: .rounded))
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Theme.positive)
             Text("= \(Fmt.wonKo(liquidTotal))")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
+            Text("지금 바로 현금화해 쓸 수 있는 자산(현금·주식·코인 등)이에요. 실거주 부동산·전세보증금·연금처럼 묶인 돈과 부채는 빠집니다.")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+
             liquidityBar
+            HStack(spacing: 10) {
+                legendDot("유동 \(Fmt.krw(liquidTotal))원", Theme.positive)
+                if lockedTotal > 0 {
+                    legendDot("묶임 \(Fmt.krw(lockedTotal))원", Theme.textSecond.opacity(0.5))
+                }
+            }
+            .font(.caption2)
+
             HStack {
                 Text("순자산 \(Fmt.krw(total))원")
-                if lockedTotal > 0 {
-                    Text("· 묶인 돈 \(Fmt.krw(lockedTotal))원")
-                }
             }
             .font(.caption)
             .foregroundStyle(Theme.textSecond)
@@ -145,19 +155,30 @@ struct AssetsView: View {
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
 
-            if monthlyIncome > 0 || totalGain != 0 {
+            if monthlyIncome > 0 || totalDebtCost > 0 || totalGain != 0 {
                 Divider().overlay(Theme.hairline)
                 HStack(spacing: 0) {
                     if monthlyIncome > 0 {
                         flowStat(title: "월 현금흐름",
-                                 value: "\(Fmt.krw(monthlyIncome))원",
+                                 value: "+\(Fmt.krw(monthlyIncome))원",
                                  tint: Theme.positive)
+                    }
+                    if totalDebtCost > 0 {
+                        flowStat(title: "부채가 가져가는 돈",
+                                 value: "−\(Fmt.krw(totalDebtCost))원",
+                                 tint: Theme.negative)
                     }
                     if totalGain != 0 {
                         flowStat(title: "총 평가 차익",
                                  value: "\(totalGain >= 0 ? "+" : "-")\(Fmt.krw(abs(totalGain)))원",
                                  tint: totalGain >= 0 ? Theme.positive : Theme.negative)
                     }
+                }
+                if monthlyIncome > 0 && totalDebtCost > 0 {
+                    let net = monthlyIncome - totalDebtCost
+                    Text("월 순현금흐름 \(net >= 0 ? "+" : "−")\(Fmt.krw(abs(net)))원 (현금흐름 − 부채)")
+                        .font(.caption2)
+                        .foregroundStyle(net >= 0 ? Theme.positive : Theme.negative)
                 }
             }
         }
@@ -175,6 +196,13 @@ struct AssetsView: View {
                 .foregroundStyle(tint)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func legendDot(_ label: String, _ color: Color) -> some View {
+        HStack(spacing: 4) {
+            Circle().fill(color).frame(width: 8, height: 8)
+            Text(label).foregroundStyle(Theme.textSecond)
+        }
     }
 
     // Split bar: spendable (유동) vs locked (묶임).
@@ -250,7 +278,7 @@ struct AssetsView: View {
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                     Text("\(Fmt.krw(effectiveMode == .gross ? grossAssets : total))원")
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .font(.system(.title2, design: .rounded, weight: .bold))
                         .foregroundStyle(effectiveMode == .gross ? Theme.textPrimary : Theme.accent)
                     Text(effectiveMode == .gross
                          ? "부채 \(Fmt.krw(debtTotal))원 차감 시 순자산 \(Fmt.krw(total))원"
@@ -304,7 +332,7 @@ struct AssetsView: View {
     private func row(_ asset: Asset) -> some View {
         HStack(spacing: 12) {
             Image(systemName: asset.assetClass.symbolName)
-                .font(.system(size: 15))
+                .font(.system(.subheadline))
                 .foregroundStyle(Color(hex: asset.assetClass.colorHex))
                 .frame(width: 32, height: 32)
                 .background(Color(hex: asset.assetClass.colorHex).opacity(0.15))
@@ -333,6 +361,10 @@ struct AssetsView: View {
                     if asset.effectiveMonthlyIncome > 0 {
                         Text("월 \(Fmt.krw(asset.effectiveMonthlyIncome))")
                             .foregroundStyle(Theme.positive)
+                    }
+                    if asset.monthlyDebtCost > 0 {
+                        Text("월 −\(Fmt.krw(asset.monthlyDebtCost))")
+                            .foregroundStyle(Theme.negative)
                     }
                 }
                 .font(.caption2)
@@ -376,7 +408,7 @@ struct AssetsView: View {
     private var emptyState: some View {
         VStack(spacing: 14) {
             Image(systemName: "tray.full")
-                .font(.system(size: 40))
+                .font(.system(.largeTitle))
                 .foregroundStyle(Theme.textSecond)
             Text("내 자산을 먼저 등록해보세요.")
                 .font(.headline)
@@ -597,6 +629,8 @@ struct AssetEditor: View {
                         incomeSection
                         depositSection
                     }
+                } else {
+                    debtInterestSection
                 }
 
                 if !history.isEmpty {
@@ -663,6 +697,33 @@ struct AssetEditor: View {
         let value = Double(amount) ?? 0
         if yield > 0 { return value * yield / 100 / 12 }
         return 0
+    }
+
+    // 부채가 매달 가져가는 돈 (이자/상환). 월 직접 입력 또는 연 이자율 × 잔액.
+    private var debtInterestSection: some View {
+        Section {
+            TextField("월 이자/상환액 (원)", text: $monthlyIncome.commaGrouped)
+                .keyboardType(.numberPad)
+            TextField("또는 연 이자율 (%)", text: $annualYieldPct)
+                .keyboardType(.decimalPad)
+            if previewMonthlyIncome > 0 {
+                HStack {
+                    Text("매달 빠져나가는 돈")
+                    Spacer()
+                    Text("−\(Fmt.krw(previewMonthlyIncome))원")
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.negative)
+                }
+                Text("연 −\(Fmt.wonKo(previewMonthlyIncome * 12))")
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            }
+        } header: {
+            Text("이자 / 상환 (매달 나가는 돈)")
+        } footer: {
+            Text("매달 갚는 이자(또는 원리금)를 넣으면 ‘부채가 가져가는 돈’으로 현금흐름에 반영됩니다.")
+                .font(.caption)
+        }
     }
 
     // 취득가 대비 평가 차익 — 자산이 값이 올라서 만든 부가가치.
@@ -1268,7 +1329,7 @@ struct ScreenshotImportView: View {
     private var intro: some View {
         VStack(spacing: 22) {
             Image(systemName: "text.viewfinder")
-                .font(.system(size: 48))
+                .font(.system(.largeTitle))
                 .foregroundStyle(Theme.accent)
             VStack(spacing: 8) {
                 Text("보유 종목 스크린샷을 불러오세요")
@@ -1305,7 +1366,7 @@ struct ScreenshotImportView: View {
         if rows.isEmpty {
             VStack(spacing: 18) {
                 Image(systemName: "questionmark.viewfinder")
-                    .font(.system(size: 44))
+                    .font(.system(.largeTitle))
                     .foregroundStyle(Theme.textSecond)
                 Text("종목을 읽지 못했어요")
                     .font(.headline)
@@ -1326,7 +1387,7 @@ struct ScreenshotImportView: View {
                         HStack(spacing: 10) {
                             Button { row.include.toggle() } label: {
                                 Image(systemName: row.include ? "checkmark.circle.fill" : "circle")
-                                    .font(.system(size: 20))
+                                    .font(.system(.title2))
                                     .foregroundStyle(row.include ? Theme.accent : Theme.textSecond)
                             }
                             .buttonStyle(.plain)

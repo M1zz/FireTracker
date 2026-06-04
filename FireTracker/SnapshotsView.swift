@@ -54,7 +54,7 @@ struct SnapshotsView: View {
     private var emptyState: some View {
         VStack(spacing: 14) {
             Image(systemName: "clock.arrow.circlepath")
-                .font(.system(size: 40))
+                .font(.system(.largeTitle))
                 .foregroundStyle(Theme.textSecond)
             Text("아직 저장된 기록이 없습니다.")
                 .font(.headline)

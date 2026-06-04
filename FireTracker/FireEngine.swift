@@ -135,6 +135,12 @@ enum Fmt {
         Int(value.rounded()).formatted()
     }
 
+    // Full comma amount with its Korean reading appended so the unit is always
+    // clear, e.g. "36,000,000원 (3,600만)".
+    static func wonKo(_ value: Double) -> String {
+        "\(won(value))원 (\(krw(value)))"
+    }
+
     // Abbreviated form with the exact amount written alongside,
     // e.g. "3,600만 (36,000,000원)".
     static func krwBoth(_ value: Double) -> String {

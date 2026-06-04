@@ -53,9 +53,14 @@ struct SettingsView: View {
 
                 Section {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("연간 목표 지출")
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.textPrimary)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("연간 목표 지출")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.textPrimary)
+                            Text("은퇴 후 1년 동안 쓸 생활비예요 (수입이 아닙니다)")
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                        }
                         HStack(spacing: 6) {
                             TextField("36,000,000", text: $annualExpense.commaGrouped)
                                 .keyboardType(.numberPad)
@@ -76,26 +81,38 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
 
                     sliderRow(title: "안전 인출률", value: $swr,
-                              range: 0.02...0.06, step: 0.005)
+                              range: 0.02...0.06, step: 0.005,
+                              hint: "모은 자산을 매년 이만큼씩 꺼내 써도 평생 안 마른다고 보는 비율. 보통 4%(30년+ 기준). 낮출수록 더 안전하지만 목표 금액이 커져요.")
                     sliderRow(title: "예상 연 수익률", value: $expectedReturn,
-                              range: 0...0.12, step: 0.005)
+                              range: 0...0.12, step: 0.005,
+                              hint: "투자 자산이 매년 이만큼 불어난다고 가정하는 값. ‘예상 달성 시점’ 계산에 쓰여요.")
                 } header: {
                     Text("FIRE 목표")
                 } footer: {
-                    Text("탭하거나 슬라이더를 움직여 값을 수정하세요. 변경은 자동 저장됩니다.")
+                    Text("은퇴 후 매년 쓸 생활비(지출)를 넣으면 목표 자산을 역산합니다 — 목표 자산 = 연간 목표 지출 ÷ 안전 인출률 (4% 룰이면 연 지출의 25배). 매달 버는 수입은 ‘올해 말 예측’의 세후 월급 칸에 넣어요.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 }
 
-                Section("계산 결과") {
+                Section {
+                    let annualExp = Double(annualExpense) ?? 0
+                    let target = annualExp / max(swr, 0.0001)
                     HStack {
                         Text("FIRE 목표 금액")
                         Spacer()
-                        Text("\(Fmt.krw((Double(annualExpense) ?? 0) / max(swr, 0.0001)))원")
+                        Text("\(Fmt.krw(target))원")
                             .font(.system(.body, design: .rounded).weight(.semibold))
                             .foregroundStyle(Theme.accent)
                     }
-                    Text("연 지출을 안전 인출률로 나눈 값입니다. 4% 룰 기준이라면 연 지출의 25배.")
+                    if target > 0 {
+                        Text("이만큼 모으면, 다 쓰지 않고도 매달 \(Fmt.krw(annualExp / 12))원(연 \(Fmt.krw(annualExp))원)을 평생 꺼내 쓸 수 있어요.")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                } header: {
+                    Text("계산 결과")
+                } footer: {
+                    Text("목표 금액은 위 ‘연간 목표 지출 ÷ 안전 인출률’로 자동 계산돼요(직접 수정 불가). 금액을 바꾸려면 목표 지출이나 인출률을 조절하세요. 예) 매달 300만원 쓰려면 연 3,600만 ÷ 4% = 9억.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -190,7 +207,7 @@ struct SettingsView: View {
                     .foregroundStyle(Theme.textPrimary)
                 Spacer()
                 if let v = Double(text.wrappedValue), v > 0 {
-                    Text("= \(Fmt.won(v))원")
+                    Text("= \(Fmt.wonKo(v))")
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -209,10 +226,12 @@ struct SettingsView: View {
         .padding(.vertical, 2)
     }
 
-    // A labelled slider with the current value shown as an accent pill.
+    // A labelled slider with the current value shown as an accent pill, plus an
+    // optional one-line explanation of what the value is used for.
     @ViewBuilder
     private func sliderRow(title: String, value: Binding<Double>,
-                           range: ClosedRange<Double>, step: Double) -> some View {
+                           range: ClosedRange<Double>, step: Double,
+                           hint: String = "") -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Text(title)
@@ -226,6 +245,11 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
                     .background(Theme.accentSoft)
                     .clipShape(Capsule())
+            }
+            if !hint.isEmpty {
+                Text(hint)
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
             }
             Slider(value: value, in: range, step: step)
                 .tint(Theme.accent)

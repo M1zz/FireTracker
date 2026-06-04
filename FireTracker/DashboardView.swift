@@ -343,7 +343,7 @@ struct DashboardView: View {
             Text("\(Fmt.krw(projectedYearEnd))원")
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(Theme.accent)
-            Text("= \(Fmt.won(projectedYearEnd))원")
+            Text("= \(Fmt.wonKo(projectedYearEnd))")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
 
@@ -677,7 +677,7 @@ struct ProjectionDetailView: View {
                 Text("\(Fmt.krw(value))원")
                     .font(.system(big ? .title3 : .body, design: .rounded).weight(.bold))
                     .foregroundStyle(tint)
-                Text("\(Fmt.won(value))원")
+                Text("\(Fmt.wonKo(value))")
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
             }

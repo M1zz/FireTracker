@@ -129,7 +129,7 @@ struct AssetsView: View {
             Text("\(Fmt.krw(liquidTotal))원")
                 .font(.system(size: 32, weight: .bold, design: .rounded))
                 .foregroundStyle(Theme.positive)
-            Text("= \(Fmt.won(liquidTotal))원")
+            Text("= \(Fmt.wonKo(liquidTotal))")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
             liquidityBar
@@ -141,7 +141,7 @@ struct AssetsView: View {
             }
             .font(.caption)
             .foregroundStyle(Theme.textSecond)
-            Text("순자산 \(Fmt.won(total))원")
+            Text("순자산 \(Fmt.wonKo(total))")
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
 
@@ -566,7 +566,7 @@ struct AssetEditor: View {
                                 .foregroundStyle(Theme.accent)
                         }
                         if let v = Double(amount), v > 0 {
-                            Text("= \(Fmt.won(v))원")
+                            Text("= \(Fmt.wonKo(v))")
                                 .font(.caption)
                                 .foregroundStyle(Theme.textSecond)
                         }
@@ -680,7 +680,7 @@ struct AssetEditor: View {
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(g >= 0 ? Theme.positive : Theme.negative)
                 }
-                Text("= \(g >= 0 ? "+" : "-")\(Fmt.won(abs(g)))원")
+                Text("= \(g >= 0 ? "+" : "-")\(Fmt.wonKo(abs(g)))")
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
             }

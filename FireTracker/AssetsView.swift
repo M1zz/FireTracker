@@ -2,6 +2,8 @@ import SwiftUI
 import SwiftData
 import Charts
 import TipKit
+import PhotosUI
+import Vision
 
 // Occasional nudge to capture assets the user may have forgotten.
 struct OtherAssetsTip: Tip {
@@ -18,17 +20,23 @@ struct OtherAssetsTip: Tip {
 struct AssetsView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
+    @Query private var settingsList: [FireSettings]
     @State private var editing: Asset?
     @State private var showingNew = false
     @State private var showingRecord = false
     @State private var showingHistory = false
+    @State private var showingImport = false
+    @State private var totalMode: AssetTotalMode = .gross
 
     private let otherAssetsTip = OtherAssetsTip()
 
     private var total: Double { assets.reduce(0) { $0 + $1.netValue } }
     private var liquidTotal: Double { assets.reduce(0) { $0 + $1.liquidValue } }
     private var lockedTotal: Double { total - liquidTotal }
-    private var monthlyIncome: Double { assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } }
+    private var settings: FireSettings { settingsList.first ?? FireSettings() }
+    private var monthlyIncome: Double {
+        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } + settings.manualMonthlyDividend
+    }
     private var totalGain: Double { assets.reduce(0) { $0 + $1.gain } }
 
     var body: some View {
@@ -49,7 +57,14 @@ struct AssetsView: View {
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { showingNew = true } label: { Image(systemName: "plus") }
+                    Menu {
+                        Button { showingNew = true } label: {
+                            Label("직접 추가", systemImage: "square.and.pencil")
+                        }
+                        Button { showingImport = true } label: {
+                            Label("스크린샷으로 추가", systemImage: "text.viewfinder")
+                        }
+                    } label: { Image(systemName: "plus") }
                 }
             }
             .safeAreaInset(edge: .bottom) {
@@ -63,6 +78,9 @@ struct AssetsView: View {
             }
             .sheet(isPresented: $showingRecord) { RecordSheet() }
             .sheet(isPresented: $showingHistory) { SnapshotsView() }
+            .sheet(isPresented: $showingImport) {
+                ScreenshotImportView(startingSortOrder: assets.count)
+            }
         }
     }
 
@@ -180,28 +198,70 @@ struct AssetsView: View {
     // Positive net value per asset class, for the composition chart.
     private var compositionEntries: [(assetClass: AssetClass, amount: Double)] {
         AssetClass.allCases.compactMap { ac in
+            guard ac != .debt else { return nil }
             let sum = assets.filter { $0.assetClass == ac }
                 .reduce(0) { $0 + max(0, $1.netValue) }
             return sum > 0 ? (ac, sum) : nil
         }
     }
+    // Debt magnitude, gross assets, and the toggle's effective mode — mirror the
+    // dashboard so 총자산/순자산 behaves the same on both screens.
+    private var debtTotal: Double { abs(assets.filter { $0.isDebt }.reduce(0) { $0 + $1.netValue }) }
+    private var grossAssets: Double { compositionEntries.reduce(0) { $0 + $1.amount } }
+    private var hasDebt: Bool { debtTotal > 0 }
+    private var effectiveMode: AssetTotalMode { hasDebt ? totalMode : .gross }
+    // Chart/legend rows: assets always; 순자산 mode adds a debt slice.
+    private var compositionRows: [(assetClass: AssetClass, amount: Double)] {
+        var rows = compositionEntries
+        if effectiveMode == .net && debtTotal > 0 {
+            rows.append((assetClass: .debt, amount: debtTotal))
+        }
+        return rows
+    }
 
     // Donut chart + legend showing how net worth breaks down by class.
     private var compositionCard: some View {
-        let entries = compositionEntries
-        let sum = entries.reduce(0) { $0 + $1.amount }
+        let rows = compositionRows
+        let sum = rows.reduce(0) { $0 + $1.amount }
         return VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text("자산 구성")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
                 Spacer()
-                Text("\(assets.count)개 자산")
-                    .font(.caption)
-                    .foregroundStyle(Theme.textSecond)
+                if hasDebt {
+                    Picker("", selection: $totalMode) {
+                        ForEach(AssetTotalMode.allCases) { mode in
+                            Text(mode.rawValue).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .fixedSize()
+                } else {
+                    Text("\(assets.count)개 자산")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
             }
 
-            Chart(entries, id: \.assetClass) { item in
+            if hasDebt {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(effectiveMode == .gross ? "총자산" : "순자산")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                    Text("\(Fmt.krw(effectiveMode == .gross ? grossAssets : total))원")
+                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .foregroundStyle(effectiveMode == .gross ? Theme.textPrimary : Theme.accent)
+                    Text(effectiveMode == .gross
+                         ? "부채 \(Fmt.krw(debtTotal))원 차감 시 순자산 \(Fmt.krw(total))원"
+                         : "총자산 \(Fmt.krw(grossAssets))원 − 부채 \(Fmt.krw(debtTotal))원")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+            Chart(rows, id: \.assetClass) { item in
                 SectorMark(
                     angle: .value("금액", item.amount),
                     innerRadius: .ratio(0.62),
@@ -211,9 +271,11 @@ struct AssetsView: View {
                 .cornerRadius(4)
             }
             .frame(height: 170)
+            .animation(.easeInOut(duration: 0.45), value: rows.map(\.amount))
 
             VStack(spacing: 10) {
-                ForEach(entries, id: \.assetClass) { item in
+                ForEach(rows, id: \.assetClass) { item in
+                    let isDebt = item.assetClass == .debt
                     HStack(spacing: 10) {
                         Circle()
                             .fill(Color(hex: item.assetClass.colorHex))
@@ -222,16 +284,18 @@ struct AssetsView: View {
                             .font(.subheadline)
                             .foregroundStyle(Theme.textPrimary)
                         Spacer()
-                        Text("\(Fmt.krw(item.amount))원")
+                        Text("\(isDebt ? "-" : "")\(Fmt.krw(item.amount))원")
                             .font(.subheadline.monospacedDigit())
-                            .foregroundStyle(Theme.textSecond)
+                            .foregroundStyle(isDebt ? Theme.negative : Theme.textSecond)
                         Text(Fmt.percent(sum > 0 ? item.amount / sum : 0, fraction: 0))
                             .font(.caption.monospacedDigit())
                             .foregroundStyle(Theme.textSecond)
                             .frame(width: 40, alignment: .trailing)
                     }
+                    .transition(.opacity.combined(with: .move(edge: .top)))
                 }
             }
+            .animation(.easeInOut(duration: 0.45), value: rows.map(\.assetClass))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
@@ -246,7 +310,7 @@ struct AssetsView: View {
                 .background(Color(hex: asset.assetClass.colorHex).opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
             VStack(alignment: .leading, spacing: 3) {
-                Text(asset.name.isEmpty ? asset.assetClass.label : asset.name)
+                Text(asset.name.isEmpty ? asset.displayClassLabel : asset.name)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
                     .lineLimit(1)
@@ -255,7 +319,7 @@ struct AssetsView: View {
                         Label(asset.realEstateUse.label, systemImage: asset.realEstateUse.icon)
                             .foregroundStyle(Color(hex: asset.assetClass.colorHex))
                     } else {
-                        Text(asset.assetClass.label)
+                        Text(asset.displayClassLabel)
                             .foregroundStyle(Theme.textSecond)
                     }
                     if asset.liquidity == .locked {
@@ -362,6 +426,7 @@ struct AssetEditor: View {
 
     @State private var name = ""
     @State private var assetClass: AssetClass = .stocks
+    @State private var customLabel = ""
     @State private var amount = ""
     @State private var symbol = ""
     @State private var quantity = ""
@@ -393,6 +458,7 @@ struct AssetEditor: View {
         let cls = asset?.assetClass ?? .stocks
         _name = State(initialValue: asset?.name ?? "")
         _assetClass = State(initialValue: cls)
+        _customLabel = State(initialValue: asset?.customLabel ?? "")
         _amount = State(initialValue: asset.map { $0.amount > 0 ? String(Int($0.amount)) : "" } ?? "")
         _symbol = State(initialValue: asset?.symbol ?? "")
         _quantity = State(initialValue: asset.map { $0.quantity > 0 ? Fmt.trimNumber($0.quantity) : "" } ?? "")
@@ -432,6 +498,9 @@ struct AssetEditor: View {
                     .onChange(of: assetClass) { _, newValue in
                         if !newValue.supportsAutoPrice { auto = false }
                         liquidity = Liquidity.suggested(for: newValue)
+                    }
+                    if assetClass == .custom {
+                        TextField("종류 직접 입력 (예: 회원권, 한정판, 사업 지분)", text: $customLabel)
                     }
                     TextField(namePlaceholder, text: $name)
                 }
@@ -623,6 +692,55 @@ struct AssetEditor: View {
         }
     }
 
+    // One-tap yield presets so dividends don't have to be entered won-by-won.
+    // Selecting a chip sets the annual yield %, and the dividend is derived from
+    // the (often auto-priced) value — no manual amount entry needed.
+    private var yieldPresets: [(label: String, pct: Double)] {
+        switch incomeKind {
+        case .dividend:
+            return [("코스피 2%", 2), ("S&P500 1.5%", 1.5), ("고배당 ETF 4.5%", 4.5), ("무배당 0%", 0)]
+        case .interest:
+            return [("예금 3%", 3), ("0%", 0)]
+        case .staking:
+            return [("ETH 3.5%", 3.5), ("0%", 0)]
+        default:
+            return []
+        }
+    }
+
+    private func isSelectedPreset(_ pct: Double) -> Bool {
+        (Double(monthlyIncome) ?? 0) == 0 && (Double(annualYieldPct) ?? -1) == pct
+    }
+
+    private var yieldPresetChips: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(yieldPresets, id: \.label) { preset in
+                    let selected = isSelectedPreset(preset.pct)
+                    Button {
+                        // Yield-driven: clear any direct amount so the % takes effect.
+                        annualYieldPct = Fmt.trimNumber(preset.pct)
+                        monthlyIncome = ""
+                    } label: {
+                        Text(preset.label)
+                            .font(.caption.weight(.semibold))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(selected ? Theme.accent.opacity(0.2) : Theme.surfaceHigh)
+                            .foregroundStyle(selected ? Theme.accent : Theme.textPrimary)
+                            .clipShape(Capsule())
+                            .overlay(
+                                Capsule().stroke(selected ? Theme.accent.opacity(0.6) : Theme.hairline,
+                                                 lineWidth: 1)
+                            )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.vertical, 2)
+        }
+    }
+
     // 월세·배당·이자·연금·스테이킹 등 자산이 만들어내는 현금흐름.
     private var incomeSection: some View {
         Section {
@@ -630,6 +748,14 @@ struct AssetEditor: View {
                 ForEach(IncomeKind.allCases) { kind in Text(kind.label).tag(kind) }
             }
             if incomeKind != .none {
+                if !yieldPresets.isEmpty {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(incomeKind == .interest ? "빠른 이자율 선택" : "빠른 배당률 선택")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                        yieldPresetChips
+                    }
+                }
                 TextField("월 소득 (원)", text: $monthlyIncome.commaGrouped)
                     .keyboardType(.numberPad)
                 TextField("또는 연 수익률 (%)", text: $annualYieldPct)
@@ -815,6 +941,8 @@ struct AssetEditor: View {
         }
         target.name = name
         target.assetClass = assetClass
+        // Keep the custom label only while 직접 입력 is the selected class.
+        target.customLabel = assetClass == .custom ? customLabel : ""
         target.amount = Double(amount) ?? 0
         target.quantity = Double(quantity) ?? 0
         target.symbol = symbol
@@ -872,7 +1000,9 @@ struct RecordSheet: View {
 
     private var total: Double { assets.reduce(0) { $0 + $1.netValue } }
     private var liquidTotal: Double { assets.reduce(0) { $0 + $1.liquidValue } }
-    private var passiveIncome: Double { assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } }
+    private var passiveIncome: Double {
+        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } + settings.manualMonthlyDividend
+    }
 
     var body: some View {
         NavigationStack {
@@ -969,6 +1099,266 @@ struct RecordSheet: View {
             )
             entry.snapshot = snap
             snap.entries.append(entry)
+        }
+        try? context.save()
+        dismiss()
+    }
+}
+
+// A candidate holding read from a screenshot — editable before import.
+struct ParsedHolding: Identifiable {
+    let id = UUID()
+    var name: String
+    var amountText: String   // raw digits, shown comma-grouped
+    var include: Bool = true
+}
+
+// On-device OCR of a brokerage holdings screenshot → candidate (종목명, 평가액)
+// rows. Uses Vision (no network, nothing leaves the device). Heuristic parsing,
+// so the UI always lets the user correct/deselect before anything is saved.
+enum HoldingsOCR {
+    private static let numberRegex = try! NSRegularExpression(pattern: #"[0-9][0-9,]*(?:\.[0-9]+)?"#)
+
+    static func rows(from image: UIImage) -> [ParsedHolding] {
+        guard let cg = image.cgImage else { return [] }
+        var tokens: [(text: String, box: CGRect)] = []
+        let request = VNRecognizeTextRequest { req, _ in
+            for o in (req.results as? [VNRecognizedTextObservation]) ?? [] {
+                if let s = o.topCandidates(1).first?.string { tokens.append((s, o.boundingBox)) }
+            }
+        }
+        request.recognitionLevel = .accurate
+        request.usesLanguageCorrection = false
+        request.recognitionLanguages = ["ko-Hangul", "en-US"]
+        let handler = VNImageRequestHandler(cgImage: cg, options: [:])
+        try? handler.perform([request])
+        return parse(tokens)
+    }
+
+    // Group tokens that sit on the same visual line, then parse each line.
+    private static func parse(_ tokens: [(text: String, box: CGRect)]) -> [ParsedHolding] {
+        guard !tokens.isEmpty else { return [] }
+        // boundingBox origin is bottom-left, so a larger midY is higher up.
+        let sorted = tokens.sorted { $0.box.midY > $1.box.midY }
+        var lines: [[(text: String, box: CGRect)]] = []
+        let rowGap: CGFloat = 0.015
+        for t in sorted {
+            if let ref = lines.last?.first, abs(ref.box.midY - t.box.midY) < rowGap {
+                lines[lines.count - 1].append(t)
+            } else {
+                lines.append([t])
+            }
+        }
+        return lines.compactMap { line in
+            let text = line.sorted { $0.box.minX < $1.box.minX }
+                .map(\.text).joined(separator: " ")
+            return parseLine(text)
+        }
+    }
+
+    private static func parseLine(_ line: String) -> ParsedHolding? {
+        let ns = line as NSString
+        let full = NSRange(location: 0, length: ns.length)
+        let matches = numberRegex.matches(in: line, range: full)
+        let numbers = matches.compactMap { m -> Double? in
+            Double(ns.substring(with: m.range).replacingOccurrences(of: ",", with: ""))
+        }
+        // 평가액 ≈ the largest sizeable number on the line; small numbers are
+        // share counts / percentages and are ignored.
+        guard let amount = numbers.filter({ $0 >= 1000 }).max() else { return nil }
+
+        // Name = the line with numbers and trailing symbols stripped out.
+        var name = numberRegex.stringByReplacingMatches(in: line, range: full, withTemplate: " ")
+        let junk = CharacterSet(charactersIn: "원%+-▲▼△▽()[]{}·,.\\/|").union(.decimalDigits)
+        name = name.components(separatedBy: junk).joined(separator: " ")
+        name = name.split(separator: " ").joined(separator: " ").trimmingCharacters(in: .whitespaces)
+        // Require a real name (some letters, not just a stray number row).
+        guard name.count >= 2, name.rangeOfCharacter(from: .letters) != nil else { return nil }
+
+        return ParsedHolding(name: name, amountText: String(Int(amount)))
+    }
+}
+
+// Pick a holdings screenshot → OCR → review/correct → bulk-add as 주식.
+struct ScreenshotImportView: View {
+    let startingSortOrder: Int
+
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
+
+    @State private var pickerItem: PhotosPickerItem?
+    @State private var rows: [ParsedHolding] = []
+    @State private var processing = false
+    @State private var didProcess = false
+    @State private var loadError: String?
+
+    private var selectedCount: Int {
+        rows.filter { $0.include && (Double($0.amountText) ?? 0) > 0 }.count
+    }
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if processing {
+                    VStack(spacing: 14) {
+                        ProgressView().tint(Theme.accent)
+                        Text("이미지에서 종목을 읽는 중…")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                } else if didProcess {
+                    reviewContent
+                } else {
+                    intro
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Theme.bg.ignoresSafeArea())
+            .navigationTitle("스크린샷으로 추가")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
+                if didProcess, !rows.isEmpty {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("\(selectedCount)개 추가") { importSelected() }
+                            .disabled(selectedCount == 0)
+                    }
+                }
+            }
+        }
+        .preferredColorScheme(.dark)
+        .onChange(of: pickerItem) { _, item in
+            guard let item else { return }
+            Task { await process(item) }
+        }
+    }
+
+    private var intro: some View {
+        VStack(spacing: 22) {
+            Image(systemName: "text.viewfinder")
+                .font(.system(size: 48))
+                .foregroundStyle(Theme.accent)
+            VStack(spacing: 8) {
+                Text("보유 종목 스크린샷을 불러오세요")
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(Theme.textPrimary)
+                Text("증권사 앱의 ‘보유 종목’ 화면을 캡처해서 고르면, 종목명과 평가액을 읽어 한 번에 등록합니다. 이미지는 기기에서만 처리되고 전송되지 않아요.")
+                    .multilineTextAlignment(.center)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            PhotosPicker(selection: $pickerItem, matching: .images) {
+                HStack {
+                    Image(systemName: "photo.on.rectangle")
+                    Text("스크린샷 선택")
+                        .font(.subheadline.weight(.semibold))
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 15)
+                .background(Theme.accent)
+                .foregroundStyle(Color.black)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            }
+            if let loadError {
+                Text(loadError)
+                    .font(.caption)
+                    .foregroundStyle(Theme.negative)
+            }
+        }
+        .padding(28)
+    }
+
+    @ViewBuilder
+    private var reviewContent: some View {
+        if rows.isEmpty {
+            VStack(spacing: 18) {
+                Image(systemName: "questionmark.viewfinder")
+                    .font(.system(size: 44))
+                    .foregroundStyle(Theme.textSecond)
+                Text("종목을 읽지 못했어요")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Text("‘보유 종목’ 목록이 잘 보이는 스크린샷으로 다시 시도해보세요.")
+                    .multilineTextAlignment(.center)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.textSecond)
+                PhotosPicker("다른 스크린샷 선택", selection: $pickerItem, matching: .images)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+            }
+            .padding(28)
+        } else {
+            List {
+                Section {
+                    ForEach($rows) { $row in
+                        HStack(spacing: 10) {
+                            Button { row.include.toggle() } label: {
+                                Image(systemName: row.include ? "checkmark.circle.fill" : "circle")
+                                    .font(.system(size: 20))
+                                    .foregroundStyle(row.include ? Theme.accent : Theme.textSecond)
+                            }
+                            .buttonStyle(.plain)
+                            VStack(spacing: 6) {
+                                TextField("종목명", text: $row.name)
+                                    .font(.subheadline.weight(.semibold))
+                                HStack(spacing: 6) {
+                                    TextField("평가액", text: $row.amountText.commaGrouped)
+                                        .keyboardType(.numberPad)
+                                        .font(.system(.subheadline, design: .rounded))
+                                    Text("원").foregroundStyle(Theme.textSecond)
+                                }
+                            }
+                            .opacity(row.include ? 1 : 0.4)
+                        }
+                        .listRowBackground(Theme.surface)
+                    }
+                } header: {
+                    Text("읽은 종목 \(selectedCount)/\(rows.count) 선택 · 잘못된 건 끄거나 고치세요")
+                } footer: {
+                    Text("모두 ‘주식’으로 등록됩니다. 평가액은 수동값이며, 나중에 편집에서 종목코드를 넣으면 시세 자동을, 배당률 프리셋으로 배당을 채울 수 있어요.")
+                        .font(.caption)
+                }
+
+                Section {
+                    PhotosPicker("다른 스크린샷 선택", selection: $pickerItem, matching: .images)
+                        .listRowBackground(Theme.surface)
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .keyboardDismissable()
+        }
+    }
+
+    private func process(_ item: PhotosPickerItem) async {
+        processing = true
+        loadError = nil
+        defer { processing = false }
+        guard let data = try? await item.loadTransferable(type: Data.self),
+              let image = UIImage(data: data) else {
+            loadError = "이미지를 불러오지 못했습니다."
+            return
+        }
+        let parsed = await Task.detached(priority: .userInitiated) {
+            HoldingsOCR.rows(from: image)
+        }.value
+        rows = parsed
+        didProcess = true
+    }
+
+    private func importSelected() {
+        var order = startingSortOrder
+        for row in rows where row.include {
+            let amount = Double(row.amountText) ?? 0
+            guard amount > 0 else { continue }
+            let name = row.name.trimmingCharacters(in: .whitespaces)
+            let asset = Asset(name: name,
+                              assetClass: .stocks,
+                              amount: amount,
+                              incomeKind: .dividend,
+                              liquidity: .liquid,
+                              sortOrder: order)
+            context.insert(asset)
+            order += 1
         }
         try? context.save()
         dismiss()

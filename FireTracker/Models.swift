@@ -1,30 +1,49 @@
 import Foundation
 import SwiftData
 
-// Asset class categories tracked in the app.
+// Asset class categories tracked in the app. Ordered roughly 현금성 → 투자 →
+// 부동산·실물 → 권리·채권 → 기타 → 부채, which is also the picker order.
 enum AssetClass: String, Codable, CaseIterable, Identifiable {
+    case cash        // 현금·예금 (보통/정기예금, MMF·CMA 등 단기금융 포함)
     case stocks      // 주식
-    case jeonse      // 전세 (lease deposit)
-    case cash        // 현금
-    case realEstate  // 부동산
+    case fund        // 펀드·ETF
+    case bond        // 채권
     case crypto      // 암호화폐
     case pension     // 연금
-    case debt        // 부채 (대출 등) — reduces net worth
+    case insurance   // 보험 (해지환급금)
+    case realEstate  // 부동산
+    case jeonse      // 전세보증금 (내가 맡긴 보증금)
+    case deposit     // 보증금 (월세·기타 보증금)
+    case vehicle     // 자동차
+    case valuables   // 귀금속·미술품
+    case receivable  // 받을 돈 (대여금·미수금)
+    case ip          // 지식재산권·권리금
     case other       // 기타
+    case custom      // 직접 입력 (사용자 지정)
+    case debt        // 부채 (대출 등) — reduces net worth
 
     var id: String { rawValue }
 
     // Korean UI label.
     var label: String {
         switch self {
+        case .cash:       return "현금·예금"
         case .stocks:     return "주식"
-        case .jeonse:     return "전세"
-        case .cash:       return "현금"
-        case .realEstate: return "부동산"
+        case .fund:       return "펀드·ETF"
+        case .bond:       return "채권"
         case .crypto:     return "암호화폐"
         case .pension:    return "연금"
-        case .debt:       return "부채"
+        case .insurance:  return "보험"
+        case .realEstate: return "부동산"
+        case .jeonse:     return "전세보증금"
+        case .deposit:    return "보증금"
+        case .vehicle:    return "자동차"
+        case .valuables:  return "귀금속·미술품"
+        case .receivable: return "받을 돈"
+        case .ip:         return "지식재산권"
         case .other:      return "기타"
+        case .custom:     return "직접 입력"
+        case .debt:       return "부채"
         }
     }
 
@@ -41,28 +60,46 @@ enum AssetClass: String, Codable, CaseIterable, Identifiable {
 
     var symbolName: String {
         switch self {
-        case .stocks:     return "chart.line.uptrend.xyaxis"
-        case .jeonse:     return "house.fill"
         case .cash:       return "banknote.fill"
-        case .realEstate: return "building.2.fill"
+        case .stocks:     return "chart.line.uptrend.xyaxis"
+        case .fund:       return "chart.pie.fill"
+        case .bond:       return "doc.text.fill"
         case .crypto:     return "bitcoinsign.circle.fill"
         case .pension:    return "shield.lefthalf.filled"
-        case .debt:       return "creditcard.trianglebadge.exclamationmark"
+        case .insurance:  return "cross.case.fill"
+        case .realEstate: return "building.2.fill"
+        case .jeonse:     return "house.fill"
+        case .deposit:    return "lock.square.fill"
+        case .vehicle:    return "car.fill"
+        case .valuables:  return "sparkles"
+        case .receivable: return "arrow.down.left.circle.fill"
+        case .ip:         return "lightbulb.fill"
         case .other:      return "ellipsis.circle.fill"
+        case .custom:     return "square.and.pencil"
+        case .debt:       return "creditcard.trianglebadge.exclamationmark"
         }
     }
 
     // Hex color for the class, used in charts and badges.
     var colorHex: String {
         switch self {
-        case .stocks:     return "5B8DEF"
-        case .jeonse:     return "E8A33D"
         case .cash:       return "4CAF8E"
-        case .realEstate: return "B05BEF"
+        case .stocks:     return "5B8DEF"
+        case .fund:       return "5BA3C7"
+        case .bond:       return "7E9B5B"
         case .crypto:     return "EF6B5B"
         case .pension:    return "5BC8EF"
-        case .debt:       return "C75D5D"
+        case .insurance:  return "5BC7A3"
+        case .realEstate: return "B05BEF"
+        case .jeonse:     return "E8A33D"
+        case .deposit:    return "C7A15B"
+        case .vehicle:    return "8A8F98"
+        case .valuables:  return "C75DA0"
+        case .receivable: return "B0C75B"
+        case .ip:         return "9B7EDE"
         case .other:      return "9AA0A6"
+        case .custom:     return "78A1B8"
+        case .debt:       return "C75D5D"
         }
     }
 }
@@ -152,12 +189,12 @@ enum IncomeKind: String, Codable, CaseIterable, Identifiable {
     // Sensible default income kind for an asset class.
     static func suggested(for ac: AssetClass) -> IncomeKind {
         switch ac {
-        case .realEstate: return .rent
-        case .stocks:     return .dividend
-        case .cash:       return .interest
-        case .pension:    return .pension
-        case .crypto:     return .staking
-        default:          return .none
+        case .realEstate:        return .rent
+        case .stocks, .fund:     return .dividend
+        case .cash, .bond, .receivable: return .interest
+        case .pension:           return .pension
+        case .crypto:            return .staking
+        default:                 return .none
         }
     }
 
@@ -199,8 +236,11 @@ enum Liquidity: String, Codable, CaseIterable, Identifiable {
     // Conservative default per class — never overstate spendable money.
     static func suggested(for ac: AssetClass) -> Liquidity {
         switch ac {
-        case .cash, .stocks, .crypto, .debt: return .liquid
-        case .realEstate, .jeonse, .pension, .other: return .locked
+        case .cash, .stocks, .fund, .bond, .crypto, .debt:
+            return .liquid
+        case .realEstate, .jeonse, .deposit, .pension, .insurance,
+             .vehicle, .valuables, .receivable, .ip, .other, .custom:
+            return .locked
         }
     }
 }
@@ -245,6 +285,8 @@ final class Asset {
     var key: UUID = UUID()
     var name: String
     var assetClassRaw: String
+    // User-typed category name, used when assetClass == .custom (직접 입력).
+    var customLabel: String = ""
 
     // Current scale of the holding.
     var amount: Double          // current value in KRW (source of truth)
@@ -282,6 +324,7 @@ final class Asset {
 
     init(name: String = "",
          assetClass: AssetClass = .stocks,
+         customLabel: String = "",
          amount: Double = 0,
          quantity: Double = 0,
          symbol: String = "",
@@ -301,6 +344,7 @@ final class Asset {
         self.key = UUID()
         self.name = name
         self.assetClassRaw = assetClass.rawValue
+        self.customLabel = customLabel
         self.amount = amount
         self.quantity = quantity
         self.symbol = symbol
@@ -322,6 +366,13 @@ final class Asset {
     var assetClass: AssetClass {
         get { AssetClass(rawValue: assetClassRaw) ?? .other }
         set { assetClassRaw = newValue.rawValue }
+    }
+
+    // Category label for display: the user-typed name for 직접 입력, else the
+    // built-in class label.
+    var displayClassLabel: String {
+        if assetClass == .custom, !customLabel.isEmpty { return customLabel }
+        return assetClass.label
     }
 
     var incomeKind: IncomeKind {
@@ -452,6 +503,12 @@ final class FireSettings {
     // Monthly savings used to project forward.
     var plannedMonthlySavings: Double { monthlyTakeHome - plannedMonthlyExpense }
 
+    // Rough annual dividend / passive income entered by hand, for people who
+    // don't want to fill in each holding's dividend. Added on top of the
+    // per-asset cash flow; its monthly share feeds the dashboard & snapshots.
+    var manualAnnualDividend: Double = 0
+    var manualMonthlyDividend: Double { manualAnnualDividend / 12 }
+
     // --- API credentials for live price lookups (entered in 설정) ---
     // Finnhub token — 미국 주식 시세.
     var finnhubKey: String = ""
@@ -467,6 +524,7 @@ final class FireSettings {
          displayUnit: Double = 10_000,
          monthlyTakeHome: Double = 0,
          plannedMonthlyExpense: Double = 0,
+         manualAnnualDividend: Double = 0,
          finnhubKey: String = "",
          kisAppKey: String = "",
          kisAppSecret: String = "",
@@ -477,6 +535,7 @@ final class FireSettings {
         self.displayUnit = displayUnit
         self.monthlyTakeHome = monthlyTakeHome
         self.plannedMonthlyExpense = plannedMonthlyExpense
+        self.manualAnnualDividend = manualAnnualDividend
         self.finnhubKey = finnhubKey
         self.kisAppKey = kisAppKey
         self.kisAppSecret = kisAppSecret

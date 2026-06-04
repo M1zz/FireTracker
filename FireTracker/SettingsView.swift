@@ -1,11 +1,15 @@
 import SwiftUI
 import SwiftData
+import LocalAuthentication
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @Query private var settingsList: [FireSettings]
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
+
+    // Biometric app lock (stored in UserDefaults, not synced asset data).
+    @AppStorage("appLockEnabled") private var lockEnabled = false
 
     @State private var annualExpense: String = ""
     @State private var swr: Double = 0.04
@@ -14,6 +18,9 @@ struct SettingsView: View {
     // Projection (올해 말 예측)
     @State private var monthlyTakeHome: String = ""
     @State private var plannedExpense: String = ""
+
+    // Rough manual annual dividend / passive income
+    @State private var annualDividend: String = ""
 
     // Live-pricing API credentials
     @State private var finnhubKey: String = ""
@@ -24,6 +31,26 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Toggle(isOn: $lockEnabled) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("앱 잠금")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.textPrimary)
+                            Text(biometryLabel)
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                    .tint(Theme.accent)
+                } header: {
+                    Text("보안")
+                } footer: {
+                    Text("켜면 앱을 열거나 다시 돌아올 때마다 \(biometryName)(또는 기기 암호)로 인증해야 자산이 보입니다. 앱을 전환할 때도 화면이 가려져요.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
+
                 Section {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("연간 목표 지출")
@@ -96,6 +123,25 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    moneyField(title: "연간 배당수익 (대략)", hint: "예: 1,200,000", text: $annualDividend)
+                    if let v = Double(annualDividend), v > 0 {
+                        HStack {
+                            Text("월 환산")
+                            Spacer()
+                            Text("\(Fmt.krw(v / 12))원")
+                                .font(.system(.body, design: .rounded).weight(.semibold))
+                                .foregroundStyle(Theme.positive)
+                        }
+                    }
+                } header: {
+                    Text("패시브 인컴 (배당 등)")
+                } footer: {
+                    Text("종목마다 배당을 넣기 번거로우면, 연간 배당 총액을 여기에 대략 입력하세요. 12로 나눈 월 수입이 대시보드에 반영되고, 기록을 저장할 때마다 추이로 쌓여 월 인컴이 어떻게 느는지 볼 수 있어요. 종목별로 입력한 배당과는 합산되니 한쪽만 쓰는 걸 권장해요.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
+
+                Section {
                     apiField(title: "Finnhub (미국주식)",
                              hint: "finnhub.io 무료 가입 후 API Key",
                              text: $finnhubKey)
@@ -129,6 +175,7 @@ struct SettingsView: View {
             .onChange(of: dataGoKey) { persist() }
             .onChange(of: monthlyTakeHome) { persist() }
             .onChange(of: plannedExpense) { persist() }
+            .onChange(of: annualDividend) { persist() }
         }
         .preferredColorScheme(.dark)
     }
@@ -215,12 +262,34 @@ struct SettingsView: View {
         .padding(.vertical, 4)
     }
 
+    // The biometry available on this device, for accurate labels.
+    private var biometryType: LABiometryType {
+        let ctx = LAContext()
+        _ = ctx.canEvaluatePolicy(.deviceOwnerAuthentication, error: nil)
+        return ctx.biometryType
+    }
+    private var biometryName: String {
+        switch biometryType {
+        case .faceID:  return "Face ID"
+        case .touchID: return "Touch ID"
+        default:       return "기기 암호"
+        }
+    }
+    private var biometryLabel: String {
+        switch biometryType {
+        case .faceID:  return "Face ID로 자산 정보를 보호합니다"
+        case .touchID: return "Touch ID로 자산 정보를 보호합니다"
+        default:       return "기기 암호로 자산 정보를 보호합니다"
+        }
+    }
+
     private func load() {
         annualExpense = String(Int(settings.targetAnnualExpense))
         swr = settings.safeWithdrawalRate
         expectedReturn = settings.expectedAnnualReturn
         monthlyTakeHome = settings.monthlyTakeHome > 0 ? String(Int(settings.monthlyTakeHome)) : ""
         plannedExpense = settings.plannedMonthlyExpense > 0 ? String(Int(settings.plannedMonthlyExpense)) : ""
+        annualDividend = settings.manualAnnualDividend > 0 ? String(Int(settings.manualAnnualDividend)) : ""
         finnhubKey = settings.finnhubKey
         kisAppKey = settings.kisAppKey
         kisAppSecret = settings.kisAppSecret
@@ -241,6 +310,7 @@ struct SettingsView: View {
         target.expectedAnnualReturn = expectedReturn
         target.monthlyTakeHome = Double(monthlyTakeHome) ?? 0
         target.plannedMonthlyExpense = Double(plannedExpense) ?? 0
+        target.manualAnnualDividend = Double(annualDividend) ?? 0
         target.finnhubKey = finnhubKey
         target.kisAppKey = kisAppKey
         target.kisAppSecret = kisAppSecret

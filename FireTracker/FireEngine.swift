@@ -58,47 +58,47 @@ struct FireEngine {
         return max(0, 12 - month + 1)
     }
 
-    // Projected net worth at year-end: current net worth plus monthly savings
-    // for each remaining month, with invested savings compounded at the
-    // expected return.
+    // Projected assets at year-end. Counts ONLY money we actually expect to come
+    // in — salary-based monthly savings plus the passive income the assets are
+    // scheduled to pay (배당·월세·이자 등). No speculative appreciation: an owner-
+    // occupied apartment or a stock that "might go up" adds nothing here.
     static func projectedYearEnd(currentNetWorth: Double,
                                  monthlySavings: Double,
-                                 annualReturn: Double,
+                                 monthlyPassiveIncome: Double,
                                  asOf date: Date) -> Double {
         projectionSteps(currentNetWorth: currentNetWorth,
                         monthlySavings: monthlySavings,
-                        annualReturn: annualReturn,
+                        monthlyPassiveIncome: monthlyPassiveIncome,
                         asOf: date).last?.end ?? currentNetWorth
     }
 
     // One month of the projection, broken out so the basis can be shown.
     struct ProjectionStep: Identifiable {
-        let month: Int      // 1...N
-        let date: Date      // the calendar month it represents
+        let month: Int           // 1...N
+        let date: Date           // the calendar month it represents
         let start: Double
-        let savings: Double
-        let gain: Double    // investment return earned that month
+        let savings: Double      // salary − spending saved that month
+        let passiveIncome: Double // dividends/rent/interest expected that month
         let end: Double
         var id: Int { month }
     }
 
     static func projectionSteps(currentNetWorth: Double,
                                 monthlySavings: Double,
-                                annualReturn: Double,
+                                monthlyPassiveIncome: Double,
                                 asOf date: Date) -> [ProjectionStep] {
         let cal = Calendar(identifier: .gregorian)
         let months = monthsLeftInYear(asOf: date)
-        let monthlyRate = annualReturn / 12
         var balance = currentNetWorth
         var steps: [ProjectionStep] = []
         for i in 0..<months {
             let start = balance
-            let gain = start * monthlyRate
-            let end = start + gain + monthlySavings
+            // Linear accumulation of expected inflows — no compounding return.
+            let end = start + monthlySavings + monthlyPassiveIncome
             let monthDate = cal.date(byAdding: .month, value: i, to: date) ?? date
             steps.append(ProjectionStep(month: i + 1, date: monthDate,
                                         start: start, savings: monthlySavings,
-                                        gain: gain, end: end))
+                                        passiveIncome: monthlyPassiveIncome, end: end))
             balance = end
         }
         return steps

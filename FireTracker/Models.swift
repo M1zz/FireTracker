@@ -499,6 +499,21 @@ final class AssetEntry {
     }
 }
 
+// What "FIRE 달성" is measured against.
+enum FireGoalType: String, Codable, CaseIterable, Identifiable {
+    case assets   // 순자산이 FIRE 목표 금액에 도달
+    case income   // 월 패시브 인컴이 원하는 월 지출을 커버
+    case both     // 둘 다
+    var id: String { rawValue }
+    var label: String {
+        switch self {
+        case .assets: return "자산"
+        case .income: return "패시브 인컴"
+        case .both:   return "둘 다"
+        }
+    }
+}
+
 // Singleton-style settings driving the FIRE projection math.
 @Model
 final class FireSettings {
@@ -530,6 +545,24 @@ final class FireSettings {
     // per-asset cash flow; its monthly share feeds the dashboard & snapshots.
     var manualAnnualDividend: Double = 0
     var manualMonthlyDividend: Double { manualAnnualDividend / 12 }
+
+    // --- 목표 측정 기준 & 기간(은퇴 시점) ---
+    // Whether 달성률 is measured by assets, passive income, or both.
+    var fireGoalTypeRaw: String = FireGoalType.both.rawValue
+    var fireGoalType: FireGoalType {
+        get { FireGoalType(rawValue: fireGoalTypeRaw) ?? .both }
+        set { fireGoalTypeRaw = newValue.rawValue }
+    }
+    // Ages drive the milestone trajectory (이번달·올해·5년·은퇴).
+    var currentAge: Int = 0
+    var targetRetireAge: Int = 0
+    // Months from now until the target retirement age (nil until both ages set).
+    var monthsToRetire: Int? {
+        guard currentAge > 0, targetRetireAge > currentAge else { return nil }
+        return (targetRetireAge - currentAge) * 12
+    }
+    // The passive-income FIRE goal: the monthly spending you want covered.
+    var incomeGoalMonthly: Double { targetAnnualExpense / 12 }
 
     // --- API credentials for live price lookups (entered in 설정) ---
     // Finnhub token — 미국 주식 시세.

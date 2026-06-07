@@ -27,7 +27,6 @@ struct RootView: View {
                 .tag(3)
         }
         .tint(Theme.accent)
-        .preferredColorScheme(.dark)
         // Bigger baseline text, but still scales with the system text-size
         // setting (floor at xLarge, capped before the extreme accessibility
         // sizes that would break the dense card layouts).
@@ -49,9 +48,11 @@ struct RootView: View {
             context.insert(FireSettings())
             try? context.save()
         }
+
+        // Bars use dynamic colors so they adapt to light/dark automatically.
         let tabAppearance = UITabBarAppearance()
         tabAppearance.configureWithOpaqueBackground()
-        tabAppearance.backgroundColor = UIColor(Theme.surface)
+        tabAppearance.backgroundColor = Theme.surfaceUI
         UITabBar.appearance().standardAppearance = tabAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabAppearance
 
@@ -60,7 +61,7 @@ struct RootView: View {
         // default so the large title still shows.
         let navAppearance = UINavigationBarAppearance()
         navAppearance.configureWithOpaqueBackground()
-        navAppearance.backgroundColor = UIColor(Theme.bg)
+        navAppearance.backgroundColor = Theme.bgUI
         navAppearance.shadowColor = .clear
         UINavigationBar.appearance().standardAppearance = navAppearance
         UINavigationBar.appearance().compactAppearance = navAppearance

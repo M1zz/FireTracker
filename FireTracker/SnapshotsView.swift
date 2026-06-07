@@ -147,7 +147,6 @@ struct SnapshotDetail: View {
             }
             .onAppear(perform: load)
         }
-        .preferredColorScheme(.dark)
     }
 
     private func load() {

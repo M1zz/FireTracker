@@ -44,6 +44,17 @@ struct FireEngine {
         return months >= maxMonths ? nil : Double(months) / 12.0
     }
 
+    // Where you should be `horizonMonths` from now if you climb linearly from
+    // `current` to `goal` over the remaining months to retirement. Used to slice
+    // the macro retirement goal into 이번달·올해·5년 targets.
+    static func milestoneTarget(current: Double, goal: Double,
+                                monthsToRetire: Int, horizonMonths: Int) -> Double {
+        guard monthsToRetire > 0, goal > current else { return goal }
+        let required = (goal - current) / Double(monthsToRetire)
+        let h = min(max(horizonMonths, 0), monthsToRetire)
+        return min(goal, current + required * Double(h))
+    }
+
     // Month-over-month net worth delta between two most recent snapshots.
     static func latestDelta(snapshots: [NetWorthSnapshot]) -> Double? {
         let sorted = snapshots.sorted { $0.date > $1.date }
@@ -109,6 +120,8 @@ struct FireEngine {
 enum Fmt {
     // Formats a KRW amount into 억/만원 readable Korean string.
     static func krw(_ value: Double) -> String {
+        // Int(NaN/Inf) traps — never let a bad number crash the money formatter.
+        guard value.isFinite else { return "0" }
         let eok = 100_000_000.0
         let man = 10_000.0
         let sign = value < 0 ? "-" : ""
@@ -132,7 +145,8 @@ enum Fmt {
 
     // Full KRW amount with thousands separators, e.g. 36,000,000.
     static func won(_ value: Double) -> String {
-        Int(value.rounded()).formatted()
+        guard value.isFinite else { return "0" }
+        return Int(value.rounded()).formatted()
     }
 
     // Full comma amount with its Korean reading appended so the unit is always
@@ -156,7 +170,7 @@ enum Fmt {
     }
 
     static func years(_ value: Double?) -> String {
-        guard let value else { return "—" }
+        guard let value, value.isFinite else { return "—" }
         if value < 1.0 / 12.0 { return "달성!" }
         let whole = Int(value)
         let months = Int((value - Double(whole)) * 12)
@@ -167,6 +181,7 @@ enum Fmt {
 
     // Renders a quantity without trailing ".0" (e.g. 3.0 → "3", 0.25 → "0.25").
     static func trimNumber(_ value: Double) -> String {
+        guard value.isFinite else { return "0" }
         if value == value.rounded() { return String(Int(value)) }
         return String(value)
     }

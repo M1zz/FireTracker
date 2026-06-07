@@ -63,7 +63,90 @@
   - 기록 저장 시 스냅샷 monthlyPassiveIncome에 반영 → 추이로 누적
   - 종목별 입력분과 합산되므로 한쪽만 쓰도록 안내 문구 추가
 
+- [x] 목표 월 수입 달성에 필요한 자금 계산 카드 추가 (현재 전략 기준)
+  - 전략 수익률 = 연 패시브 인컴 ÷ 수입창출 자본(없으면 유동자산으로 폴백)
+  - 필요 자금 = 목표 연수입 ÷ 전략 수익률, 부족분(gap)·현재 자본·진행바 표시
+  - 4% 룰 기준 fireNumber도 참고로 병기, 수입 없으면 안내 상태
+
+- [x] 대시보드 '재정 신호등'(signalCard) 순서를 맨 아래로 이동
+- [x] 다크모드 온전 적용: 윈도우 overrideUserInterfaceStyle=.dark 강제(메뉴·피커·알럿·키보드 등 UIKit 크롬 포함) + 앱 루트/TrendView preferredColorScheme(.dark) 보강
+
+- [x] 추이 탭: 라이브 현재값 자동 포함 + 주/월(주초/월초) 기준 버킷팅
+  - 카탈로그 기반 '지금' 포인트를 자동 append → 새 기록 없이도 최신까지 표시
+  - TrendPoint로 스냅샷+현재 통합, 주초/월초로 버킷팅(버킷당 최신값)
+  - 주/월 세그먼트 토글 추가, 막대 차트 단위도 기간 따라 변경
+  - 표시 조건 snapshots≥2 → 버킷 포인트≥2, 빈 상태 문구 개선
+
+- [x] 대시보드 첫 화면 환영 요약 카드(맨 위) 추가
+  - 지난 기록 이후 변화 금액: 한국식 색(상승=붉은색 Theme.rise, 하락=푸른색 Theme.fall) + 화살표
+  - FIRE 목표 달성률 바 + 이번 변화로 가까워진/멀어진 %p
+  - 재정 상태(신호등) 한눈 칩 요약(overallHeadline + 신호별 색 칩)
+  - 신규 등록 자산 제외한 정직한 변화(sinceLastRecord, catalogKey 매칭)
+  - '전월 대비' 지표도 상승=빨강/하락=파랑으로 통일
+
+- [x] 카드 자잘한 설명을 항상 노출 대신 ⓘ 버튼 팝오버 + TipKit 안내로 전환
+  - 재사용 InfoPopoverButton(팝오버, presentationCompactAdaptation/Background) 추가
+  - InfoButtonTip(TipKit) — ⓘ 사용법 1회 안내, welcomeCard ⓘ에 popoverTip 부착
+  - 적용: welcomeCard(빨강/파랑 설명)·cashFlowCard·capitalNeededCard·liquidityCard
+  - 해당 카드의 장황한 캡션/가정 문구는 본문에서 제거 → 팝오버로 이동
+
+- [x] welcomeCard 다듬기: '지난 기록 이후'를 카드 타이틀(.headline)로 승격
+  - 총자산/순자산 변화 구분 표시(부채 변동 시 둘이 달라짐, lastRecordChange gross/net)
+  - HStack 최소화: 화살표를 ▲▼ 글자로 단일 Text, ⓘ는 카드 overlay(topTrailing)로
+  - 신호 칩은 Label로, 변화 없음(±0) 중립 처리
+
+- [x] 패시브 인컴을 '월 수입'으로 부르던 UI 문구를 '패시브 인컴'으로 변경
+  - 대시보드 카드 타이틀 '내 월 수입'→'내 패시브 인컴', '목표 수입에 필요한 자금'→'목표 패시브 인컴에…'
+  - 연말예상 근거/설정 푸터의 패시브 인컴 표기 통일 (RecordSheet/SnapshotsView의 근로 '월 수입'은 유지)
+- [x] 자산 탭 순서 변경: 자산구성 → 내 자산 → 쓸 수 있는 돈 요약 → 팁/추가
+
+- [x] 총자산↔순자산 변화 차이를 글 대신 워터폴(다리) 차트로 시각화
+  - changeBridge: 총자산 변화 → 부채 영향(floating bar) → 순자산 변화, 막대별 증감 주석
+  - 부채가 움직여 둘이 다를 때만 표시, 기존 설명 문구 제거
+
+- [x] 변화 워터폴 라벨/설명을 '자산−부채=순자산' 회계 모델에 맞게 정정
+  - 막대 라벨 총자산/부채영향/순자산 → 자산/부채/순자산
+  - welcomeCard ⓘ: 빚으로 받은 현금도 자산이라 빚 내면 보통 순자산 불변임을 명시
+
+- [x] 기간별 목표 미설정 시 인라인 문구 → TipKit(TipView)로 노출 + 설정 안내
+  - MilestoneSetupTip: '설정 ▸ 목표 측정 & 기간'에서 나이 입력 유도
+  - monthsToRetire 있으면 카드, 없으면 TipView(닫기 가능)
+- [x] FIRE 목표 측정 기준 설정(자산/패시브 인컴/둘 다, 기본 둘 다) + 기간별 목표
+  - FireSettings: fireGoalType, currentAge, targetRetireAge, monthsToRetire, incomeGoalMonthly
+  - 설정에 '목표 측정 & 기간' 섹션(세그먼트 + 나이 입력)
+  - FireEngine.milestoneTarget: 은퇴까지 필요속도로 역산
+  - 대시보드 '기간별 목표' 카드: 이번달·올해·5년·은퇴 목표치+진행바(자산/인컴 토글)
+  - welcomeCard 달성률을 goalType 반영(자산/인컴/둘 다 바)
+
+- [x] 라이트/다크 적응형 지원 (시스템 따라 자동)
+  - Color(light:dark:) 동적 색 도입, Theme 팔레트를 라이트/다크 쌍으로 정의
+  - accent는 두 모드 동일 골드(검정 텍스트 버튼 가독성 유지)
+  - 강제 다크 제거: 모든 preferredColorScheme(.dark)·overrideUserInterfaceStyle 삭제
+  - 탭/내비 바는 동적 UIColor(Theme.surfaceUI/bgUI)로 적응
+
+- [x] 크래시 방어: Fmt.krw/won/wonKo/years/trimNumber에 isFinite 가드 (Int(NaN/Inf) trap 방지)
+- [x] 지난기록 변화 차트: 떠있는 워터폴(yStart/yEnd) → 총자산·부채·순자산 '변화' 막대로 교체
+  - 부채 변화 양수=빚 증가로 표기, 순자산=총자산−부채 관계 명확화 + ⓘ 문구 갱신
+
+- [x] 변화 설명을 절대 구성 → '총자산의 변화량은 이렇게 구성돼요'로 변경
+  - changeComposition: 총자산 변화 = 순자산 변화 + 부채 변화 색코딩 등식, 부채 변동 시만 표시
+- [x] 총자산/부채/순자산 3막대 차트 → 직관적인 누적 구성 막대로 교체
+  - assetCompositionBar: 한 막대를 순자산(초록)+부채(빨강)로 채워 '총자산=순자산+부채' 시각화
+  - 색 코딩 Text 한 줄(내 몫+갚을 빚=총자산), HStack 없이 Text 연결, 빚>자산(underwater) 케이스 처리
+  - 부채 있을 때만 표시
+
+- [x] 설정: 연간 목표 지출 옆에 '월간 목표 지출' 입력 추가(양방향 연동, 월×12=연간)
+
+- [x] 기간별 목표에 '은퇴까지 자산 궤도' 라인 차트 추가
+  - trajectoryChart: 지금→은퇴 필요 궤도(Line+Area) + 마일스톤 점 + 현재/은퇴 강조
+  - 자산/패시브 인컴 토글 반영, 기존 마일스톤 진행바 행은 아래 유지
+
+- [x] welcomeCard 정리: 변화 구성을 바 차트 하나(총자산·순자산·부채)로, 달성률은 goalProgressCard로 분리, 신호등 글랜스(재정이 순항중…) 제거
+  - changeComposition을 3-bar Chart로 (부채 변화 양수=빚 증가)
+  - goalProgressCard 신설(자산/패시브 인컴 달성률), 본문 welcomeCard 다음 배치
+
 ## 다음에 해볼 만한 것
+- [ ] (논의) 부채만 등록하고 대응 현금을 안 넣으면 총자산0/순자산−로 보임 — 부채 잔액을 현금으로 자동 인식 옵션 검토
 - [ ] '만약에' 시나리오 확장: '투자했더라면', '빚 안 갚고 뒀다면 낸 이자' 추가 가능
 - [ ] '예상 달성 시점(yearsToFire)'도 수익률 가정을 뺄지 결정 — 현재는 장기라 expectedAnnualReturn 유지 중
 - [ ] 설정에 '원하는 월 지출'을 월 단위로 직접 입력하는 필드 추가 (현재는 연간 목표 지출÷12)

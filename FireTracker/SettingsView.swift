@@ -8,12 +8,32 @@ struct SettingsView: View {
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
 
+    // Two-way bridge: edits the same annual target, just shown per month
+    // (월 입력 → 연간 = 월×12, 연간 입력 → 월 = 연간÷12).
+    private var monthlyExpenseBinding: Binding<String> {
+        Binding(
+            get: {
+                let annual = Double(annualExpense) ?? 0
+                return annual > 0 ? String(Int((annual / 12).rounded())) : ""
+            },
+            set: { newValue in
+                let monthly = Double(newValue.filter(\.isNumber)) ?? 0
+                annualExpense = monthly > 0 ? String(Int(monthly * 12)) : ""
+            }
+        )
+    }
+
     // Biometric app lock (stored in UserDefaults, not synced asset data).
     @AppStorage("appLockEnabled") private var lockEnabled = false
 
     @State private var annualExpense: String = ""
     @State private var swr: Double = 0.04
     @State private var expectedReturn: Double = 0.05
+
+    // 목표 측정 기준 & 은퇴 시점
+    @State private var goalType: FireGoalType = .both
+    @State private var currentAge: String = ""
+    @State private var retireAge: String = ""
 
     // Projection (올해 말 예측)
     @State private var netSavingsPlan: String = ""
@@ -78,6 +98,32 @@ struct SettingsView: View {
                                 .font(.caption)
                                 .foregroundStyle(Theme.textSecond)
                         }
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("월간 목표 지출 (연간 ÷ 12)")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.textPrimary)
+                            Text("월 단위로 넣어도 연간과 자동으로 연동돼요")
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                        }
+                        .padding(.top, 8)
+                        HStack(spacing: 6) {
+                            TextField("3,000,000", text: monthlyExpenseBinding.commaGrouped)
+                                .keyboardType(.numberPad)
+                                .font(.system(.body, design: .rounded))
+                            Text("원")
+                                .foregroundStyle(Theme.textSecond)
+                            Image(systemName: "pencil")
+                                .font(.caption)
+                                .foregroundStyle(Theme.accent)
+                        }
+                        .inputBox()
+                        if let v = Double(annualExpense), v > 0 {
+                            Text("= 월 \(Fmt.krwBoth(v / 12))")
+                                .font(.caption)
+                                .foregroundStyle(Theme.textSecond)
+                        }
                     }
                     .padding(.vertical, 4)
 
@@ -114,6 +160,29 @@ struct SettingsView: View {
                     Text("계산 결과")
                 } footer: {
                     Text("목표 금액은 위 ‘연간 목표 지출 ÷ 안전 인출률’로 자동 계산돼요(직접 수정 불가). 금액을 바꾸려면 목표 지출이나 인출률을 조절하세요. 예) 매달 300만원 쓰려면 연 3,600만 ÷ 4% = 9억.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
+
+                Section {
+                    Picker("달성률 기준", selection: $goalType) {
+                        ForEach(FireGoalType.allCases) { Text($0.label).tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+
+                    HStack(spacing: 10) {
+                        ageField(title: "현재 나이", text: $currentAge)
+                        ageField(title: "목표 은퇴 나이", text: $retireAge)
+                    }
+                    if let cur = Int(currentAge), let ret = Int(retireAge), ret > cur {
+                        Text("은퇴까지 \(ret - cur)년 (\((ret - cur) * 12)개월) — 이 기간에 맞춰 이번달·올해·5년 목표를 역산해요.")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                } header: {
+                    Text("목표 측정 & 기간")
+                } footer: {
+                    Text("‘달성률 기준’은 자산(순자산)·패시브 인컴·둘 다 중에서 고를 수 있어요. 현재 나이와 목표 은퇴 나이를 넣으면 대시보드에 이번달·올해·5년·은퇴 목표가 단계별로 표시됩니다.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -164,7 +233,7 @@ struct SettingsView: View {
                 } header: {
                     Text("패시브 인컴 (배당 등)")
                 } footer: {
-                    Text("종목마다 배당을 넣기 번거로우면, 연간 배당 총액을 여기에 대략 입력하세요. 12로 나눈 월 수입이 대시보드에 반영되고, 기록을 저장할 때마다 추이로 쌓여 월 인컴이 어떻게 느는지 볼 수 있어요. 종목별로 입력한 배당과는 합산되니 한쪽만 쓰는 걸 권장해요.")
+                    Text("종목마다 배당을 넣기 번거로우면, 연간 배당 총액을 여기에 대략 입력하세요. 12로 나눈 월 패시브 인컴이 대시보드에 반영되고, 기록을 저장할 때마다 추이로 쌓여 월 인컴이 어떻게 느는지 볼 수 있어요. 종목별로 입력한 배당과는 합산되니 한쪽만 쓰는 걸 권장해요.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -205,8 +274,27 @@ struct SettingsView: View {
             .onChange(of: monthlyTakeHome) { persist() }
             .onChange(of: plannedExpense) { persist() }
             .onChange(of: annualDividend) { persist() }
+            .onChange(of: goalType) { persist() }
+            .onChange(of: currentAge) { persist() }
+            .onChange(of: retireAge) { persist() }
         }
-        .preferredColorScheme(.dark)
+    }
+
+    // A compact numeric age input.
+    private func ageField(title: String, text: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.subheadline)
+                .foregroundStyle(Theme.textPrimary)
+            HStack(spacing: 6) {
+                TextField("세", text: text)
+                    .keyboardType(.numberPad)
+                    .font(.system(.body, design: .rounded))
+                Text("세").foregroundStyle(Theme.textSecond)
+            }
+            .inputBox()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     // A labelled numeric input box with the exact amount shown alongside.
@@ -327,6 +415,9 @@ struct SettingsView: View {
         monthlyTakeHome = settings.monthlyTakeHome > 0 ? String(Int(settings.monthlyTakeHome)) : ""
         plannedExpense = settings.plannedMonthlyExpense > 0 ? String(Int(settings.plannedMonthlyExpense)) : ""
         annualDividend = settings.manualAnnualDividend > 0 ? String(Int(settings.manualAnnualDividend)) : ""
+        goalType = settings.fireGoalType
+        currentAge = settings.currentAge > 0 ? String(settings.currentAge) : ""
+        retireAge = settings.targetRetireAge > 0 ? String(settings.targetRetireAge) : ""
         finnhubKey = settings.finnhubKey
         kisAppKey = settings.kisAppKey
         kisAppSecret = settings.kisAppSecret
@@ -349,6 +440,9 @@ struct SettingsView: View {
         target.monthlyTakeHome = Double(monthlyTakeHome) ?? 0
         target.plannedMonthlyExpense = Double(plannedExpense) ?? 0
         target.manualAnnualDividend = Double(annualDividend) ?? 0
+        target.fireGoalType = goalType
+        target.currentAge = Int(currentAge) ?? 0
+        target.targetRetireAge = Int(retireAge) ?? 0
         target.finnhubKey = finnhubKey
         target.kisAppKey = kisAppKey
         target.kisAppSecret = kisAppSecret

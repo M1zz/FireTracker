@@ -87,18 +87,16 @@ struct AssetsView: View {
 
     private var catalogList: some View {
         List {
-            Section {
-                VStack(spacing: 16) {
-                    totalCard
-                    if !compositionEntries.isEmpty {
-                        compositionCard
-                    }
+            // 1) 자산 구성 — 먼저.
+            if !compositionEntries.isEmpty {
+                Section {
+                    compositionCard
+                        .padding(.top, 8)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
                 }
-                .padding(.top, 8)
-                .padding(.bottom, 8)
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
             }
+            // 2) 내 자산.
             Section("내 자산") {
                 ForEach(assets) { asset in
                     Button { editing = asset } label: { row(asset) }
@@ -107,6 +105,13 @@ struct AssetsView: View {
                 .onDelete(perform: delete)
                 .onMove(perform: move)
             }
+            // 3) 그 다음 — 쓸 수 있는 돈/순자산 요약.
+            Section {
+                totalCard
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+            }
+            // 4) 팁 + 추가.
             Section {
                 TipView(otherAssetsTip)
                     .tipBackground(Theme.surface)
@@ -654,7 +659,6 @@ struct AssetEditor: View {
                 ToolbarItem(placement: .confirmationAction) { Button("저장") { save() } }
             }
         }
-        .preferredColorScheme(.dark)
     }
 
     private var namePlaceholder: String {
@@ -1163,7 +1167,6 @@ struct RecordSheet: View {
                 }
             }
         }
-        .preferredColorScheme(.dark)
     }
 
     private func save() {
@@ -1319,7 +1322,6 @@ struct ScreenshotImportView: View {
                 }
             }
         }
-        .preferredColorScheme(.dark)
         .onChange(of: pickerItem) { _, item in
             guard let item else { return }
             Task { await process(item) }

@@ -1,6 +1,50 @@
 import SwiftUI
 import SwiftData
 import Charts
+import TipKit
+
+// Surfaces the 기간별 목표 feature and points to where it's set up (설정).
+struct MilestoneSetupTip: Tip {
+    var title: Text { Text("기간별 목표를 켜보세요") }
+    var message: Text? {
+        Text("설정 ▸ ‘목표 측정 & 기간’에서 현재 나이와 목표 은퇴 나이를 넣으면, 은퇴까지 필요한 속도로 이번달·올해·5년·은퇴 목표를 단계별로 보여드려요.")
+    }
+    var image: Image? { Image(systemName: "target") }
+}
+
+// One-time nudge teaching that the small ⓘ buttons reveal each card's details.
+struct InfoButtonTip: Tip {
+    var title: Text { Text("자세한 설명은 ⓘ에서") }
+    var message: Text? { Text("카드의 ⓘ 버튼을 누르면 그 지표가 무슨 뜻인지, 어떻게 계산했는지 볼 수 있어요.") }
+    var image: Image? { Image(systemName: "info.circle") }
+}
+
+// A small ⓘ button that reveals a card's detail text in a popover, so the
+// "짜잘한" explanations aren't shown all the time.
+struct InfoPopoverButton: View {
+    let text: String
+    @State private var show = false
+    var body: some View {
+        Button { show.toggle() } label: {
+            Image(systemName: "info.circle")
+                .font(.system(size: 15))
+                .foregroundStyle(Theme.textSecond)
+        }
+        .buttonStyle(.plain)
+        .popover(isPresented: $show) {
+            Text(text)
+                .font(.callout)
+                .foregroundStyle(Theme.textPrimary)
+                .multilineTextAlignment(.leading)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(width: 280, alignment: .leading)
+                .padding(16)
+                .presentationCompactAdaptation(.popover)
+                .presentationBackground(Theme.surface)
+        }
+    }
+}
 
 // Which total the asset-composition card headlines: gross (자산 합계) or net
 // (부채 차감 후).
@@ -17,6 +61,14 @@ private struct AllocationSlice: Identifiable {
     let label: String
     let amount: Double
     let color: Color
+}
+
+// One point on the FIRE trajectory: where you should be at a given time.
+private struct TrajPoint: Identifiable {
+    let id = UUID()
+    let date: Date
+    let value: Double
+    let label: String
 }
 
 // Traffic-light reading of a single financial signal.
@@ -47,6 +99,8 @@ struct DashboardView: View {
 
     @State private var showingAddAsset = false
     @State private var totalMode: AssetTotalMode = .gross
+    @State private var milestoneMetric: FireGoalType = .assets
+    private let milestoneSetupTip = MilestoneSetupTip()
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
     private var latest: NetWorthSnapshot? {
@@ -88,6 +142,30 @@ struct DashboardView: View {
     // How far the monthly income still falls short of / overshoots the goal.
     private var incomeShortfall: Double { max(0, targetMonthlyExpense - monthlyPassiveIncome) }
     private var incomeSurplus: Double { max(0, monthlyPassiveIncome - targetMonthlyExpense) }
+
+    // --- 목표 수입에 필요한 자금 (현재 전략 기준) ---
+    // The goal income is the spending you want covered, expressed monthly.
+    private var targetMonthlyIncome: Double { targetMonthlyExpense }
+    private var annualPassiveIncome: Double { monthlyPassiveIncome * 12 }
+    // Capital that is actually producing income right now (per-asset). Falls
+    // back to all investable (liquid, non-debt) assets when income is entered as
+    // a manual lump (설정의 연간 배당) with no specific holding behind it.
+    private var yieldingCapital: Double {
+        assets.filter { !$0.isDebt && $0.effectiveMonthlyIncome > 0 }.reduce(0) { $0 + $1.amount }
+    }
+    private var strategyCapitalBase: Double { yieldingCapital > 0 ? yieldingCapital : catalogLiquid }
+    // The blended yield of the current strategy: how fast your money makes
+    // income today. e.g. 연 3.2%.
+    private var strategyYield: Double {
+        guard strategyCapitalBase > 0, annualPassiveIncome > 0 else { return 0 }
+        return annualPassiveIncome / strategyCapitalBase
+    }
+    // Capital required to throw off the target income at that same yield.
+    private var capitalNeeded: Double {
+        guard strategyYield > 0 else { return 0 }
+        return (targetMonthlyIncome * 12) / strategyYield
+    }
+    private var capitalGap: Double { max(0, capitalNeeded - strategyCapitalBase) }
     // Nothing registered and nothing recorded yet → show onboarding.
     private var isEmpty: Bool { assets.isEmpty && snapshots.isEmpty }
     private var fireNumber: Double { settings.fireNumber }
@@ -125,6 +203,38 @@ struct DashboardView: View {
     }
     private var delta: Double? {
         FireEngine.latestDelta(snapshots: snapshots)
+    }
+
+    // --- 첫 화면 요약: 지난 기록 이후 변화 & 목표 근접도 ---
+    // Change since the last saved record, counting only assets that existed in
+    // that record so newly-registered holdings don't look like growth. Gross
+    // tracks asset value only; net also folds in debt changes — the two differ
+    // when debt moved, so we surface both.
+    private var lastRecordChange: (gross: Double, net: Double)? {
+        guard let last = latest else { return nil }
+        var recorded: [UUID: Double] = [:]
+        for entry in last.entries {
+            if let key = entry.catalogKey { recorded[key, default: 0] += entry.amount }
+        }
+        guard !recorded.isEmpty else {
+            let d = netWorth - last.netWorth
+            return (d, d)
+        }
+        var gross = 0.0, net = 0.0
+        for asset in assets {
+            guard let prior = recorded[asset.key] else { continue }
+            net += asset.netValue - prior
+            if !asset.isDebt { gross += asset.netValue - prior }
+        }
+        return (gross, net)
+    }
+    private var goalProgress: Double { fireNumber > 0 ? netWorth / fireNumber : 0 }
+    private var goalRemaining: Double { max(0, fireNumber - netWorth) }
+    // Percentage points of the goal gained (or lost) since the last record, by
+    // net worth — the figure the FIRE goal is measured against.
+    private var goalChangePP: Double {
+        guard fireNumber > 0, let c = lastRecordChange else { return 0 }
+        return c.net / fireNumber
     }
 
     // --- 재정 신호등 (financial health signals) ---
@@ -218,8 +328,16 @@ struct DashboardView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 20) {
-                            signalCard
+                            welcomeCard
+                            goalProgressCard
+                            if settings.monthsToRetire != nil {
+                                milestoneGoalsCard
+                            } else {
+                                TipView(milestoneSetupTip)
+                                    .tipBackground(Theme.surface)
+                            }
                             cashFlowCard
+                            capitalNeededCard
                             NavigationLink {
                                 ProjectionDetailView(startingAssets: projectionBase,
                                                      basisLabel: hasDebt ? (effectiveMode == .net ? "순자산" : "총자산") : nil,
@@ -241,6 +359,7 @@ struct DashboardView: View {
                             }
                             .buttonStyle(.plain)
                             allocationCard
+                            signalCard
                         }
                         .padding(20)
                     }
@@ -336,6 +455,322 @@ struct DashboardView: View {
         .cardStyle()
     }
 
+    // First thing you see: how much you rose (붉은색) or fell (푸른색) since the
+    // last record, how much closer to the goal that put you, and a glance at the
+    // health signals.
+    // One change line (총자산 또는 순자산): arrow glyph + amount in a single Text
+    // so no HStack is needed; 오르면 빨강, 내리면 파랑.
+    private func changeBlock(title: String, value: Double) -> some View {
+        let flat = abs(value) < 1
+        let up = value >= 0
+        return VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+            Text(flat ? "– 변화 없음"
+                      : "\(up ? "▲ +" : "▼ −")\(Fmt.krw(abs(value)))원")
+                .font(.system(.title2, design: .rounded, weight: .bold))
+                .foregroundStyle(flat ? Theme.textSecond : (up ? Theme.rise : Theme.fall))
+        }
+    }
+
+    // One bar chart for the change breakdown: 총자산·순자산·부채 변화. Each bar is
+    // signed from the zero line (양수 = 늘어남), with its value labelled.
+    // 총자산 변화 = 순자산 변화 + 부채 변화.
+    private func changeComposition(grossChange: Double, netChange: Double) -> some View {
+        let debtChange = grossChange - netChange   // 양수 = 빚이 늘어남
+        let debtColor = Color(hex: AssetClass.debt.colorHex)
+        let bars: [(label: String, value: Double, color: Color)] = [
+            ("총자산", grossChange, grossChange >= 0 ? Theme.rise : Theme.fall),
+            ("순자산", netChange, netChange >= 0 ? Theme.rise : Theme.fall),
+            ("부채", debtChange, debtColor)
+        ]
+        return VStack(alignment: .leading, spacing: 6) {
+            Text("총자산의 변화량은 이렇게 구성돼요")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+            Chart(bars, id: \.label) { b in
+                BarMark(
+                    x: .value("구분", b.label),
+                    y: .value("변화", b.value),
+                    width: .ratio(0.5)
+                )
+                .foregroundStyle(b.color)
+                .cornerRadius(4)
+                .annotation(position: b.value >= 0 ? .top : .bottom, spacing: 3) {
+                    Text(abs(b.value) < 1 ? "0"
+                         : "\(b.value >= 0 ? "+" : "−")\(Fmt.krw(abs(b.value)))")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(b.color)
+                }
+            }
+            .chartXScale(domain: bars.map(\.label))
+            .chartYAxis {
+                AxisMarks { v in
+                    AxisGridLine().foregroundStyle(Theme.hairline)
+                    AxisValueLabel {
+                        if let d = v.as(Double.self) { Text(Fmt.krw(d)).font(.caption2) }
+                    }
+                }
+            }
+            .chartXAxis {
+                AxisMarks { v in
+                    AxisValueLabel {
+                        if let s = v.as(String.self) {
+                            Text(s).font(.caption2).foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                }
+            }
+            .frame(height: 160)
+        }
+    }
+
+    // A labelled progress bar for a FIRE goal达성률 (자산 또는 패시브 인컴).
+    private func goalBar(title: String, progress: Double, detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+                Spacer()
+                Text(Fmt.percent(min(progress, 1), fraction: 1))
+                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    .foregroundStyle(progress >= 1 ? Theme.positive : Theme.accent)
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Theme.hairline)
+                    Capsule().fill(progress >= 1 ? Theme.positive : Theme.accent)
+                        .frame(width: max(2, geo.size.width * min(progress, 1)))
+                }
+            }
+            .frame(height: 8)
+            Text(detail)
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+        }
+    }
+
+    private var welcomeCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // 카드 타이틀 — 다른 카드(내 패시브 인컴)와 같은 레벨.
+            Text("지난 기록 이후")
+                .font(.headline)
+                .foregroundStyle(Theme.textPrimary)
+
+            // 지난 기록 이후 변화 — 부채가 함께 움직였으면 바 차트로, 아니면 한 수치로.
+            if let c = lastRecordChange, latest != nil {
+                if abs(c.gross - c.net) >= 1 {
+                    changeComposition(grossChange: c.gross, netChange: c.net)
+                } else {
+                    changeBlock(title: "총자산 변화", value: c.gross)
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("아직 비교할 기록이 없어요")
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(Theme.textPrimary)
+                    Text("자산 탭에서 ‘이번 달 기록 저장’을 누르면 다음부터 변화가 여기 표시돼요.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(alignment: .topTrailing) {
+            InfoPopoverButton(text: "지난번 기록 대비 변화예요. 한국식으로 오르면 붉은색, 내리면 푸른색. 막대는 총자산·순자산·부채의 변화를 보여줘요(총자산 변화 = 순자산 변화 + 부채 변화). 부채 막대가 양수(+)면 빚이 그만큼 늘었다는 뜻이고, 빚이 늘면 총자산이 그대로여도 순자산은 줄어요. 새로 등록한 자산은 변화에서 빼서 등록만으로 오른 것처럼 보이지 않게 했어요.")
+                .popoverTip(InfoButtonTip())
+        }
+        .cardStyle()
+    }
+
+    // FIRE 목표 달성률 — 설정한 기준(자산/패시브 인컴/둘 다)에 따라 보여줌.
+    private var goalProgressCard: some View {
+        let gt = settings.fireGoalType
+        let showAsset = (gt == .assets || gt == .both) && fireNumber > 0
+        let showIncome = (gt == .income || gt == .both) && settings.incomeGoalMonthly > 0
+        return VStack(alignment: .leading, spacing: 14) {
+            Text("목표 달성률")
+                .font(.headline)
+                .foregroundStyle(Theme.textPrimary)
+            if showAsset {
+                goalBar(title: "자산 목표 달성률",
+                        progress: goalProgress,
+                        detail: "목표까지 \(Fmt.krw(goalRemaining))원 남음"
+                            + ((lastRecordChange?.net ?? 0) != 0
+                               ? " · 이번에 \((lastRecordChange?.net ?? 0) > 0 ? "+" : "−")\(Fmt.percent(abs(goalChangePP), fraction: 1)) \((lastRecordChange?.net ?? 0) > 0 ? "가까워졌어요" : "멀어졌어요")"
+                               : ""))
+            }
+            if showIncome {
+                let cov = settings.incomeGoalMonthly > 0 ? monthlyPassiveIncome / settings.incomeGoalMonthly : 0
+                goalBar(title: "패시브 인컴 목표 달성률",
+                        progress: cov,
+                        detail: "원하는 월 지출 \(Fmt.krw(settings.incomeGoalMonthly))원의 \(Fmt.percent(min(cov, 1), fraction: 0)) 커버")
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    // Horizons to slice the retirement goal into. Only those nearer than
+    // retirement get their own row; the final row is always 은퇴.
+    private var milestoneHorizons: [(label: String, months: Int)] {
+        guard let m = settings.monthsToRetire else { return [] }
+        var out: [(String, Int)] = []
+        for (label, mo) in [("이번 달", 1), ("올해", max(1, monthsLeftInYear)), ("5년", 60)] where mo < m {
+            out.append((label, mo))
+        }
+        out.append(("은퇴", m))
+        return out
+    }
+
+    private func milestoneRow(label: String, months: Int, metric: FireGoalType) -> some View {
+        let isAsset = metric == .assets
+        let current = isAsset ? netWorth : monthlyPassiveIncome
+        let goal = isAsset ? fireNumber : settings.incomeGoalMonthly
+        let target = FireEngine.milestoneTarget(current: current, goal: goal,
+                                                monthsToRetire: settings.monthsToRetire ?? 0,
+                                                horizonMonths: months)
+        let progress = target > 0 ? min(current / target, 1) : 0
+        let gap = max(0, target - current)
+        return VStack(alignment: .leading, spacing: 5) {
+            HStack {
+                Text(label)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                Text(isAsset ? "\(Fmt.krw(target))원" : "월 \(Fmt.krw(target))원")
+                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Theme.hairline)
+                    Capsule().fill(progress >= 1 ? Theme.positive : Theme.accent)
+                        .frame(width: max(2, geo.size.width * progress))
+                }
+            }
+            .frame(height: 7)
+            Text(gap < 1
+                 ? "이미 달성 🎉"
+                 : "\(Fmt.percent(progress, fraction: 0)) · \(isAsset ? "" : "월 ")\(Fmt.krw(gap))원 더 필요")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+        }
+    }
+
+    // Points along the required path from now to retirement (now → 이번달 →
+    // 올해 → 5년 → 은퇴). They sit on the linear trajectory, so a line through
+    // them *is* the path you need to climb.
+    private func trajectoryPoints(metric: FireGoalType) -> [TrajPoint] {
+        guard let m = settings.monthsToRetire else { return [] }
+        let isAsset = metric == .assets
+        let current = isAsset ? netWorth : monthlyPassiveIncome
+        let goal = isAsset ? fireNumber : settings.incomeGoalMonthly
+        let cal = Calendar.current
+        let now = Date()
+        func date(_ months: Int) -> Date { cal.date(byAdding: .month, value: months, to: now) ?? now }
+        var pts: [TrajPoint] = [TrajPoint(date: now, value: current, label: "지금")]
+        for (label, mo) in [("이번 달", 1), ("올해", max(1, monthsLeftInYear)), ("5년", 60)] where mo < m {
+            let t = FireEngine.milestoneTarget(current: current, goal: goal,
+                                               monthsToRetire: m, horizonMonths: mo)
+            pts.append(TrajPoint(date: date(mo), value: t, label: label))
+        }
+        pts.append(TrajPoint(date: date(m), value: goal, label: "은퇴"))
+        return pts
+    }
+
+    private func trajectoryChart(metric: FireGoalType) -> some View {
+        let pts = trajectoryPoints(metric: metric)
+        let isAsset = metric == .assets
+        return Chart {
+            ForEach(pts) { p in
+                AreaMark(x: .value("시점", p.date), y: .value("값", p.value))
+                    .foregroundStyle(LinearGradient(
+                        colors: [Theme.accent.opacity(0.22), Theme.accent.opacity(0.02)],
+                        startPoint: .top, endPoint: .bottom))
+                    .interpolationMethod(.linear)
+            }
+            ForEach(pts) { p in
+                LineMark(x: .value("시점", p.date), y: .value("값", p.value))
+                    .foregroundStyle(Theme.accent)
+                    .interpolationMethod(.linear)
+                    .lineStyle(StrokeStyle(lineWidth: 2.5))
+            }
+            ForEach(pts) { p in
+                let edge = p.label == "지금" || p.label == "은퇴"
+                PointMark(x: .value("시점", p.date), y: .value("값", p.value))
+                    .foregroundStyle(p.label == "지금" ? Theme.positive : Theme.accent)
+                    .symbolSize(edge ? 90 : 45)
+                    .annotation(position: .top, spacing: 3) {
+                        if edge {
+                            Text(p.label)
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(p.label == "지금" ? Theme.positive : Theme.accent)
+                        }
+                    }
+            }
+        }
+        .chartYAxis {
+            AxisMarks { v in
+                AxisGridLine().foregroundStyle(Theme.hairline)
+                AxisValueLabel {
+                    if let d = v.as(Double.self) {
+                        Text(isAsset ? Fmt.krw(d) : "월\(Fmt.krw(d))").font(.caption2)
+                    }
+                }
+            }
+        }
+        .chartXAxis {
+            AxisMarks(values: .stride(by: .year)) { value in
+                AxisGridLine().foregroundStyle(Theme.hairline)
+                AxisValueLabel(format: .dateTime.year())
+            }
+        }
+        .frame(height: 190)
+    }
+
+    // The retirement goal, sliced into 이번달·올해·5년·은퇴 so progress isn't only
+    // measured against the far-off finish line.
+    private var milestoneGoalsCard: some View {
+        let metric = settings.fireGoalType == .both ? milestoneMetric : settings.fireGoalType
+        return VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("기간별 목표")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                if settings.fireGoalType == .both {
+                    Picker("", selection: $milestoneMetric) {
+                        Text("자산").tag(FireGoalType.assets)
+                        Text("패시브 인컴").tag(FireGoalType.income)
+                    }
+                    .pickerStyle(.segmented)
+                    .fixedSize()
+                }
+            }
+
+            // 은퇴까지 자산 궤도 — 지금 위치에서 은퇴 목표까지 올라야 할 길.
+            trajectoryChart(metric: metric)
+            if let m = settings.monthsToRetire {
+                let goal = metric == .assets ? fireNumber : settings.incomeGoalMonthly
+                Text("은퇴까지 \(m / 12)년 \(m % 12)개월 · \(metric == .assets ? "목표 \(Fmt.krw(goal))원" : "목표 월 \(Fmt.krw(goal))원")")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            }
+
+            Divider().overlay(Theme.hairline)
+            VStack(spacing: 14) {
+                ForEach(milestoneHorizons, id: \.label) { h in
+                    milestoneRow(label: h.label, months: h.months, metric: metric)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
     // Hero: the cash-flow question — does the income my assets produce cover the
     // monthly spending I want? This, not a static asset total, is the real
     // measure of financial independence and current liquidity.
@@ -388,13 +823,17 @@ struct DashboardView: View {
 
     private var cashFlowCard: some View {
         VStack(alignment: .leading, spacing: 18) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("내 월 수입")
-                    .font(.headline)
-                    .foregroundStyle(Theme.textPrimary)
-                Text("자산이 만들어내는 현금흐름")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.textSecond)
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("내 패시브 인컴")
+                        .font(.headline)
+                        .foregroundStyle(Theme.textPrimary)
+                    Text("자산이 만들어내는 현금흐름")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                }
+                Spacer()
+                InfoPopoverButton(text: "일하지 않아도 들어오는 돈이에요 — 월세·배당·이자·연금·스테이킹과 설정의 ‘연간 배당수익’을 합산했어요. 주 수입은 월÷4.345로 환산했고, 막대는 원하는 월 지출(연간 목표 지출÷12)을 얼마나 커버하는지 보여줘요.")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -476,6 +915,76 @@ struct DashboardView: View {
         .cardStyle()
     }
 
+    // How much capital it takes to throw off the target monthly income, using
+    // the yield the user's *current* portfolio actually produces (not the 4%
+    // rule). Answers "내가 지금 전략대로면 목표 수입까지 자금이 얼마나 필요한가".
+    private var capitalNeededCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("목표 패시브 인컴에 필요한 자금")
+                        .font(.headline)
+                        .foregroundStyle(Theme.textPrimary)
+                    Text("지금 전략(실제 수익률) 기준")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                }
+                Spacer()
+                InfoPopoverButton(text: "목표 패시브 인컴을 ‘지금 포트폴리오가 실제로 내는 수익률’로 나눠 필요한 자본을 계산해요. 같은 수익률을 유지한다고 가정한 값이라, 더 높은 배당·이자 전략을 쓰면 필요 자금은 줄어듭니다. 참고로 4% 룰 기준 필요 자금은 \(Fmt.krw(fireNumber))원이에요.")
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            if strategyYield > 0 {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("약 \(Fmt.krw(capitalNeeded))원")
+                        .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                        .foregroundStyle(Theme.accent)
+                    Text("월 \(Fmt.krw(targetMonthlyIncome))원 패시브 인컴을 만들려면 · 현재 전략 수익률 연 \(Fmt.percent(strategyYield, fraction: 1))")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
+
+                // Progress of current income-producing capital toward the goal.
+                VStack(alignment: .leading, spacing: 6) {
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            Capsule().fill(Theme.hairline)
+                            Capsule()
+                                .fill(incomeCoverage >= 1 ? Theme.accent : Theme.positive)
+                                .frame(width: max(2, geo.size.width * min(incomeCoverage, 1)))
+                        }
+                    }
+                    .frame(height: 10)
+                    if capitalGap > 0 {
+                        Text("현재 투자 자본 \(Fmt.krw(strategyCapitalBase))원 · 약 \(Fmt.krw(capitalGap))원 더 필요")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                    } else {
+                        Text("이미 목표 패시브 인컴을 낼 만큼 자본이 충분해요 🎉")
+                            .font(.caption)
+                            .foregroundStyle(Theme.positive)
+                    }
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("아직 현재 전략 수익률을 계산할 수 없어요")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.textPrimary)
+                    Text("배당·이자·월세 등 수입이 잡혀야 ‘내 전략의 수익률’이 계산돼요. 자산에 배당률을 넣거나 설정에서 연간 배당을 입력해보세요.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                    if fireNumber > 0 {
+                        Text("참고: 4% 룰 기준 필요 자금은 \(Fmt.krw(fireNumber))원이에요.")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
     private var metricsGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
             MetricCard(
@@ -494,7 +1003,7 @@ struct DashboardView: View {
                 title: "전월 대비",
                 value: delta != nil ? "\(delta! >= 0 ? "+" : "")\(Fmt.krw(delta!))원" : "—",
                 symbol: delta ?? 0 >= 0 ? "chart.line.uptrend.xyaxis" : "chart.line.downtrend.xyaxis",
-                tint: (delta ?? 0) >= 0 ? Theme.positive : Theme.negative
+                tint: (delta ?? 0) >= 0 ? Theme.rise : Theme.fall
             )
             MetricCard(
                 title: "최근 저축률",
@@ -530,7 +1039,7 @@ struct DashboardView: View {
 
             if plannedSavings != 0 || monthlyPassiveIncome > 0 {
                 Text("현재 \(Fmt.krw(projectionBase))원 + (월 저축 \(Fmt.krw(plannedSavings))원"
-                     + (monthlyPassiveIncome > 0 ? " + 월 수입 \(Fmt.krw(monthlyPassiveIncome))원" : "")
+                     + (monthlyPassiveIncome > 0 ? " + 월 패시브 인컴 \(Fmt.krw(monthlyPassiveIncome))원" : "")
                      + ") × 남은 \(monthsLeftInYear)개월. 자산 가치 상승은 반영하지 않아요.")
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
@@ -549,9 +1058,12 @@ struct DashboardView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("쓸 수 있는 돈 (유동)")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
+                    HStack(spacing: 6) {
+                        Text("쓸 수 있는 돈 (유동)")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                        InfoPopoverButton(text: "순자산 \(Fmt.krw(netWorth))원 중 실제 쓸 수 있는 돈입니다. 실거주 부동산·전세보증금·연금·부채는 묶인 돈으로 빠집니다.")
+                    }
                     Text("\(Fmt.krw(liquidNetWorth))원")
                         .font(.system(.title, design: .rounded, weight: .bold))
                         .foregroundStyle(Theme.positive)
@@ -582,10 +1094,6 @@ struct DashboardView: View {
                 }
             }
             .frame(height: 10)
-
-            Text("순자산 \(Fmt.krw(netWorth))원 중 실제 쓸 수 있는 돈입니다. 실거주 부동산·전세보증금·연금·부채는 묶인 돈으로 빠집니다.")
-                .font(.caption2)
-                .foregroundStyle(Theme.textSecond)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
@@ -801,7 +1309,7 @@ struct ProjectionDetailView: View {
                 }
                 assumptionRow("월 저축", Fmt.krwBoth(monthlySavings),
                               tint: monthlySavings >= 0 ? Theme.positive : Theme.negative)
-                assumptionRow("월 수입 (배당·월세 등)", Fmt.krwBoth(monthlyPassiveIncome),
+                assumptionRow("월 패시브 인컴 (배당·월세 등)", Fmt.krwBoth(monthlyPassiveIncome),
                               tint: monthlyPassiveIncome > 0 ? Theme.positive : Theme.textPrimary)
                 assumptionRow("올해 남은 개월", "\(steps.count)개월")
             }
@@ -837,7 +1345,6 @@ struct ProjectionDetailView: View {
         .background(Theme.bg.ignoresSafeArea())
         .navigationTitle("예상 근거")
         .navigationBarTitleDisplayMode(.inline)
-        .preferredColorScheme(.dark)
     }
 
     private func assumptionRow(_ title: String, _ value: String, tint: Color = Theme.textPrimary) -> some View {
@@ -939,7 +1446,6 @@ struct WhatIfView: View {
         .background(Theme.bg.ignoresSafeArea())
         .navigationTitle("만약에")
         .navigationBarTitleDisplayMode(.inline)
-        .preferredColorScheme(.dark)
         .keyboardDismissable()
     }
 

@@ -4,8 +4,10 @@ import Charts
 
 struct TrendView: View {
     @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
+    @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query private var settingsList: [FireSettings]
     @State private var mode: TrendMode = .netWorth
+    @State private var period: TrendPeriod = .month
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
 
@@ -17,6 +19,27 @@ struct TrendView: View {
         var id: String { rawValue }
     }
 
+    enum TrendPeriod: String, CaseIterable, Identifiable {
+        case week = "주"
+        case month = "월"
+        var id: String { rawValue }
+        var component: Calendar.Component { self == .week ? .weekOfYear : .month }
+        var label: String { self == .week ? "주" : "달" }
+    }
+
+    // A point on the trend — either a saved snapshot or the live "now" state,
+    // bucketed to the start of its week/month so changes read against 월초/주초.
+    struct TrendPoint: Identifiable {
+        let id = UUID()
+        let date: Date
+        let netWorth: Double
+        let liquidNetWorth: Double
+        let monthlyPassiveIncome: Double
+        let savingsRate: Double
+        let byClass: [AssetClass: Double]
+        func total(for ac: AssetClass) -> Double { byClass[ac] ?? 0 }
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -26,7 +49,19 @@ struct TrendView: View {
                     }
                     .pickerStyle(.segmented)
 
-                    if snapshots.count < 2 {
+                    HStack {
+                        Text("기준")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                        Picker("", selection: $period) {
+                            ForEach(TrendPeriod.allCases) { Text("\($0.label) 단위").tag($0) }
+                        }
+                        .pickerStyle(.segmented)
+                        .fixedSize()
+                        Spacer()
+                    }
+
+                    if sorted.count < 2 {
                         emptyState
                     } else {
                         switch mode {
@@ -50,7 +85,9 @@ struct TrendView: View {
             Image(systemName: "chart.xyaxis.line")
                 .font(.system(.largeTitle))
                 .foregroundStyle(Theme.textSecond)
-            Text("추이를 보려면 기록이\n2개 이상 필요합니다.")
+            Text(hasCatalog
+                 ? "이번 \(period.label)의 현재 값만 있어요.\n다음 \(period.label)이 되면 변화가 자동으로 그려집니다."
+                 : "자산을 등록하면 지금까지의 추이가\n자동으로 표시됩니다.")
                 .multilineTextAlignment(.center)
                 .font(.subheadline)
                 .foregroundStyle(Theme.textSecond)
@@ -60,8 +97,56 @@ struct TrendView: View {
         .cardStyle()
     }
 
-    private var sorted: [NetWorthSnapshot] {
-        snapshots.sorted { $0.date < $1.date }
+    private var hasCatalog: Bool { !assets.isEmpty }
+
+    // The live state right now, derived from the catalog — appended so the trend
+    // is always current without needing a fresh manual record.
+    private var currentPoint: TrendPoint {
+        let net = assets.reduce(0) { $0 + $1.netValue }
+        let liquid = assets.reduce(0) { $0 + $1.liquidValue }
+        let passive = assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } + settings.manualMonthlyDividend
+        var byClass: [AssetClass: Double] = [:]
+        for ac in AssetClass.allCases {
+            let t = assets.filter { $0.assetClass == ac }.reduce(0) { $0 + $1.netValue }
+            if t != 0 { byClass[ac] = t }
+        }
+        let sr = settings.monthlyTakeHome > 0
+            ? (settings.monthlyTakeHome - settings.plannedMonthlyExpense) / settings.monthlyTakeHome
+            : 0
+        return TrendPoint(date: Date(), netWorth: net, liquidNetWorth: liquid,
+                          monthlyPassiveIncome: passive, savingsRate: sr, byClass: byClass)
+    }
+
+    private func classMap(_ s: NetWorthSnapshot) -> [AssetClass: Double] {
+        var m: [AssetClass: Double] = [:]
+        for ac in AssetClass.allCases {
+            let t = s.total(for: ac)
+            if t != 0 { m[ac] = t }
+        }
+        return m
+    }
+
+    // Snapshots + live "now", bucketed to each period start (월초/주초). When more
+    // than one point falls in a bucket, the latest wins, so the current period
+    // always reflects the live value.
+    private var sorted: [TrendPoint] {
+        var raw = snapshots.map { s in
+            TrendPoint(date: s.date, netWorth: s.netWorth, liquidNetWorth: s.liquidNetWorth,
+                       monthlyPassiveIncome: s.monthlyPassiveIncome, savingsRate: s.savingsRate,
+                       byClass: classMap(s))
+        }
+        if hasCatalog { raw.append(currentPoint) }
+
+        let cal = Calendar.current
+        var byKey: [Date: TrendPoint] = [:]
+        for p in raw.sorted(by: { $0.date < $1.date }) {
+            let start = cal.dateInterval(of: period.component, for: p.date)?.start ?? p.date
+            byKey[start] = TrendPoint(date: start, netWorth: p.netWorth,
+                                      liquidNetWorth: p.liquidNetWorth,
+                                      monthlyPassiveIncome: p.monthlyPassiveIncome,
+                                      savingsRate: p.savingsRate, byClass: p.byClass)
+        }
+        return byKey.values.sorted { $0.date < $1.date }
     }
 
     private var netWorthChart: some View {
@@ -225,7 +310,7 @@ struct TrendView: View {
                 .foregroundStyle(Theme.textPrimary)
             Chart(sorted) { s in
                 BarMark(
-                    x: .value("월", s.date, unit: .month),
+                    x: .value("기간", s.date, unit: period.component),
                     y: .value("저축률", s.savingsRate)
                 )
                 .foregroundStyle(
@@ -260,7 +345,7 @@ struct TrendView: View {
                         let amount = s.total(for: ac)
                         if amount > 0 {
                             BarMark(
-                                x: .value("월", s.date, unit: .month),
+                                x: .value("기간", s.date, unit: period.component),
                                 y: .value("금액", amount)
                             )
                             .foregroundStyle(Color(hex: ac.colorHex))

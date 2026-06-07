@@ -117,6 +117,16 @@ struct DashboardView: View {
     // recorded snapshot only when no assets are registered.
     private var netWorth: Double { hasCatalog ? catalogTotal : (latest?.netWorth ?? 0) }
 
+    // 현재 자산(+) 합과 부채 합 — 총자산 막대(순자산 + 부채)에 쓰임.
+    private var grossAssetsNow: Double {
+        if hasCatalog { return assets.filter { !$0.isDebt }.reduce(0) { $0 + max(0, $1.netValue) } }
+        return latest?.entries.filter { $0.amount > 0 }.reduce(0) { $0 + $1.amount } ?? 0
+    }
+    private var debtTotalNow: Double {
+        if hasCatalog { return abs(assets.filter { $0.isDebt }.reduce(0) { $0 + min(0, $1.netValue) }) }
+        return abs(latest?.entries.filter { $0.amount < 0 }.reduce(0) { $0 + $1.amount } ?? 0)
+    }
+
     // Spendable (liquid) net worth — the figure that actually matters for FIRE.
     private var catalogLiquid: Double { assets.reduce(0) { $0 + $1.liquidValue } }
     private var liquidNetWorth: Double { hasCatalog ? catalogLiquid : (latest?.liquidNetWorth ?? 0) }
@@ -232,8 +242,7 @@ struct DashboardView: View {
         }
         return (assets: dAssets, debt: dDebt)
     }
-    // 총자산(부채 포함) 변화 / 순자산 변화 — 여러 카드에서 공용.
-    private var lastGrossChange: Double? { lastRecordChange.map { $0.assets + $0.debt } }
+    // 순자산 변화 — 목표 달성률·총자산 막대 캡션에서 공용.
     private var lastNetChange: Double? { lastRecordChange.map { $0.assets - $0.debt } }
     private var goalProgress: Double { fireNumber > 0 ? netWorth / fireNumber : 0 }
     private var goalRemaining: Double { max(0, fireNumber - netWorth) }
@@ -480,13 +489,75 @@ struct DashboardView: View {
         }
     }
 
-    // 지난 기록 대비 변화 한 줄 — 한국식(오르면 붉은색, 내리면 푸른색).
-    private func changeAmountRow(_ label: String, _ value: Double) -> some View {
-        let flat = abs(value) < 1
-        let up = value >= 0
-        return kvRow(label,
-                     flat ? "변화 없음" : "\(up ? "+" : "−")\(Fmt.krw(abs(value)))원",
-                     color: flat ? Theme.textSecond : (up ? Theme.rise : Theme.fall))
+    // 총자산을 한 막대로: 순자산(왼쪽·초록) + 부채(오른쪽·빨강) = 총자산.
+    // 자산(초록)은 0에서 오른쪽으로, 부채(빨강)는 자산 오른쪽 끝에서 왼쪽으로 차오름.
+    // 부채가 자산보다 크면 순자산이 마이너스 → 빨강이 0선을 넘어 왼쪽까지 그려짐.
+    private func totalAssetsBar(gross: Double, debt: Double) -> some View {
+        let net = gross - debt
+        let minV = min(0, net)
+        let maxV = max(gross, 1)
+        let range = maxV - minV
+        return VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("총자산")
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+                Spacer()
+                Text("\(Fmt.krw(gross))원")
+                    .font(.system(.subheadline, design: .rounded).weight(.bold))
+                    .foregroundStyle(Theme.textPrimary)
+            }
+            GeometryReader { geo in
+                let w = geo.size.width
+                // 겹치지 않는 두 칸. 순자산≥0: [순자산 | 부채]. 순자산<0: [자산 | 0선 왼쪽 적자].
+                let gEnd = net >= 0 ? net : gross      // 초록 칸 끝
+                let rEnd = net >= 0 ? gross : 0         // 빨강 칸 끝
+                let xZero = (0 - minV) / range * w
+                let xGEnd = (gEnd - minV) / range * w
+                let xNet = (net - minV) / range * w
+                let xREnd = (rEnd - minV) / range * w
+                ZStack(alignment: .leading) {
+                    Rectangle().fill(Theme.hairline)
+                    // 초록: 순자산(또는 적자일 땐 자산 합계)
+                    Rectangle().fill(Theme.positive)
+                        .frame(width: max(0, xGEnd - xZero))
+                        .offset(x: xZero)
+                    // 빨강: 부채(적자일 땐 0선을 넘어 왼쪽까지)
+                    Rectangle().fill(Theme.negative)
+                        .frame(width: max(0, xREnd - xNet))
+                        .offset(x: xNet)
+                    // 순자산이 마이너스일 때 0선 표시.
+                    if net < 0 {
+                        Rectangle().fill(Theme.textPrimary)
+                            .frame(width: 1.5)
+                            .offset(x: xZero - 0.75)
+                    }
+                }
+                .clipShape(Capsule())
+            }
+            .frame(height: 18)
+            HStack {
+                legendLabel(color: net >= 0 ? Theme.positive : Theme.negative,
+                            "순자산 \(net < 0 ? "−" : "")\(Fmt.krw(abs(net)))원")
+                Spacer()
+                if debt >= 1 {
+                    legendLabel(color: Theme.negative, "부채 \(Fmt.krw(debt))원")
+                }
+            }
+            .font(.caption2)
+            if let nc = lastNetChange, abs(nc) >= 1 {
+                Text("지난 기록 이후 순자산 \(nc > 0 ? "+" : "−")\(Fmt.krw(abs(nc)))원")
+                    .font(.caption2)
+                    .foregroundStyle(nc > 0 ? Theme.rise : Theme.fall)
+            }
+        }
+    }
+
+    private func legendLabel(color: Color, _ text: String) -> some View {
+        HStack(spacing: 5) {
+            Circle().fill(color).frame(width: 8, height: 8)
+            Text(text).foregroundStyle(Theme.textSecond)
+        }
     }
 
     // A labelled progress bar for a FIRE goal达성률 (자산 또는 패시브 인컴).
@@ -542,26 +613,14 @@ struct DashboardView: View {
                 }
             }
 
-            // 지난 기록 이후 — 뭐가 변했는지 그냥 수치로, 그리고 그 기록의 월 수입·지출.
+            // 지난 기록 이후 — 총자산 구성(순자산+부채)을 1차원 막대로, 그리고 그 기록의 월 수입·지출.
             if let last = latest {
-                let c = lastRecordChange ?? (assets: 0, debt: 0)
-                let grossChange = c.assets + c.debt   // 총자산 = 자산 + 부채(부채도 자산)
-                let netChange = c.assets - c.debt     // 순자산 = 자산 − 부채
                 let income = last.monthlyIncome
                 let expense = last.monthlyExpense
 
                 VStack(alignment: .leading, spacing: 12) {
-                    // 자산이 얼마나 변했는지. 빚이 함께 움직였으면 총자산·순자산·부채를 나눠서.
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("자산 변화")
-                            .font(.caption)
-                            .foregroundStyle(Theme.textSecond)
-                        changeAmountRow("총자산", grossChange)
-                        if abs(c.debt) >= 1 {
-                            changeAmountRow("순자산", netChange)
-                            changeAmountRow("부채", c.debt)
-                        }
-                    }
+                    // 총자산 = 순자산(왼쪽) + 부채(오른쪽), 한 막대로.
+                    totalAssetsBar(gross: grossAssetsNow, debt: debtTotalNow)
 
                     // 이 기록에 적어둔 월 수입·지출.
                     if income > 0 || expense > 0 {
@@ -592,7 +651,7 @@ struct DashboardView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .overlay(alignment: .topTrailing) {
-            InfoPopoverButton(text: "지난번 기록 이후의 변화예요. 부채도 내 자산 목록의 일부라 총자산 = 자산 + 부채로 봐요. 그래서 빚이 1,100만 늘면 총자산은 +1,100만(굴리는 규모가 커짐), 순자산 = 자산 − 부채는 −1,100만이 돼요. 한국식으로 오르면 붉은색, 내리면 푸른색. 아래 수입·지출은 그 기록에 적어둔 월 단위 금액이고, 순현금흐름 = 수입 − 지출이에요. 새로 등록한 자산은 변화에서 빼서 등록만으로 오른 것처럼 보이지 않게 했어요.")
+            InfoPopoverButton(text: "총자산 = 순자산 + 부채를 한 막대로 봐요. 왼쪽 초록은 실제 내 몫(순자산), 오른쪽 빨강은 빚(부채)이에요. 빚이 늘면 빨강이 커지고 순자산(초록)이 줄어요. 부채가 자산보다 커서 순자산이 마이너스가 되면, 빨강이 0선을 넘어 왼쪽까지 차요. 아래 수입·지출은 그 기록에 적어둔 월 단위 금액이고, 순현금흐름 = 수입 − 지출이에요.")
                 .popoverTip(InfoButtonTip())
         }
         .cardStyle()

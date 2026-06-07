@@ -210,31 +210,38 @@ struct DashboardView: View {
     // that record so newly-registered holdings don't look like growth. Gross
     // tracks asset value only; net also folds in debt changes — the two differ
     // when debt moved, so we surface both.
-    private var lastRecordChange: (gross: Double, net: Double)? {
+    // 지난 기록 대비 변화. assets = 순수 자산(+) 증감, debt = 부채 증감(+면 빚이 늘어남).
+    // 부채도 자산이므로 총자산 = assets + debt, 순자산 = assets − debt.
+    private var lastRecordChange: (assets: Double, debt: Double)? {
         guard let last = latest else { return nil }
         var recorded: [UUID: Double] = [:]
         for entry in last.entries {
             if let key = entry.catalogKey { recorded[key, default: 0] += entry.amount }
         }
         guard !recorded.isEmpty else {
+            // 옛 기록(자산별 키 없음) — 부채 분리 불가, 순변화만.
             let d = netWorth - last.netWorth
-            return (d, d)
+            return (assets: d, debt: 0)
         }
-        var gross = 0.0, net = 0.0
+        var dAssets = 0.0, dDebt = 0.0
         for asset in assets {
             guard let prior = recorded[asset.key] else { continue }
-            net += asset.netValue - prior
-            if !asset.isDebt { gross += asset.netValue - prior }
+            let dNet = asset.netValue - prior          // 부채는 netValue가 음수로 저장됨
+            if asset.isDebt { dDebt += -dNet }          // 빚이 늘면 +
+            else { dAssets += dNet }
         }
-        return (gross, net)
+        return (assets: dAssets, debt: dDebt)
     }
+    // 총자산(부채 포함) 변화 / 순자산 변화 — 여러 카드에서 공용.
+    private var lastGrossChange: Double? { lastRecordChange.map { $0.assets + $0.debt } }
+    private var lastNetChange: Double? { lastRecordChange.map { $0.assets - $0.debt } }
     private var goalProgress: Double { fireNumber > 0 ? netWorth / fireNumber : 0 }
     private var goalRemaining: Double { max(0, fireNumber - netWorth) }
     // Percentage points of the goal gained (or lost) since the last record, by
     // net worth — the figure the FIRE goal is measured against.
     private var goalChangePP: Double {
-        guard fireNumber > 0, let c = lastRecordChange else { return 0 }
-        return c.net / fireNumber
+        guard fireNumber > 0, let net = lastNetChange else { return 0 }
+        return net / fireNumber
     }
 
     // --- 재정 신호등 (financial health signals) ---
@@ -460,70 +467,26 @@ struct DashboardView: View {
     // health signals.
     // One change line (총자산 또는 순자산): arrow glyph + amount in a single Text
     // so no HStack is needed; 오르면 빨강, 내리면 파랑.
-    private func changeBlock(title: String, value: Double) -> some View {
-        let flat = abs(value) < 1
-        let up = value >= 0
-        return VStack(alignment: .leading, spacing: 2) {
-            Text(title)
-                .font(.caption)
+    // 라벨 + 금액 한 줄. 색은 호출부가 정함(오름 붉은색 / 내림 푸른색 / 중립).
+    private func kvRow(_ label: String, _ value: String, color: Color) -> some View {
+        HStack {
+            Text(label)
+                .font(.subheadline)
                 .foregroundStyle(Theme.textSecond)
-            Text(flat ? "– 변화 없음"
-                      : "\(up ? "▲ +" : "▼ −")\(Fmt.krw(abs(value)))원")
-                .font(.system(.title2, design: .rounded, weight: .bold))
-                .foregroundStyle(flat ? Theme.textSecond : (up ? Theme.rise : Theme.fall))
+            Spacer()
+            Text(value)
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(color)
         }
     }
 
-    // One bar chart for the change breakdown: 총자산·순자산·부채 변화. Each bar is
-    // signed from the zero line (양수 = 늘어남), with its value labelled.
-    // 총자산 변화 = 순자산 변화 + 부채 변화.
-    private func changeComposition(grossChange: Double, netChange: Double) -> some View {
-        let debtChange = grossChange - netChange   // 양수 = 빚이 늘어남
-        let debtColor = Color(hex: AssetClass.debt.colorHex)
-        let bars: [(label: String, value: Double, color: Color)] = [
-            ("총자산", grossChange, grossChange >= 0 ? Theme.rise : Theme.fall),
-            ("순자산", netChange, netChange >= 0 ? Theme.rise : Theme.fall),
-            ("부채", debtChange, debtColor)
-        ]
-        return VStack(alignment: .leading, spacing: 6) {
-            Text("총자산의 변화량은 이렇게 구성돼요")
-                .font(.caption)
-                .foregroundStyle(Theme.textSecond)
-            Chart(bars, id: \.label) { b in
-                BarMark(
-                    x: .value("구분", b.label),
-                    y: .value("변화", b.value),
-                    width: .ratio(0.5)
-                )
-                .foregroundStyle(b.color)
-                .cornerRadius(4)
-                .annotation(position: b.value >= 0 ? .top : .bottom, spacing: 3) {
-                    Text(abs(b.value) < 1 ? "0"
-                         : "\(b.value >= 0 ? "+" : "−")\(Fmt.krw(abs(b.value)))")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(b.color)
-                }
-            }
-            .chartXScale(domain: bars.map(\.label))
-            .chartYAxis {
-                AxisMarks { v in
-                    AxisGridLine().foregroundStyle(Theme.hairline)
-                    AxisValueLabel {
-                        if let d = v.as(Double.self) { Text(Fmt.krw(d)).font(.caption2) }
-                    }
-                }
-            }
-            .chartXAxis {
-                AxisMarks { v in
-                    AxisValueLabel {
-                        if let s = v.as(String.self) {
-                            Text(s).font(.caption2).foregroundStyle(Theme.textSecond)
-                        }
-                    }
-                }
-            }
-            .frame(height: 160)
-        }
+    // 지난 기록 대비 변화 한 줄 — 한국식(오르면 붉은색, 내리면 푸른색).
+    private func changeAmountRow(_ label: String, _ value: Double) -> some View {
+        let flat = abs(value) < 1
+        let up = value >= 0
+        return kvRow(label,
+                     flat ? "변화 없음" : "\(up ? "+" : "−")\(Fmt.krw(abs(value)))원",
+                     color: flat ? Theme.textSecond : (up ? Theme.rise : Theme.fall))
     }
 
     // A labelled progress bar for a FIRE goal达성률 (자산 또는 패시브 인컴).
@@ -552,19 +515,69 @@ struct DashboardView: View {
         }
     }
 
+    // "지난 기록"의 정체 — 비교 대상 스냅샷의 날짜와 며칠 전인지.
+    private func recordDateText(_ date: Date) -> String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ko_KR")
+        f.dateFormat = "yyyy년 M월 d일"
+        return f.string(from: date)
+    }
+    private func daysSince(_ date: Date) -> Int {
+        Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: date),
+                                        to: Calendar.current.startOfDay(for: Date())).day ?? 0
+    }
+
     private var welcomeCard: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // 카드 타이틀 — 다른 카드(내 패시브 인컴)와 같은 레벨.
-            Text("지난 기록 이후")
-                .font(.headline)
-                .foregroundStyle(Theme.textPrimary)
+            // 카드 타이틀 + 비교 대상 기록의 날짜(정체).
+            VStack(alignment: .leading, spacing: 2) {
+                Text("지난 기록 이후")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                if let last = latest {
+                    let days = daysSince(last.date)
+                    Text("\(recordDateText(last.date)) 기록과 비교" + (days > 0 ? " · \(days)일 전" : " · 오늘"))
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                }
+            }
 
-            // 지난 기록 이후 변화 — 부채가 함께 움직였으면 바 차트로, 아니면 한 수치로.
-            if let c = lastRecordChange, latest != nil {
-                if abs(c.gross - c.net) >= 1 {
-                    changeComposition(grossChange: c.gross, netChange: c.net)
-                } else {
-                    changeBlock(title: "총자산 변화", value: c.gross)
+            // 지난 기록 이후 — 뭐가 변했는지 그냥 수치로, 그리고 그 기록의 월 수입·지출.
+            if let last = latest {
+                let c = lastRecordChange ?? (assets: 0, debt: 0)
+                let grossChange = c.assets + c.debt   // 총자산 = 자산 + 부채(부채도 자산)
+                let netChange = c.assets - c.debt     // 순자산 = 자산 − 부채
+                let income = last.monthlyIncome
+                let expense = last.monthlyExpense
+
+                VStack(alignment: .leading, spacing: 12) {
+                    // 자산이 얼마나 변했는지. 빚이 함께 움직였으면 총자산·순자산·부채를 나눠서.
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("자산 변화")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                        changeAmountRow("총자산", grossChange)
+                        if abs(c.debt) >= 1 {
+                            changeAmountRow("순자산", netChange)
+                            changeAmountRow("부채", c.debt)
+                        }
+                    }
+
+                    // 이 기록에 적어둔 월 수입·지출.
+                    if income > 0 || expense > 0 {
+                        Divider().overlay(Theme.hairline)
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("이 기록의 월 수입·지출")
+                                .font(.caption)
+                                .foregroundStyle(Theme.textSecond)
+                            kvRow("수입", "\(Fmt.krw(income))원", color: Theme.positive)
+                            kvRow("지출", "\(Fmt.krw(expense))원", color: Theme.negative)
+                            let flow = income - expense
+                            kvRow("순현금흐름",
+                                  "\(flow >= 0 ? "+" : "−")\(Fmt.krw(abs(flow)))원",
+                                  color: flow >= 0 ? Theme.positive : Theme.negative)
+                        }
+                    }
                 }
             } else {
                 VStack(alignment: .leading, spacing: 4) {
@@ -579,7 +592,7 @@ struct DashboardView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .overlay(alignment: .topTrailing) {
-            InfoPopoverButton(text: "지난번 기록 대비 변화예요. 한국식으로 오르면 붉은색, 내리면 푸른색. 막대는 총자산·순자산·부채의 변화를 보여줘요(총자산 변화 = 순자산 변화 + 부채 변화). 부채 막대가 양수(+)면 빚이 그만큼 늘었다는 뜻이고, 빚이 늘면 총자산이 그대로여도 순자산은 줄어요. 새로 등록한 자산은 변화에서 빼서 등록만으로 오른 것처럼 보이지 않게 했어요.")
+            InfoPopoverButton(text: "지난번 기록 이후의 변화예요. 부채도 내 자산 목록의 일부라 총자산 = 자산 + 부채로 봐요. 그래서 빚이 1,100만 늘면 총자산은 +1,100만(굴리는 규모가 커짐), 순자산 = 자산 − 부채는 −1,100만이 돼요. 한국식으로 오르면 붉은색, 내리면 푸른색. 아래 수입·지출은 그 기록에 적어둔 월 단위 금액이고, 순현금흐름 = 수입 − 지출이에요. 새로 등록한 자산은 변화에서 빼서 등록만으로 오른 것처럼 보이지 않게 했어요.")
                 .popoverTip(InfoButtonTip())
         }
         .cardStyle()
@@ -598,8 +611,8 @@ struct DashboardView: View {
                 goalBar(title: "자산 목표 달성률",
                         progress: goalProgress,
                         detail: "목표까지 \(Fmt.krw(goalRemaining))원 남음"
-                            + ((lastRecordChange?.net ?? 0) != 0
-                               ? " · 이번에 \((lastRecordChange?.net ?? 0) > 0 ? "+" : "−")\(Fmt.percent(abs(goalChangePP), fraction: 1)) \((lastRecordChange?.net ?? 0) > 0 ? "가까워졌어요" : "멀어졌어요")"
+                            + ((lastNetChange ?? 0) != 0
+                               ? " · 이번에 \((lastNetChange ?? 0) > 0 ? "+" : "−")\(Fmt.percent(abs(goalChangePP), fraction: 1)) \((lastNetChange ?? 0) > 0 ? "가까워졌어요" : "멀어졌어요")"
                                : ""))
             }
             if showIncome {
@@ -712,16 +725,7 @@ struct DashboardView: View {
                     }
             }
         }
-        .chartYAxis {
-            AxisMarks { v in
-                AxisGridLine().foregroundStyle(Theme.hairline)
-                AxisValueLabel {
-                    if let d = v.as(Double.self) {
-                        Text(isAsset ? Fmt.krw(d) : "월\(Fmt.krw(d))").font(.caption2)
-                    }
-                }
-            }
-        }
+        .chartYAxis(.hidden)
         .chartXAxis {
             AxisMarks(values: .stride(by: .year)) { value in
                 AxisGridLine().foregroundStyle(Theme.hairline)

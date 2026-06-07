@@ -26,6 +26,7 @@ struct AssetsView: View {
     @State private var showingRecord = false
     @State private var showingHistory = false
     @State private var showingImport = false
+    @State private var showingBreakdown = false
     @State private var totalMode: AssetTotalMode = .gross
 
     private let otherAssetsTip = OtherAssetsTip()
@@ -82,6 +83,7 @@ struct AssetsView: View {
             .sheet(isPresented: $showingImport) {
                 ScreenshotImportView(startingSortOrder: assets.count)
             }
+            .sheet(isPresented: $showingBreakdown) { NetWorthBreakdownView() }
         }
     }
 
@@ -151,14 +153,20 @@ struct AssetsView: View {
             }
             .font(.caption2)
 
-            HStack {
-                Text("순자산 \(Fmt.krw(total))원")
-            }
-            .font(.caption)
-            .foregroundStyle(Theme.textSecond)
-            Text("순자산 \(Fmt.wonKo(total))")
-                .font(.caption2)
+            Button { showingBreakdown = true } label: {
+                HStack(spacing: 4) {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("순자산 \(Fmt.krw(total))원")
+                            .font(.caption)
+                        Text("\(Fmt.wonKo(total)) · 내역 보기")
+                            .font(.caption2)
+                    }
+                    Image(systemName: "chevron.right").font(.caption2)
+                    Spacer()
+                }
                 .foregroundStyle(Theme.textSecond)
+            }
+            .buttonStyle(.plain)
 
             if monthlyIncome > 0 || totalDebtCost > 0 || totalGain != 0 {
                 Divider().overlay(Theme.hairline)
@@ -279,7 +287,7 @@ struct AssetsView: View {
 
             if hasDebt {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(effectiveMode == .gross ? "총자산" : "순자산")
+                    Text(effectiveMode == .gross ? "자산 합계" : "순자산")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                     Text("\(Fmt.krw(effectiveMode == .gross ? grossAssets : total))원")
@@ -287,7 +295,7 @@ struct AssetsView: View {
                         .foregroundStyle(effectiveMode == .gross ? Theme.textPrimary : Theme.accent)
                     Text(effectiveMode == .gross
                          ? "부채 \(Fmt.krw(debtTotal))원 차감 시 순자산 \(Fmt.krw(total))원"
-                         : "총자산 \(Fmt.krw(grossAssets))원 − 부채 \(Fmt.krw(debtTotal))원")
+                         : "자산 합계 \(Fmt.krw(grossAssets))원 − 부채 \(Fmt.krw(debtTotal))원")
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -949,14 +957,7 @@ struct AssetEditor: View {
             PointMark(x: .value("월", point.date), y: .value("평가액", point.amount))
                 .foregroundStyle(Theme.accent)
         }
-        .chartYAxis {
-            AxisMarks { value in
-                AxisGridLine().foregroundStyle(Theme.hairline)
-                AxisValueLabel {
-                    if let v = value.as(Double.self) { Text(Fmt.krw(v)).font(.caption2) }
-                }
-            }
-        }
+        .chartYAxis(.hidden)
         .frame(height: 160)
     }
 
@@ -1457,5 +1458,106 @@ struct ScreenshotImportView: View {
         }
         try? context.save()
         dismiss()
+    }
+}
+
+// Itemized basis for net worth — shows how each asset/debt contributes so the
+// user can see exactly why 순자산 = 총자산 − 부채 lands where it does.
+struct NetWorthBreakdownView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Query(sort: \Asset.sortOrder) private var assets: [Asset]
+
+    private var positives: [Asset] { assets.filter { !$0.isDebt && $0.netValue != 0 } }
+    private var debts: [Asset] { assets.filter { $0.isDebt && $0.amount != 0 } }
+    private var grossAssets: Double { positives.reduce(0) { $0 + $1.netValue } }
+    private var debtTotal: Double { debts.reduce(0) { $0 + $1.amount } }
+    private var netWorth: Double { grossAssets - debtTotal }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    HStack {
+                        Text("순자산").font(.headline)
+                        Spacer()
+                        VStack(alignment: .trailing, spacing: 1) {
+                            Text("\(Fmt.krw(netWorth))원")
+                                .font(.system(.title3, design: .rounded, weight: .bold))
+                                .foregroundStyle(netWorth >= 0 ? Theme.accent : Theme.negative)
+                            Text(Fmt.wonKo(netWorth))
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                    Text("순자산 = 자산 합계(\(Fmt.krw(grossAssets))원) − 부채(\(Fmt.krw(debtTotal))원)")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                } footer: {
+                    Text("아래에서 자산·부채가 각각 순자산에 얼마씩 더하고 빼는지 확인하세요. 빚을 1,100만 졌는데 순자산이 −600만이라면, 자산 쪽 합이 500만이라는 뜻이에요.")
+                        .font(.caption)
+                }
+
+                Section {
+                    if positives.isEmpty {
+                        Text("등록된 자산이 없어요").font(.caption).foregroundStyle(Theme.textSecond)
+                    }
+                    ForEach(positives) { a in
+                        breakdownRow(a, value: a.netValue, sign: "+", tint: Theme.positive)
+                    }
+                    subtotal("자산 합계", grossAssets, tint: Theme.textPrimary)
+                } header: {
+                    Text("자산 (+)")
+                }
+
+                if !debts.isEmpty {
+                    Section {
+                        ForEach(debts) { a in
+                            breakdownRow(a, value: a.amount, sign: "−", tint: Theme.negative)
+                        }
+                        subtotal("부채 합계", debtTotal, sign: "−", tint: Theme.negative)
+                    } header: {
+                        Text("부채 (−)")
+                    }
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .scrollIndicators(.hidden)
+            .background(Theme.bg.ignoresSafeArea())
+            .navigationTitle("순자산 내역")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) { Button("닫기") { dismiss() } }
+            }
+        }
+    }
+
+    private func breakdownRow(_ a: Asset, value: Double, sign: String, tint: Color) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: a.assetClass.symbolName)
+                .foregroundStyle(Color(hex: a.assetClass.colorHex))
+                .frame(width: 22)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(a.name.isEmpty ? a.assetClass.label : a.name)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.textPrimary)
+                Text(a.assetClass == .realEstate ? "\(a.assetClass.label) · \(a.realEstateUse.label)" : a.assetClass.label)
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            Spacer()
+            Text("\(sign)\(Fmt.krw(abs(value)))원")
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(tint)
+        }
+    }
+
+    private func subtotal(_ title: String, _ value: Double, sign: String = "+", tint: Color) -> some View {
+        HStack {
+            Text(title).font(.subheadline.weight(.semibold)).foregroundStyle(Theme.textPrimary)
+            Spacer()
+            Text("\(sign)\(Fmt.krw(value))원")
+                .font(.system(.subheadline, design: .rounded).weight(.bold))
+                .foregroundStyle(tint)
+        }
     }
 }

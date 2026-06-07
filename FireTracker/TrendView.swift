@@ -205,16 +205,7 @@ struct TrendView: View {
                             .foregroundStyle(Theme.accent)
                     }
             }
-            .chartYAxis {
-                AxisMarks { value in
-                    AxisGridLine().foregroundStyle(Theme.hairline)
-                    AxisValueLabel {
-                        if let v = value.as(Double.self) {
-                            Text(Fmt.krw(v)).font(.caption2)
-                        }
-                    }
-                }
-            }
+            .chartYAxis(.hidden)
             .frame(height: 240)
 
             if let last = sorted.last, last.netWorth > 0 {
@@ -280,16 +271,7 @@ struct TrendView: View {
                         }
                 }
             }
-            .chartYAxis {
-                AxisMarks { value in
-                    AxisGridLine().foregroundStyle(Theme.hairline)
-                    AxisValueLabel {
-                        if let v = value.as(Double.self) {
-                            Text(Fmt.krw(v)).font(.caption2)
-                        }
-                    }
-                }
-            }
+            .chartYAxis(.hidden)
             .frame(height: 240)
 
             if let last = sorted.last, monthlyTargetExpense > 0 {
@@ -318,16 +300,7 @@ struct TrendView: View {
                 )
                 .cornerRadius(4)
             }
-            .chartYAxis {
-                AxisMarks { value in
-                    AxisGridLine().foregroundStyle(Theme.hairline)
-                    AxisValueLabel {
-                        if let v = value.as(Double.self) {
-                            Text(Fmt.percent(v, fraction: 0)).font(.caption2)
-                        }
-                    }
-                }
-            }
+            .chartYAxis(.hidden)
             .frame(height: 240)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -357,16 +330,7 @@ struct TrendView: View {
                 domain: AssetClass.allCases.map { $0.label },
                 range: AssetClass.allCases.map { Color(hex: $0.colorHex) }
             )
-            .chartYAxis {
-                AxisMarks { value in
-                    AxisGridLine().foregroundStyle(Theme.hairline)
-                    AxisValueLabel {
-                        if let v = value.as(Double.self) {
-                            Text(Fmt.krw(v)).font(.caption2)
-                        }
-                    }
-                }
-            }
+            .chartYAxis(.hidden)
             .frame(height: 240)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

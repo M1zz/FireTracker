@@ -598,6 +598,19 @@ struct DashboardView: View {
                                         to: Calendar.current.startOfDay(for: Date())).day ?? 0
     }
 
+    // 순자산(누적 잔액)과 이 달 수입·지출(흐름)을 헷갈리지 않게 한 줄로 설명한다.
+    // 흐름이 +면 다음 기록에서 순자산이 그만큼 오르고, −면 내려가고, 0이면 그대로.
+    private func flowVsNetWorthHint(flow: Double) -> String {
+        let base = "위 막대의 순자산은 지금까지 쌓인 잔액, 수입·지출은 이 달 한 달치예요. "
+        if flow > 0 {
+            return base + "이 달은 \(Fmt.krw(flow))원 모았으니 다음 기록에서 순자산이 그만큼 오를 여력이 생겨요."
+        } else if flow < 0 {
+            return base + "이 달은 \(Fmt.krw(abs(flow)))원 더 썼으니 다음 기록에서 순자산이 그만큼 줄어요."
+        } else {
+            return base + "이 달은 번 만큼 다 써서 본전 — 그래서 순자산(빚 포함)은 이 달엔 그대로예요."
+        }
+    }
+
     private var welcomeCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             // 카드 타이틀 + 비교 대상 기록의 날짜(정체).
@@ -626,15 +639,30 @@ struct DashboardView: View {
                     if income > 0 || expense > 0 {
                         Divider().overlay(Theme.hairline)
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("이 기록의 월 수입·지출")
-                                .font(.caption)
-                                .foregroundStyle(Theme.textSecond)
+                            HStack(spacing: 6) {
+                                Text("이 기록의 월 수입·지출")
+                                    .font(.caption)
+                                    .foregroundStyle(Theme.textSecond)
+                                Text("이 달 흐름")
+                                    .font(.caption2.weight(.bold))
+                                    .foregroundStyle(Theme.textSecond)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 1)
+                                    .background(Theme.surfaceHigh)
+                                    .clipShape(Capsule())
+                            }
                             kvRow("수입", "\(Fmt.krw(income))원", color: Theme.positive)
                             kvRow("지출", "\(Fmt.krw(expense))원", color: Theme.negative)
                             let flow = income - expense
                             kvRow("순현금흐름",
                                   "\(flow >= 0 ? "+" : "−")\(Fmt.krw(abs(flow)))원",
                                   color: flow >= 0 ? Theme.positive : Theme.negative)
+                            // 누적 잔액(순자산)과 이 달 흐름(수입·지출)이 다른 개념이라
+                            // 헷갈리지 않게 한 줄로 묶어준다.
+                            Text(flowVsNetWorthHint(flow: flow))
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                                .padding(.top, 2)
                         }
                     }
                 }

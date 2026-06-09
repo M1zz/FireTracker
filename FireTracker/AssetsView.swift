@@ -28,6 +28,11 @@ struct AssetsView: View {
     @State private var showingImport = false
     @State private var showingBreakdown = false
     @State private var totalMode: AssetTotalMode = .gross
+    // 새 자산을 어떤 카테고리로 추가할지 — 카테고리별 ‘+ 종목 추가’가 미리 채운다.
+    @State private var newClass: AssetClass = .stocks
+    @State private var newCustomLabel = ""
+    // 접힌 카테고리 그룹 id들. 비어 있으면 전부 펼침(기본).
+    @State private var collapsedGroups: Set<String> = []
 
     private let otherAssetsTip = OtherAssetsTip()
 
@@ -60,7 +65,7 @@ struct AssetsView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
-                        Button { showingNew = true } label: {
+                        Button { startNewAsset() } label: {
                             Label("직접 추가", systemImage: "square.and.pencil")
                         }
                         Button { showingImport = true } label: {
@@ -73,7 +78,8 @@ struct AssetsView: View {
                 if !assets.isEmpty { recordBar }
             }
             .sheet(isPresented: $showingNew) {
-                AssetEditor(asset: nil, nextSortOrder: assets.count)
+                AssetEditor(asset: nil, nextSortOrder: assets.count,
+                            initialClass: newClass, initialCustomLabel: newCustomLabel)
             }
             .sheet(item: $editing) { asset in
                 AssetEditor(asset: asset, nextSortOrder: assets.count)
@@ -98,14 +104,26 @@ struct AssetsView: View {
                         .listRowBackground(Color.clear)
                 }
             }
-            // 2) 내 자산.
-            Section("내 자산") {
-                ForEach(assets) { asset in
-                    Button { editing = asset } label: { row(asset) }
+            // 2) 내 자산 — 종류(카테고리)별로 묶어, 접고 펼치며 종목을 관리.
+            ForEach(assetGroups) { group in
+                Section {
+                    if !collapsedGroups.contains(group.id) {
+                        ForEach(group.assets) { asset in
+                            Button { editing = asset } label: { row(asset) }
+                                .listRowBackground(Theme.surface)
+                        }
+                        .onDelete { delete(in: group, at: $0) }
+                        Button { startNewAsset(group.assetClass, customLabel: group.customLabel) } label: {
+                            Label("\(group.title) 종목 추가", systemImage: "plus.circle")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.accent)
+                        }
                         .listRowBackground(Theme.surface)
+                    }
+                } header: {
+                    groupHeader(group)
                 }
-                .onDelete(perform: delete)
-                .onMove(perform: move)
+                .textCase(nil)
             }
             // 3) 그 다음 — 쓸 수 있는 돈/순자산 요약.
             Section {
@@ -118,7 +136,7 @@ struct AssetsView: View {
                 TipView(otherAssetsTip)
                     .tipBackground(Theme.surface)
                     .listRowBackground(Theme.surface)
-                Button { showingNew = true } label: {
+                Button { startNewAsset() } label: {
                     Label("자산 추가", systemImage: "plus.circle")
                 }
                 .listRowBackground(Theme.surface)
@@ -430,7 +448,7 @@ struct AssetsView: View {
                 .multilineTextAlignment(.center)
                 .font(.subheadline)
                 .foregroundStyle(Theme.textSecond)
-            Button { showingNew = true } label: {
+            Button { startNewAsset() } label: {
                 Text("자산 추가")
                     .font(.subheadline.weight(.semibold))
                     .padding(.horizontal, 24)
@@ -445,17 +463,98 @@ struct AssetsView: View {
         .background(Theme.bg)
     }
 
-    private func delete(at offsets: IndexSet) {
-        for i in offsets { context.delete(assets[i]) }
+    private func delete(in group: AssetGroup, at offsets: IndexSet) {
+        for i in offsets { context.delete(group.assets[i]) }
         try? context.save()
     }
 
-    private func move(from: IndexSet, to: Int) {
-        var arr = assets
-        arr.move(fromOffsets: from, toOffset: to)
-        for (index, asset) in arr.enumerated() { asset.sortOrder = index }
-        try? context.save()
+    // Open the editor for a brand-new holding, pre-set to a category so the
+    // user only fills in the name + amount.
+    private func startNewAsset(_ cls: AssetClass = .stocks, customLabel: String = "") {
+        newClass = cls
+        newCustomLabel = customLabel
+        showingNew = true
     }
+
+    private func toggleGroup(_ id: String) {
+        if collapsedGroups.contains(id) { collapsedGroups.remove(id) }
+        else { collapsedGroups.insert(id) }
+    }
+
+    // 카탈로그를 종류별 그룹으로. AssetClass.allCases 순서를 유지하고, 직접 입력은
+    // 사용자가 붙인 라벨별로 갈라 별도 그룹이 되게 한다.
+    private var assetGroups: [AssetGroup] {
+        var groups: [AssetGroup] = []
+        for ac in AssetClass.allCases {
+            let members = assets.filter { $0.assetClass == ac }
+            guard !members.isEmpty else { continue }
+            if ac == .custom {
+                var labels: [String] = []
+                for m in members where !labels.contains(m.customLabel) { labels.append(m.customLabel) }
+                for label in labels {
+                    let sub = members.filter { $0.customLabel == label }
+                    groups.append(AssetGroup(id: "custom:\(label)",
+                                             assetClass: ac,
+                                             title: label.isEmpty ? ac.label : label,
+                                             customLabel: label,
+                                             assets: sub))
+                }
+            } else {
+                groups.append(AssetGroup(id: ac.rawValue,
+                                         assetClass: ac,
+                                         title: ac.label,
+                                         customLabel: "",
+                                         assets: members))
+            }
+        }
+        return groups
+    }
+
+    // Tappable category header: chevron + icon + name + count, and the group's
+    // net subtotal on the right (red & negative for the debt group).
+    private func groupHeader(_ group: AssetGroup) -> some View {
+        let collapsed = collapsedGroups.contains(group.id)
+        let subtotal = group.subtotal
+        return Button { toggleGroup(group.id) } label: {
+            HStack(spacing: 8) {
+                Image(systemName: collapsed ? "chevron.right" : "chevron.down")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(Theme.textSecond)
+                    .frame(width: 10)
+                Image(systemName: group.assetClass.symbolName)
+                    .font(.caption)
+                    .foregroundStyle(Color(hex: group.assetClass.colorHex))
+                Text(group.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                Text("\(group.assets.count)")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(Theme.textSecond)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 1)
+                    .background(Theme.surfaceHigh)
+                    .clipShape(Capsule())
+                Spacer()
+                Text("\(subtotal < 0 ? "−" : "")\(Fmt.krw(abs(subtotal)))원")
+                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    .foregroundStyle(subtotal < 0 ? Theme.negative : Theme.textPrimary)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// One category section in the catalog: a group of holdings sharing an asset
+// class (custom holdings split further by their user-typed label).
+struct AssetGroup: Identifiable {
+    let id: String
+    let assetClass: AssetClass
+    let title: String
+    let customLabel: String
+    let assets: [Asset]
+    // Net contribution of the group (debts subtract).
+    var subtotal: Double { assets.reduce(0) { $0 + $1.netValue } }
 }
 
 // Detailed editor for a single holding: define it, enter its scale (manually
@@ -497,13 +596,14 @@ struct AssetEditor: View {
     // Seed all editor state directly from the asset so that opening the editor
     // does not mutate `assetClass` (which would trigger onChange and clobber the
     // stored liquidity/income with class-suggested defaults).
-    init(asset: Asset?, nextSortOrder: Int) {
+    init(asset: Asset?, nextSortOrder: Int,
+         initialClass: AssetClass = .stocks, initialCustomLabel: String = "") {
         self.asset = asset
         self.nextSortOrder = nextSortOrder
-        let cls = asset?.assetClass ?? .stocks
+        let cls = asset?.assetClass ?? initialClass
         _name = State(initialValue: asset?.name ?? "")
         _assetClass = State(initialValue: cls)
-        _customLabel = State(initialValue: asset?.customLabel ?? "")
+        _customLabel = State(initialValue: asset?.customLabel ?? initialCustomLabel)
         _amount = State(initialValue: asset.map { $0.amount > 0 ? String(Int($0.amount)) : "" } ?? "")
         _symbol = State(initialValue: asset?.symbol ?? "")
         _quantity = State(initialValue: asset.map { $0.quantity > 0 ? Fmt.trimNumber($0.quantity) : "" } ?? "")
@@ -543,6 +643,13 @@ struct AssetEditor: View {
                     .onChange(of: assetClass) { _, newValue in
                         if !newValue.supportsAutoPrice { auto = false }
                         liquidity = Liquidity.suggested(for: newValue)
+                        // 종류가 바뀌면 그 종류에 맞는 소득 유형으로 정렬.
+                        let kinds = newValue == .realEstate ? [IncomeKind.rent] : newValue.incomeKinds
+                        if !kinds.contains(incomeKind) {
+                            incomeKind = kinds.contains(IncomeKind.suggested(for: newValue))
+                                ? IncomeKind.suggested(for: newValue)
+                                : (kinds.first ?? .none)
+                        }
                     }
                     if assetClass == .custom {
                         TextField("종류 직접 입력 (예: 회원권, 한정판, 사업 지분)", text: $customLabel)
@@ -559,6 +666,8 @@ struct AssetEditor: View {
                         }
                         .onChange(of: realEstateUse) { _, newValue in
                             if newValue.hasRent { incomeKind = .rent }
+                            // 전세·반전세는 지분이 묶이고 보증금만 유동 → 지분을 묶임으로.
+                            if newValue.hasDeposit { liquidity = .locked }
                         }
                     } header: {
                         Text("이용 형태")
@@ -568,7 +677,9 @@ struct AssetEditor: View {
                     }
                 }
 
-                if !isDebt {
+                // 전세·반전세는 받은 보증금(유동) + 부동산 지분(묶임)으로 자동 분리되므로
+                // 수동 유동성 토글을 숨긴다 — 토글이 보증금 분리와 충돌해 혼란을 줬음.
+                if !isDebt && !(assetClass == .realEstate && realEstateUse.hasDeposit) {
                     Section {
                         Picker("유동성", selection: $liquidity) {
                             ForEach(Liquidity.allCases) { l in Text(l.label).tag(l) }
@@ -579,7 +690,7 @@ struct AssetEditor: View {
                     } footer: {
                         Text(liquidity == .liquid
                              ? "현금화해서 바로 쓸 수 있는 자산입니다. ‘쓸 수 있는 돈’에 포함됩니다."
-                             : "실거주 부동산·전세보증금·연금처럼 당장 쓸 수 없는 자산입니다. 순자산엔 잡히지만 ‘쓸 수 있는 돈’에서는 빠집니다.")
+                             : "실거주 부동산·연금·보험처럼 당장 쓸 수 없는 자산입니다. 순자산엔 잡히지만 ‘쓸 수 있는 돈’에서는 빠집니다.")
                             .font(.caption)
                     }
                 }
@@ -632,18 +743,17 @@ struct AssetEditor: View {
                     }
                 }
 
-                if !isDebt {
-                    if assetClass == .realEstate {
-                        if realEstateUse.hasDeposit { depositSection }
-                        if realEstateUse.hasRent { incomeSection }
-                        costBasisSection
-                    } else {
-                        costBasisSection
-                        incomeSection
-                        depositSection
-                    }
-                } else {
+                if isDebt {
                     debtInterestSection
+                } else if assetClass == .realEstate {
+                    // 부동산은 이용형태에 따라 보증금/월세가 갈린다.
+                    if realEstateUse.hasDeposit { depositSection }
+                    if realEstateUse.hasRent { incomeSection }
+                    costBasisSection
+                } else {
+                    // 자산 종류별로 필요한 칸만. (전세 보증금은 부동산 전세/반전세 전용)
+                    if assetClass.tracksCostBasis { costBasisSection }
+                    if !availableIncomeKinds.isEmpty { incomeSection }
                 }
 
                 if !history.isEmpty {
@@ -743,6 +853,7 @@ struct AssetEditor: View {
         Section {
             TextField("취득가 (산 가격, 원)", text: $costBasis.commaGrouped)
                 .keyboardType(.numberPad)
+            MoneyReadout(amount: costBasis)
             if let cb = Double(costBasis), cb > 0 {
                 let cur = Double(amount) ?? 0
                 let g = cur - cb
@@ -814,11 +925,31 @@ struct AssetEditor: View {
         }
     }
 
+    // 이 자산 종류가 만들 수 있는 소득 유형들. 부동산은 월세 전용.
+    private var availableIncomeKinds: [IncomeKind] {
+        assetClass == .realEstate ? [.rent] : assetClass.incomeKinds
+    }
+
+    // 소득 유형에 맞춘 입력 칸 이름.
+    private var incomeAmountLabel: String {
+        switch incomeKind {
+        case .rent:     return "월세 (원)"
+        case .pension:  return "월 연금 수령액 (원)"
+        case .interest: return "월 이자 (원)"
+        case .dividend: return "월 배당 (원)"
+        case .staking:  return "월 스테이킹 보상 (원)"
+        default:        return "월 소득 (원)"
+        }
+    }
+
     // 월세·배당·이자·연금·스테이킹 등 자산이 만들어내는 현금흐름.
     private var incomeSection: some View {
         Section {
-            Picker("소득 유형", selection: $incomeKind) {
-                ForEach(IncomeKind.allCases) { kind in Text(kind.label).tag(kind) }
+            // 선택지가 둘 이상일 때만 유형 선택을 보여준다(연금·월세는 단일).
+            if availableIncomeKinds.count > 1 {
+                Picker("소득 유형", selection: $incomeKind) {
+                    ForEach(availableIncomeKinds) { kind in Text(kind.label).tag(kind) }
+                }
             }
             if incomeKind != .none {
                 if !yieldPresets.isEmpty {
@@ -829,7 +960,7 @@ struct AssetEditor: View {
                         yieldPresetChips
                     }
                 }
-                TextField("월 소득 (원)", text: $monthlyIncome.commaGrouped)
+                TextField(incomeAmountLabel, text: $monthlyIncome.commaGrouped)
                     .keyboardType(.numberPad)
                 TextField("또는 연 수익률 (%)", text: $annualYieldPct)
                     .keyboardType(.decimalPad)
@@ -1125,7 +1256,9 @@ struct RecordSheet: View {
 
                 Section {
                     TextField("월 수입", text: $income.commaGrouped).keyboardType(.numberPad)
+                    MoneyReadout(amount: income)
                     TextField("월 지출", text: $expense.commaGrouped).keyboardType(.numberPad)
+                    MoneyReadout(amount: expense)
                     if let inc = Double(income), inc > 0 {
                         let exp = Double(expense) ?? 0
                         HStack {
@@ -1403,6 +1536,8 @@ struct ScreenshotImportView: View {
                                         .font(.system(.subheadline, design: .rounded))
                                     Text("원").foregroundStyle(Theme.textSecond)
                                 }
+                                MoneyReadout(amount: row.amountText)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .opacity(row.include ? 1 : 0.4)
                         }
@@ -1458,6 +1593,20 @@ struct ScreenshotImportView: View {
         }
         try? context.save()
         dismiss()
+    }
+}
+
+// 돈을 숫자로 입력하면 곧바로 한글 단위(예: "= 3,600만원")로 echo 해서, 자릿수를
+// 눈으로 확인할 수 있게 한다. 비었거나 0이면 아무것도 그리지 않는다.
+struct MoneyReadout: View {
+    let amount: String
+    var body: some View {
+        let v = Double(amount.filter { $0.isNumber }) ?? 0
+        if v > 0 {
+            Text("= \(Fmt.krw(v))원")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+        }
     }
 }
 

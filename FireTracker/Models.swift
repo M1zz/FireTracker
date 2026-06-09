@@ -58,6 +58,31 @@ enum AssetClass: String, Codable, CaseIterable, Identifiable {
         }
     }
 
+    // 취득가 대비 평가차익(부가가치) 입력이 의미 있는 자산 — 사서 값이 오르내리는 것.
+    var tracksCostBasis: Bool {
+        switch self {
+        case .stocks, .fund, .crypto, .realEstate, .vehicle, .valuables: return true
+        default: return false
+        }
+    }
+
+    // 이 자산이 만들 수 있는 현금흐름 종류(소득 유형 선택지). 빈 배열이면 소득 섹션을
+    // 숨긴다. 부동산은 이용형태(월세)로 따로 처리하므로 여기선 빈 배열.
+    var incomeKinds: [IncomeKind] {
+        switch self {
+        case .cash:           return [.none, .interest]
+        case .stocks:         return [.none, .dividend]
+        case .fund:           return [.none, .dividend, .interest]
+        case .bond:           return [.none, .interest]
+        case .crypto:         return [.none, .staking]
+        case .pension:        return [.pension]
+        case .receivable:     return [.none, .interest]
+        case .ip:             return [.none, .other]
+        case .other, .custom: return [.none, .interest, .dividend, .other]
+        default:              return []   // insurance·전세보증금·보증금·자동차·귀금속·부동산·부채
+        }
+    }
+
     var symbolName: String {
         switch self {
         case .cash:       return "banknote.fill"

@@ -13,7 +13,7 @@ struct TrendView: View {
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
 
     enum TrendMode: String, CaseIterable, Identifiable {
-        case netWorth = "순자산"
+        case netWorth = "총자산"
         case passiveIncome = "패시브 인컴"
         case savingsRate = "저축률"
         case allocation = "자산 구성"
@@ -39,7 +39,8 @@ struct TrendView: View {
         let savingsRate: Double
         let byClass: [AssetClass: Double]
         func total(for ac: AssetClass) -> Double { byClass[ac] ?? 0 }
-        // 부채 규모(양수)와 그것을 포함하기 전 자산 합계. 순자산 = 자산 − 부채.
+        // 부채 규모(양수)와 보유 자산 합계(사용자 용어로 '순자산').
+        // 총자산(net) = 순자산 − 부채 = netWorth.
         var debt: Double { abs(byClass[.debt] ?? 0) }
         var grossAssets: Double { netWorth + debt }
     }
@@ -158,7 +159,8 @@ struct TrendView: View {
         sorted.enumerated().map { (idx: $0.offset, point: $0.element) }
     }
 
-    // 토스 스타일 월별 컬럼: 자산(초록·위) + 부채(회색·아래), 순자산은 원형 라인.
+    // 토스 스타일 월별 컬럼: 순자산(보유 자산·초록·위) + 부채(회색·아래),
+    // 총자산(= 순자산 − 부채)은 원형 라인.
     private var netWorthChart: some View {
         let pts = indexedPoints
         let count = pts.count
@@ -166,13 +168,13 @@ struct TrendView: View {
             .flatMap { (0..<count).contains($0) ? pts[$0].point : nil } ?? sorted.last
         return VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 12) {
-                Text("자산 · 부채 · 순자산")
+                Text("순자산 · 부채 · 총자산")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
                 Spacer()
-                legendSquare("자산", Theme.positive)
+                legendSquare("순자산", Theme.positive)
                 legendSquare("부채", Theme.textSecond.opacity(0.35))
-                legendDot("순자산", Theme.accent)
+                legendDot("총자산", Theme.accent)
             }
 
             if let s = shown {
@@ -184,7 +186,7 @@ struct TrendView: View {
                     BarMark(
                         x: .value("기간", item.idx),
                         yStart: .value("기준", 0.0),
-                        yEnd: .value("자산", item.point.grossAssets),
+                        yEnd: .value("순자산", item.point.grossAssets),
                         width: .ratio(0.55)
                     )
                     .foregroundStyle(Theme.positive)
@@ -203,14 +205,14 @@ struct TrendView: View {
                 ForEach(pts, id: \.idx) { item in
                     LineMark(
                         x: .value("기간", item.idx),
-                        y: .value("순자산", item.point.netWorth)
+                        y: .value("총자산", item.point.netWorth)
                     )
                     .foregroundStyle(Theme.accent)
                     .interpolationMethod(.catmullRom)
                     .lineStyle(StrokeStyle(lineWidth: 2.5))
                     PointMark(
                         x: .value("기간", item.idx),
-                        y: .value("순자산", item.point.netWorth)
+                        y: .value("총자산", item.point.netWorth)
                     )
                     .symbol {
                         Circle()
@@ -239,15 +241,15 @@ struct TrendView: View {
         .cardStyle()
     }
 
-    // 막대를 탭하면 그 칸의 자산·부채·순자산을 띄운다(선택 없으면 최근 칸).
+    // 막대를 탭하면 그 칸의 순자산·부채·총자산을 띄운다(선택 없으면 최근 칸).
     private func tooltipCard(_ s: TrendPoint) -> some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(periodLabelFull(s.date))
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
-            tooltipRow("자산", s.grossAssets, Theme.positive)
+            tooltipRow("순자산", s.grossAssets, Theme.positive)
             tooltipRow("부채", -s.debt, Theme.textSecond)
-            tooltipRow("순자산", s.netWorth, Theme.accent)
+            tooltipRow("총자산", s.netWorth, Theme.accent)
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -46,11 +46,11 @@ struct InfoPopoverButton: View {
     }
 }
 
-// Which total the asset-composition card headlines: gross (자산 합계) or net
-// (부채 차감 후).
+// Which total the asset-composition card headlines: gross holdings (사용자 용어
+// '순자산') or net after debt (사용자 용어 '총자산').
 enum AssetTotalMode: String, CaseIterable, Identifiable {
-    case gross = "총자산"
-    case net   = "순자산"
+    case gross = "순자산"
+    case net   = "총자산"
     var id: String { rawValue }
 }
 
@@ -492,23 +492,33 @@ struct DashboardView: View {
     // 총자산을 한 막대로: 순자산(왼쪽·초록) + 부채(오른쪽·빨강) = 총자산.
     // 자산(초록)은 0에서 오른쪽으로, 부채(빨강)는 자산 오른쪽 끝에서 왼쪽으로 차오름.
     // 부채가 자산보다 크면 순자산이 마이너스 → 빨강이 0선을 넘어 왼쪽까지 그려짐.
-    // 지난 기록 대비 변화량 — 한 줄(항목) 데이터.
+    // 지난 기록 대비 변화량 + 지난 기록의 절대값(prev) 한 줄.
     private struct AssetChangeBar: Identifiable {
         let label: String
-        let value: Double
-        let positiveIsGood: Bool   // 부채는 늘면 나쁨 → false
+        let value: Double          // 이번 변화량(부호 포함)
+        let prev: Double           // 지난 기록의 금액(부호 포함)
+        let positiveIsGood: Bool
         var id: String { label }
     }
 
-    // 자산·부채·순자산의 증감. 부채는 마이너스로 잡아 순자산 = 자산 + 부채(−)가
-    // 되게 한다(레퍼런스와 동일). 새로 추가한 자산이 변동으로 부풀려지지 않도록
-    // 지난 기록에 있던 자산만 비교한 lastRecordChange/lastNetChange를 쓴다.
+    // 직전 기록(latest 스냅샷)의 절대값. 순자산=보유 자산(+), 부채=−, 총자산=net.
+    private var prevGrossAssets: Double {
+        latest?.entries.filter { $0.amount > 0 }.reduce(0) { $0 + $1.amount } ?? 0
+    }
+    private var prevDebt: Double {
+        abs(latest?.entries.filter { $0.amount < 0 }.reduce(0) { $0 + $1.amount } ?? 0)
+    }
+    private var prevNet: Double { latest?.netWorth ?? 0 }
+
+    // 변화량 3종(지난 기록 대비) + 각 항목의 지난 금액. 사용자 용어 기준:
+    //   순자산 = 보유 자산 증감(+), 부채 = 빚 증감을 −로, 총자산 = 순자산 + 부채(net).
+    // 새로 추가한 자산이 변동으로 부풀려지지 않도록 lastRecordChange/lastNetChange를 쓴다.
     private var assetChangeBars: [AssetChangeBar] {
         let c = lastRecordChange
         return [
-            AssetChangeBar(label: "자산",   value: c?.assets ?? 0,     positiveIsGood: true),
-            AssetChangeBar(label: "부채",   value: -(c?.debt ?? 0),    positiveIsGood: true),
-            AssetChangeBar(label: "순자산", value: lastNetChange ?? 0, positiveIsGood: true),
+            AssetChangeBar(label: "순자산", value: c?.assets ?? 0,     prev: prevGrossAssets, positiveIsGood: true),
+            AssetChangeBar(label: "부채",   value: -(c?.debt ?? 0),    prev: -prevDebt,        positiveIsGood: true),
+            AssetChangeBar(label: "총자산", value: lastNetChange ?? 0, prev: prevNet,          positiveIsGood: true),
         ]
     }
 
@@ -518,8 +528,27 @@ struct DashboardView: View {
         return good ? Theme.positive : Theme.negative
     }
 
-    // 지난 기록 대비 변화만 — 가로 막대 차트. 0을 기준으로 +는 오른쪽, −는 왼쪽.
-    // 예) 빚 내서 1,100만 주식 매수 → 자산 +1,100 · 부채 +1,100 · 순자산 0.
+    private func signedKRW(_ v: Double) -> String {
+        "\(v > 0 ? "+" : (v < 0 ? "−" : ""))\(Fmt.krw(abs(v)))원"
+    }
+
+    // 지난 기록의 금액과 이번 변화량을 한 줄로: "지난 1,090만 → +500만".
+    private func changeDetailRow(_ bar: AssetChangeBar) -> some View {
+        HStack(spacing: 8) {
+            Text(bar.label).font(.caption).foregroundStyle(Theme.textSecond)
+            Spacer()
+            Text("지난 \(bar.prev < 0 ? "−" : "")\(Fmt.krw(abs(bar.prev)))")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+            Image(systemName: "arrow.right").font(.caption2).foregroundStyle(Theme.textSecond)
+            Text(signedKRW(bar.value))
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(changeBarColor(bar))
+                .frame(minWidth: 84, alignment: .trailing)
+        }
+    }
+
+    // 지난 기록 대비 변화를 가로 막대로, 그 아래 ‘지난 금액 → 변화량’을 함께 표기.
     private var netWorthChangeChart: some View {
         let bars = assetChangeBars
         return VStack(alignment: .leading, spacing: 10) {
@@ -533,7 +562,7 @@ struct DashboardView: View {
                     .foregroundStyle(changeBarColor(bar))
                     .cornerRadius(4)
                     .annotation(position: bar.value >= 0 ? .trailing : .leading) {
-                        Text("\(bar.value > 0 ? "+" : (bar.value < 0 ? "−" : ""))\(Fmt.krw(abs(bar.value)))원")
+                        Text(signedKRW(bar.value))
                             .font(.caption2.weight(.semibold))
                             .foregroundStyle(Theme.textSecond)
                     }
@@ -541,7 +570,7 @@ struct DashboardView: View {
                 RuleMark(x: .value("0", 0.0))
                     .foregroundStyle(Theme.hairline)
             }
-            .chartYScale(domain: ["순자산", "부채", "자산"])   // 위→아래: 자산·부채·순자산
+            .chartYScale(domain: ["총자산", "부채", "순자산"])   // 위→아래: 순자산·부채·총자산
             .chartXAxis {
                 AxisMarks { value in
                     AxisGridLine().foregroundStyle(Theme.hairline)
@@ -555,7 +584,13 @@ struct DashboardView: View {
                 }
             }
             .frame(height: 140)
-            Text("부채는 마이너스로 잡혀요. 순자산 = 자산 + 부채. 빚 내서 자산을 사면 자산 +, 부채 −가 상쇄돼 순자산 변화는 0이에요.")
+
+            Divider().overlay(Theme.hairline)
+            VStack(spacing: 6) {
+                ForEach(bars) { changeDetailRow($0) }
+            }
+
+            Text("‘지난 금액 → 이번 변화량’이에요. 총자산 = 순자산 + 부채(부채는 −).")
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
         }
@@ -630,7 +665,7 @@ struct DashboardView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .overlay(alignment: .topTrailing) {
-            InfoPopoverButton(text: "지난 기록 대비 변화만 가로 막대로 봐요. 0을 기준으로 +는 오른쪽, −는 왼쪽. 부채는 마이너스로 잡혀서 순자산 = 자산 + 부채가 됩니다. 빚 내서 1,100만 주식을 사면 자산 +1,100·부채 −1,100·순자산 0이에요. 달마다의 절대값 추이는 추이 탭에서 볼 수 있어요.")
+            InfoPopoverButton(text: "지난 기록 대비 변화만 가로 막대로 봐요. 0을 기준으로 +는 오른쪽, −는 왼쪽. 순자산은 보유 자산 증감, 부채는 −로, 총자산 = 순자산 + 부채(net)예요. 빚 내서 1,100만 주식을 사면 순자산 +1,100·부채 −1,100·총자산 0. 부채가 더 늘면 총자산이 −로 내려가요. 달마다의 절대값 추이는 추이 탭에서 볼 수 있어요.")
                 .popoverTip(InfoButtonTip())
         }
         .cardStyle()

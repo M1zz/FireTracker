@@ -174,7 +174,7 @@ struct AssetsView: View {
             Button { showingBreakdown = true } label: {
                 HStack(spacing: 4) {
                     VStack(alignment: .leading, spacing: 1) {
-                        Text("순자산 \(Fmt.krw(total))원")
+                        Text("총자산 \(Fmt.krw(total))원")
                             .font(.caption)
                         Text("\(Fmt.wonKo(total)) · 내역 보기")
                             .font(.caption2)
@@ -305,15 +305,15 @@ struct AssetsView: View {
 
             if hasDebt {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(effectiveMode == .gross ? "자산 합계" : "순자산")
+                    Text(effectiveMode == .gross ? "순자산" : "총자산")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                     Text("\(Fmt.krw(effectiveMode == .gross ? grossAssets : total))원")
                         .font(.system(.title2, design: .rounded, weight: .bold))
                         .foregroundStyle(effectiveMode == .gross ? Theme.textPrimary : Theme.accent)
                     Text(effectiveMode == .gross
-                         ? "부채 \(Fmt.krw(debtTotal))원 차감 시 순자산 \(Fmt.krw(total))원"
-                         : "자산 합계 \(Fmt.krw(grossAssets))원 − 부채 \(Fmt.krw(debtTotal))원")
+                         ? "부채 \(Fmt.krw(debtTotal))원 차감 시 총자산 \(Fmt.krw(total))원"
+                         : "순자산 \(Fmt.krw(grossAssets))원 − 부채 \(Fmt.krw(debtTotal))원")
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -690,7 +690,7 @@ struct AssetEditor: View {
                     } footer: {
                         Text(liquidity == .liquid
                              ? "현금화해서 바로 쓸 수 있는 자산입니다. ‘쓸 수 있는 돈’에 포함됩니다."
-                             : "실거주 부동산·연금·보험처럼 당장 쓸 수 없는 자산입니다. 순자산엔 잡히지만 ‘쓸 수 있는 돈’에서는 빠집니다.")
+                             : "실거주 부동산·연금·보험처럼 당장 쓸 수 없는 자산입니다. 총자산엔 잡히지만 ‘쓸 수 있는 돈’에서는 빠집니다.")
                             .font(.caption)
                     }
                 }
@@ -735,7 +735,7 @@ struct AssetEditor: View {
                         TextField(isDebt ? "남은 대출 잔액 (원)" : "금액 (원)", text: $amount.commaGrouped)
                             .keyboardType(.numberPad)
                         if let v = Double(amount), v > 0 {
-                            Text(isDebt ? "순자산에서 −\(Fmt.krwBoth(v)) 차감됩니다."
+                            Text(isDebt ? "총자산에서 −\(Fmt.krwBoth(v)) 차감됩니다."
                                         : "= \(Fmt.krwBoth(v))")
                                 .font(.caption)
                                 .foregroundStyle(isDebt ? Theme.negative : Theme.textSecond)
@@ -1006,7 +1006,7 @@ struct AssetEditor: View {
                 compositionRow("\(assetClass.label) 지분 (묶임)",
                                symbol: "lock.fill", value: equity, tint: Theme.textSecond)
                 HStack {
-                    Text("순자산 기여")
+                    Text("총자산 기여")
                     Spacer()
                     Text("\(Fmt.krw(value))원")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
@@ -1016,7 +1016,7 @@ struct AssetEditor: View {
         } header: {
             Text("전세 보증금")
         } footer: {
-            Text("받은 보증금은 언젠가 돌려줘야 하지만 지금은 현금으로 보유 중이라, 순자산은 평가액 그대로입니다. 단지 구성이 ‘현금 + 부동산 지분’으로 나뉘어, 실거주(전액 묶임)와 달리 쓸 수 있는 현금이 생깁니다.")
+            Text("받은 보증금은 언젠가 돌려줘야 하지만 지금은 현금으로 보유 중이라, 총자산은 평가액 그대로입니다. 단지 구성이 ‘현금 + 부동산 지분’으로 나뉘어, 실거주(전액 묶임)와 달리 쓸 수 있는 현금이 생깁니다.")
                 .font(.caption)
         }
     }
@@ -1208,7 +1208,7 @@ struct RecordSheet: View {
                 Section("기간") {
                     DatePicker("월", selection: $date, displayedComponents: .date)
                 }
-                Section("이번 달 순자산") {
+                Section("이번 달 총자산") {
                     HStack {
                         Text("쓸 수 있는 돈 (유동)")
                         Spacer()
@@ -1217,7 +1217,7 @@ struct RecordSheet: View {
                             .foregroundStyle(Theme.positive)
                     }
                     HStack {
-                        Text("순자산")
+                        Text("총자산")
                         Spacer()
                         Text("\(Fmt.krw(total))원")
                             .font(.system(.body, design: .rounded).weight(.semibold))
@@ -1611,7 +1611,7 @@ struct MoneyReadout: View {
 }
 
 // Itemized basis for net worth — shows how each asset/debt contributes so the
-// user can see exactly why 순자산 = 총자산 − 부채 lands where it does.
+// user can see exactly why 총자산(net) = 순자산(보유 자산) − 부채 lands where it does.
 struct NetWorthBreakdownView: View {
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
@@ -1627,7 +1627,7 @@ struct NetWorthBreakdownView: View {
             Form {
                 Section {
                     HStack {
-                        Text("순자산").font(.headline)
+                        Text("총자산").font(.headline)
                         Spacer()
                         VStack(alignment: .trailing, spacing: 1) {
                             Text("\(Fmt.krw(netWorth))원")
@@ -1638,11 +1638,11 @@ struct NetWorthBreakdownView: View {
                                 .foregroundStyle(Theme.textSecond)
                         }
                     }
-                    Text("순자산 = 자산 합계(\(Fmt.krw(grossAssets))원) − 부채(\(Fmt.krw(debtTotal))원)")
+                    Text("총자산 = 순자산(\(Fmt.krw(grossAssets))원) − 부채(\(Fmt.krw(debtTotal))원)")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 } footer: {
-                    Text("아래에서 자산·부채가 각각 순자산에 얼마씩 더하고 빼는지 확인하세요. 빚을 1,100만 졌는데 순자산이 −600만이라면, 자산 쪽 합이 500만이라는 뜻이에요.")
+                    Text("아래에서 순자산·부채가 각각 총자산에 얼마씩 더하고 빼는지 확인하세요. 빚을 1,100만 졌는데 총자산이 −600만이라면, 순자산(보유 자산) 합이 500만이라는 뜻이에요.")
                         .font(.caption)
                 }
 
@@ -1653,9 +1653,9 @@ struct NetWorthBreakdownView: View {
                     ForEach(positives) { a in
                         breakdownRow(a, value: a.netValue, sign: "+", tint: Theme.positive)
                     }
-                    subtotal("자산 합계", grossAssets, tint: Theme.textPrimary)
+                    subtotal("순자산", grossAssets, tint: Theme.textPrimary)
                 } header: {
-                    Text("자산 (+)")
+                    Text("보유 자산 (+)")
                 }
 
                 if !debts.isEmpty {
@@ -1672,7 +1672,7 @@ struct NetWorthBreakdownView: View {
             .scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)
             .background(Theme.bg.ignoresSafeArea())
-            .navigationTitle("순자산 내역")
+            .navigationTitle("총자산 내역")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("닫기") { dismiss() } }

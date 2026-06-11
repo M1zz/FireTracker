@@ -100,6 +100,9 @@ struct DashboardView: View {
     @State private var showingAddAsset = false
     @State private var totalMode: AssetTotalMode = .gross
     @State private var milestoneMetric: FireGoalType = .assets
+    // 기간별 목표 그래프에서 보고 있는 구간(이번 달/올해/5년/은퇴). 전체를 한 번에
+    // 펼치지 않고 고른 구간만 확대해 본다.
+    @State private var milestoneHorizonLabel: String = "올해"
     // 변화 카드 우측 상단 토글: 켜면 총자산 변화량을 롤링 숫자로 강조.
     @State private var showTotalChange = false
     @State private var animatedTotalChange: Double = 0
@@ -221,30 +224,19 @@ struct DashboardView: View {
     }
 
     // --- 첫 화면 요약: 지난 기록 이후 변화 & 목표 근접도 ---
-    // Change since the last saved record, counting only assets that existed in
-    // that record so newly-registered holdings don't look like growth. Gross
-    // tracks asset value only; net also folds in debt changes — the two differ
-    // when debt moved, so we surface both.
-    // 지난 기록 대비 변화. assets = 순수 자산(+) 증감, debt = 부채 증감(+면 빚이 늘어남).
-    // 부채도 자산이므로 총자산 = assets + debt, 순자산 = assets − debt.
+    // 지난 기록 대비 변화. 아래 '무엇이 바뀌었나' 목록(assetDeltas)과 동일한 기준으로
+    // 집계해 막대 합 = 목록 합이 되도록 한다(새로 추가/삭제된 자산도 모두 포함).
+    // assets = 비부채 자산 증감 합, debt = 부채 증감 합(+면 빚이 늘어남).
+    // 총자산(net) = assets − debt, 순자산(보유 자산) = assets.
     private var lastRecordChange: (assets: Double, debt: Double)? {
         guard let last = latest else { return nil }
-        var recorded: [UUID: Double] = [:]
-        for entry in last.entries {
-            if let key = entry.catalogKey { recorded[key, default: 0] += entry.amount }
+        // 자산별 키가 없는 옛 기록은 항목 귀속이 불가 → 순변화만.
+        guard last.entries.contains(where: { $0.catalogKey != nil }) else {
+            return (assets: netWorth - last.netWorth, debt: 0)
         }
-        guard !recorded.isEmpty else {
-            // 옛 기록(자산별 키 없음) — 부채 분리 불가, 순변화만.
-            let d = netWorth - last.netWorth
-            return (assets: d, debt: 0)
-        }
-        var dAssets = 0.0, dDebt = 0.0
-        for asset in assets {
-            guard let prior = recorded[asset.key] else { continue }
-            let dNet = asset.netValue - prior          // 부채는 netValue가 음수로 저장됨
-            if asset.isDebt { dDebt += -dNet }          // 빚이 늘면 +
-            else { dAssets += dNet }
-        }
+        let items = assetDeltas
+        let dAssets = items.filter { !$0.isDebt }.reduce(0) { $0 + $1.netDelta }
+        let dDebt = items.filter { $0.isDebt }.reduce(0) { $0 + (-$1.netDelta) } // 빚 증가를 +로
         return (assets: dAssets, debt: dDebt)
     }
     // 순자산 변화 — 목표 달성률·총자산 막대 캡션에서 공용.
@@ -525,6 +517,8 @@ struct DashboardView: View {
     // 현재 카탈로그를 지난 기록(latest 스냅샷)과 항목별로 비교해 증감 목록을 만든다.
     private var assetDeltas: [AssetDelta] {
         guard let last = latest else { return [] }
+        // 자산별 키가 없는 옛 기록은 항목별 귀속 불가 → 목록을 비운다.
+        guard last.entries.contains(where: { $0.catalogKey != nil }) else { return [] }
         var prior: [UUID: Double] = [:]
         var meta: [UUID: (name: String, isDebt: Bool)] = [:]
         for e in last.entries {
@@ -602,8 +596,14 @@ struct DashboardView: View {
         let totalBar  = AssetChangeBar(label: "총자산", value: lastNetChange ?? 0, positiveIsGood: true)
         if showTotalChange {
             totalChangeGraph(totalBar)
+                .transition(.asymmetric(
+                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                    removal: .move(edge: .trailing).combined(with: .opacity)))
         } else {
             assetDebtGraph(assetsBar: assetsBar, debtBar: debtBar)
+                .transition(.asymmetric(
+                    insertion: .move(edge: .leading).combined(with: .opacity),
+                    removal: .move(edge: .leading).combined(with: .opacity)))
         }
     }
 
@@ -720,7 +720,7 @@ struct DashboardView: View {
                         Text("총자산 변화")
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
-                        Toggle("", isOn: $showTotalChange.animation(.spring(response: 0.45, dampingFraction: 0.82)))
+                        Toggle("", isOn: $showTotalChange.animation(.smooth(duration: 0.55)))
                             .labelsHidden()
                             .tint(Theme.accent)
                     }
@@ -774,10 +774,10 @@ struct DashboardView: View {
         .cardStyle()
     }
 
-    // 막대를 0선에서 부드럽게 자라나게 — 0으로 리셋 후 스프링으로 1까지.
+    // 막대가 0선에서 미끄러지듯 그려지게 — 0으로 리셋 후 부드럽게(글라이드) 1까지.
     private func animateChangeBars() {
         barAnim = 0
-        withAnimation(.spring(response: 0.65, dampingFraction: 0.72).delay(0.05)) {
+        withAnimation(.smooth(duration: 0.8, extraBounce: 0.05).delay(0.05)) {
             barAnim = 1
         }
     }
@@ -860,7 +860,8 @@ struct DashboardView: View {
     // Points along the required path from now to retirement (now → 이번달 →
     // 올해 → 5년 → 은퇴). They sit on the linear trajectory, so a line through
     // them *is* the path you need to climb.
-    private func trajectoryPoints(metric: FireGoalType) -> [TrajPoint] {
+    // 지금 → 선택한 구간(upTo)까지의 궤도. 전체(은퇴)가 아니라 고른 구간만 그린다.
+    private func trajectoryPoints(metric: FireGoalType, upTo horizon: Int, endLabel: String) -> [TrajPoint] {
         guard let m = settings.monthsToRetire else { return [] }
         let isAsset = metric == .assets
         let current = isAsset ? netWorth : monthlyPassiveIncome
@@ -869,17 +870,21 @@ struct DashboardView: View {
         let now = Date()
         func date(_ months: Int) -> Date { cal.date(byAdding: .month, value: months, to: now) ?? now }
         var pts: [TrajPoint] = [TrajPoint(date: now, value: current, label: "지금")]
-        for (label, mo) in [("이번 달", 1), ("올해", max(1, monthsLeftInYear)), ("5년", 60)] where mo < m {
+        // 선택 구간보다 앞에 있는 중간 마일스톤만 함께 표시.
+        for (label, mo) in [("이번 달", 1), ("올해", max(1, monthsLeftInYear)), ("5년", 60)] where mo < horizon {
             let t = FireEngine.milestoneTarget(current: current, goal: goal,
                                                monthsToRetire: m, horizonMonths: mo)
             pts.append(TrajPoint(date: date(mo), value: t, label: label))
         }
-        pts.append(TrajPoint(date: date(m), value: goal, label: "은퇴"))
+        let endVal = horizon >= m ? goal
+            : FireEngine.milestoneTarget(current: current, goal: goal, monthsToRetire: m, horizonMonths: horizon)
+        pts.append(TrajPoint(date: date(horizon), value: endVal, label: endLabel))
         return pts
     }
 
-    private func trajectoryChart(metric: FireGoalType) -> some View {
-        let pts = trajectoryPoints(metric: metric)
+    private func trajectoryChart(metric: FireGoalType, upTo horizon: Int, endLabel: String) -> some View {
+        let pts = trajectoryPoints(metric: metric, upTo: horizon, endLabel: endLabel)
+        let byYear = horizon > 18   // 짧은 구간은 월 단위 눈금, 길면 연 단위.
         return Chart {
             ForEach(pts) { p in
                 AreaMark(x: .value("시점", p.date), y: .value("값", p.value))
@@ -895,7 +900,7 @@ struct DashboardView: View {
                     .lineStyle(StrokeStyle(lineWidth: 2.5))
             }
             ForEach(pts) { p in
-                let edge = p.label == "지금" || p.label == "은퇴"
+                let edge = p.label == "지금" || p.label == endLabel
                 PointMark(x: .value("시점", p.date), y: .value("값", p.value))
                     .foregroundStyle(p.label == "지금" ? Theme.positive : Theme.accent)
                     .symbolSize(edge ? 90 : 45)
@@ -910,18 +915,22 @@ struct DashboardView: View {
         }
         .chartYAxis(.hidden)
         .chartXAxis {
-            AxisMarks(values: .stride(by: .year)) { value in
+            AxisMarks(values: .stride(by: byYear ? .year : .month, count: byYear ? 1 : 2)) { value in
                 AxisGridLine().foregroundStyle(Theme.hairline)
-                AxisValueLabel(format: .dateTime.year())
+                AxisValueLabel(format: byYear ? .dateTime.year() : .dateTime.month(.abbreviated))
             }
         }
         .frame(height: 190)
+        .animation(.smooth(duration: 0.5), value: horizon)
     }
 
     // The retirement goal, sliced into 이번달·올해·5년·은퇴 so progress isn't only
     // measured against the far-off finish line.
     private var milestoneGoalsCard: some View {
         let metric = settings.fireGoalType == .both ? milestoneMetric : settings.fireGoalType
+        let horizons = milestoneHorizons
+        // 선택한 구간 — 저장된 라벨이 목록에 없으면 가장 가까운 구간으로.
+        let sel = horizons.first { $0.label == milestoneHorizonLabel } ?? horizons.first ?? ("은퇴", settings.monthsToRetire ?? 0)
         return VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("기간별 목표")
@@ -938,24 +947,35 @@ struct DashboardView: View {
                 }
             }
 
-            // 은퇴까지 자산 궤도 — 지금 위치에서 은퇴 목표까지 올라야 할 길.
-            trajectoryChart(metric: metric)
-            if let m = settings.monthsToRetire {
-                let goal = metric == .assets ? fireNumber : settings.incomeGoalMonthly
-                Text("은퇴까지 \(m / 12)년 \(m % 12)개월 · \(metric == .assets ? "목표 \(Fmt.krw(goal))원" : "목표 월 \(Fmt.krw(goal))원")")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.textSecond)
+            // 구간 선택 — 고른 구간만 확대해서 본다(전체 은퇴까지 한 번에 X).
+            if horizons.count > 1 {
+                Picker("", selection: $milestoneHorizonLabel.animation(.smooth(duration: 0.5))) {
+                    ForEach(horizons, id: \.label) { h in Text(h.label).tag(h.label) }
+                }
+                .pickerStyle(.segmented)
             }
 
+            // 지금 위치에서 선택한 구간 목표까지 올라야 할 길.
+            trajectoryChart(metric: metric, upTo: sel.months, endLabel: sel.label)
+            Text("\(sel.label) 목표까지 · \(horizonRemainText(sel.months))")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+
             Divider().overlay(Theme.hairline)
-            VStack(spacing: 14) {
-                ForEach(milestoneHorizons, id: \.label) { h in
-                    milestoneRow(label: h.label, months: h.months, metric: metric)
-                }
-            }
+            // 선택한 구간의 진행도만 — 다른 구간은 위 선택기로 전환.
+            milestoneRow(label: sel.label, months: sel.months, metric: metric)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
+    }
+
+    // "3개월"·"2년 4개월"·"오늘" 같은 남은 기간 텍스트.
+    private func horizonRemainText(_ months: Int) -> String {
+        if months <= 0 { return "이번 달" }
+        let y = months / 12, mo = months % 12
+        if y > 0 && mo > 0 { return "\(y)년 \(mo)개월 뒤" }
+        if y > 0 { return "\(y)년 뒤" }
+        return "\(mo)개월 뒤"
     }
 
     // Hero: the cash-flow question — does the income my assets produce cover the

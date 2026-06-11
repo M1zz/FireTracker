@@ -1045,6 +1045,7 @@ struct AssetEditor: View {
     private var namePlaceholder: String {
         switch assetClass {
         case .stocks:     return "이름 (예: 삼성전자, Apple)"
+        case .fund:       return "이름 (예: KODEX 200, SPY)"
         case .crypto:     return "이름 (예: 비트코인)"
         case .realEstate: return "아파트명 (예: 래미안)"
         case .jeonse:     return "이름 (예: 우리집 전세)"

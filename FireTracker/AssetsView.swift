@@ -743,6 +743,7 @@ struct AssetEditor: View {
     @Environment(\.dismiss) private var dismiss
     @Query private var settingsList: [FireSettings]
     @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
+    @Query(sort: \Asset.sortOrder) private var allAssets: [Asset]
 
     let asset: Asset?
     let nextSortOrder: Int
@@ -876,6 +877,9 @@ struct AssetEditor: View {
                     TextField(namePlaceholder, text: $name)
                 }
 
+                // 티커·종목코드(선택) — 넣으면 시세 자동으로 현재가를 불러올 수 있다고 안내.
+                tickerSection
+
                 // 세부 종목 — 평가액을 종목별로 쪼개 할당 (부채 제외).
                 // 눈에 잘 띄도록 기본 정보 바로 다음, 최상단에 노출.
                 if showAdvanced && !isDebt {
@@ -920,14 +924,15 @@ struct AssetEditor: View {
                     }
                 }
 
-                if showAdvanced && assetClass.supportsAutoPrice {
+                // 티커를 넣었거나 세부 설정을 펼치면 시세 자동(수량·불러오기)을 노출.
+                if assetClass.supportsAutoPrice && (showAdvanced || !symbol.isEmpty) {
                     Section {
                         Toggle(isOn: $auto) {
                             Label("시세 자동", systemImage: "antenna.radiowaves.left.and.right")
                         }
                         .tint(Theme.accent)
                         if auto {
-                            autoInputs
+                            quantityInputs
                             fetchControls
                         }
                     } header: {
@@ -966,6 +971,7 @@ struct AssetEditor: View {
                                 .foregroundStyle(isDebt ? Theme.negative : Theme.textSecond)
                         }
                     }
+                    portfolioShareReadout
                 }
 
                 // 간단 입력(새 자산 기본): 여기까지만 — 종류·이름·금액이면 끝.
@@ -1042,6 +1048,51 @@ struct AssetEditor: View {
 
     private var isDebt: Bool { assetClass == .debt }
 
+    // 이 자산과 같은 편(자산/부채)에서, 편집 중인 자산을 뺀 나머지 합.
+    private var otherSameSideTotal: Double {
+        allAssets
+            .filter { $0.isDebt == isDebt && $0.key != asset?.key }
+            .reduce(0) { $0 + abs($1.netValue) }
+    }
+
+    // 입력 중인 금액이 전체(자산 또는 부채)에서 차지하는 금액·비중을 실시간 표시.
+    @ViewBuilder
+    private var portfolioShareReadout: some View {
+        let thisAmount = abs(Double(amount) ?? 0)
+        let others = otherSameSideTotal
+        let total = others + thisAmount
+        let pct = total > 0 ? thisAmount / total : 0
+        let sideLabel = isDebt ? "전체 부채" : "전체 자산"
+        let tint = isDebt ? Theme.negative : Theme.accent
+        Divider().overlay(Theme.hairline)
+        HStack {
+            Text("현재 \(sideLabel)")
+                .font(.caption).foregroundStyle(Theme.textSecond)
+            Spacer()
+            Text("\(Fmt.krw(others))원")
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(Theme.textPrimary)
+        }
+        if thisAmount > 0 {
+            HStack {
+                Text("이 자산 포함 시")
+                    .font(.caption).foregroundStyle(Theme.textSecond)
+                Spacer()
+                Text("\(Fmt.krw(thisAmount))원 · \(sideLabel)의 \(Fmt.percent(pct, fraction: 1))")
+                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    .foregroundStyle(tint)
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Theme.hairline)
+                    Capsule().fill(tint)
+                        .frame(width: max(2, geo.size.width * min(pct, 1)))
+                }
+            }
+            .frame(height: 6)
+        }
+    }
+
     // 고정된 종류의 표시명 — 직접 입력이면 사용자 라벨.
     private var lockedTitle: String {
         assetClass == .custom && !customLabel.isEmpty ? customLabel : assetClass.label
@@ -1105,14 +1156,21 @@ struct AssetEditor: View {
     // 취득가 대비 평가 차익 — 자산이 값이 올라서 만든 부가가치.
     private var costBasisSection: some View {
         Section {
-            TextField("취득가 (산 가격, 원)", text: $costBasis.commaGrouped)
+            TextField("투자 원금 (산 가격, 원)", text: $costBasis.commaGrouped)
                 .keyboardType(.numberPad)
             MoneyReadout(amount: costBasis)
             if let cb = Double(costBasis), cb > 0 {
                 let cur = Double(amount) ?? 0
+                HStack {
+                    Text("현재 평가액")
+                    Spacer()
+                    Text("\(Fmt.krw(cur))원")
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.textPrimary)
+                }
                 let g = cur - cb
                 HStack {
-                    Text("평가 차익")
+                    Text("평가 손익")
                     Spacer()
                     Text("\(g >= 0 ? "+" : "-")\(Fmt.krw(abs(g)))원 (\(g >= 0 ? "+" : "-")\(Fmt.percent(abs(g / cb), fraction: 1)))")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
@@ -1123,9 +1181,9 @@ struct AssetEditor: View {
                     .foregroundStyle(Theme.textSecond)
             }
         } header: {
-            Text("취득가 · 평가 차익")
+            Text("투자 원금 · 평가 손익")
         } footer: {
-            Text("산 가격을 넣으면 현재 평가액 대비 얼마나 올랐는지(부가가치)가 계산됩니다.")
+            Text("투자 원금(산 가격)은 그대로 두고, 평가액은 시세에 따라 바뀝니다. 둘의 차이가 평가 손익이에요. 평가액은 위 ‘평가액’ 칸 또는 시세 자동으로 갱신돼요.")
                 .font(.caption)
         }
     }
@@ -1367,29 +1425,68 @@ struct AssetEditor: View {
         }
     }
 
+    // 티커·종목코드(선택) 섹션 — 넣으면 시세 자동을 켜고 현재가를 불러올 수 있다고 안내.
     @ViewBuilder
-    private var autoInputs: some View {
+    private var tickerSection: some View {
+        if assetClass.supportsAutoPrice {
+            Section {
+                switch assetClass {
+                case .stocks:
+                    Picker("시장", selection: $currency) {
+                        Text("국내").tag("KRW")
+                        Text("미국").tag("USD")
+                    }
+                    .pickerStyle(.segmented)
+                    TextField(currency == "USD" ? "티커 (예: AAPL)" : "종목코드 6자리 (예: 005930)",
+                              text: $symbol)
+                        .textInputAutocapitalization(.characters)
+                        .keyboardType(currency == "USD" ? .asciiCapable : .numberPad)
+                case .crypto:
+                    TextField("코인 심볼 (예: BTC)", text: $symbol)
+                        .textInputAutocapitalization(.characters)
+                case .realEstate:
+                    TextField("법정동코드 5자리 (예: 11680)", text: $symbol)
+                        .keyboardType(.numberPad)
+                default:
+                    EmptyView()
+                }
+            } header: {
+                Text(assetClass == .realEstate ? "법정동코드 (선택)" : "티커 · 종목코드 (선택)")
+            } footer: {
+                Text(tickerHint).font(.caption)
+            }
+            .onChange(of: symbol) { _, new in
+                // 코드가 채워지면 시세 자동을 켜서 현재가를 불러올 수 있게 한다.
+                if !new.trimmingCharacters(in: .whitespaces).isEmpty { auto = true }
+            }
+        }
+    }
+
+    private var tickerHint: String {
+        switch assetClass {
+        case .stocks:
+            return "이름 대신 티커/종목코드를 넣으면 ‘시세 자동’으로 현재가를 불러올 수 있어요. 비워두면 금액만 직접 입력합니다."
+        case .crypto:
+            return "코인 심볼을 넣으면 업비트 시세로 현재가를 자동 계산해요(키 불필요). 비워두면 금액만 직접 입력합니다."
+        case .realEstate:
+            return "법정동코드를 넣으면 국토부 최근 실거래가를 불러올 수 있어요. 비워두면 금액만 직접 입력합니다."
+        default:
+            return ""
+        }
+    }
+
+    // 시세 자동일 때 입력하는 수량(또는 부동산 안내). 티커·종목코드는 위 tickerSection.
+    @ViewBuilder
+    private var quantityInputs: some View {
         switch assetClass {
         case .crypto:
-            TextField("코인 심볼 (예: BTC)", text: $symbol)
-                .textInputAutocapitalization(.characters)
             TextField("수량", text: $quantity)
                 .keyboardType(.decimalPad)
         case .stocks:
-            Picker("시장", selection: $currency) {
-                Text("국내").tag("KRW")
-                Text("미국").tag("USD")
-            }
-            .pickerStyle(.segmented)
-            TextField(currency == "USD" ? "티커 (예: AAPL)" : "종목코드 6자리 (예: 005930)", text: $symbol)
-                .textInputAutocapitalization(.characters)
-                .keyboardType(currency == "USD" ? .asciiCapable : .numberPad)
             TextField("보유 주식 수", text: $quantity)
                 .keyboardType(.decimalPad)
         case .realEstate:
-            TextField("법정동코드 5자리 (예: 11680)", text: $symbol)
-                .keyboardType(.numberPad)
-            Text("아파트명은 위 ‘이름’ 칸을 사용합니다.")
+            Text("아파트명은 위 ‘이름’ 칸, 법정동코드는 위 칸을 사용합니다.")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
         default:

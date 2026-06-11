@@ -43,8 +43,7 @@ struct SettingsView: View {
     // Rough manual annual dividend / passive income
     @State private var annualDividend: String = ""
 
-    // Live-pricing API credentials
-    @State private var finnhubKey: String = ""
+    // Live-pricing API credentials (Finnhub은 앱 내장 키 사용 — 입력칸 없음)
     @State private var kisAppKey: String = ""
     @State private var kisAppSecret: String = ""
     @State private var dataGoKey: String = ""
@@ -173,9 +172,6 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    apiField(title: "Finnhub (미국주식)",
-                             hint: "finnhub.io 무료 가입 후 API Key",
-                             text: $finnhubKey)
                     apiField(title: "한국투자증권 App Key (국내주식)",
                              hint: "KIS Developers에서 발급",
                              text: $kisAppKey)
@@ -188,7 +184,7 @@ struct SettingsView: View {
                 } header: {
                     Text("자동 시세 API 키")
                 } footer: {
-                    Text("암호화폐(업비트)와 환율은 키 없이 자동으로 불러옵니다. 위 키는 해당 자산에서 ‘시세 자동’을 켰을 때만 사용됩니다.")
+                    Text("미국 주식(Finnhub)·암호화폐(업비트)·환율은 키 없이 자동으로 불러옵니다. 위 키는 국내 주식·부동산에서 ‘시세 자동’을 켰을 때만 사용됩니다.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -200,7 +196,6 @@ struct SettingsView: View {
             .onChange(of: annualExpense) { persist() }
             .onChange(of: swr) { persist() }
             .onChange(of: expectedReturn) { persist() }
-            .onChange(of: finnhubKey) { persist() }
             .onChange(of: kisAppKey) { persist() }
             .onChange(of: kisAppSecret) { persist() }
             .onChange(of: dataGoKey) { persist() }
@@ -368,7 +363,6 @@ struct SettingsView: View {
         goalType = settings.fireGoalType
         currentAge = settings.currentAge > 0 ? String(settings.currentAge) : ""
         retireAge = settings.targetRetireAge > 0 ? String(settings.targetRetireAge) : ""
-        finnhubKey = settings.finnhubKey
         kisAppKey = settings.kisAppKey
         kisAppSecret = settings.kisAppSecret
         dataGoKey = settings.dataGoKey
@@ -393,7 +387,6 @@ struct SettingsView: View {
         target.fireGoalType = goalType
         target.currentAge = Int(currentAge) ?? 0
         target.targetRetireAge = Int(retireAge) ?? 0
-        target.finnhubKey = finnhubKey
         target.kisAppKey = kisAppKey
         target.kisAppSecret = kisAppSecret
         target.dataGoKey = dataGoKey

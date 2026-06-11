@@ -26,6 +26,11 @@ enum PriceError: LocalizedError {
 // `AssetEntry.amount`.
 enum PriceService {
 
+    // 앱 내장 Finnhub 키(미국 주식). 설정에 사용자가 따로 키를 넣지 않아도
+    // 미국 주식 시세가 바로 동작하도록 기본 제공한다.
+    // ⚠️ 공개 저장소에 노출됨 — 도용·차단 시 finnhub.io에서 재발급할 것.
+    static let defaultFinnhubKey = "d8lbq1pr01qtamgtumogd8lbq1pr01qtamgtump0"
+
     // Unified dispatch used by the asset editor: given a holding's definition,
     // returns its current value (KRW) and the per-unit price (KRW).
     static func autoValue(assetClass: AssetClass,
@@ -100,10 +105,12 @@ enum PriceService {
 
     // MARK: - 미국 주식 (Finnhub, 키 필요) → KRW per share
     static func usStockUnitKRW(symbol: String, finnhubKey: String) async throws -> Double {
-        guard !finnhubKey.isEmpty else { throw PriceError.missingKey("Finnhub(미국주식)") }
+        // 사용자가 키를 따로 넣지 않으면 앱 내장 기본 키를 쓴다.
+        let key = finnhubKey.isEmpty ? defaultFinnhubKey : finnhubKey
+        guard !key.isEmpty else { throw PriceError.missingKey("Finnhub(미국주식)") }
         let sym = symbol.uppercased().trimmingCharacters(in: .whitespaces)
         guard !sym.isEmpty else { throw PriceError.message("티커를 입력하세요 (예: AAPL)") }
-        guard let url = URL(string: "https://finnhub.io/api/v1/quote?symbol=\(sym)&token=\(finnhubKey)") else {
+        guard let url = URL(string: "https://finnhub.io/api/v1/quote?symbol=\(sym)&token=\(key)") else {
             throw PriceError.badURL
         }
         let result = try await json(url)

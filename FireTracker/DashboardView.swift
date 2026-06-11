@@ -100,6 +100,9 @@ struct DashboardView: View {
     @State private var showingAddAsset = false
     @State private var totalMode: AssetTotalMode = .gross
     @State private var milestoneMetric: FireGoalType = .assets
+    // 변화 카드 우측 상단 토글: 켜면 총자산 변화량을 롤링 숫자로 강조.
+    @State private var showTotalChange = false
+    @State private var animatedTotalChange: Double = 0
     private let milestoneSetupTip = MilestoneSetupTip()
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
@@ -516,6 +519,9 @@ struct DashboardView: View {
         let totalBar  = AssetChangeBar(label: "총자산", value: lastNetChange ?? 0, positiveIsGood: true)
         // 부채가 순자산과 같은 부호면 순자산 끝에서 이어 그려 겹치지 않게 한다.
         let debtStart = assetsBar.value * debtBar.value > 0 ? assetsBar.value : 0
+        // 0을 카드 가로 중앙에 두기 위한 좌우 대칭 도메인(±최대 변화량).
+        let bound = max([assetsBar.value, debtStart + debtBar.value, totalBar.value]
+                        .map { abs($0) }.max() ?? 0, 1) * 1.2
         return VStack(alignment: .leading, spacing: 10) {
             // 순자산·부채 값은 차트 위에.
             HStack(spacing: 14) {
@@ -552,6 +558,7 @@ struct DashboardView: View {
                     .foregroundStyle(Theme.hairline)
             }
             .chartYScale(domain: ["순자산·부채", "총자산"])   // 위: 순자산·부채, 아래: 총자산
+            .chartXScale(domain: -bound ... bound)            // 0을 카드 중앙에
             .chartYAxis(.hidden)
             .chartXAxis {
                 AxisMarks { _ in
@@ -620,20 +627,51 @@ struct DashboardView: View {
 
     private var welcomeCard: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // 카드 타이틀 + 비교 대상 기록의 날짜(정체).
-            VStack(alignment: .leading, spacing: 2) {
-                Text("지난 기록 대비 변화")
-                    .font(.headline)
-                    .foregroundStyle(Theme.textPrimary)
-                if let last = latest {
-                    let days = daysSince(last.date)
-                    Text(recordDateText(last.date) + (days > 0 ? " · \(days)일 전" : " · 오늘"))
-                        .font(.caption2)
-                        .foregroundStyle(Theme.textSecond)
+            // 카드 타이틀 + 우측 상단 '총자산 변화' 토글.
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("지난 기록 대비 변화")
+                        .font(.headline)
+                        .foregroundStyle(Theme.textPrimary)
+                    if let last = latest {
+                        let days = daysSince(last.date)
+                        Text(recordDateText(last.date) + (days > 0 ? " · \(days)일 전" : " · 오늘"))
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                }
+                Spacer()
+                if latest != nil {
+                    HStack(spacing: 6) {
+                        Text("총자산 변화")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                        Toggle("", isOn: $showTotalChange.animation(.spring(response: 0.45, dampingFraction: 0.82)))
+                            .labelsHidden()
+                            .tint(Theme.accent)
+                    }
+                    .padding(.trailing, 26)   // 우측 상단 info 버튼과 겹치지 않게
                 }
             }
 
-            // 지난 기록 대비 변화만 — 자산·부채·순자산 증감을 가로 막대로.
+            // 토글 ON: 총자산 변화량을 롤링 숫자로 강조.
+            if showTotalChange, latest != nil {
+                let net = lastNetChange ?? 0
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("총자산 변화")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                    Text(signedKRW(animatedTotalChange) + "원")
+                        .font(.system(size: 34, weight: .bold, design: .rounded))
+                        .foregroundStyle(net < 0 ? Theme.negative : (net > 0 ? Theme.positive : Theme.textSecond))
+                        .contentTransition(.numericText())
+                        .monospacedDigit()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .transition(.scale(scale: 0.92, anchor: .leading).combined(with: .opacity))
+            }
+
+            // 지난 기록 대비 변화만 — 순자산·부채·총자산 증감을 가로 막대로.
             if latest != nil {
                 netWorthChangeChart
             } else {
@@ -649,8 +687,16 @@ struct DashboardView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .overlay(alignment: .topTrailing) {
-            InfoPopoverButton(text: "지난 기록 대비 변화만 가로 막대로 봐요. 0을 기준으로 +는 오른쪽, −는 왼쪽. 순자산은 보유 자산 증감, 부채는 −로, 총자산 = 순자산 + 부채(net)예요. 빚 내서 1,100만 주식을 사면 순자산 +1,100·부채 −1,100·총자산 0. 부채가 더 늘면 총자산이 −로 내려가요. 달마다의 절대값 추이는 추이 탭에서 볼 수 있어요.")
+            InfoPopoverButton(text: "지난 기록 대비 변화만 가로 막대로 봐요. 0을 기준으로 +는 오른쪽, −는 왼쪽. 순자산은 보유 자산 증감, 부채는 −로, 총자산 = 순자산 + 부채(net)예요. 빚 내서 1,100만 주식을 사면 순자산 +1,100·부채 −1,100·총자산 0. 부채가 더 늘면 총자산이 −로 내려가요. 우측 상단 토글을 켜면 총자산 변화량이 크게 표시돼요.")
                 .popoverTip(InfoButtonTip())
+        }
+        .onChange(of: showTotalChange) { _, on in
+            if on {
+                animatedTotalChange = 0
+                withAnimation(.easeOut(duration: 0.8)) { animatedTotalChange = lastNetChange ?? 0 }
+            } else {
+                animatedTotalChange = 0
+            }
         }
         .cardStyle()
     }

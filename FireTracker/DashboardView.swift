@@ -913,7 +913,18 @@ struct DashboardView: View {
                     }
             }
         }
-        .chartYAxis(.hidden)
+        .chartYAxis {
+            AxisMarks(position: .leading) { value in
+                AxisGridLine().foregroundStyle(Theme.hairline)
+                AxisValueLabel {
+                    if let v = value.as(Double.self) {
+                        Text("\(Fmt.krw(v))원")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                }
+            }
+        }
         .chartXAxis {
             AxisMarks(values: .stride(by: byYear ? .year : .month, count: byYear ? 1 : 2)) { value in
                 AxisGridLine().foregroundStyle(Theme.hairline)

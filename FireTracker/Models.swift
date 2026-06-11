@@ -51,9 +51,10 @@ enum AssetClass: String, Codable, CaseIterable, Identifiable {
     var isDebt: Bool { self == .debt }
 
     // Whether a live price/value can be fetched for this class.
+    // 펀드·ETF는 ETF처럼 티커/종목코드로 거래되는 경우 주식과 동일하게 조회 가능.
     var supportsAutoPrice: Bool {
         switch self {
-        case .crypto, .stocks, .realEstate: return true
+        case .crypto, .stocks, .fund, .realEstate: return true
         default: return false
         }
     }

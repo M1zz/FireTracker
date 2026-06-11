@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>퇴사각 · 지원</title>
+<meta name="description" content="퇴사각 지원 페이지 — 자산·순자산·FIRE(조기은퇴) 목표 추적 앱" />
+<style>
+  :root{
+    --bg:#0f1115; --surface:#171a21; --surface2:#1f242d; --line:#2a2f3a;
+    --text:#e9edf2; --muted:#9aa3b0; --accent:#4CAF8E; --accent2:#E8A33D;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
+       background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{padding:64px 0 40px;text-align:center}
+  .logo{width:96px;height:96px;border-radius:22px;object-fit:cover;border:1px solid var(--line);margin-bottom:18px}
+  h1{font-size:30px;margin:6px 0 6px;letter-spacing:-.4px}
+  .tag{color:var(--muted);font-size:16px;margin:0}
+  section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px;margin:18px 0}
+  h2{font-size:19px;margin:0 0 14px;letter-spacing:-.3px}
+  ul{margin:0;padding-left:20px}
+  li{margin:7px 0}
+  .feat{display:grid;grid-template-columns:1fr;gap:10px;margin:0;padding:0;list-style:none}
+  .feat li{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);
+           border-radius:12px;padding:12px 14px;margin:0}
+  .feat .ico{font-size:18px;line-height:1.5}
+  .qa{margin:14px 0}
+  .qa h3{font-size:15px;margin:0 0 4px;color:var(--text)}
+  .qa p{margin:0;color:var(--muted);font-size:15px}
+  a{color:var(--accent)}
+  .btn{display:inline-block;background:var(--accent);color:#06120d;font-weight:700;text-decoration:none;
+       padding:12px 20px;border-radius:12px;margin-top:6px}
+  .contact{font-size:17px}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 60px}
+  footer a{color:var(--muted)}
+  code{background:var(--surface2);padding:2px 6px;border-radius:6px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <img class="logo" src="./icon.png" alt="퇴사각 로고" />
+    <h1>퇴사각</h1>
+    <p class="tag">자산 · 순자산 · FIRE(조기은퇴) 목표를 한눈에 추적하는 앱</p>
+  </header>
+
+  <section>
+    <h2>소개</h2>
+    <p>퇴사각은 보유한 자산과 부채를 등록해 <strong>순자산과 총자산</strong>을 계산하고,
+       매달 기록을 쌓아 <strong>변화 추이</strong>와 <strong>FIRE(경제적 자유) 목표 달성률</strong>을 보여주는
+       개인 재무 추적 앱입니다. 모든 데이터는 <strong>사용자 기기에만 저장</strong>되며 별도의 회원가입이 없습니다.</p>
+  </section>
+
+  <section>
+    <h2>주요 기능</h2>
+    <ul class="feat">
+      <li><span class="ico">📊</span><span>주식·코인·부동산·현금·연금·부채 등 카테고리별 자산 관리와 종목별 세부 기록</span></li>
+      <li><span class="ico">📈</span><span>월별 자산·부채·순자산 추이 그래프와 지난 기록 대비 변화</span></li>
+      <li><span class="ico">🎯</span><span>목표 지출·인출률 기반 FIRE 달성률과 올해 말 예측</span></li>
+      <li><span class="ico">📡</span><span>티커·종목코드를 넣으면 미국 주식·국내 주식·암호화폐·부동산 시세 자동 조회</span></li>
+      <li><span class="ico">🖼️</span><span>증권사 보유종목 스크린샷을 기기 내부에서 인식해 한 번에 추가</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>자주 묻는 질문</h2>
+    <div class="qa">
+      <h3>내 자산 데이터는 어디에 저장되나요?</h3>
+      <p>모두 사용자의 기기 안(Apple SwiftData)에만 저장됩니다. 서버로 업로드되지 않으며 개발자도 볼 수 없습니다.</p>
+    </div>
+    <div class="qa">
+      <h3>시세가 자동으로 안 불러와져요.</h3>
+      <p>미국 주식·암호화폐·환율은 키 없이 동작합니다. 국내 주식·부동산 시세는 설정 탭에서 해당 API 키(한국투자증권·공공데이터포털)를 입력해야 합니다. 네트워크 연결과 올바른 티커/종목코드도 확인해주세요.</p>
+    </div>
+    <div class="qa">
+      <h3>데이터를 삭제하려면?</h3>
+      <p>앱을 삭제하면 기기에 저장된 모든 데이터가 함께 삭제됩니다.</p>
+    </div>
+    <div class="qa">
+      <h3>총자산과 순자산의 차이가 뭔가요?</h3>
+      <p>앱에서 ‘순자산’은 보유 자산의 합, ‘총자산’은 거기서 부채를 뺀 값(자산 − 부채)입니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>문의</h2>
+    <p class="contact">버그 제보·기능 제안·문의는 이메일로 보내주세요.</p>
+    <p><a class="btn" href="mailto:mizzking75@gmail.com">mizzking75@gmail.com</a></p>
+  </section>
+
+  <section>
+    <h2>개인정보처리방침</h2>
+    <p>앱이 어떤 정보를 다루는지(그리고 다루지 않는지)는 아래에서 확인하세요.</p>
+    <p><a href="./privacy.html">개인정보처리방침 보기 →</a></p>
+  </section>
+
+  <footer>
+    <p>© 2026 퇴사각 · <a href="./privacy.html">개인정보처리방침</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

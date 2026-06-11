@@ -103,6 +103,8 @@ struct DashboardView: View {
     // 변화 카드 우측 상단 토글: 켜면 총자산 변화량을 롤링 숫자로 강조.
     @State private var showTotalChange = false
     @State private var animatedTotalChange: Double = 0
+    // 0→1로 올라가며 막대가 0선에서 자라나게 하는 진행도.
+    @State private var barAnim: Double = 0
     private let milestoneSetupTip = MilestoneSetupTip()
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
@@ -510,69 +512,60 @@ struct DashboardView: View {
         "\(v > 0 ? "+" : (v < 0 ? "−" : ""))\(Fmt.krw(abs(v)))"
     }
 
-    // 지난 기록 대비 변화를 가로 막대로. 순자산·부채는 같은 수평선(한 행) 위에서
-    // 0을 기준으로 갈라지고, 총자산(net)은 그 아래 별도 막대.
+    // 우측 상단 토글로 그래프 택일: OFF = 순자산·부채, ON = 총자산.
+    @ViewBuilder
     private var netWorthChangeChart: some View {
         let c = lastRecordChange
         let assetsBar = AssetChangeBar(label: "순자산", value: c?.assets ?? 0,  positiveIsGood: true)
         let debtBar   = AssetChangeBar(label: "부채",   value: -(c?.debt ?? 0), positiveIsGood: true)
         let totalBar  = AssetChangeBar(label: "총자산", value: lastNetChange ?? 0, positiveIsGood: true)
+        if showTotalChange {
+            totalChangeGraph(totalBar)
+        } else {
+            assetDebtGraph(assetsBar: assetsBar, debtBar: debtBar)
+        }
+    }
+
+    // 순자산·부채만: 같은 수평선에서 0 기준으로 갈라지는 두 막대.
+    // 라벨은 그래프 위치에 맞춰 왼쪽(부채·−) → 오른쪽(순자산·+) 순서.
+    private func assetDebtGraph(assetsBar: AssetChangeBar, debtBar: AssetChangeBar) -> some View {
         // 부채가 순자산과 같은 부호면 순자산 끝에서 이어 그려 겹치지 않게 한다.
         let debtStart = assetsBar.value * debtBar.value > 0 ? assetsBar.value : 0
-        // 0을 카드 가로 중앙에 두기 위한 좌우 대칭 도메인(±최대 변화량).
-        let bound = max([assetsBar.value, debtStart + debtBar.value, totalBar.value]
-                        .map { abs($0) }.max() ?? 0, 1) * 1.2
+        let bound = max([assetsBar.value, debtStart + debtBar.value].map { abs($0) }.max() ?? 0, 1) * 1.2
         return VStack(alignment: .leading, spacing: 10) {
-            // 순자산·부채 값은 차트 위에.
             HStack(spacing: 14) {
-                changeLegendItem(assetsBar)
                 changeLegendItem(debtBar)
+                changeLegendItem(assetsBar)
                 Spacer()
             }
             Chart {
-                // 같은 수평선 위에서 보통 순자산은 0의 오른쪽(+), 부채는 왼쪽(−).
-                BarMark(
-                    xStart: .value("시작", 0.0),
-                    xEnd: .value("변화", assetsBar.value),
-                    y: .value("항목", "순자산·부채"),
-                    height: .ratio(0.5)
-                )
-                .foregroundStyle(changeBarColor(assetsBar))
-                .cornerRadius(4)
-                BarMark(
-                    xStart: .value("시작", debtStart),
-                    xEnd: .value("변화", debtStart + debtBar.value),
-                    y: .value("항목", "순자산·부채"),
-                    height: .ratio(0.5)
-                )
-                .foregroundStyle(changeBarColor(debtBar))
-                .cornerRadius(4)
-                BarMark(
-                    x: .value("변화", totalBar.value),
-                    y: .value("항목", "총자산"),
-                    height: .ratio(0.5)
-                )
-                .foregroundStyle(changeBarColor(totalBar))
-                .cornerRadius(4)
-                RuleMark(x: .value("0", 0.0))
-                    .foregroundStyle(Theme.hairline)
+                BarMark(xStart: .value("시작", 0.0), xEnd: .value("변화", assetsBar.value * barAnim),
+                        y: .value("항목", "순자산·부채"), height: .ratio(0.5))
+                    .foregroundStyle(changeBarColor(assetsBar)).cornerRadius(4)
+                BarMark(xStart: .value("시작", debtStart * barAnim), xEnd: .value("변화", (debtStart + debtBar.value) * barAnim),
+                        y: .value("항목", "순자산·부채"), height: .ratio(0.5))
+                    .foregroundStyle(changeBarColor(debtBar)).cornerRadius(4)
+                RuleMark(x: .value("0", 0.0)).foregroundStyle(Theme.hairline)
             }
-            .chartYScale(domain: ["순자산·부채", "총자산"])   // 위: 순자산·부채, 아래: 총자산
-            .chartXScale(domain: -bound ... bound)            // 0을 카드 중앙에
+            .chartXScale(domain: -bound ... bound)
             .chartYAxis(.hidden)
-            .chartXAxis {
-                AxisMarks { _ in
-                    AxisGridLine().foregroundStyle(Theme.hairline)
-                }
-            }
-            .frame(height: 110)
-
-            // 총자산(맨 아래 막대) 값은 차트 아래에.
-            HStack {
-                changeLegendItem(totalBar)
-                Spacer()
-            }
+            .chartXAxis { AxisMarks { _ in AxisGridLine().foregroundStyle(Theme.hairline) } }
+            .frame(height: 86)
         }
+    }
+
+    // 총자산만: 단일 막대(0을 카드 중앙에). 큰 값은 위의 롤링 숫자로 강조됨.
+    private func totalChangeGraph(_ totalBar: AssetChangeBar) -> some View {
+        let bound = max(abs(totalBar.value), 1) * 1.2
+        return Chart {
+            BarMark(x: .value("변화", totalBar.value * barAnim), y: .value("항목", "총자산"), height: .ratio(0.5))
+                .foregroundStyle(changeBarColor(totalBar)).cornerRadius(4)
+            RuleMark(x: .value("0", 0.0)).foregroundStyle(Theme.hairline)
+        }
+        .chartXScale(domain: -bound ... bound)
+        .chartYAxis(.hidden)
+        .chartXAxis { AxisMarks { _ in AxisGridLine().foregroundStyle(Theme.hairline) } }
+        .frame(height: 72)
     }
 
     // "순자산 +500만"처럼 라벨 + 변화량 한 쌍. 색은 막대와 동일.
@@ -650,25 +643,24 @@ struct DashboardView: View {
                             .labelsHidden()
                             .tint(Theme.accent)
                     }
-                    .padding(.trailing, 26)   // 우측 상단 info 버튼과 겹치지 않게
                 }
             }
 
-            // 토글 ON: 총자산 변화량을 롤링 숫자로 강조.
+            // 토글 ON: 총자산 변화량을 순자산·부채 라벨과 같은 크기로(롤링 애니메이션 유지).
             if showTotalChange, latest != nil {
                 let net = lastNetChange ?? 0
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("총자산 변화")
-                        .font(.caption)
+                HStack(spacing: 4) {
+                    Text("총자산")
+                        .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
-                    Text(signedKRW(animatedTotalChange) + "원")
-                        .font(.system(size: 34, weight: .bold, design: .rounded))
+                    Text(signedKRW(animatedTotalChange))
+                        .font(.system(.caption2, design: .rounded).weight(.semibold))
                         .foregroundStyle(net < 0 ? Theme.negative : (net > 0 ? Theme.positive : Theme.textSecond))
                         .contentTransition(.numericText())
                         .monospacedDigit()
+                    Spacer()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .transition(.scale(scale: 0.92, anchor: .leading).combined(with: .opacity))
+                .transition(.opacity)
             }
 
             // 지난 기록 대비 변화만 — 순자산·부채·총자산 증감을 가로 막대로.
@@ -686,11 +678,10 @@ struct DashboardView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay(alignment: .topTrailing) {
-            InfoPopoverButton(text: "지난 기록 대비 변화만 가로 막대로 봐요. 0을 기준으로 +는 오른쪽, −는 왼쪽. 순자산은 보유 자산 증감, 부채는 −로, 총자산 = 순자산 + 부채(net)예요. 빚 내서 1,100만 주식을 사면 순자산 +1,100·부채 −1,100·총자산 0. 부채가 더 늘면 총자산이 −로 내려가요. 우측 상단 토글을 켜면 총자산 변화량이 크게 표시돼요.")
-                .popoverTip(InfoButtonTip())
-        }
+        .onAppear { animateChangeBars() }
         .onChange(of: showTotalChange) { _, on in
+            // 그래프를 바꿀 때마다 막대를 0에서 다시 자라나게 한다.
+            animateChangeBars()
             if on {
                 animatedTotalChange = 0
                 withAnimation(.easeOut(duration: 0.8)) { animatedTotalChange = lastNetChange ?? 0 }
@@ -699,6 +690,14 @@ struct DashboardView: View {
             }
         }
         .cardStyle()
+    }
+
+    // 막대를 0선에서 부드럽게 자라나게 — 0으로 리셋 후 스프링으로 1까지.
+    private func animateChangeBars() {
+        barAnim = 0
+        withAnimation(.spring(response: 0.65, dampingFraction: 0.72).delay(0.05)) {
+            barAnim = 1
+        }
     }
 
     // FIRE 목표 달성률 — 설정한 기준(자산/패시브 인컴/둘 다)에 따라 보여줌.

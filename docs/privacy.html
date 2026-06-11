@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>퇴사각 · 개인정보처리방침</title>
+<meta name="description" content="퇴사각 개인정보처리방침" />
+<style>
+  :root{--bg:#0f1115;--surface:#171a21;--line:#2a2f3a;--text:#e9edf2;--muted:#9aa3b0;--accent:#4CAF8E}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
+       background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:48px 20px 70px}
+  h1{font-size:26px;letter-spacing:-.4px;margin:0 0 4px}
+  .upd{color:var(--muted);font-size:14px;margin:0 0 28px}
+  h2{font-size:18px;margin:30px 0 10px;letter-spacing:-.3px}
+  p,li{font-size:15.5px}
+  ul{padding-left:20px}
+  li{margin:7px 0}
+  a{color:var(--accent)}
+  .note{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:18px 0}
+  .back{display:inline-block;margin-bottom:24px;color:var(--muted);text-decoration:none;font-size:14px}
+  footer{color:var(--muted);font-size:13px;margin-top:40px;border-top:1px solid var(--line);padding-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./index.html">← 지원 페이지로</a>
+  <h1>개인정보처리방침</h1>
+  <p class="upd">앱: 퇴사각 · 시행일: 2026년 6월 12일</p>
+
+  <div class="note">
+    <strong>요약:</strong> 퇴사각은 회원가입이 없고, 사용자의 재무 데이터를 서버로 수집·저장하지 않습니다.
+    모든 데이터는 사용자의 기기에만 저장됩니다.
+  </div>
+
+  <h2>1. 수집·저장하는 정보</h2>
+  <p>사용자가 입력하는 자산·부채·수입·지출·목표 등 모든 재무 데이터는 전적으로 사용자의 <strong>기기 내부
+     (Apple SwiftData)</strong>에만 저장됩니다. 개발자를 포함한 제3자는 이 데이터에 접근할 수 없으며,
+     별도의 계정 생성이나 로그인이 없습니다. 앱은 이름·이메일·전화번호 등 개인 식별정보를 수집하지 않습니다.</p>
+
+  <h2>2. 시세 자동 조회 시 외부로 전송되는 정보</h2>
+  <p>‘시세 자동’ 기능을 사용할 때, 사용자가 입력한 <strong>조회 식별자(종목코드·티커·코인 심볼·법정동코드)</strong>가
+     현재가를 받아오기 위해 아래 외부 서비스로 전송됩니다.</p>
+  <ul>
+    <li>Finnhub — 미국 주식 시세</li>
+    <li>한국투자증권(KIS) Open API — 국내 주식 시세</li>
+    <li>업비트(Upbit) — 암호화폐 시세</li>
+    <li>공공데이터포털(국토교통부) — 부동산 실거래가</li>
+    <li>환율 제공처 — 통화 환산</li>
+  </ul>
+  <p>이때 전송되는 것은 <strong>조회 대상 식별자뿐</strong>이며, 보유 수량·평가액·자산 총액 등 개인 재무정보나
+     신원정보는 전송되지 않습니다. 각 서비스로 전송된 요청의 처리에는 해당 서비스의 개인정보 방침이 적용됩니다.</p>
+
+  <h2>3. 스크린샷 가져오기</h2>
+  <p>증권사 보유종목 스크린샷으로 자산을 추가하는 기능은 Apple의 <strong>온디바이스 Vision</strong>으로
+     기기 내부에서만 이미지를 인식하며, 이미지나 인식 결과를 외부로 전송하거나 저장하지 않습니다.</p>
+
+  <h2>4. 분석·광고·추적</h2>
+  <p>앱은 분석 도구, 광고, 사용자 추적(트래킹)을 사용하지 않으며, 사용 데이터를 수집하지 않습니다.</p>
+
+  <h2>5. 데이터 보관 및 삭제</h2>
+  <p>모든 데이터는 기기에 저장되므로, 앱을 삭제하면 데이터도 함께 삭제됩니다. 기기에서 iCloud 백업을
+     사용하는 경우 해당 백업은 Apple의 기기 백업 정책을 따릅니다.</p>
+
+  <h2>6. 아동의 개인정보</h2>
+  <p>앱은 만 14세 미만 아동을 대상으로 하지 않으며, 아동의 개인정보를 의도적으로 수집하지 않습니다.</p>
+
+  <h2>7. 방침 변경</h2>
+  <p>본 방침이 변경되면 이 페이지에 갱신하여 게시합니다.</p>
+
+  <h2>8. 문의</h2>
+  <p>개인정보 처리에 관한 문의는 <a href="mailto:mizzking75@gmail.com">mizzking75@gmail.com</a> 으로 보내주세요.</p>
+
+  <footer>© 2026 퇴사각</footer>
+</div>
+</body>
+</html>

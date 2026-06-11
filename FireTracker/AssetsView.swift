@@ -765,6 +765,9 @@ struct AssetEditor: View {
     @State private var fetching = false
     @State private var status = ""
     @State private var failed = false
+    // 티커·종목코드 칸 포커스 — 칸을 떠나면 API로 이름을 자동 조회한다.
+    @FocusState private var tickerFocused: Bool
+    @State private var lookingUpName = false
 
     // Cash flow / yield
     @State private var incomeKind: IncomeKind = .none
@@ -841,6 +844,10 @@ struct AssetEditor: View {
     var body: some View {
         NavigationStack {
             Form {
+                // 주식·코인·부동산은 티커·종목코드를 가장 먼저 입력 — 입력하면 이름이
+                // 자동으로 채워지고 시세 자동도 켜진다. (그 외 종류는 아무것도 안 보임)
+                tickerSection
+
                 Section("기본 정보") {
                     if lockedClass {
                         // 그룹에서 들어옴 — 종류는 고정, 현재 그룹 합계를 컨텍스트로.
@@ -876,9 +883,6 @@ struct AssetEditor: View {
                     }
                     TextField(namePlaceholder, text: $name)
                 }
-
-                // 티커·종목코드(선택) — 넣으면 시세 자동으로 현재가를 불러올 수 있다고 안내.
-                tickerSection
 
                 // 세부 종목 — 평가액을 종목별로 쪼개 할당 (부채 제외).
                 // 눈에 잘 띄도록 기본 정보 바로 다음, 최상단에 노출.
@@ -974,6 +978,12 @@ struct AssetEditor: View {
                     portfolioShareReadout
                 }
 
+                // 투자 자산(주식·펀드·코인·부동산 등)은 구매가격(투자 원금)을 기본 노출.
+                // 평가액과 따로 관리하고, 평가 손익을 자동 계산한다.
+                if !isDebt && assetClass.tracksCostBasis {
+                    costBasisSection
+                }
+
                 // 간단 입력(새 자산 기본): 여기까지만 — 종류·이름·금액이면 끝.
                 // 나머지는 종류별 기본값이 자동 적용되고, 펼치면 모두 입력 가능.
                 if !showAdvanced {
@@ -993,19 +1003,17 @@ struct AssetEditor: View {
                     } footer: {
                         Text(isDebt
                              ? "월 이자·상환액은 ‘세부 설정’에서 입력할 수 있어요."
-                             : "유동성·소득·취득가·시세 자동 등은 종류에 맞게 자동 설정돼요. 바꾸고 싶을 때만 펼치면 됩니다. 저장 후 자산을 눌러도 수정할 수 있어요.")
+                             : "유동성·소득·시세 자동 등은 종류에 맞게 자동 설정돼요. 바꾸고 싶을 때만 펼치면 됩니다. 저장 후 자산을 눌러도 수정할 수 있어요.")
                             .font(.caption)
                     }
                 } else if isDebt {
                     debtInterestSection
                 } else if assetClass == .realEstate {
-                    // 부동산은 이용형태에 따라 보증금/월세가 갈린다.
+                    // 부동산은 이용형태에 따라 보증금/월세가 갈린다. (구매가격은 위에 노출됨)
                     if realEstateUse.hasDeposit { depositSection }
                     if realEstateUse.hasRent { incomeSection }
-                    costBasisSection
                 } else {
-                    // 자산 종류별로 필요한 칸만. (전세 보증금은 부동산 전세/반전세 전용)
-                    if assetClass.tracksCostBasis { costBasisSection }
+                    // 소득/현금흐름만. (구매가격은 위에서 이미 노출됨)
                     if !availableIncomeKinds.isEmpty { incomeSection }
                 }
 
@@ -1109,9 +1117,9 @@ struct AssetEditor: View {
 
     private var autoHint: String {
         switch assetClass {
-        case .crypto:     return "업비트 시세로 자동 계산됩니다 (키 불필요)."
-        case .stocks:     return currency == "USD" ? "Finnhub 시세 + 실시간 환율로 환산합니다." : "한국투자증권 시세로 계산합니다."
-        case .realEstate: return "법정동코드 + 아파트명으로 국토부 최근 실거래가를 조회합니다."
+        case .crypto:        return "업비트 시세로 자동 계산됩니다 (키 불필요)."
+        case .stocks, .fund: return currency == "USD" ? "Finnhub 시세 + 실시간 환율로 환산합니다." : "Yahoo Finance 시세로 계산합니다 (키 불필요)."
+        case .realEstate:    return "법정동코드 + 아파트명으로 국토부 최근 실거래가를 조회합니다."
         default:          return ""
         }
     }
@@ -1431,24 +1439,33 @@ struct AssetEditor: View {
         if assetClass.supportsAutoPrice {
             Section {
                 switch assetClass {
-                case .stocks:
+                case .stocks, .fund:
                     Picker("시장", selection: $currency) {
                         Text("국내").tag("KRW")
                         Text("미국").tag("USD")
                     }
                     .pickerStyle(.segmented)
-                    TextField(currency == "USD" ? "티커 (예: AAPL)" : "종목코드 6자리 (예: 005930)",
+                    TextField(currency == "USD" ? "티커 (예: AAPL, SPY)" : "종목코드 6자리 (예: 005930, 069500)",
                               text: $symbol)
                         .textInputAutocapitalization(.characters)
-                        .keyboardType(currency == "USD" ? .asciiCapable : .numberPad)
+                        .autocorrectionDisabled()
+                        .keyboardType(.asciiCapable)   // 영문 티커·숫자 코드 모두 입력 가능
+                        .focused($tickerFocused)
                 case .crypto:
                     TextField("코인 심볼 (예: BTC)", text: $symbol)
                         .textInputAutocapitalization(.characters)
+                        .focused($tickerFocused)
                 case .realEstate:
                     TextField("법정동코드 5자리 (예: 11680)", text: $symbol)
                         .keyboardType(.numberPad)
                 default:
                     EmptyView()
+                }
+                if lookingUpName {
+                    HStack(spacing: 6) {
+                        ProgressView().controlSize(.small)
+                        Text("이름 불러오는 중…").font(.caption).foregroundStyle(Theme.textSecond)
+                    }
                 }
             } header: {
                 Text(assetClass == .realEstate ? "법정동코드 (선택)" : "티커 · 종목코드 (선택)")
@@ -1459,15 +1476,33 @@ struct AssetEditor: View {
                 // 코드가 채워지면 시세 자동을 켜서 현재가를 불러올 수 있게 한다.
                 if !new.trimmingCharacters(in: .whitespaces).isEmpty { auto = true }
             }
+            .onChange(of: tickerFocused) { _, focused in
+                // 칸을 떠나면(blur) API로 종목 이름을 조회해 이름 칸을 채운다.
+                if !focused { Task { await autofillName() } }
+            }
+        }
+    }
+
+    // 티커·종목코드로 이름을 조회해 이름 칸이 비어 있을 때만 채운다(사용자 입력은 보존).
+    private func autofillName() async {
+        let sym = symbol.trimmingCharacters(in: .whitespaces)
+        guard !sym.isEmpty, name.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        lookingUpName = true
+        defer { lookingUpName = false }
+        if let n = try? await PriceService.lookupName(assetClass: assetClass, symbol: sym,
+                                                      currency: currency,
+                                                      finnhubKey: settings.finnhubKey),
+           !n.isEmpty {
+            name = n
         }
     }
 
     private var tickerHint: String {
         switch assetClass {
-        case .stocks:
-            return "이름 대신 티커/종목코드를 넣으면 ‘시세 자동’으로 현재가를 불러올 수 있어요. 비워두면 금액만 직접 입력합니다."
+        case .stocks, .fund:
+            return "티커/종목코드(ETF 포함)를 먼저 넣고 칸을 벗어나면 이름이 자동으로 채워지고, ‘시세 자동’으로 현재가도 불러올 수 있어요. 미국=Finnhub, 국내=Yahoo. 비워두면 직접 입력합니다."
         case .crypto:
-            return "코인 심볼을 넣으면 업비트 시세로 현재가를 자동 계산해요(키 불필요). 비워두면 금액만 직접 입력합니다."
+            return "코인 심볼을 넣고 칸을 벗어나면 이름이 자동으로 채워지고, 업비트 시세로 현재가를 자동 계산해요(키 불필요). 비워두면 직접 입력합니다."
         case .realEstate:
             return "법정동코드를 넣으면 국토부 최근 실거래가를 불러올 수 있어요. 비워두면 금액만 직접 입력합니다."
         default:
@@ -1482,8 +1517,8 @@ struct AssetEditor: View {
         case .crypto:
             TextField("수량", text: $quantity)
                 .keyboardType(.decimalPad)
-        case .stocks:
-            TextField("보유 주식 수", text: $quantity)
+        case .stocks, .fund:
+            TextField("보유 수량 (주/좌)", text: $quantity)
                 .keyboardType(.decimalPad)
         case .realEstate:
             Text("아파트명은 위 ‘이름’ 칸, 법정동코드는 위 칸을 사용합니다.")

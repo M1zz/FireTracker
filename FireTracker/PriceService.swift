@@ -47,12 +47,15 @@ enum PriceService {
         case .crypto:
             let unit = try await cryptoUnitKRW(symbol: symbol)
             return (unit * quantity, unit)
-        case .stocks where currency == "USD":
-            let unit = try await usStockUnitKRW(symbol: symbol, finnhubKey: finnhubKey)
-            return (unit * quantity, unit)
-        case .stocks:
-            let unit = try await krStockUnitKRW(code: symbol, appKey: kisAppKey, appSecret: kisAppSecret)
-            return (unit * quantity, unit)
+        case .stocks, .fund:
+            // 주식·ETF: 미국=Finnhub, 국내=Yahoo(키 불필요).
+            if currency == "USD" {
+                let unit = try await usStockUnitKRW(symbol: symbol, finnhubKey: finnhubKey)
+                return (unit * quantity, unit)
+            } else {
+                let unit = try await yahooKRStock(code: symbol).price
+                return (unit * quantity, unit)
+            }
         case .realEstate:
             let value = try await apartmentKRW(lawdCd: symbol, aptName: name, date: date, serviceKey: dataGoKey)
             return (value, value)
@@ -101,6 +104,65 @@ enum PriceService {
             throw PriceError.message("환율을 가져오지 못했습니다")
         }
         return krw
+    }
+
+    // MARK: - 국내 주식 (Yahoo Finance, 키 불필요) → (KRW 단가, 종목명)
+    // 6자리 코드에 .KS(코스피)·.KQ(코스닥)를 차례로 붙여 조회한다. KRW로 바로 옴.
+    static func yahooKRStock(code: String) async throws -> (price: Double, name: String) {
+        let iscd = code.filter { $0.isNumber }
+        guard iscd.count == 6 else { throw PriceError.message("종목코드 6자리를 입력하세요 (예: 005930)") }
+        for suffix in [".KS", ".KQ"] {
+            guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/\(iscd)\(suffix)?interval=1d&range=1d") else { continue }
+            let result = try? await json(url, headers: ["User-Agent": "Mozilla/5.0"])
+            if let obj = result as? [String: Any],
+               let chart = obj["chart"] as? [String: Any],
+               let arr = chart["result"] as? [[String: Any]],
+               let meta = arr.first?["meta"] as? [String: Any],
+               let price = meta["regularMarketPrice"] as? Double, price > 0 {
+                let name = (meta["longName"] as? String) ?? (meta["shortName"] as? String) ?? ""
+                return (price, name)
+            }
+        }
+        throw PriceError.message("'\(iscd)' 국내 시세를 찾을 수 없습니다")
+    }
+
+    // MARK: - 티커·종목코드로 종목 이름 조회 (best-effort, 실패 시 빈 문자열)
+    // 미국 주식 → Finnhub 회사명, 암호화폐 → 업비트 한글 이름. 그 외는 빈 값.
+    static func lookupName(assetClass: AssetClass, symbol: String, currency: String,
+                           finnhubKey: String) async throws -> String {
+        let sym = symbol.trimmingCharacters(in: .whitespaces)
+        guard !sym.isEmpty else { return "" }
+        switch assetClass {
+        case .stocks, .fund:
+            if currency == "USD" {
+                // 미국: Finnhub 회사명 → 비면(ETF 등) Yahoo로 보완.
+                let key = finnhubKey.isEmpty ? defaultFinnhubKey : finnhubKey
+                if let url = URL(string: "https://finnhub.io/api/v1/stock/profile2?symbol=\(sym.uppercased())&token=\(key)"),
+                   let obj = try? await json(url) as? [String: Any],
+                   let n = obj["name"] as? String, !n.isEmpty {
+                    return n
+                }
+                return (try? await yahooName(sym.uppercased())) ?? ""
+            } else {
+                // 국내: Yahoo 종목명.
+                return (try? await yahooKRStock(code: sym).name) ?? ""
+            }
+        case .crypto:
+            guard let url = URL(string: "https://api.upbit.com/v1/market/all?isDetails=false") else { return "" }
+            let arr = try await json(url) as? [[String: Any]]
+            let want = "KRW-\(sym.uppercased())"
+            return (arr?.first { ($0["market"] as? String) == want }?["korean_name"] as? String) ?? ""
+        default:
+            return ""
+        }
+    }
+
+    // Yahoo Finance에서 심볼(접미사 포함 가능)의 종목명만 조회. 미국 티커 보완용.
+    static func yahooName(_ symbol: String) async throws -> String {
+        guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/\(symbol)?interval=1d&range=1d") else { return "" }
+        let obj = try await json(url, headers: ["User-Agent": "Mozilla/5.0"]) as? [String: Any]
+        let meta = ((obj?["chart"] as? [String: Any])?["result"] as? [[String: Any]])?.first?["meta"] as? [String: Any]
+        return (meta?["longName"] as? String) ?? (meta?["shortName"] as? String) ?? ""
     }
 
     // MARK: - 미국 주식 (Finnhub, 키 필요) → KRW per share

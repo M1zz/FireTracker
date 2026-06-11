@@ -512,6 +512,87 @@ struct DashboardView: View {
         "\(v > 0 ? "+" : (v < 0 ? "−" : ""))\(Fmt.krw(abs(v)))"
     }
 
+    // 변화의 '정체' — 지난 기록 대비 항목별 증감 한 줄.
+    private struct AssetDelta: Identifiable {
+        let name: String
+        let netDelta: Double   // 순자산(net worth) 기여 변화 (자산 +, 부채는 −)
+        let isDebt: Bool
+        var id: String { (isDebt ? "d:" : "a:") + name }
+        // 표시 부호: 자산은 그대로, 부채는 '빚 증가'를 +로 보이게 뒤집는다.
+        var displayDelta: Double { isDebt ? -netDelta : netDelta }
+    }
+
+    // 현재 카탈로그를 지난 기록(latest 스냅샷)과 항목별로 비교해 증감 목록을 만든다.
+    private var assetDeltas: [AssetDelta] {
+        guard let last = latest else { return [] }
+        var prior: [UUID: Double] = [:]
+        var meta: [UUID: (name: String, isDebt: Bool)] = [:]
+        for e in last.entries {
+            guard let k = e.catalogKey else { continue }
+            prior[k, default: 0] += e.amount
+            meta[k] = (e.name, e.assetClass == .debt)
+        }
+        var out: [AssetDelta] = []
+        var seen = Set<UUID>()
+        for a in assets {
+            seen.insert(a.key)
+            let d = a.netValue - (prior[a.key] ?? 0)
+            guard abs(d) >= 1 else { continue }
+            out.append(AssetDelta(name: a.name.isEmpty ? a.displayClassLabel : a.name,
+                                  netDelta: d, isDebt: a.isDebt))
+        }
+        for (k, amt) in prior where !seen.contains(k) && abs(amt) >= 1 {
+            let m = meta[k]
+            out.append(AssetDelta(name: (m?.name.isEmpty == false ? m!.name : "삭제된 항목"),
+                                  netDelta: -amt, isDebt: m?.isDebt ?? false))
+        }
+        return out.sorted { abs($0.netDelta) > abs($1.netDelta) }
+    }
+
+    private func deltaColor(_ it: AssetDelta) -> Color {
+        if it.displayDelta == 0 { return Theme.textSecond }
+        let good = it.isDebt ? it.displayDelta < 0 : it.displayDelta > 0
+        return good ? Theme.positive : Theme.negative
+    }
+
+    // 항목별 증감 목록 — 무엇이(자산=초록, 부채=빨강) 얼마나 바뀌었는지.
+    @ViewBuilder
+    private var changeBreakdownList: some View {
+        let items = assetDeltas
+        if !items.isEmpty {
+            Divider().overlay(Theme.hairline)
+            Text("무엇이 바뀌었나")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+            VStack(spacing: 6) {
+                ForEach(items.prefix(6)) { it in
+                    HStack(spacing: 8) {
+                        Circle()
+                            .fill(it.isDebt ? Theme.negative : Theme.positive)
+                            .frame(width: 6, height: 6)
+                        Text(it.name)
+                            .font(.caption)
+                            .foregroundStyle(Theme.textPrimary)
+                            .lineLimit(1)
+                        Text(it.isDebt ? "부채" : "자산")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                        Spacer()
+                        Text(signedKRW(it.displayDelta) + "원")
+                            .font(.system(.caption, design: .rounded).weight(.semibold))
+                            .foregroundStyle(deltaColor(it))
+                    }
+                }
+                if items.count > 6 {
+                    Text("외 \(items.count - 6)개")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+        }
+    }
+
     // 우측 상단 토글로 그래프 택일: OFF = 순자산·부채, ON = 총자산.
     @ViewBuilder
     private var netWorthChangeChart: some View {
@@ -666,6 +747,7 @@ struct DashboardView: View {
             // 지난 기록 대비 변화만 — 순자산·부채·총자산 증감을 가로 막대로.
             if latest != nil {
                 netWorthChangeChart
+                changeBreakdownList
             } else {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("아직 비교할 기록이 없어요")

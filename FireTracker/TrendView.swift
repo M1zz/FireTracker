@@ -30,6 +30,9 @@ struct TrendView: View {
 
     // A point on the trend — either a saved snapshot or the live "now" state,
     // bucketed to the start of its week/month so changes read against 월초/주초.
+    // 한 항목(종목/자산)의 금액과 부채 여부 — 기간 간 변동 계산용.
+    struct AssetSlice { let amount: Double; let isDebt: Bool }
+
     struct TrendPoint: Identifiable {
         let id = UUID()
         let date: Date
@@ -38,6 +41,7 @@ struct TrendView: View {
         let monthlyPassiveIncome: Double
         let savingsRate: Double
         let byClass: [AssetClass: Double]
+        let byAsset: [String: AssetSlice]
         func total(for ac: AssetClass) -> Double { byClass[ac] ?? 0 }
         // 부채 규모(양수)와 보유 자산 합계(사용자 용어로 '순자산').
         // 총자산(net) = 순자산 − 부채 = netWorth.
@@ -115,11 +119,17 @@ struct TrendView: View {
             let t = assets.filter { $0.assetClass == ac }.reduce(0) { $0 + $1.netValue }
             if t != 0 { byClass[ac] = t }
         }
+        var byAsset: [String: AssetSlice] = [:]
+        for a in assets {
+            let key = a.name.isEmpty ? a.displayClassLabel : a.name
+            byAsset[key] = AssetSlice(amount: (byAsset[key]?.amount ?? 0) + a.netValue, isDebt: a.isDebt)
+        }
         let sr = settings.monthlyTakeHome > 0
             ? (settings.monthlyTakeHome - settings.plannedMonthlyExpense) / settings.monthlyTakeHome
             : 0
         return TrendPoint(date: Date(), netWorth: net, liquidNetWorth: liquid,
-                          monthlyPassiveIncome: passive, savingsRate: sr, byClass: byClass)
+                          monthlyPassiveIncome: passive, savingsRate: sr,
+                          byClass: byClass, byAsset: byAsset)
     }
 
     private func classMap(_ s: NetWorthSnapshot) -> [AssetClass: Double] {
@@ -131,6 +141,15 @@ struct TrendView: View {
         return m
     }
 
+    private func assetMap(_ s: NetWorthSnapshot) -> [String: AssetSlice] {
+        var m: [String: AssetSlice] = [:]
+        for e in s.entries {
+            let key = e.name.isEmpty ? e.assetClass.label : e.name
+            m[key] = AssetSlice(amount: (m[key]?.amount ?? 0) + e.amount, isDebt: e.assetClass == .debt)
+        }
+        return m
+    }
+
     // Snapshots + live "now", bucketed to each period start (월초/주초). When more
     // than one point falls in a bucket, the latest wins, so the current period
     // always reflects the live value.
@@ -138,7 +157,7 @@ struct TrendView: View {
         var raw = snapshots.map { s in
             TrendPoint(date: s.date, netWorth: s.netWorth, liquidNetWorth: s.liquidNetWorth,
                        monthlyPassiveIncome: s.monthlyPassiveIncome, savingsRate: s.savingsRate,
-                       byClass: classMap(s))
+                       byClass: classMap(s), byAsset: assetMap(s))
         }
         if hasCatalog { raw.append(currentPoint) }
 
@@ -149,7 +168,7 @@ struct TrendView: View {
             byKey[start] = TrendPoint(date: start, netWorth: p.netWorth,
                                       liquidNetWorth: p.liquidNetWorth,
                                       monthlyPassiveIncome: p.monthlyPassiveIncome,
-                                      savingsRate: p.savingsRate, byClass: p.byClass)
+                                      savingsRate: p.savingsRate, byClass: p.byClass, byAsset: p.byAsset)
         }
         return byKey.values.sorted { $0.date < $1.date }
     }
@@ -164,8 +183,9 @@ struct TrendView: View {
     private var netWorthChart: some View {
         let pts = indexedPoints
         let count = pts.count
-        let shown: TrendPoint? = selectedIndex
-            .flatMap { (0..<count).contains($0) ? pts[$0].point : nil } ?? sorted.last
+        let shownIdx = (selectedIndex.flatMap { (0..<count).contains($0) ? $0 : nil }) ?? (count - 1)
+        let shown: TrendPoint? = (0..<count).contains(shownIdx) ? pts[shownIdx].point : nil
+        let prevPoint: TrendPoint? = shownIdx > 0 ? pts[shownIdx - 1].point : nil
         return VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 12) {
                 Text("순자산 · 부채 · 총자산")
@@ -179,6 +199,8 @@ struct TrendView: View {
 
             if let s = shown {
                 tooltipCard(s)
+                let ds = deltas(from: prevPoint, to: s)
+                if !ds.isEmpty { trendBreakdown(ds) }
             }
 
             Chart {
@@ -265,6 +287,56 @@ struct TrendView: View {
                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                 .foregroundStyle(color)
         }
+    }
+
+    // 이전 기간 대비 항목별 변동.
+    struct TrendDelta: Identifiable {
+        let name: String
+        let net: Double
+        let isDebt: Bool
+        var id: String { (isDebt ? "d:" : "a:") + name }
+        var display: Double { isDebt ? -net : net }   // 부채 증가를 +로
+    }
+
+    private func deltas(from prev: TrendPoint?, to cur: TrendPoint) -> [TrendDelta] {
+        guard let prev else { return [] }
+        let keys = Set(prev.byAsset.keys).union(cur.byAsset.keys)
+        var out: [TrendDelta] = []
+        for k in keys {
+            let d = (cur.byAsset[k]?.amount ?? 0) - (prev.byAsset[k]?.amount ?? 0)
+            guard abs(d) >= 1 else { continue }
+            let isDebt = cur.byAsset[k]?.isDebt ?? prev.byAsset[k]?.isDebt ?? false
+            out.append(TrendDelta(name: k, net: d, isDebt: isDebt))
+        }
+        return out.sorted { abs($0.net) > abs($1.net) }
+    }
+
+    // 선택한 기간에 '무엇이 얼마나' 바뀌었는지 — 자산=초록, 부채=빨강.
+    private func trendBreakdown(_ items: [TrendDelta]) -> some View {
+        VStack(alignment: .leading, spacing: 7) {
+            Text("이 기간에 바뀐 것")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+            ForEach(items.prefix(8)) { it in
+                let good = it.isDebt ? it.display < 0 : it.display > 0
+                HStack(spacing: 8) {
+                    Circle().fill(it.isDebt ? Theme.negative : Theme.positive).frame(width: 6, height: 6)
+                    Text(it.name).font(.caption).foregroundStyle(Theme.textPrimary).lineLimit(1)
+                    Text(it.isDebt ? "부채" : "자산").font(.caption2).foregroundStyle(Theme.textSecond)
+                    Spacer()
+                    Text("\(it.display > 0 ? "+" : "−")\(Fmt.krw(abs(it.display)))원")
+                        .font(.system(.caption, design: .rounded).weight(.semibold))
+                        .foregroundStyle(good ? Theme.positive : Theme.negative)
+                }
+            }
+            if items.count > 8 {
+                Text("외 \(items.count - 8)개").font(.caption2).foregroundStyle(Theme.textSecond)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
     // 라벨을 찍을 인덱스 — 처음·끝을 포함해 4칸 안팎으로 솎는다.

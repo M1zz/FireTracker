@@ -9,7 +9,8 @@ struct FireTrackerApp: App {
             FireSettings.self,
             NetWorthSnapshot.self,
             AssetEntry.self,
-            Asset.self
+            Asset.self,
+            AssetDetail.self
         ])
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {

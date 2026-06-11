@@ -345,7 +345,6 @@ struct DashboardView: View {
                     ScrollView {
                         VStack(spacing: 20) {
                             welcomeCard
-                            goalProgressCard
                             if settings.monthsToRetire != nil {
                                 milestoneGoalsCard
                             } else {
@@ -376,6 +375,7 @@ struct DashboardView: View {
                             .buttonStyle(.plain)
                             allocationCard
                             signalCard
+                            goalProgressCard
                         }
                         .padding(20)
                     }
@@ -489,37 +489,12 @@ struct DashboardView: View {
         }
     }
 
-    // 총자산을 한 막대로: 순자산(왼쪽·초록) + 부채(오른쪽·빨강) = 총자산.
-    // 자산(초록)은 0에서 오른쪽으로, 부채(빨강)는 자산 오른쪽 끝에서 왼쪽으로 차오름.
-    // 부채가 자산보다 크면 순자산이 마이너스 → 빨강이 0선을 넘어 왼쪽까지 그려짐.
-    // 지난 기록 대비 변화량 + 지난 기록의 절대값(prev) 한 줄.
+    // 지난 기록 대비 변화량 하나를 담는 막대. 부호로 방향(오름/내림)을 표현.
     private struct AssetChangeBar: Identifiable {
         let label: String
         let value: Double          // 이번 변화량(부호 포함)
-        let prev: Double           // 지난 기록의 금액(부호 포함)
         let positiveIsGood: Bool
         var id: String { label }
-    }
-
-    // 직전 기록(latest 스냅샷)의 절대값. 순자산=보유 자산(+), 부채=−, 총자산=net.
-    private var prevGrossAssets: Double {
-        latest?.entries.filter { $0.amount > 0 }.reduce(0) { $0 + $1.amount } ?? 0
-    }
-    private var prevDebt: Double {
-        abs(latest?.entries.filter { $0.amount < 0 }.reduce(0) { $0 + $1.amount } ?? 0)
-    }
-    private var prevNet: Double { latest?.netWorth ?? 0 }
-
-    // 변화량 3종(지난 기록 대비) + 각 항목의 지난 금액. 사용자 용어 기준:
-    //   순자산 = 보유 자산 증감(+), 부채 = 빚 증감을 −로, 총자산 = 순자산 + 부채(net).
-    // 새로 추가한 자산이 변동으로 부풀려지지 않도록 lastRecordChange/lastNetChange를 쓴다.
-    private var assetChangeBars: [AssetChangeBar] {
-        let c = lastRecordChange
-        return [
-            AssetChangeBar(label: "순자산", value: c?.assets ?? 0,     prev: prevGrossAssets, positiveIsGood: true),
-            AssetChangeBar(label: "부채",   value: -(c?.debt ?? 0),    prev: -prevDebt,        positiveIsGood: true),
-            AssetChangeBar(label: "총자산", value: lastNetChange ?? 0, prev: prevNet,          positiveIsGood: true),
-        ]
     }
 
     private func changeBarColor(_ bar: AssetChangeBar) -> Color {
@@ -529,70 +504,79 @@ struct DashboardView: View {
     }
 
     private func signedKRW(_ v: Double) -> String {
-        "\(v > 0 ? "+" : (v < 0 ? "−" : ""))\(Fmt.krw(abs(v)))원"
+        "\(v > 0 ? "+" : (v < 0 ? "−" : ""))\(Fmt.krw(abs(v)))"
     }
 
-    // 지난 기록의 금액과 이번 변화량을 한 줄로: "지난 1,090만 → +500만".
-    private func changeDetailRow(_ bar: AssetChangeBar) -> some View {
-        HStack(spacing: 8) {
-            Text(bar.label).font(.caption).foregroundStyle(Theme.textSecond)
-            Spacer()
-            Text("지난 \(bar.prev < 0 ? "−" : "")\(Fmt.krw(abs(bar.prev)))")
-                .font(.caption2)
-                .foregroundStyle(Theme.textSecond)
-            Image(systemName: "arrow.right").font(.caption2).foregroundStyle(Theme.textSecond)
-            Text(signedKRW(bar.value))
-                .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                .foregroundStyle(changeBarColor(bar))
-                .frame(minWidth: 84, alignment: .trailing)
-        }
-    }
-
-    // 지난 기록 대비 변화를 가로 막대로, 그 아래 ‘지난 금액 → 변화량’을 함께 표기.
+    // 지난 기록 대비 변화를 가로 막대로. 순자산·부채는 같은 수평선(한 행) 위에서
+    // 0을 기준으로 갈라지고, 총자산(net)은 그 아래 별도 막대.
     private var netWorthChangeChart: some View {
-        let bars = assetChangeBars
+        let c = lastRecordChange
+        let assetsBar = AssetChangeBar(label: "순자산", value: c?.assets ?? 0,  positiveIsGood: true)
+        let debtBar   = AssetChangeBar(label: "부채",   value: -(c?.debt ?? 0), positiveIsGood: true)
+        let totalBar  = AssetChangeBar(label: "총자산", value: lastNetChange ?? 0, positiveIsGood: true)
+        // 부채가 순자산과 같은 부호면 순자산 끝에서 이어 그려 겹치지 않게 한다.
+        let debtStart = assetsBar.value * debtBar.value > 0 ? assetsBar.value : 0
         return VStack(alignment: .leading, spacing: 10) {
+            // 순자산·부채 값은 차트 위에.
+            HStack(spacing: 14) {
+                changeLegendItem(assetsBar)
+                changeLegendItem(debtBar)
+                Spacer()
+            }
             Chart {
-                ForEach(bars) { bar in
-                    BarMark(
-                        x: .value("변화", bar.value),
-                        y: .value("항목", bar.label),
-                        height: .ratio(0.5)
-                    )
-                    .foregroundStyle(changeBarColor(bar))
-                    .cornerRadius(4)
-                    .annotation(position: bar.value >= 0 ? .trailing : .leading) {
-                        Text(signedKRW(bar.value))
-                            .font(.caption2.weight(.semibold))
-                            .foregroundStyle(Theme.textSecond)
-                    }
-                }
+                // 같은 수평선 위에서 보통 순자산은 0의 오른쪽(+), 부채는 왼쪽(−).
+                BarMark(
+                    xStart: .value("시작", 0.0),
+                    xEnd: .value("변화", assetsBar.value),
+                    y: .value("항목", "순자산·부채"),
+                    height: .ratio(0.5)
+                )
+                .foregroundStyle(changeBarColor(assetsBar))
+                .cornerRadius(4)
+                BarMark(
+                    xStart: .value("시작", debtStart),
+                    xEnd: .value("변화", debtStart + debtBar.value),
+                    y: .value("항목", "순자산·부채"),
+                    height: .ratio(0.5)
+                )
+                .foregroundStyle(changeBarColor(debtBar))
+                .cornerRadius(4)
+                BarMark(
+                    x: .value("변화", totalBar.value),
+                    y: .value("항목", "총자산"),
+                    height: .ratio(0.5)
+                )
+                .foregroundStyle(changeBarColor(totalBar))
+                .cornerRadius(4)
                 RuleMark(x: .value("0", 0.0))
                     .foregroundStyle(Theme.hairline)
             }
-            .chartYScale(domain: ["총자산", "부채", "순자산"])   // 위→아래: 순자산·부채·총자산
+            .chartYScale(domain: ["순자산·부채", "총자산"])   // 위: 순자산·부채, 아래: 총자산
+            .chartYAxis(.hidden)
             .chartXAxis {
-                AxisMarks { value in
+                AxisMarks { _ in
                     AxisGridLine().foregroundStyle(Theme.hairline)
-                    AxisValueLabel {
-                        if let v = value.as(Double.self) {
-                            Text(Fmt.krw(v))
-                                .font(.caption2)
-                                .foregroundStyle(Theme.textSecond)
-                        }
-                    }
                 }
             }
-            .frame(height: 140)
+            .frame(height: 110)
 
-            Divider().overlay(Theme.hairline)
-            VStack(spacing: 6) {
-                ForEach(bars) { changeDetailRow($0) }
+            // 총자산(맨 아래 막대) 값은 차트 아래에.
+            HStack {
+                changeLegendItem(totalBar)
+                Spacer()
             }
+        }
+    }
 
-            Text("‘지난 금액 → 이번 변화량’이에요. 총자산 = 순자산 + 부채(부채는 −).")
+    // "순자산 +500만"처럼 라벨 + 변화량 한 쌍. 색은 막대와 동일.
+    private func changeLegendItem(_ bar: AssetChangeBar) -> some View {
+        HStack(spacing: 4) {
+            Text(bar.label)
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
+            Text(signedKRW(bar.value))
+                .font(.system(.caption2, design: .rounded).weight(.semibold))
+                .foregroundStyle(changeBarColor(bar))
         }
     }
 
@@ -626,7 +610,7 @@ struct DashboardView: View {
     private func recordDateText(_ date: Date) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "yyyy년 M월 d일"
+        f.dateFormat = "M월 d일"
         return f.string(from: date)
     }
     private func daysSince(_ date: Date) -> Int {
@@ -643,7 +627,7 @@ struct DashboardView: View {
                     .foregroundStyle(Theme.textPrimary)
                 if let last = latest {
                     let days = daysSince(last.date)
-                    Text("\(recordDateText(last.date)) 기록과 비교" + (days > 0 ? " · \(days)일 전" : " · 오늘"))
+                    Text(recordDateText(last.date) + (days > 0 ? " · \(days)일 전" : " · 오늘"))
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -769,7 +753,6 @@ struct DashboardView: View {
 
     private func trajectoryChart(metric: FireGoalType) -> some View {
         let pts = trajectoryPoints(metric: metric)
-        let isAsset = metric == .assets
         return Chart {
             ForEach(pts) { p in
                 AreaMark(x: .value("시점", p.date), y: .value("값", p.value))

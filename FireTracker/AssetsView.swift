@@ -31,6 +31,11 @@ struct AssetsView: View {
     // 새 자산을 어떤 카테고리로 추가할지 — 카테고리별 ‘+ 종목 추가’가 미리 채운다.
     @State private var newClass: AssetClass = .stocks
     @State private var newCustomLabel = ""
+    @State private var newLockedClass = false
+    @State private var newClassTotal: Double = 0
+    // 카테고리 선택 시트 → 닫힌 뒤 그 카테고리 고정 에디터로 이어줌.
+    @State private var showingCategoryPicker = false
+    @State private var pendingCategory: (cls: AssetClass, label: String)?
     // 접힌 카테고리 그룹 id들. 비어 있으면 전부 펼침(기본).
     @State private var collapsedGroups: Set<String> = []
 
@@ -65,6 +70,9 @@ struct AssetsView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
+                        Button { showingCategoryPicker = true } label: {
+                            Label("카테고리 추가", systemImage: "folder.badge.plus")
+                        }
                         Button { startNewAsset() } label: {
                             Label("직접 추가", systemImage: "square.and.pencil")
                         }
@@ -79,10 +87,28 @@ struct AssetsView: View {
             }
             .sheet(isPresented: $showingNew) {
                 AssetEditor(asset: nil, nextSortOrder: assets.count,
-                            initialClass: newClass, initialCustomLabel: newCustomLabel)
+                            initialClass: newClass, initialCustomLabel: newCustomLabel,
+                            lockedClass: newLockedClass,
+                            classTotal: newLockedClass ? newClassTotal : nil)
             }
             .sheet(item: $editing) { asset in
                 AssetEditor(asset: asset, nextSortOrder: assets.count)
+            }
+            // 카테고리 먼저 고르는 흐름 — 고르면 닫히고, 그 카테고리 고정 에디터로.
+            // (세부 종목을 저장해야 카테고리가 실제로 생긴다 = 빈 카테고리 없음)
+            .sheet(isPresented: $showingCategoryPicker, onDismiss: {
+                if let p = pendingCategory {
+                    pendingCategory = nil
+                    let subtotal = assets
+                        .filter { $0.assetClass == p.cls && (p.cls != .custom || $0.customLabel == p.label) }
+                        .reduce(0) { $0 + $1.netValue }
+                    startNewAsset(p.cls, customLabel: p.label, lock: true, classTotal: subtotal)
+                }
+            }) {
+                CategoryPickerSheet(assets: assets) { cls, label in
+                    pendingCategory = (cls, label)
+                    showingCategoryPicker = false
+                }
             }
             .sheet(isPresented: $showingRecord) { RecordSheet() }
             .sheet(isPresented: $showingHistory) { SnapshotsView() }
@@ -113,7 +139,10 @@ struct AssetsView: View {
                                 .listRowBackground(Theme.surface)
                         }
                         .onDelete { delete(in: group, at: $0) }
-                        Button { startNewAsset(group.assetClass, customLabel: group.customLabel) } label: {
+                        Button {
+                            startNewAsset(group.assetClass, customLabel: group.customLabel,
+                                          lock: true, classTotal: group.subtotal)
+                        } label: {
                             Label("\(group.title) 종목 추가", systemImage: "plus.circle")
                                 .font(.subheadline)
                                 .foregroundStyle(Theme.accent)
@@ -124,6 +153,12 @@ struct AssetsView: View {
                     groupHeader(group)
                 }
                 .textCase(nil)
+            }
+            // 2.5) 자산 도감 — 우표첩처럼 자산 종류를 수집하는 재미.
+            Section {
+                collectionCard
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
             }
             // 3) 그 다음 — 쓸 수 있는 돈/순자산 요약.
             Section {
@@ -360,6 +395,70 @@ struct AssetsView: View {
         .cardStyle()
     }
 
+    // 도감 대상 종류 — 직접 입력·부채는 수집 개념에서 제외.
+    private var collectibleClasses: [AssetClass] {
+        AssetClass.allCases.filter { $0 != .custom && $0 != .debt }
+    }
+    private var collectedClasses: Set<AssetClass> {
+        Set(assets.map(\.assetClass))
+    }
+
+    // 자산 도감 — 보유한 종류는 색으로 채워지고, 미보유 칸을 누르면 바로 그
+    // 종류의 자산 추가로 이어진다.
+    private var collectionCard: some View {
+        let collected = collectedClasses
+        let total = collectibleClasses.count
+        let count = collectibleClasses.filter { collected.contains($0) }.count
+        return VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("자산 도감")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                Text("\(count)/\(total) 수집")
+                    .font(.caption.weight(.semibold).monospacedDigit())
+                    .foregroundStyle(count == total ? Theme.accent : Theme.textSecond)
+            }
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 72), spacing: 8)], spacing: 8) {
+                ForEach(collectibleClasses) { ac in
+                    let owned = collected.contains(ac)
+                    Button { if !owned { startNewAsset(ac, lock: true) } } label: {
+                        VStack(spacing: 5) {
+                            Image(systemName: owned ? ac.symbolName : "plus")
+                                .font(.subheadline)
+                                .foregroundStyle(owned ? Color(hex: ac.colorHex) : Theme.textSecond.opacity(0.5))
+                                .frame(height: 18)
+                            Text(ac.label)
+                                .font(.caption2)
+                                .foregroundStyle(owned ? Theme.textPrimary : Theme.textSecond.opacity(0.6))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 9)
+                        .background(owned ? Color(hex: ac.colorHex).opacity(0.13) : Theme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .stroke(owned ? Color(hex: ac.colorHex).opacity(0.45) : Theme.hairline,
+                                        style: owned ? StrokeStyle(lineWidth: 1)
+                                                     : StrokeStyle(lineWidth: 1, dash: [4, 3]))
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(owned)
+                }
+            }
+            Text(count == total
+                 ? "모든 자산 종류를 수집했어요! 🎉"
+                 : "빈 칸을 누르면 그 종류의 자산을 바로 추가할 수 있어요.")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
     private func row(_ asset: Asset) -> some View {
         HStack(spacing: 12) {
             Image(systemName: asset.assetClass.symbolName)
@@ -400,6 +499,14 @@ struct AssetsView: View {
                 }
                 .font(.caption2)
                 .lineLimit(1)
+                // 세부 종목 한 줄 요약 — 예) 삼성전자 1,000만 · 애플 2,000만
+                if !asset.details.isEmpty {
+                    Text(asset.sortedDetails.map { "\($0.name) \(Fmt.krw($0.amount))" }
+                        .joined(separator: " · "))
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                        .lineLimit(1)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -469,10 +576,14 @@ struct AssetsView: View {
     }
 
     // Open the editor for a brand-new holding, pre-set to a category so the
-    // user only fills in the name + amount.
-    private func startNewAsset(_ cls: AssetClass = .stocks, customLabel: String = "") {
+    // user only fills in the name + amount. `lock`이면 종류 변경 불가(그룹의
+    // '종목 추가') — 그 종류 합계를 컨텍스트로 함께 넘긴다.
+    private func startNewAsset(_ cls: AssetClass = .stocks, customLabel: String = "",
+                               lock: Bool = false, classTotal: Double = 0) {
         newClass = cls
         newCustomLabel = customLabel
+        newLockedClass = lock
+        newClassTotal = classTotal
         showingNew = true
     }
 
@@ -557,6 +668,74 @@ struct AssetGroup: Identifiable {
     var subtotal: Double { assets.reduce(0) { $0 + $1.netValue } }
 }
 
+// 카테고리(자산 종류)를 먼저 고르는 시트. 고르면 그 카테고리가 고정된 종목
+// 입력으로 이어진다. 이미 자산이 있는 카테고리는 현재 합계를 함께 표시.
+struct CategoryPickerSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    let assets: [Asset]
+    let onPick: (AssetClass, String) -> Void
+
+    @State private var customLabel = ""
+
+    private func subtotal(for ac: AssetClass) -> Double {
+        assets.filter { $0.assetClass == ac }.reduce(0) { $0 + $1.netValue }
+    }
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    ForEach(AssetClass.allCases.filter { $0 != .custom }) { ac in
+                        Button { onPick(ac, "") } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: ac.symbolName)
+                                    .font(.subheadline)
+                                    .foregroundStyle(Color(hex: ac.colorHex))
+                                    .frame(width: 26)
+                                Text(ac.label)
+                                    .foregroundStyle(Theme.textPrimary)
+                                Spacer()
+                                let t = subtotal(for: ac)
+                                if t != 0 {
+                                    Text("\(t < 0 ? "−" : "")\(Fmt.krw(abs(t)))원")
+                                        .font(.system(.subheadline, design: .rounded))
+                                        .foregroundStyle(t < 0 ? Theme.negative : Theme.textSecond)
+                                }
+                            }
+                        }
+                    }
+                } header: {
+                    Text("카테고리 선택")
+                } footer: {
+                    Text("고르면 바로 그 카테고리의 종목 입력으로 이어져요. 종목을 저장하면 목록에 카테고리가 생깁니다.")
+                        .font(.caption)
+                }
+
+                Section("직접 입력") {
+                    HStack(spacing: 6) {
+                        TextField("카테고리 이름 (예: 회원권, 사업 지분)", text: $customLabel)
+                        Button {
+                            onPick(.custom, customLabel.trimmingCharacters(in: .whitespaces))
+                        } label: {
+                            Image(systemName: "arrow.right.circle.fill")
+                                .foregroundStyle(customLabel.trimmingCharacters(in: .whitespaces).isEmpty
+                                                 ? Theme.textSecond.opacity(0.4) : Theme.accent)
+                        }
+                        .buttonStyle(.borderless)
+                        .disabled(customLabel.trimmingCharacters(in: .whitespaces).isEmpty)
+                    }
+                }
+            }
+            .navigationTitle("카테고리 추가")
+            .navigationBarTitleDisplayMode(.inline)
+            .scrollIndicators(.hidden)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
+            }
+        }
+    }
+}
+
 // Detailed editor for a single holding: define it, enter its scale (manually
 // or via live quote), and see how its value has tracked over past records.
 struct AssetEditor: View {
@@ -567,6 +746,10 @@ struct AssetEditor: View {
 
     let asset: Asset?
     let nextSortOrder: Int
+    // 그룹의 '종목 추가'로 열렸을 때 — 종류를 고정하고 세부 정보만 입력받는다.
+    let lockedClass: Bool
+    // 고정된 종류의 현재 합계(그룹 소계) — 컨텍스트로 보여줌.
+    let classTotal: Double?
 
     @State private var name = ""
     @State private var assetClass: AssetClass = .stocks
@@ -593,13 +776,31 @@ struct AssetEditor: View {
     // Liquidity
     @State private var liquidity: Liquidity = .liquid
 
+    // 새 자산은 간단 입력(종류·이름·금액)으로 시작 — 세부 설정은 펼쳐서.
+    // 기존 자산 편집은 저장된 값이 보이도록 전체 폼.
+    @State private var showAdvanced: Bool
+
+    // 세부 종목 드래프트 — 저장 시점에 Asset.details로 동기화.
+    private struct DetailDraft: Identifiable {
+        let id = UUID()
+        var name: String
+        var amount: String
+    }
+    @State private var detailDrafts: [DetailDraft] = []
+    @State private var newDetailName = ""
+    @State private var newDetailAmount = ""
+
     // Seed all editor state directly from the asset so that opening the editor
     // does not mutate `assetClass` (which would trigger onChange and clobber the
     // stored liquidity/income with class-suggested defaults).
     init(asset: Asset?, nextSortOrder: Int,
-         initialClass: AssetClass = .stocks, initialCustomLabel: String = "") {
+         initialClass: AssetClass = .stocks, initialCustomLabel: String = "",
+         lockedClass: Bool = false, classTotal: Double? = nil) {
         self.asset = asset
         self.nextSortOrder = nextSortOrder
+        self.lockedClass = lockedClass
+        self.classTotal = classTotal
+        _showAdvanced = State(initialValue: asset != nil)
         let cls = asset?.assetClass ?? initialClass
         _name = State(initialValue: asset?.name ?? "")
         _assetClass = State(initialValue: cls)
@@ -618,6 +819,9 @@ struct AssetEditor: View {
         _costBasis = State(initialValue: asset.map { $0.costBasis > 0 ? String(Int($0.costBasis)) : "" } ?? "")
         _realEstateUse = State(initialValue: asset?.realEstateUse ?? .residence)
         _liquidity = State(initialValue: asset?.liquidity ?? Liquidity.suggested(for: cls))
+        _detailDrafts = State(initialValue: (asset?.sortedDetails ?? []).map {
+            DetailDraft(name: $0.name, amount: $0.amount > 0 ? String(Int($0.amount)) : "")
+        })
     }
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
@@ -637,27 +841,48 @@ struct AssetEditor: View {
         NavigationStack {
             Form {
                 Section("기본 정보") {
-                    Picker("종류", selection: $assetClass) {
-                        ForEach(AssetClass.allCases) { ac in Text(ac.label).tag(ac) }
-                    }
-                    .onChange(of: assetClass) { _, newValue in
-                        if !newValue.supportsAutoPrice { auto = false }
-                        liquidity = Liquidity.suggested(for: newValue)
-                        // 종류가 바뀌면 그 종류에 맞는 소득 유형으로 정렬.
-                        let kinds = newValue == .realEstate ? [IncomeKind.rent] : newValue.incomeKinds
-                        if !kinds.contains(incomeKind) {
-                            incomeKind = kinds.contains(IncomeKind.suggested(for: newValue))
-                                ? IncomeKind.suggested(for: newValue)
-                                : (kinds.first ?? .none)
+                    if lockedClass {
+                        // 그룹에서 들어옴 — 종류는 고정, 현재 그룹 합계를 컨텍스트로.
+                        HStack {
+                            Label(lockedTitle, systemImage: assetClass.symbolName)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Color(hex: assetClass.colorHex))
+                            Spacer()
+                            if let t = classTotal, t != 0 {
+                                Text("현재 \(Fmt.krw(t))원")
+                                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                                    .foregroundStyle(Theme.textPrimary)
+                            }
                         }
-                    }
-                    if assetClass == .custom {
-                        TextField("종류 직접 입력 (예: 회원권, 한정판, 사업 지분)", text: $customLabel)
+                    } else {
+                        Picker("종류", selection: $assetClass) {
+                            ForEach(AssetClass.allCases) { ac in Text(ac.label).tag(ac) }
+                        }
+                        .onChange(of: assetClass) { _, newValue in
+                            if !newValue.supportsAutoPrice { auto = false }
+                            liquidity = Liquidity.suggested(for: newValue)
+                            // 종류가 바뀌면 그 종류에 맞는 소득 유형으로 정렬.
+                            let kinds = newValue == .realEstate ? [IncomeKind.rent] : newValue.incomeKinds
+                            if !kinds.contains(incomeKind) {
+                                incomeKind = kinds.contains(IncomeKind.suggested(for: newValue))
+                                    ? IncomeKind.suggested(for: newValue)
+                                    : (kinds.first ?? .none)
+                            }
+                        }
+                        if assetClass == .custom {
+                            TextField("종류 직접 입력 (예: 회원권, 한정판, 사업 지분)", text: $customLabel)
+                        }
                     }
                     TextField(namePlaceholder, text: $name)
                 }
 
-                if assetClass == .realEstate {
+                // 세부 종목 — 평가액을 종목별로 쪼개 할당 (부채 제외).
+                // 눈에 잘 띄도록 기본 정보 바로 다음, 최상단에 노출.
+                if showAdvanced && !isDebt {
+                    detailSection
+                }
+
+                if showAdvanced && assetClass == .realEstate {
                     Section {
                         Picker("이용 형태", selection: $realEstateUse) {
                             ForEach(RealEstateUse.allCases) { use in
@@ -679,7 +904,7 @@ struct AssetEditor: View {
 
                 // 전세·반전세는 받은 보증금(유동) + 부동산 지분(묶임)으로 자동 분리되므로
                 // 수동 유동성 토글을 숨긴다 — 토글이 보증금 분리와 충돌해 혼란을 줬음.
-                if !isDebt && !(assetClass == .realEstate && realEstateUse.hasDeposit) {
+                if showAdvanced && !isDebt && !(assetClass == .realEstate && realEstateUse.hasDeposit) {
                     Section {
                         Picker("유동성", selection: $liquidity) {
                             ForEach(Liquidity.allCases) { l in Text(l.label).tag(l) }
@@ -695,7 +920,7 @@ struct AssetEditor: View {
                     }
                 }
 
-                if assetClass.supportsAutoPrice {
+                if showAdvanced && assetClass.supportsAutoPrice {
                     Section {
                         Toggle(isOn: $auto) {
                             Label("시세 자동", systemImage: "antenna.radiowaves.left.and.right")
@@ -743,7 +968,29 @@ struct AssetEditor: View {
                     }
                 }
 
-                if isDebt {
+                // 간단 입력(새 자산 기본): 여기까지만 — 종류·이름·금액이면 끝.
+                // 나머지는 종류별 기본값이 자동 적용되고, 펼치면 모두 입력 가능.
+                if !showAdvanced {
+                    Section {
+                        Button {
+                            withAnimation { showAdvanced = true }
+                        } label: {
+                            HStack {
+                                Label("세부 설정 입력", systemImage: "slider.horizontal.3")
+                                    .font(.subheadline)
+                                Spacer()
+                                Image(systemName: "chevron.down")
+                                    .font(.caption2)
+                                    .foregroundStyle(Theme.textSecond)
+                            }
+                        }
+                    } footer: {
+                        Text(isDebt
+                             ? "월 이자·상환액은 ‘세부 설정’에서 입력할 수 있어요."
+                             : "유동성·소득·취득가·시세 자동 등은 종류에 맞게 자동 설정돼요. 바꾸고 싶을 때만 펼치면 됩니다. 저장 후 자산을 눌러도 수정할 수 있어요.")
+                            .font(.caption)
+                    }
+                } else if isDebt {
                     debtInterestSection
                 } else if assetClass == .realEstate {
                     // 부동산은 이용형태에 따라 보증금/월세가 갈린다.
@@ -768,7 +1015,9 @@ struct AssetEditor: View {
                     }
                 }
             }
-            .navigationTitle(asset == nil ? "자산 추가" : "자산 편집")
+            .navigationTitle(asset == nil
+                             ? (lockedClass ? "\(lockedTitle) 추가" : "자산 추가")
+                             : "자산 편집")
             .navigationBarTitleDisplayMode(.inline)
             .scrollIndicators(.hidden)
             .keyboardDismissable()
@@ -792,6 +1041,11 @@ struct AssetEditor: View {
     }
 
     private var isDebt: Bool { assetClass == .debt }
+
+    // 고정된 종류의 표시명 — 직접 입력이면 사용자 라벨.
+    private var lockedTitle: String {
+        assetClass == .custom && !customLabel.isEmpty ? customLabel : assetClass.label
+    }
 
     private var realEstateUseHint: String {
         switch realEstateUse {
@@ -984,6 +1238,87 @@ struct AssetEditor: View {
         }
     }
 
+    // --- 세부 종목 할당 ---
+    private var detailAllocated: Double {
+        detailDrafts.reduce(0) { $0 + (Double($1.amount) ?? 0) }
+    }
+    private var detailRemaining: Double { (Double(amount) ?? 0) - detailAllocated }
+
+    // 평가액(예: 주식 3,000만원)을 종목별로 쪼개 할당하는 섹션. 합계와 남은
+    // 금액을 보여줘서 3,000만 중 얼마가 어디에 들어가 있는지 한눈에 보인다.
+    private var detailSection: some View {
+        Section {
+            ForEach($detailDrafts) { $d in
+                HStack(spacing: 6) {
+                    TextField("종목명", text: $d.name)
+                    TextField("금액", text: $d.amount.commaGrouped)
+                        .keyboardType(.numberPad)
+                        .multilineTextAlignment(.trailing)
+                        .font(.system(.body, design: .rounded))
+                        .frame(maxWidth: 130)
+                    Text("원").foregroundStyle(Theme.textSecond)
+                }
+            }
+            .onDelete { detailDrafts.remove(atOffsets: $0) }
+
+            // 새 종목 추가 행.
+            HStack(spacing: 6) {
+                TextField("종목 추가 (예: 삼성전자)", text: $newDetailName)
+                TextField("금액", text: $newDetailAmount.commaGrouped)
+                    .keyboardType(.numberPad)
+                    .multilineTextAlignment(.trailing)
+                    .font(.system(.body, design: .rounded))
+                    .frame(maxWidth: 130)
+                Button {
+                    addDetailDraft()
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundStyle(canAddDetail ? Theme.accent : Theme.textSecond.opacity(0.4))
+                }
+                .buttonStyle(.borderless)
+                .disabled(!canAddDetail)
+            }
+
+            if !detailDrafts.isEmpty {
+                HStack {
+                    Text("할당 \(Fmt.krw(detailAllocated))원")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                    Spacer()
+                    Text(detailRemaining >= 0
+                         ? "남음 \(Fmt.krw(detailRemaining))원"
+                         : "초과 \(Fmt.krw(-detailRemaining))원")
+                        .font(.system(.caption, design: .rounded).weight(.semibold))
+                        .foregroundStyle(detailRemaining >= 0 ? Theme.positive : Theme.negative)
+                }
+            }
+        } header: {
+            Text("세부 종목 (선택)")
+        } footer: {
+            if detailDrafts.isEmpty {
+                Text("평가액을 종목별로 쪼개 관리할 수 있어요. 예) 주식 3,000만원 → 삼성전자 1,000만 + 애플 2,000만.")
+                    .font(.caption)
+            } else if detailRemaining < 0 {
+                Text("종목 합계가 평가액보다 커요. 평가액을 올리거나 종목 금액을 줄여주세요.")
+                    .font(.caption)
+                    .foregroundStyle(Theme.negative)
+            }
+        }
+    }
+
+    private var canAddDetail: Bool {
+        !newDetailName.trimmingCharacters(in: .whitespaces).isEmpty
+            && (Double(newDetailAmount) ?? 0) > 0
+    }
+
+    private func addDetailDraft() {
+        guard canAddDetail else { return }
+        detailDrafts.append(DetailDraft(name: newDetailName.trimmingCharacters(in: .whitespaces),
+                                        amount: newDetailAmount))
+        newDetailName = ""
+        newDetailAmount = ""
+    }
+
     // 전세를 주고 받은 보증금 → 보유 현금(유동) + 부동산 지분(묶임)으로 분리 인식.
     private var depositSection: some View {
         Section {
@@ -1163,6 +1498,20 @@ struct AssetEditor: View {
                 target.annualYieldPct = 0
                 target.incomeKind = .none
             }
+        }
+        // 세부 종목 동기화 — 드래프트를 통째로 다시 쓴다 (이름 있는 행만).
+        // 입력칸에 적어두고 + 를 안 누른 채 저장해도 종목으로 들어가게 포함.
+        var drafts = isDebt ? [] : detailDrafts
+        if !isDebt, canAddDetail {
+            drafts.append(DetailDraft(name: newDetailName.trimmingCharacters(in: .whitespaces),
+                                      amount: newDetailAmount))
+        }
+        for old in target.details { context.delete(old) }
+        target.details = drafts.enumerated().compactMap { idx, d in
+            let nm = d.name.trimmingCharacters(in: .whitespaces)
+            let amt = Double(d.amount) ?? 0
+            guard !nm.isEmpty, amt > 0 else { return nil }
+            return AssetDetail(name: nm, amount: amt, sortOrder: idx)
         }
         try? context.save()
         return target

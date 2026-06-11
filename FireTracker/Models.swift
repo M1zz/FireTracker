@@ -355,6 +355,11 @@ final class Asset {
     var sortOrder: Int
     var createdAt: Date
 
+    // 세부 종목 — 카테고리 금액(예: 주식 3,000만원)을 종목별로 쪼개 할당한 내역.
+    // 평가액(amount)이 진실의 원천이고, 세부 종목은 그 안의 구성을 보여준다.
+    @Relationship(deleteRule: .cascade, inverse: \AssetDetail.asset)
+    var details: [AssetDetail] = []
+
     init(name: String = "",
          assetClass: AssetClass = .stocks,
          customLabel: String = "",
@@ -469,6 +474,28 @@ final class Asset {
     var hasCostBasis: Bool { !isDebt && costBasis > 0 }
     var gain: Double { hasCostBasis ? amount - costBasis : 0 }
     var gainRate: Double { hasCostBasis ? (amount - costBasis) / costBasis : 0 }
+
+    // --- 세부 종목 할당 ---
+    var sortedDetails: [AssetDetail] { details.sorted { $0.sortOrder < $1.sortOrder } }
+    // 종목에 할당된 금액 합과, 평가액에서 아직 할당하지 않은 잔액.
+    var allocatedAmount: Double { details.reduce(0) { $0 + $1.amount } }
+    var unallocatedAmount: Double { amount - allocatedAmount }
+}
+
+// 자산 안의 세부 종목 한 줄 — 이름 + 할당 금액. 예) 주식 3,000만원 중
+// 삼성전자 1,000만 · 애플 2,000만.
+@Model
+final class AssetDetail {
+    var name: String
+    var amount: Double
+    var sortOrder: Int
+    var asset: Asset?
+
+    init(name: String = "", amount: Double = 0, sortOrder: Int = 0) {
+        self.name = name
+        self.amount = amount
+        self.sortOrder = sortOrder
+    }
 }
 
 // One asset line item inside a snapshot.

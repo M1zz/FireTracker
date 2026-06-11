@@ -72,117 +72,51 @@ struct SettingsView: View {
                         .foregroundStyle(Theme.textSecond)
                 }
 
+                // 목표 설정 — 한 줄짜리 행들로 깔끔하게. 설명은 푸터 한 줄만.
                 Section {
-                    VStack(alignment: .leading, spacing: 6) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("연간 목표 지출")
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.textPrimary)
-                            Text("은퇴 후 1년 동안 쓸 생활비예요 (수입이 아닙니다)")
-                                .font(.caption2)
-                                .foregroundStyle(Theme.textSecond)
-                        }
-                        HStack(spacing: 6) {
-                            TextField("36,000,000", text: $annualExpense.commaGrouped)
-                                .keyboardType(.numberPad)
-                                .font(.system(.body, design: .rounded))
-                            Text("원")
-                                .foregroundStyle(Theme.textSecond)
-                            Image(systemName: "pencil")
-                                .font(.caption)
-                                .foregroundStyle(Theme.accent)
-                        }
-                        .inputBox()
-                        if let v = Double(annualExpense), v > 0 {
-                            Text("= \(Fmt.krwBoth(v))")
-                                .font(.caption)
-                                .foregroundStyle(Theme.textSecond)
-                        }
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("월간 목표 지출 (연간 ÷ 12)")
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.textPrimary)
-                            Text("월 단위로 넣어도 연간과 자동으로 연동돼요")
-                                .font(.caption2)
-                                .foregroundStyle(Theme.textSecond)
-                        }
-                        .padding(.top, 8)
-                        HStack(spacing: 6) {
-                            TextField("3,000,000", text: monthlyExpenseBinding.commaGrouped)
-                                .keyboardType(.numberPad)
-                                .font(.system(.body, design: .rounded))
-                            Text("원")
-                                .foregroundStyle(Theme.textSecond)
-                            Image(systemName: "pencil")
-                                .font(.caption)
-                                .foregroundStyle(Theme.accent)
-                        }
-                        .inputBox()
-                        if let v = Double(annualExpense), v > 0 {
-                            Text("= 월 \(Fmt.krwBoth(v / 12))")
-                                .font(.caption)
-                                .foregroundStyle(Theme.textSecond)
-                        }
-                    }
-                    .padding(.vertical, 4)
+                    compactMoneyRow(title: "월간 목표 지출", placeholder: "3,000,000",
+                                    text: monthlyExpenseBinding)
 
                     sliderRow(title: "안전 인출률", value: $swr,
-                              range: 0.02...0.06, step: 0.005,
-                              hint: "모은 자산을 매년 이만큼씩 꺼내 써도 평생 안 마른다고 보는 비율. 보통 4%(30년+ 기준). 낮출수록 더 안전하지만 목표 금액이 커져요.")
+                              range: 0.02...0.06, step: 0.005)
                     sliderRow(title: "예상 연 수익률", value: $expectedReturn,
-                              range: 0...0.12, step: 0.005,
-                              hint: "투자 자산이 매년 이만큼 불어난다고 가정하는 값. ‘예상 달성 시점’ 계산에 쓰여요.")
-                } header: {
-                    Text("FIRE 목표")
-                } footer: {
-                    Text("은퇴 후 매년 쓸 생활비(지출)를 넣으면 목표 자산을 역산합니다 — 목표 자산 = 연간 목표 지출 ÷ 안전 인출률 (4% 룰이면 연 지출의 25배). 매달 버는 수입은 ‘올해 말 예측’의 세후 월급 칸에 넣어요.")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
-                }
+                              range: 0...0.12, step: 0.005)
 
-                Section {
+                    // 자동 계산되는 목표 금액 — 같은 자리에서 바로 확인.
                     let annualExp = Double(annualExpense) ?? 0
                     let target = annualExp / max(swr, 0.0001)
                     HStack {
                         Text("FIRE 목표 금액")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.textPrimary)
                         Spacer()
                         Text("\(Fmt.krw(target))원")
                             .font(.system(.body, design: .rounded).weight(.semibold))
                             .foregroundStyle(Theme.accent)
                     }
-                    if target > 0 {
-                        Text("이만큼 모으면, 다 쓰지 않고도 매달 \(Fmt.krw(annualExp / 12))원(연 \(Fmt.krw(annualExp))원)을 평생 꺼내 쓸 수 있어요.")
-                            .font(.caption)
-                            .foregroundStyle(Theme.textSecond)
-                    }
-                } header: {
-                    Text("계산 결과")
-                } footer: {
-                    Text("목표 금액은 위 ‘연간 목표 지출 ÷ 안전 인출률’로 자동 계산돼요(직접 수정 불가). 금액을 바꾸려면 목표 지출이나 인출률을 조절하세요. 예) 매달 300만원 쓰려면 연 3,600만 ÷ 4% = 9억.")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
-                }
 
-                Section {
                     Picker("달성률 기준", selection: $goalType) {
                         ForEach(FireGoalType.allCases) { Text($0.label).tag($0) }
                     }
                     .pickerStyle(.segmented)
 
-                    HStack(spacing: 10) {
-                        ageField(title: "현재 나이", text: $currentAge)
-                        ageField(title: "목표 은퇴 나이", text: $retireAge)
-                    }
+                    compactAgeRow(title: "현재 나이", text: $currentAge)
+                    compactAgeRow(title: "목표 은퇴 나이", text: $retireAge)
                     if let cur = Int(currentAge), let ret = Int(retireAge), ret > cur {
-                        Text("은퇴까지 \(ret - cur)년 (\((ret - cur) * 12)개월) — 이 기간에 맞춰 이번달·올해·5년 목표를 역산해요.")
-                            .font(.caption)
-                            .foregroundStyle(Theme.textSecond)
+                        HStack {
+                            Text("은퇴까지")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.textPrimary)
+                            Spacer()
+                            Text("\(ret - cur)년")
+                                .font(.system(.body, design: .rounded).weight(.semibold))
+                                .foregroundStyle(Theme.accent)
+                        }
                     }
                 } header: {
-                    Text("목표 측정 & 기간")
+                    Text("FIRE 목표")
                 } footer: {
-                    Text("‘달성률 기준’은 자산(순자산)·패시브 인컴·둘 다 중에서 고를 수 있어요. 현재 나이와 목표 은퇴 나이를 넣으면 대시보드에 이번달·올해·5년·은퇴 목표가 단계별로 표시됩니다.")
+                    Text("월간 목표 지출은 은퇴 후 한 달 생활비예요. 목표 금액 = 연간 지출(월×12) ÷ 안전 인출률. 나이를 넣으면 대시보드에 기간별 목표가 표시돼요.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -280,21 +214,37 @@ struct SettingsView: View {
         }
     }
 
-    // A compact numeric age input.
-    private func ageField(title: String, text: Binding<String>) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+    // 한 줄짜리 금액 행 — 라벨 왼쪽, 입력은 오른쪽 정렬.
+    private func compactMoneyRow(title: String, placeholder: String,
+                                 text: Binding<String>) -> some View {
+        HStack(spacing: 6) {
             Text(title)
                 .font(.subheadline)
                 .foregroundStyle(Theme.textPrimary)
-            HStack(spacing: 6) {
-                TextField("세", text: text)
-                    .keyboardType(.numberPad)
-                    .font(.system(.body, design: .rounded))
-                Text("세").foregroundStyle(Theme.textSecond)
-            }
-            .inputBox()
+            Spacer()
+            TextField(placeholder, text: text.commaGrouped)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.trailing)
+                .font(.system(.body, design: .rounded))
+                .frame(maxWidth: 150)
+            Text("원").foregroundStyle(Theme.textSecond)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // 한 줄짜리 나이 행 — 라벨 왼쪽, 입력은 오른쪽 정렬.
+    private func compactAgeRow(title: String, text: Binding<String>) -> some View {
+        HStack(spacing: 6) {
+            Text(title)
+                .font(.subheadline)
+                .foregroundStyle(Theme.textPrimary)
+            Spacer()
+            TextField("0", text: text)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.trailing)
+                .font(.system(.body, design: .rounded))
+                .frame(maxWidth: 60)
+            Text("세").foregroundStyle(Theme.textSecond)
+        }
     }
 
     // A labelled numeric input box with the exact amount shown alongside.

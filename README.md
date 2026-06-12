@@ -1,6 +1,11 @@
 # FireTracker
 
-순자산을 기록하고 FIRE 목표까지의 추이를 추적하는 iOS 앱.
+순자산을 기록하고 FIRE 목표까지의 추이를 추적하는 iOS 앱. (앱 이름: **퇴사각**)
+
+## 링크
+- 지원 페이지: https://m1zz.github.io/FireTracker/
+- 개인정보처리방침: https://m1zz.github.io/FireTracker/privacy.html
+- 문의: mizzking75@gmail.com
 
 ## 빌드
 1. `FireTracker.xcodeproj`를 Xcode 15+ 에서 열기

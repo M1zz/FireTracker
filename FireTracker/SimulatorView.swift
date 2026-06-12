@@ -7,7 +7,8 @@ import Charts
 struct SimulatorView: View {
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query private var settingsList: [FireSettings]
-    @State private var mode: SimMode = .lifecycle
+    // 마지막으로 보던 계산 모드를 저장해 다시 와도 그대로.
+    @AppStorage("sim.mode") private var mode: SimMode = .lifecycle
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
     private var totalNet: Double { assets.reduce(0) { $0 + $1.netValue } }
@@ -34,8 +35,8 @@ struct SimulatorView: View {
 
                     switch mode {
                     case .lifecycle:
-                        LifecycleSimSection(settings: settings, startAsset: totalNet,
-                                            passiveIncome: monthlyPassive)
+                        LifecycleSimSection(settings: settings, startAssetValue: totalNet,
+                                            passiveIncomeValue: monthlyPassive)
                     case .mortgage:
                         MortgageSimSection()
                     case .savings:
@@ -122,31 +123,36 @@ private func simStat(_ label: String, _ value: String, tint: Color = Theme.textP
 // MARK: - 생애주기 자산 시뮬레이션
 
 private struct LifecycleSimSection: View {
-    // 조건 — 설정·현재 자산으로 미리 채우고, 자유롭게 바꿔본다.
-    @State private var currentAge: String
-    @State private var retireAge: String
-    @State private var endAge = "90"
-    @State private var startAsset: String
-    @State private var grossSalary = "50000000"
-    @State private var raisePct = "3"
-    @State private var monthlyLiving: String
-    @State private var retireMonthly: String
-    @State private var retirePension = "0"
-    @State private var passiveMonthly: String
-    @State private var returnPct: String
-    @State private var inflationPct = "2.5"
+    // 설정·현재 자산은 처음 한 번만 미리 채우고, 이후엔 사용자가 바꾼 값을 저장·유지.
+    let settings: FireSettings
+    let startAssetValue: Double
+    let passiveIncomeValue: Double
 
-    init(settings: FireSettings, startAsset: Double, passiveIncome: Double) {
-        _currentAge = State(initialValue: settings.currentAge > 0 ? String(settings.currentAge) : "30")
-        _retireAge = State(initialValue: settings.targetRetireAge > 0 ? String(settings.targetRetireAge) : "60")
-        _startAsset = State(initialValue: startAsset > 0 ? String(Int(startAsset)) : "0")
-        _monthlyLiving = State(initialValue: settings.plannedMonthlyExpense > 0
-                               ? String(Int(settings.plannedMonthlyExpense)) : "2500000")
-        _retireMonthly = State(initialValue: settings.incomeGoalMonthly > 0
-                               ? String(Int(settings.incomeGoalMonthly)) : "3000000")
-        _returnPct = State(initialValue: settings.expectedAnnualReturn > 0
-                           ? Fmt.trimNumber(settings.expectedAnnualReturn * 100) : "4")
-        _passiveMonthly = State(initialValue: passiveIncome > 0 ? String(Int(passiveIncome)) : "0")
+    @AppStorage("sim.life.currentAge")   private var currentAge = ""
+    @AppStorage("sim.life.retireAge")    private var retireAge = ""
+    @AppStorage("sim.life.endAge")       private var endAge = "90"
+    @AppStorage("sim.life.startAsset")   private var startAsset = ""
+    @AppStorage("sim.life.grossSalary")  private var grossSalary = "50000000"
+    @AppStorage("sim.life.raisePct")     private var raisePct = "3"
+    @AppStorage("sim.life.monthlyLiving") private var monthlyLiving = ""
+    @AppStorage("sim.life.retireMonthly") private var retireMonthly = ""
+    @AppStorage("sim.life.retirePension") private var retirePension = "0"
+    @AppStorage("sim.life.passiveMonthly") private var passiveMonthly = ""
+    @AppStorage("sim.life.returnPct")    private var returnPct = ""
+    @AppStorage("sim.life.inflationPct") private var inflationPct = "2.5"
+    @AppStorage("sim.life.seeded")       private var seeded = false
+
+    // 최초 1회만 설정·현재 자산값으로 빈 칸을 채운다(이후엔 저장된 값 유지).
+    private func seedIfNeeded() {
+        guard !seeded else { return }
+        seeded = true
+        if currentAge.isEmpty   { currentAge = settings.currentAge > 0 ? String(settings.currentAge) : "30" }
+        if retireAge.isEmpty    { retireAge = settings.targetRetireAge > 0 ? String(settings.targetRetireAge) : "60" }
+        if startAsset.isEmpty   { startAsset = startAssetValue > 0 ? String(Int(startAssetValue)) : "0" }
+        if monthlyLiving.isEmpty { monthlyLiving = settings.plannedMonthlyExpense > 0 ? String(Int(settings.plannedMonthlyExpense)) : "2500000" }
+        if retireMonthly.isEmpty { retireMonthly = settings.incomeGoalMonthly > 0 ? String(Int(settings.incomeGoalMonthly)) : "3000000" }
+        if returnPct.isEmpty    { returnPct = settings.expectedAnnualReturn > 0 ? Fmt.trimNumber(settings.expectedAnnualReturn * 100) : "4" }
+        if passiveMonthly.isEmpty { passiveMonthly = passiveIncomeValue > 0 ? String(Int(passiveIncomeValue)) : "0" }
     }
 
     private struct LifePoint: Identifiable {
@@ -338,16 +344,17 @@ private struct LifecycleSimSection: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
         }
+        .onAppear { seedIfNeeded() }
     }
 }
 
 // MARK: - 주담대 상환 시뮬레이션
 
 private struct MortgageSimSection: View {
-    @State private var principal = "300000000"
-    @State private var ratePct = "4.2"
-    @State private var years = "30"
-    @State private var method: RepayMethod = .equalPayment
+    @AppStorage("sim.mtg.principal") private var principal = "300000000"
+    @AppStorage("sim.mtg.ratePct")   private var ratePct = "4.2"
+    @AppStorage("sim.mtg.years")     private var years = "30"
+    @AppStorage("sim.mtg.method")    private var method: RepayMethod = .equalPayment
 
     enum RepayMethod: String, CaseIterable, Identifiable {
         case equalPayment = "원리금균등"
@@ -501,13 +508,13 @@ private struct MortgageSimSection: View {
 // MARK: - 예적금 시뮬레이션
 
 private struct SavingsSimSection: View {
-    @State private var kind: SavingKind = .deposit
-    @State private var principal = "10000000"
-    @State private var monthly = "500000"
-    @State private var months = "12"
-    @State private var ratePct = "3.5"
-    @State private var compound: CompoundKind = .simple
-    @State private var taxed = true
+    @AppStorage("sim.sav.kind")      private var kind: SavingKind = .deposit
+    @AppStorage("sim.sav.principal") private var principal = "10000000"
+    @AppStorage("sim.sav.monthly")   private var monthly = "500000"
+    @AppStorage("sim.sav.months")    private var months = "12"
+    @AppStorage("sim.sav.ratePct")   private var ratePct = "3.5"
+    @AppStorage("sim.sav.compound")  private var compound: CompoundKind = .simple
+    @AppStorage("sim.sav.taxed")     private var taxed = true
 
     enum SavingKind: String, CaseIterable, Identifiable {
         case deposit = "정기예금"

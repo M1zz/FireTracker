@@ -587,66 +587,49 @@ struct DashboardView: View {
         }
     }
 
-    // 우측 상단 토글로 그래프 택일: OFF = 순자산·부채, ON = 총자산.
-    @ViewBuilder
+    // 우측 상단 토글: OFF = 순자산·부채 두 막대, ON = 총자산 한 막대.
+    // 차트를 통째로 갈아끼우지 않고 같은 막대가 변한 값만큼 늘어나고 줄어든다 —
+    // 토글 ON이면 순자산 막대가 총자산 길이로 변하고 부채 막대는 그 끝점으로
+    // 수렴(폭 0)해, 둘이 합쳐져 총자산이 되는 과정이 그대로 보인다.
     private var netWorthChangeChart: some View {
         let c = lastRecordChange
         let assetsBar = AssetChangeBar(label: "순자산", value: c?.assets ?? 0,  positiveIsGood: true)
         let debtBar   = AssetChangeBar(label: "부채",   value: -(c?.debt ?? 0), positiveIsGood: true)
         let totalBar  = AssetChangeBar(label: "총자산", value: lastNetChange ?? 0, positiveIsGood: true)
-        if showTotalChange {
-            totalChangeGraph(totalBar)
-                .transition(.asymmetric(
-                    insertion: .move(edge: .trailing).combined(with: .opacity),
-                    removal: .move(edge: .trailing).combined(with: .opacity)))
-        } else {
-            assetDebtGraph(assetsBar: assetsBar, debtBar: debtBar)
-                .transition(.asymmetric(
-                    insertion: .move(edge: .leading).combined(with: .opacity),
-                    removal: .move(edge: .leading).combined(with: .opacity)))
-        }
-    }
-
-    // 순자산·부채만: 같은 수평선에서 0 기준으로 갈라지는 두 막대.
-    // 라벨은 그래프 위치에 맞춰 왼쪽(부채·−) → 오른쪽(순자산·+) 순서.
-    private func assetDebtGraph(assetsBar: AssetChangeBar, debtBar: AssetChangeBar) -> some View {
         // 부채가 순자산과 같은 부호면 순자산 끝에서 이어 그려 겹치지 않게 한다.
         let debtStart = assetsBar.value * debtBar.value > 0 ? assetsBar.value : 0
-        let bound = max([assetsBar.value, debtStart + debtBar.value].map { abs($0) }.max() ?? 0, 1) * 1.2
+        let aEnd   = showTotalChange ? totalBar.value : assetsBar.value
+        // 토글 ON: 부채 막대는 가운데 0선으로 모여들며 사라진다.
+        let dStart = showTotalChange ? 0 : debtStart
+        let dEnd   = showTotalChange ? 0 : debtStart + debtBar.value
+        // 두 모드를 오가도 축이 튀지 않도록 공통 도메인.
+        let bound = max([assetsBar.value, debtStart + debtBar.value, totalBar.value]
+            .map { abs($0) }.max() ?? 0, 1) * 1.2
         return VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 14) {
-                changeLegendItem(debtBar)
-                changeLegendItem(assetsBar)
-                Spacer()
+            if !showTotalChange {
+                HStack(spacing: 14) {
+                    changeLegendItem(debtBar)
+                    changeLegendItem(assetsBar)
+                    Spacer()
+                }
+                .transition(.opacity)
             }
             Chart {
-                BarMark(xStart: .value("시작", 0.0), xEnd: .value("변화", assetsBar.value * barAnim),
-                        y: .value("항목", "순자산·부채"), height: .ratio(0.5))
-                    .foregroundStyle(changeBarColor(assetsBar)).cornerRadius(4)
-                BarMark(xStart: .value("시작", debtStart * barAnim), xEnd: .value("변화", (debtStart + debtBar.value) * barAnim),
-                        y: .value("항목", "순자산·부채"), height: .ratio(0.5))
+                BarMark(xStart: .value("시작", 0.0), xEnd: .value("변화", aEnd * barAnim),
+                        y: .value("항목", "변화"), height: .ratio(0.5))
+                    .foregroundStyle(changeBarColor(showTotalChange ? totalBar : assetsBar))
+                    .cornerRadius(4)
+                BarMark(xStart: .value("시작", dStart * barAnim), xEnd: .value("변화", dEnd * barAnim),
+                        y: .value("항목", "변화"), height: .ratio(0.5))
                     .foregroundStyle(changeBarColor(debtBar)).cornerRadius(4)
                 RuleMark(x: .value("0", 0.0)).foregroundStyle(Theme.hairline)
             }
             .chartXScale(domain: -bound ... bound)
             .chartYAxis(.hidden)
             .chartXAxis { AxisMarks { _ in AxisGridLine().foregroundStyle(Theme.hairline) } }
-            .frame(height: 86)
+            .frame(height: 80)
+            .animation(.smooth(duration: 0.55), value: showTotalChange)
         }
-    }
-
-    // 총자산만: 단일 막대(0을 카드 중앙에). 큰 값은 위의 롤링 숫자로 강조됨.
-    private func totalChangeGraph(_ totalBar: AssetChangeBar) -> some View {
-        let bound = max(abs(totalBar.value), 1) * 1.2
-        return Chart {
-            BarMark(x: .value("변화", totalBar.value * barAnim), y: .value("항목", "총자산"), height: .ratio(0.5))
-                .foregroundStyle(changeBarColor(totalBar)).cornerRadius(4)
-            RuleMark(x: .value("0", 0.0)).foregroundStyle(Theme.hairline)
-        }
-        .chartXScale(domain: -bound ... bound)
-        .chartYAxis(.hidden)
-        .chartXAxis { AxisMarks { _ in AxisGridLine().foregroundStyle(Theme.hairline) } }
-        .frame(height: 72)
     }
 
     // "순자산 +500만"처럼 라벨 + 변화량 한 쌍. 색은 막대와 동일.
@@ -762,8 +745,7 @@ struct DashboardView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear { animateChangeBars() }
         .onChange(of: showTotalChange) { _, on in
-            // 그래프를 바꿀 때마다 막대를 0에서 다시 자라나게 한다.
-            animateChangeBars()
+            // 막대는 0에서 다시 그리지 않는다 — 길이가 변한 값만큼 늘고 줄며 모핑.
             if on {
                 animatedTotalChange = 0
                 withAnimation(.easeOut(duration: 0.8)) { animatedTotalChange = lastNetChange ?? 0 }

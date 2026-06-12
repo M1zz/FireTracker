@@ -19,6 +19,7 @@
 		A100000A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B100000A /* Assets.xcassets */; };
 		A100000B /* PriceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000B /* PriceService.swift */; };
 		A100000C /* AssetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000C /* AssetsView.swift */; };
+		A100000D /* SimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000D /* SimulatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		B100000A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B100000B /* PriceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceService.swift; sourceTree = "<group>"; };
 		B100000C /* AssetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsView.swift; sourceTree = "<group>"; };
+		B100000D /* SimulatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				B1000009 /* SettingsView.swift */,
 				B100000B /* PriceService.swift */,
 				B100000C /* AssetsView.swift */,
+				B100000D /* SimulatorView.swift */,
 				B100000A /* Assets.xcassets */,
 			);
 			path = FireTracker;
@@ -164,6 +167,7 @@
 				A1000009 /* SettingsView.swift in Sources */,
 				A100000B /* PriceService.swift in Sources */,
 				A100000C /* AssetsView.swift in Sources */,
+				A100000D /* SimulatorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

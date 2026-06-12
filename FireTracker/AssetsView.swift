@@ -303,6 +303,8 @@ struct AssetsView: View {
     private var debtTotal: Double { abs(assets.filter { $0.isDebt }.reduce(0) { $0 + $1.netValue }) }
     private var grossAssets: Double { compositionEntries.reduce(0) { $0 + $1.amount } }
     private var hasDebt: Bool { debtTotal > 0 }
+    // 부채 비율 = 부채 ÷ 보유 자산. 자산 대비 빚이 얼마나 되는지.
+    private var debtRatio: Double { grossAssets > 0 ? debtTotal / grossAssets : 0 }
     private var effectiveMode: AssetTotalMode { hasDebt ? totalMode : .gross }
     // Chart/legend rows: assets always; 순자산 mode adds a debt slice.
     private var compositionRows: [(assetClass: AssetClass, amount: Double)] {
@@ -351,6 +353,25 @@ struct AssetsView: View {
                          : "순자산 \(Fmt.krw(grossAssets))원 − 부채 \(Fmt.krw(debtTotal))원")
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
+
+                    // 부채 비율 — 자산 대비 빚의 크기를 한 줄 바로.
+                    HStack(spacing: 8) {
+                        Text("부채 비율")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                        GeometryReader { geo in
+                            ZStack(alignment: .leading) {
+                                Capsule().fill(Theme.hairline)
+                                Capsule().fill(Theme.negative.opacity(0.8))
+                                    .frame(width: max(2, geo.size.width * min(debtRatio, 1)))
+                            }
+                        }
+                        .frame(height: 6)
+                        Text(Fmt.percent(debtRatio, fraction: 1))
+                            .font(.system(.caption2, design: .rounded).weight(.semibold))
+                            .foregroundStyle(Theme.negative)
+                    }
+                    .padding(.top, 2)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -418,6 +439,7 @@ struct AssetsView: View {
                 Text("\(count)/\(total) 수집")
                     .font(.caption.weight(.semibold).monospacedDigit())
                     .foregroundStyle(count == total ? Theme.accent : Theme.textSecond)
+                    .contentTransition(.numericText(value: Double(count)))
             }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 72), spacing: 8)], spacing: 8) {
                 ForEach(collectibleClasses) { ac in
@@ -447,6 +469,12 @@ struct AssetsView: View {
                     }
                     .buttonStyle(.plain)
                     .disabled(owned)
+                    // 도장 찍기 — 칸이 채워지는 순간 크게 나타나 쾅 눌리듯 안착.
+                    // owned가 바뀌면 id가 바뀌어 새 뷰로 취급 → 삽입 트랜지션 실행.
+                    .id("\(ac.rawValue)-\(owned)")
+                    .transition(.asymmetric(
+                        insertion: .scale(scale: 1.6).combined(with: .opacity),
+                        removal: .identity))
                 }
             }
             Text(count == total
@@ -456,6 +484,9 @@ struct AssetsView: View {
                 .foregroundStyle(Theme.textSecond)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        // 저장 직후(시트 닫히며 목록 갱신) 찍히자마자 스프링으로 움직이게.
+        .animation(.spring(duration: 0.55, bounce: 0.45), value: collected)
+        .sensoryFeedback(.success, trigger: count) { old, new in new > old }
         .cardStyle()
     }
 
@@ -489,11 +520,11 @@ struct AssetsView: View {
                             .foregroundStyle(Theme.accent)
                     }
                     if asset.effectiveMonthlyIncome > 0 {
-                        Text("월 \(Fmt.krw(asset.effectiveMonthlyIncome))")
+                        Text("월 \(Fmt.wonKo(asset.effectiveMonthlyIncome))")
                             .foregroundStyle(Theme.positive)
                     }
                     if asset.monthlyDebtCost > 0 {
-                        Text("월 −\(Fmt.krw(asset.monthlyDebtCost))")
+                        Text("월 −\(Fmt.wonKo(asset.monthlyDebtCost))")
                             .foregroundStyle(Theme.negative)
                     }
                 }
@@ -507,20 +538,25 @@ struct AssetsView: View {
                         .foregroundStyle(Theme.textSecond)
                         .lineLimit(1)
                 }
+                // 전세 보증금 구성 — 오른쪽 금액 열에 붙이면 이름·부제목이
+                // 다 잘리므로, 왼쪽 전체 폭에서 축약 표기(억/만)로 보여준다.
+                if asset.depositReceived > 0 {
+                    Text("현금 \(Fmt.wonKo(asset.depositCash)) + 지분 \(Fmt.wonKo(asset.equityValue))")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                        .lineLimit(1)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            VStack(alignment: .trailing, spacing: 2) {
-                Text("\(Fmt.krw(asset.netValue))원")
-                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                    .foregroundStyle(asset.netValue < 0 ? Theme.negative : Theme.textPrimary)
-                if asset.depositReceived > 0 {
-                    Text("현금 \(Fmt.krw(asset.depositCash)) + \(Fmt.krw(asset.equityValue))")
-                        .font(.caption2)
-                        .foregroundStyle(Theme.textSecond)
-                }
-            }
-            .layoutPriority(1)
+            // 오른쪽엔 합계 한 줄만 — 억 단위 금액도 이름을 누르지 않게,
+            // 넘치면 살짝 줄여서 한 줄에 맞춘다.
+            Text("\(Fmt.krw(asset.netValue))원")
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(asset.netValue < 0 ? Theme.negative : Theme.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+                .layoutPriority(1)
         }
         .padding(.vertical, 4)
     }
@@ -649,6 +685,8 @@ struct AssetsView: View {
                 Text("\(subtotal < 0 ? "−" : "")\(Fmt.krw(abs(subtotal)))원")
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                     .foregroundStyle(subtotal < 0 ? Theme.negative : Theme.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
             }
             .contentShape(Rectangle())
         }

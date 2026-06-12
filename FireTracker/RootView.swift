@@ -22,9 +22,13 @@ struct RootView: View {
                 .tabItem { Label("추이", systemImage: "chart.xyaxis.line") }
                 .tag(2)
 
+            SimulatorView()
+                .tabItem { Label("계산", systemImage: "plus.forwardslash.minus") }
+                .tag(3)
+
             SettingsView()
                 .tabItem { Label("설정", systemImage: "gearshape.fill") }
-                .tag(3)
+                .tag(4)
         }
         .tint(Theme.accent)
         // Bigger baseline text, but still scales with the system text-size

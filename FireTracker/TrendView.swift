@@ -9,6 +9,9 @@ struct TrendView: View {
     @State private var mode: TrendMode = .netWorth
     @State private var period: TrendPeriod = .month
     @State private var selectedIndex: Int?
+    @State private var thisMonthSel: Date?
+    @State private var passiveSel: Date?
+    @State private var allocSel: Date?
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
 
@@ -371,12 +374,25 @@ struct TrendView: View {
         return byDay.values.sorted { $0.date < $1.date }
     }
 
-    // 이번 달 카드: 1일~말일 축 위에 지금까지의 기록을 일 단위로.
-    // 본 차트와 같은 문법(막대+라인). 현재 상태 숫자는 메인 카드 헤더에 있음.
+    // "오늘"·"6월 8일" 같은 이번 달 날짜 라벨.
+    private func thisMonthDayLabel(_ date: Date) -> String {
+        let cal = Calendar.current
+        if cal.isDateInToday(date) { return "오늘" }
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ko_KR")
+        f.dateFormat = "M월 d일"
+        return f.string(from: date)
+    }
+
+    // 이번 달 카드: 막대(자산/부채)+라인(순자산)을 일 단위로. 탭하면 그 날 값이 위에.
     private var thisMonthChart: some View {
         let pts = thisMonthPoints
         let cal = Calendar.current
         let month = cal.dateInterval(of: .month, for: Date())
+        // 탭한 날짜에 가장 가까운 기록(없으면 최근)을 정보 카드로.
+        let shown: TrendPoint? = thisMonthSel.flatMap { sel in
+            pts.min { abs($0.date.timeIntervalSince(sel)) < abs($1.date.timeIntervalSince(sel)) }
+        } ?? pts.last
         return VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("이번 달")
@@ -388,6 +404,25 @@ struct TrendView: View {
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
                 }
+            }
+            if let s = shown {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("\(thisMonthDayLabel(s.date)) 기준")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                    HStack(spacing: 10) {
+                        Text("순자산 \(s.netWorth < 0 ? "−" : "")\(Fmt.krw(abs(s.netWorth)))")
+                            .foregroundStyle(Theme.accent)
+                        Text("자산 \(Fmt.krw(s.grossAssets))")
+                            .foregroundStyle(Theme.positive)
+                        if s.debt > 0 {
+                            Text("부채 −\(Fmt.krw(s.debt))")
+                                .foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                    .font(.caption.weight(.semibold))
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             Chart {
                 ForEach(pts) { p in
@@ -424,18 +459,8 @@ struct TrendView: View {
             }
             .chartXScale(domain: (month?.start ?? Date()) ... (month?.end ?? Date()))
             .chartYAxis(.hidden)
-            .chartXAxis {
-                AxisMarks(values: .stride(by: .day, count: 7)) { value in
-                    AxisGridLine().foregroundStyle(Theme.hairline)
-                    if let d = value.as(Date.self) {
-                        AxisValueLabel {
-                            Text("\(cal.component(.day, from: d))일")
-                                .font(.caption2)
-                                .foregroundStyle(Theme.textSecond)
-                        }
-                    }
-                }
-            }
+            .chartXAxis(.hidden)
+            .chartXSelection(value: $thisMonthSel)
             .frame(height: 150)
             if pts.count < 2 {
                 Text("기록을 저장할수록 이번 달 안의 변화가 촘촘하게 그려져요.")
@@ -597,10 +622,31 @@ struct TrendView: View {
     private var monthlyTargetExpense: Double { settings.targetAnnualExpense / 12 }
 
     private var passiveIncomeChart: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("패시브 인컴 성장")
-                .font(.headline)
-                .foregroundStyle(Theme.textPrimary)
+        let pts = sorted
+        let shown = passiveSel.flatMap { sel in
+            pts.min { abs($0.date.timeIntervalSince(sel)) < abs($1.date.timeIntervalSince(sel)) }
+        } ?? pts.last
+        return VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top) {
+                Text("패시브 인컴 성장")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                if let s = shown {
+                    VStack(alignment: .trailing, spacing: 1) {
+                        Text("\(periodLabelFull(s.date))")
+                            .font(.caption2).foregroundStyle(Theme.textSecond)
+                        Text("월 \(Fmt.krw(s.monthlyPassiveIncome))원")
+                            .font(.system(.subheadline, design: .rounded).weight(.bold))
+                            .foregroundStyle(Theme.positive)
+                            .contentTransition(.numericText())
+                        if monthlyTargetExpense > 0 {
+                            Text("목표의 \(Fmt.percent(s.monthlyPassiveIncome / monthlyTargetExpense, fraction: 0))")
+                                .font(.caption2).foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                }
+            }
             Chart {
                 ForEach(sorted) { s in
                     AreaMark(
@@ -637,7 +683,8 @@ struct TrendView: View {
                         }
                 }
             }
-            .chartYAxis(.hidden)
+            .chartYAxis { krwYAxis() }
+            .chartXSelection(value: $passiveSel)
             .frame(height: 240)
 
             if let last = sorted.last, monthlyTargetExpense > 0 {
@@ -649,6 +696,18 @@ struct TrendView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
+    }
+
+    // 공용 Y축 — 좌측에 만·억 금액 라벨.
+    private func krwYAxis() -> some AxisContent {
+        AxisMarks(position: .leading) { value in
+            AxisGridLine().foregroundStyle(Theme.hairline)
+            AxisValueLabel {
+                if let v = value.as(Double.self) {
+                    Text("\(Fmt.krw(v))원").font(.caption2).foregroundStyle(Theme.textSecond)
+                }
+            }
+        }
     }
 
     private var savingsChart: some View {
@@ -677,10 +736,48 @@ struct TrendView: View {
         let pts = sorted
         // 데이터가 있는 카테고리만 — 없는 카테고리는 범례(세그먼트)조차 만들지 않는다.
         let present = AssetClass.allCases.filter { ac in pts.contains { $0.total(for: ac) > 0 } }
+        let shown = allocSel.flatMap { sel in
+            pts.min { abs($0.date.timeIntervalSince(sel)) < abs($1.date.timeIntervalSince(sel)) }
+        } ?? pts.last
         return VStack(alignment: .leading, spacing: 14) {
-            Text("카테고리별 자산 · 순자산")
-                .font(.headline)
-                .foregroundStyle(Theme.textPrimary)
+            HStack(alignment: .top) {
+                Text("카테고리별 자산 · 순자산")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                if let s = shown {
+                    VStack(alignment: .trailing, spacing: 1) {
+                        Text(periodLabelFull(s.date))
+                            .font(.caption2).foregroundStyle(Theme.textSecond)
+                        Text("순자산 \(Fmt.krw(s.netWorth))원")
+                            .font(.system(.subheadline, design: .rounded).weight(.bold))
+                            .foregroundStyle(Theme.accent)
+                            .contentTransition(.numericText())
+                    }
+                }
+            }
+            // 선택한 기간의 카테고리 구성 — 큰 것부터 칩으로.
+            if let s = shown {
+                let comp = present.compactMap { ac -> (AssetClass, Double)? in
+                    let t = s.total(for: ac); return t > 0 ? (ac, t) : nil
+                }.sorted { $0.1 > $1.1 }
+                if !comp.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(comp, id: \.0) { item in
+                                HStack(spacing: 4) {
+                                    Circle().fill(Color(hex: item.0.colorHex)).frame(width: 7, height: 7)
+                                    Text(item.0.label).font(.caption2).foregroundStyle(Theme.textSecond)
+                                    Text("\(Fmt.krw(item.1))원").font(.caption2.weight(.semibold)).foregroundStyle(Theme.textPrimary)
+                                }
+                                .padding(.horizontal, 8).padding(.vertical, 5)
+                                .background(Theme.surfaceHigh)
+                                .clipShape(Capsule())
+                            }
+                        }
+                    }
+                }
+            }
             Chart {
                 ForEach(pts) { s in
                     ForEach(present) { ac in
@@ -719,7 +816,8 @@ struct TrendView: View {
                 domain: present.map { $0.label },
                 range: present.map { Color(hex: $0.colorHex) }
             )
-            .chartYAxis(.hidden)
+            .chartYAxis { krwYAxis() }
+            .chartXSelection(value: $allocSel)
             .frame(height: 240)
 
             HStack(spacing: 12) {

@@ -237,12 +237,30 @@ private struct LifecycleSimSection: View {
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
 
+                // 한 줄 결론 — 희망 월수령액으로 몇 세까지 버티는지.
+                let want = Double(retireMonthly) ?? 0
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("은퇴 후 월 \(Fmt.krw(want))원 수령 시")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                    if let dep = result.depletionAge {
+                        Text("\(dep)세에 자산이 고갈돼요")
+                            .font(.system(.title3, design: .rounded, weight: .bold))
+                            .foregroundStyle(Theme.negative)
+                    } else {
+                        Text("\(a.end)세까지 버텨요 ✅")
+                            .font(.system(.title3, design: .rounded, weight: .bold))
+                            .foregroundStyle(Theme.positive)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
                 HStack(spacing: 0) {
-                    simStat("은퇴(\(a.retire)세) 자산", "\(Fmt.wonKo(result.peak))", tint: .blue)
+                    simStat("은퇴(\(a.retire)세) 자산", "\(Fmt.krw(result.peak))원", tint: .blue)
                     if let dep = result.depletionAge {
                         simStat("자산 고갈", "\(dep)세", tint: Theme.negative)
                     } else {
-                        simStat("\(a.end)세 잔액", "\(Fmt.wonKo(result.end))", tint: .orange)
+                        simStat("\(a.end)세 잔액", "\(Fmt.krw(result.end))원", tint: .orange)
                     }
                 }
 
@@ -311,20 +329,6 @@ private struct LifecycleSimSection: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
 
-            // 기본 — 나이와 가정.
-            VStack(alignment: .leading, spacing: 12) {
-                Text("기본 설정")
-                    .font(.headline)
-                    .foregroundStyle(Theme.textPrimary)
-                simInputRow("현재 나이", text: $currentAge, suffix: "세")
-                simInputRow("은퇴 나이", text: $retireAge, suffix: "세")
-                simInputRow("현재 자산", text: $startAsset, suffix: "원", money: true)
-                simInputRow("연 수익률", text: $returnPct, suffix: "%", decimal: true)
-                simInputRow("물가상승률", text: $inflationPct, suffix: "%", decimal: true)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .cardStyle()
-
             // 소득 — 모으는 시기의 엔진.
             VStack(alignment: .leading, spacing: 12) {
                 Text("소득 · 지출")
@@ -338,6 +342,23 @@ private struct LifecycleSimSection: View {
                 simMoneyChips($passiveMonthly, steps: [("+10만", 100_000), ("+50만", 500_000), ("−10만", -100_000)])
                 simInputRow("은퇴 후 월 소득(연금 등)", text: $retirePension, suffix: "원", money: true)
                 Text("세후 소득은 사회보험료·누진세 근사값이고, 패시브 인컴은 등록한 자산의 현재 값으로 미리 채워져요. 일할 때도 은퇴 후에도 들어오며 물가만큼 자란다고 가정합니다.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .cardStyle()
+
+            // 기본 — 나이와 가정. 앱 정보로 자동 채워지므로 맨 아래에 둔다.
+            VStack(alignment: .leading, spacing: 12) {
+                Text("기본 설정")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                simInputRow("현재 나이", text: $currentAge, suffix: "세")
+                simInputRow("은퇴 나이", text: $retireAge, suffix: "세")
+                simInputRow("현재 자산", text: $startAsset, suffix: "원", money: true)
+                simInputRow("연 수익률", text: $returnPct, suffix: "%", decimal: true)
+                simInputRow("물가상승률", text: $inflationPct, suffix: "%", decimal: true)
+                Text("나이·자산·수익률은 설정과 등록한 자산에서 자동으로 채워져요. 바꾸면 이 계산에만 반영됩니다.")
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
             }
@@ -447,7 +468,7 @@ private struct MortgageSimSection: View {
                         simStat("이자 비율(원금 대비)", Fmt.percent(p > 0 ? totalInterest / p : 0, fraction: 1),
                                 tint: Theme.negative)
                         if method == .equalPrincipal, let first = sched.first, let last = sched.last {
-                            simStat("월 상환액", "\(Fmt.wonKo(first.payment)) → \(Fmt.wonKo(last.payment))")
+                            simStat("월 상환액", "\(Fmt.krw(first.payment)) → \(Fmt.krw(last.payment))원")
                         } else if let first = sched.first {
                             simStat(method == .bullet ? "월 이자" : "월 상환액", "\(Fmt.krw(first.payment))원")
                         }
@@ -515,6 +536,7 @@ private struct SavingsSimSection: View {
     @AppStorage("sim.sav.ratePct")   private var ratePct = "3.5"
     @AppStorage("sim.sav.compound")  private var compound: CompoundKind = .simple
     @AppStorage("sim.sav.taxed")     private var taxed = true
+    @AppStorage("sim.sav.goal")      private var goal = ""
 
     enum SavingKind: String, CaseIterable, Identifiable {
         case deposit = "정기예금"
@@ -553,6 +575,41 @@ private struct SavingsSimSection: View {
         }
     }
 
+    private struct SavPoint: Identifiable { let id = UUID(); let month: Int; let value: Double }
+
+    // 월별 누적 잔액(세후 이자 반영) — 0개월부터 만기까지. 그래프용.
+    private var series: [SavPoint] {
+        let m = max(1, Int(months) ?? 12)
+        let r = (Double(ratePct) ?? 0) / 100
+        let i = r / 12
+        let taxFactor = taxed ? (1 - 0.154) : 1.0
+        var pts: [SavPoint] = []
+        switch kind {
+        case .deposit:
+            let p = Double(principal) ?? 0
+            for k in 0...m {
+                let interest = compound == .simple ? p * r * Double(k) / 12
+                                                   : p * (pow(1 + i, Double(k)) - 1)
+                pts.append(SavPoint(month: k, value: p + interest * taxFactor))
+            }
+        case .installment:
+            let d = Double(monthly) ?? 0
+            for k in 0...m {
+                let contributed = d * Double(k)
+                let interest: Double
+                if compound == .simple {
+                    interest = d * r * Double(k * (k - 1)) / 2 / 12
+                } else {
+                    interest = i > 0 ? d * ((pow(1 + i, Double(k)) - 1) / i) - contributed : 0
+                }
+                pts.append(SavPoint(month: k, value: contributed + interest * taxFactor))
+            }
+        }
+        return pts
+    }
+
+    private var goalValue: Double { Double(goal) ?? 0 }
+
     var body: some View {
         let r = result
         let tax = taxed ? r.interest * 0.154 : 0
@@ -587,9 +644,16 @@ private struct SavingsSimSection: View {
                         .foregroundStyle(Theme.textSecond)
                 }
                 .tint(Theme.accent)
+                simInputRow("목표 금액 (선택)", text: $goal, suffix: "원", money: true)
+                simMoneyChips($goal, steps: [("+100만", 1_000_000), ("+1,000만", 10_000_000), ("−100만", -1_000_000)])
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
+
+            // 목표까지 모이는 흐름 — 월별 누적 잔액 곡선 + 목표선.
+            if series.count > 1 {
+                savingsGrowthCard(maturity: maturity)
+            }
 
             VStack(alignment: .leading, spacing: 14) {
                 Text("만기 수령액")
@@ -629,5 +693,76 @@ private struct SavingsSimSection: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
         }
+    }
+
+    // 월별 누적 잔액 곡선 + 목표선. 목표 대비 달성도도 함께.
+    private func savingsGrowthCard(maturity: Double) -> some View {
+        let pts = series
+        let m = pts.last?.month ?? 1
+        let byYear = m > 18
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("목표까지 모이는 흐름")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                if goalValue > 0 {
+                    let pct = min(maturity / goalValue, 1)
+                    Text(maturity >= goalValue ? "목표 달성 🎉" : "목표의 \(Fmt.percent(pct, fraction: 0))")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(maturity >= goalValue ? Theme.positive : Theme.accent)
+                }
+            }
+            Chart {
+                ForEach(pts) { p in
+                    AreaMark(x: .value("개월", p.month), y: .value("잔액", p.value))
+                        .foregroundStyle(LinearGradient(
+                            colors: [Theme.positive.opacity(0.28), Theme.positive.opacity(0.03)],
+                            startPoint: .top, endPoint: .bottom))
+                    LineMark(x: .value("개월", p.month), y: .value("잔액", p.value))
+                        .foregroundStyle(Theme.positive)
+                        .lineStyle(StrokeStyle(lineWidth: 2.5))
+                }
+                if goalValue > 0 {
+                    RuleMark(y: .value("목표", goalValue))
+                        .foregroundStyle(Theme.accent.opacity(0.7))
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 4]))
+                        .annotation(position: .top, alignment: .leading) {
+                            Text("목표 \(Fmt.krw(goalValue))원")
+                                .font(.caption2)
+                                .foregroundStyle(Theme.accent)
+                        }
+                }
+            }
+            .chartYAxis {
+                AxisMarks(position: .leading) { value in
+                    AxisGridLine().foregroundStyle(Theme.hairline)
+                    AxisValueLabel {
+                        if let v = value.as(Double.self) {
+                            Text("\(Fmt.krw(v))원").font(.caption2).foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                }
+            }
+            .chartXAxis {
+                AxisMarks(values: .automatic(desiredCount: 5)) { value in
+                    AxisGridLine().foregroundStyle(Theme.hairline)
+                    if let mm = value.as(Int.self) {
+                        AxisValueLabel {
+                            Text(byYear ? "\(mm / 12)년" : "\(mm)개월")
+                                .font(.caption2).foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                }
+            }
+            .frame(height: 200)
+            if goalValue > 0, maturity < goalValue {
+                Text("만기에 목표까지 \(Fmt.krw(goalValue - maturity))원 부족해요. 기간·납입액·이자율을 올려보세요.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
     }
 }

@@ -342,8 +342,10 @@ struct DashboardView: View {
                     ScrollView {
                         VStack(spacing: 20) {
                             welcomeCard
+                            recordNudgeCard
                             if settings.monthsToRetire != nil {
                                 milestoneGoalsCard
+                                requiredSavingsCard
                             } else {
                                 TipView(milestoneSetupTip)
                                     .tipBackground(Theme.surface)
@@ -960,6 +962,74 @@ struct DashboardView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
+    }
+
+    // 마지막 기록이 오래됐으면 "변화 있었나요?" 넛지. (7일 이상)
+    @ViewBuilder
+    private var recordNudgeCard: some View {
+        if let last = latest {
+            let days = daysSince(last.date)
+            if days >= 7 {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "bell.badge.fill")
+                            .foregroundStyle(Theme.accent)
+                        Text("자산에 변화가 있었나요?")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.textPrimary)
+                    }
+                    Text("마지막 기록이 \(days)일 전이에요. 시세가 움직였거나 입출금이 있었다면 자산 탭에서 ‘이번 달 기록 저장’으로 최신 상태를 남겨두세요.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .cardStyle()
+            }
+        }
+    }
+
+    // 목표(FIRE 자산)까지 은퇴 시점에 도달하려면 하루/주/월 얼마를 모아야 하는지.
+    @ViewBuilder
+    private var requiredSavingsCard: some View {
+        if let months = settings.monthsToRetire, months > 0, fireNumber > 0, goalRemaining > 0 {
+            let monthly = goalRemaining / Double(months)
+            let weekly = monthly * 12 / 52
+            let daily = monthly * 12 / 365
+            VStack(alignment: .leading, spacing: 12) {
+                Text("목표까지 필요 저축")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Text("FIRE 목표 \(Fmt.krw(fireNumber))원까지 \(months / 12)년 \(months % 12)개월 · 남은 \(Fmt.krw(goalRemaining))원")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+                HStack(spacing: 0) {
+                    paceStat("하루", daily)
+                    paceStat("주", weekly)
+                    paceStat("월", monthly)
+                }
+                if monthlySavingsNow > 0 {
+                    let ratio = monthlySavingsNow / monthly
+                    Text(ratio >= 1
+                         ? "지금 월 저축 \(Fmt.krw(monthlySavingsNow))원 — 목표 페이스를 넘었어요 🎉"
+                         : "지금 월 저축 \(Fmt.krw(monthlySavingsNow))원 · 목표 페이스의 \(Fmt.percent(ratio, fraction: 0))")
+                        .font(.caption2)
+                        .foregroundStyle(ratio >= 1 ? Theme.positive : Theme.textSecond)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .cardStyle()
+        }
+    }
+
+    private func paceStat(_ label: String, _ value: Double) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(label).font(.caption2).foregroundStyle(Theme.textSecond)
+            Text("\(Fmt.krw(value))원")
+                .font(.system(.subheadline, design: .rounded).weight(.bold))
+                .foregroundStyle(Theme.accent)
+                .lineLimit(1).minimumScaleFactor(0.7)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     // "3개월"·"2년 4개월"·"오늘" 같은 남은 기간 텍스트.

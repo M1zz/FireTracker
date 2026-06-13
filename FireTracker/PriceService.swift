@@ -157,6 +157,31 @@ enum PriceService {
         }
     }
 
+    // MARK: - 배당 (Yahoo events=div, 키 불필요) → 연간 주당 배당(현지 통화)
+    static func yahooAnnualDividend(yahooSymbol: String) async throws -> Double {
+        guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/\(yahooSymbol)?interval=1d&range=1y&events=div") else { return 0 }
+        let obj = try await json(url, headers: ["User-Agent": "Mozilla/5.0"]) as? [String: Any]
+        let result = ((obj?["chart"] as? [String: Any])?["result"] as? [[String: Any]])?.first
+        let divs = (result?["events"] as? [String: Any])?["dividends"] as? [String: Any] ?? [:]
+        return divs.values.compactMap { ($0 as? [String: Any])?["amount"] as? Double }.reduce(0, +)
+    }
+
+    // 주식·ETF의 예상 연간 주당 배당을 KRW로. 미국은 환율 환산, 국내는 .KS/.KQ.
+    static func annualDividendKRWPerShare(assetClass: AssetClass, symbol: String, currency: String) async throws -> Double {
+        let sym = symbol.trimmingCharacters(in: .whitespaces)
+        guard !sym.isEmpty, assetClass == .stocks || assetClass == .fund else { return 0 }
+        if currency == "USD" {
+            let d = try await yahooAnnualDividend(yahooSymbol: sym.uppercased())
+            return d > 0 ? d * (try await usdToKrw()) : 0
+        } else {
+            let code = sym.filter { $0.isNumber }
+            for suffix in [".KS", ".KQ"] {
+                if let d = try? await yahooAnnualDividend(yahooSymbol: code + suffix), d > 0 { return d }
+            }
+            return 0
+        }
+    }
+
     // Yahoo Finance에서 심볼(접미사 포함 가능)의 종목명만 조회. 미국 티커 보완용.
     static func yahooName(_ symbol: String) async throws -> String {
         guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/\(symbol)?interval=1d&range=1d") else { return "" }

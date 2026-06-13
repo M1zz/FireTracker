@@ -28,6 +28,8 @@ struct AssetsView: View {
     @State private var showingImport = false
     @State private var showingBreakdown = false
     @State private var totalMode: AssetTotalMode = .gross
+    // 자산 구성 도넛에서 탭으로 선택된 조각(각도값).
+    @State private var selectedSlice: Double?
     // 새 자산을 어떤 카테고리로 추가할지 — 카테고리별 ‘+ 종목 추가’가 미리 채운다.
     @State private var newClass: AssetClass = .stocks
     @State private var newCustomLabel = ""
@@ -240,6 +242,11 @@ struct AssetsView: View {
                                  tint: totalGain >= 0 ? Theme.positive : Theme.negative)
                     }
                 }
+                if monthlyIncome > 0 {
+                    Text("연 예상 배당·현금흐름 \(Fmt.krw(monthlyIncome * 12))원 (배당·이자·월세 등 합산)")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                }
                 if monthlyIncome > 0 && totalDebtCost > 0 {
                     let net = monthlyIncome - totalDebtCost
                     Text("월 순현금흐름 \(net >= 0 ? "+" : "−")\(Fmt.krw(abs(net)))원 (현금흐름 − 부채)")
@@ -290,13 +297,15 @@ struct AssetsView: View {
     }
 
     // Positive net value per asset class, for the composition chart.
+    // 비율(금액)이 큰 종류부터 — 도넛·범례가 큰 순서로 보이게 정렬.
     private var compositionEntries: [(assetClass: AssetClass, amount: Double)] {
-        AssetClass.allCases.compactMap { ac in
+        AssetClass.allCases.compactMap { ac -> (assetClass: AssetClass, amount: Double)? in
             guard ac != .debt else { return nil }
             let sum = assets.filter { $0.assetClass == ac }
                 .reduce(0) { $0 + max(0, $1.netValue) }
             return sum > 0 ? (ac, sum) : nil
         }
+        .sorted { $0.amount > $1.amount }
     }
     // Debt magnitude, gross assets, and the toggle's effective mode — mirror the
     // dashboard so 총자산/순자산 behaves the same on both screens.
@@ -313,6 +322,26 @@ struct AssetsView: View {
             rows.append((assetClass: .debt, amount: debtTotal))
         }
         return rows
+    }
+
+    // 탭으로 선택된 도넛 조각 → 해당 카테고리. selectedSlice(누적 각도값)를 행 누적합과 대조.
+    private var selectedCompRow: (assetClass: AssetClass, amount: Double)? {
+        guard let sel = selectedSlice else { return nil }
+        var cum = 0.0
+        for r in compositionRows {
+            if sel >= cum && sel < cum + r.amount { return r }
+            cum += r.amount
+        }
+        return nil
+    }
+    // 범례 탭 시 그 카테고리 조각의 중앙 각도값 — 도넛 선택과 연동.
+    private func sliceMidAngle(for ac: AssetClass) -> Double? {
+        var cum = 0.0
+        for r in compositionRows {
+            if r.assetClass == ac { return cum + r.amount / 2 }
+            cum += r.amount
+        }
+        return nil
     }
 
     // Donut chart + legend showing how net worth breaks down by class.
@@ -342,17 +371,9 @@ struct AssetsView: View {
 
             if hasDebt {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(effectiveMode == .gross ? "순자산" : "총자산")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
                     Text("\(Fmt.krw(effectiveMode == .gross ? grossAssets : total))원")
                         .font(.system(.title2, design: .rounded, weight: .bold))
                         .foregroundStyle(effectiveMode == .gross ? Theme.textPrimary : Theme.accent)
-                    Text(effectiveMode == .gross
-                         ? "부채 \(Fmt.krw(debtTotal))원 차감 시 총자산 \(Fmt.krw(total))원"
-                         : "순자산 \(Fmt.krw(grossAssets))원 − 부채 \(Fmt.krw(debtTotal))원")
-                        .font(.caption2)
-                        .foregroundStyle(Theme.textSecond)
 
                     // 부채 비율 — 자산 대비 빚의 크기를 한 줄 바로.
                     HStack(spacing: 8) {
@@ -376,6 +397,7 @@ struct AssetsView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
 
+            let selSlice = selectedCompRow
             Chart(rows, id: \.assetClass) { item in
                 SectorMark(
                     angle: .value("금액", item.amount),
@@ -384,13 +406,35 @@ struct AssetsView: View {
                 )
                 .foregroundStyle(Color(hex: item.assetClass.colorHex))
                 .cornerRadius(4)
+                .opacity(selSlice == nil || selSlice?.assetClass == item.assetClass ? 1 : 0.3)
+            }
+            .chartAngleSelection(value: $selectedSlice)
+            .chartBackground { _ in
+                GeometryReader { geo in
+                    VStack(spacing: 2) {
+                        Text(selSlice?.assetClass.label ?? "전체")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                        Text("\(Fmt.krw(selSlice?.amount ?? sum))원")
+                            .font(.system(.subheadline, design: .rounded).weight(.bold))
+                            .foregroundStyle(selSlice.map { Color(hex: $0.assetClass.colorHex) } ?? Theme.textPrimary)
+                        if let selSlice, sum > 0 {
+                            Text(Fmt.percent(selSlice.amount / sum, fraction: 0))
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                    .frame(width: geo.size.width, height: geo.size.height)
+                }
             }
             .frame(height: 170)
+            .animation(.easeInOut(duration: 0.3), value: selectedSlice)
             .animation(.easeInOut(duration: 0.45), value: rows.map(\.amount))
 
-            VStack(spacing: 10) {
+            VStack(spacing: 4) {
                 ForEach(rows, id: \.assetClass) { item in
                     let isDebt = item.assetClass == .debt
+                    let selected = selSlice?.assetClass == item.assetClass
                     HStack(spacing: 10) {
                         Circle()
                             .fill(Color(hex: item.assetClass.colorHex))
@@ -407,9 +451,20 @@ struct AssetsView: View {
                             .foregroundStyle(Theme.textSecond)
                             .frame(width: 40, alignment: .trailing)
                     }
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 8)
+                    .background(selected ? Color(hex: item.assetClass.colorHex).opacity(0.14) : Color.clear)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            // 범례를 탭해도 선택/해제 — 도넛과 연동.
+                            selectedSlice = selected ? nil : sliceMidAngle(for: item.assetClass)
+                        }
+                    }
                 }
             }
+            .animation(.easeInOut(duration: 0.3), value: selectedSlice)
             .animation(.easeInOut(duration: 0.45), value: rows.map(\.assetClass))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -633,7 +688,9 @@ struct AssetsView: View {
     private var assetGroups: [AssetGroup] {
         var groups: [AssetGroup] = []
         for ac in AssetClass.allCases {
+            // 그룹 안에서는 금액(절댓값) 큰 종목부터.
             let members = assets.filter { $0.assetClass == ac }
+                .sorted { abs($0.netValue) > abs($1.netValue) }
             guard !members.isEmpty else { continue }
             if ac == .custom {
                 var labels: [String] = []
@@ -654,7 +711,8 @@ struct AssetsView: View {
                                          assets: members))
             }
         }
-        return groups
+        // 카테고리도 금액(소계) 큰 순으로 — 부채는 음수라 자연스레 맨 아래.
+        return groups.sorted { $0.subtotal > $1.subtotal }
     }
 
     // Tappable category header: chevron + icon + name + count, and the group's
@@ -948,9 +1006,9 @@ struct AssetEditor: View {
                     }
                 }
 
-                // 전세·반전세는 받은 보증금(유동) + 부동산 지분(묶임)으로 자동 분리되므로
-                // 수동 유동성 토글을 숨긴다 — 토글이 보증금 분리와 충돌해 혼란을 줬음.
-                if showAdvanced && !isDebt && !(assetClass == .realEstate && realEstateUse.hasDeposit) {
+                // 유동성(쓸 수 있는 돈 ↔ 묶인 돈) 토글은 기본 노출 — 자주 바꾸는 값이라
+                // 세부 설정을 펼치지 않아도 보이게 한다. 전세·반전세(보증금 자동 분리)만 숨김.
+                if !isDebt && !(assetClass == .realEstate && realEstateUse.hasDeposit) {
                     Section {
                         Picker("유동성", selection: $liquidity) {
                             ForEach(Liquidity.allCases) { l in Text(l.label).tag(l) }
@@ -1624,6 +1682,19 @@ struct AssetEditor: View {
                 status = "최근 실거래가 반영됨"
             } else {
                 status = "단가 \(Fmt.krw(result.unit))원 × \(quantity.isEmpty ? "0" : quantity)"
+            }
+            // 주식·ETF면 예상 배당도 자동으로 — 사용자가 배당을 안 넣었을 때만 채운다.
+            if assetClass == .stocks || assetClass == .fund {
+                if let perShare = try? await PriceService.annualDividendKRWPerShare(
+                        assetClass: assetClass, symbol: symbol, currency: currency),
+                   perShare > 0 {
+                    let annual = perShare * qty
+                    if annual > 0, (Double(monthlyIncome) ?? 0) == 0 {
+                        incomeKind = .dividend
+                        monthlyIncome = String(Int((annual / 12).rounded()))
+                        status += " · 예상 배당 월 \(Fmt.krw(annual / 12))원 반영"
+                    }
+                }
             }
         } catch {
             failed = true

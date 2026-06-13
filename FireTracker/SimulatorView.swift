@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import Charts
+import TipKit
 
 // 계산 탭 — 참고용 시뮬레이터 모음.
 // 생애주기(모으고 쓰는 인생 자산 곡선) · 주담대(상환 흐름) · 예적금(만기 수령액).
@@ -196,11 +197,21 @@ private struct LifecycleSimSection: View {
     @AppStorage("sim.life.passiveMonthly") private var passiveMonthly = ""
     @AppStorage("sim.life.returnPct")    private var returnPct = ""
     @AppStorage("sim.life.inflationPct") private var inflationPct = "2.5"
+    // C — 수익률이 해마다 출렁이는 폭(변동성). 밴드의 넓이를 정한다.
+    @AppStorage("sim.life.volatilityPct") private var volatilityPct = "12"
+    // B — 규모별 수익률 가정. 켜면 자산이 클수록 연 수익률을 조금씩 더해준다.
+    // Fagereng(2020)·Piketty 근거이되 '낙관 가정'이므로 기본은 꺼둔다.
+    @AppStorage("sim.life.scaleReturns") private var scaleReturns = false
     @AppStorage("sim.life.seeded")       private var seeded = false
 
     @Environment(\.modelContext) private var context
     @State private var showReflectConfirm = false
     @State private var reflected = false
+
+    // 4단계 "충분의 거울" 성찰 팁 — 쓰는 흐름 속에서 질문을 던진다.
+    private let vanityMirrorTip = VanityMirrorTip()   // 1단계 — 월 생활비
+    private let bucketListTip = BucketListTip()        // 2단계 — 희망 월수령액
+    private let enoughAnchorTip = EnoughAnchorTip()    // 3단계 — 판정 카드
 
     // 최초 1회만 설정·현재 자산값으로 빈 칸을 채운다(이후엔 저장된 값 유지).
     private func seedIfNeeded() {
@@ -236,6 +247,21 @@ private struct LifecycleSimSection: View {
         return gross * rate
     }
 
+    // B — 규모별 수익률. 자산이 클수록 연 수익률을 단계적으로 더한다(낙관 가정).
+    // 근거: 큰 자산일수록 리스크 감내·대체투자 접근·낮은 수수료로 평균 수익이 높다
+    // (Fagereng 2020; Piketty 기금 사례 — 규모 클수록 실질수익 ~2%p 높음).
+    private func scaledReturn(base r: Double, asset: Double) -> Double {
+        guard scaleReturns else { return r }
+        let bump: Double
+        switch asset {
+        case ..<300_000_000:    bump = 0       // 3억 미만
+        case ..<1_000_000_000:  bump = 0.005   // 3~10억  +0.5%p
+        case ..<5_000_000_000:  bump = 0.010   // 10~50억 +1.0%p
+        default:                bump = 0.015   // 50억+   +1.5%p
+        }
+        return r + bump
+    }
+
     private var ages: (cur: Int, retire: Int, end: Int) {
         let cur = max(15, Int(currentAge) ?? 30)
         let retire = max(cur + 1, Int(retireAge) ?? 60)
@@ -245,7 +271,7 @@ private struct LifecycleSimSection: View {
 
     // 연 단위 시뮬레이션: 일할 땐 (세후소득 − 생활비)를 모으고, 은퇴 후엔
     // 희망 월수령액(물가 반영)을 꺼내 쓴다. 자산엔 매년 수익률이 붙는다.
-    private var sim: (points: [LifePoint], peak: Double, end: Double, depletionAge: Int?) {
+    private var sim: (points: [LifePoint], peak: Double, end: Double, depletionAge: Int?, crossoverAge: Int?) {
         let a = ages
         var asset = Double(startAsset) ?? 0
         let r = (Double(returnPct) ?? 0) / 100
@@ -260,10 +286,20 @@ private struct LifecycleSimSection: View {
         var pts: [LifePoint] = [LifePoint(age: a.cur, value: asset, phase: "모으는 시기")]
         var peak = asset
         var depletion: Int? = nil
+        // 분기점 — 한 해 투자수익(자산×수익률)이 그 해 순저축을 넘어서는 첫 나이.
+        // 이때부터 곡선이 직선(저축 주도)에서 지수(수익 주도)로 휘기 시작한다.
+        var crossover: Int? = nil
         for age in (a.cur + 1)...a.end {
             let working = age <= a.retire
             let yearsOut = Double(age - a.cur)
-            asset *= (1 + r)
+            let rEff = scaledReturn(base: r, asset: asset)  // B — 규모 반영 수익률
+            // 성장 적용 전에, 이 해의 수익과 순저축을 비교해 분기점을 잡는다.
+            if working, crossover == nil {
+                let yearReturn = asset * rEff
+                let yearSavings = netAnnual(salary) - living
+                if yearSavings > 0, yearReturn >= yearSavings { crossover = age }
+            }
+            asset *= (1 + rEff)
             // 패시브 인컴(배당·월세)은 일할 때도 은퇴 후에도 들어온다.
             // 물가만큼 자라는 것으로 가정(임대료·배당 성장 근사).
             asset += passiveYear * pow(1 + infl, yearsOut)
@@ -284,7 +320,79 @@ private struct LifecycleSimSection: View {
                 pts.append(LifePoint(age: age, value: asset, phase: "쓰는 시기"))
             }
         }
-        return (pts, peak, asset, depletion)
+        return (pts, peak, asset, depletion, crossover)
+    }
+
+    // MARK: - 변동성 밴드 (C — 단일 선의 거짓 정밀함을 부채꼴로)
+    //
+    // 단일 수익률 선은 "딱 이렇게 된다"는 환상을 준다. 실제 수익은 해마다 출렁이고,
+    // 그 불확실성은 시간이 갈수록 벌어진다(sequence-of-returns risk). 그래서 같은
+    // 모델을 수익률만 정규분포로 흔들어 여러 번 돌리고(몬테카를로), 가운데 50%
+    // 구간(p25~p75)을 띠로 그린다. 시드를 고정해 입력이 같으면 띠도 흔들리지 않는다.
+
+    private struct BandPoint: Identifiable { let id = UUID(); let age: Int; let low: Double; let high: Double }
+
+    // 입력이 같으면 결과도 같은 시드 고정 난수기(xorshift64 + Box–Muller).
+    private struct SeededGen {
+        var state: UInt64
+        mutating func uniform() -> Double {
+            state ^= state << 13; state ^= state >> 7; state ^= state << 17
+            return Double(state >> 11) * (1.0 / 9_007_199_254_740_992.0)  // [0,1)
+        }
+        mutating func normal() -> Double {  // 표준정규 한 표본
+            let u1 = max(uniform(), 1e-12), u2 = uniform()
+            return (-2 * log(u1)).squareRoot() * cos(2 * .pi * u2)
+        }
+    }
+
+    private var band: [BandPoint] {
+        let a = ages
+        let r = (Double(returnPct) ?? 0) / 100
+        let infl = (Double(inflationPct) ?? 0) / 100
+        let raise = (Double(raisePct) ?? 0) / 100
+        let sigma = (Double(volatilityPct) ?? 0) / 100
+        let start = Double(startAsset) ?? 0
+        let salary0 = Double(grossSalary) ?? 0
+        let living0 = (Double(monthlyLiving) ?? 0) * 12
+        let wantYear = (Double(retireMonthly) ?? 0) * 12
+        let pensionYear = (Double(retirePension) ?? 0) * 12
+        let passiveYear = (Double(passiveMonthly) ?? 0) * 12
+        let span = a.end - a.cur
+        guard span > 0 else { return [] }
+
+        let trials = 400
+        var samples = Array(repeating: [Double](), count: span + 1)
+        var gen = SeededGen(state: 0x9E37_79B9_7F4A_7C15)  // 고정 시드
+
+        for _ in 0..<trials {
+            var asset = start, salary = salary0, living = living0
+            samples[0].append(asset)
+            for (i, age) in ((a.cur + 1)...a.end).enumerated() {
+                let yearsOut = Double(age - a.cur)
+                let rEff = scaledReturn(base: r, asset: asset)  // B — 규모 반영
+                asset *= (1 + rEff + sigma * gen.normal())  // 수익률만 흔든다
+                asset += passiveYear * pow(1 + infl, yearsOut)
+                if age <= a.retire {
+                    asset += netAnnual(salary) - living
+                    salary *= (1 + raise); living *= (1 + infl)
+                } else {
+                    asset += pensionYear - wantYear * pow(1 + infl, yearsOut)
+                }
+                asset = max(0, asset)
+                samples[i + 1].append(asset)
+            }
+        }
+
+        return samples.enumerated().map { idx, vals in
+            let s = vals.sorted()
+            return BandPoint(age: a.cur + idx, low: pct(s, 0.25), high: pct(s, 0.75))
+        }
+    }
+
+    private func pct(_ sorted: [Double], _ p: Double) -> Double {
+        guard !sorted.isEmpty else { return 0 }
+        let i = Int((Double(sorted.count - 1) * p).rounded())
+        return sorted[min(max(i, 0), sorted.count - 1)]
     }
 
     var body: some View {
@@ -335,6 +443,8 @@ private struct LifecycleSimSection: View {
                 .padding(12)
                 .background(tint.opacity(0.12))
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                // 3단계 — 닻: '충분한 삶'의 값을 마주하되 매일 쫓지 말라고 짚는다.
+                .popoverTip(enoughAnchorTip)
 
                 HStack(spacing: 0) {
                     simStat("은퇴(\(a.retire)세) 자산", "\(Fmt.krw(result.peak))원", tint: .blue)
@@ -345,7 +455,16 @@ private struct LifecycleSimSection: View {
                     }
                 }
 
+                let bandPts = band
                 Chart {
+                    // C — 변동성 밴드(가운데 50% 구간). 선 뒤에 깔아 부채꼴로 보이게.
+                    ForEach(bandPts) { b in
+                        AreaMark(x: .value("나이", b.age),
+                                 yStart: .value("하한", b.low),
+                                 yEnd: .value("상한", b.high))
+                            .foregroundStyle(Theme.accent.opacity(0.13))
+                            .interpolationMethod(.catmullRom)
+                    }
                     ForEach(result.points) { p in
                         LineMark(x: .value("나이", p.age), y: .value("자산", p.value))
                             .foregroundStyle(by: .value("시기", p.phase))
@@ -360,6 +479,17 @@ private struct LifecycleSimSection: View {
                                 .font(.caption2)
                                 .foregroundStyle(Theme.textSecond)
                         }
+                    // A — 분기점: 수익이 저축을 앞서는 나이. "돈이 일하기 시작하는" 지점.
+                    if let cross = result.crossoverAge, cross < a.retire {
+                        RuleMark(x: .value("분기점", cross))
+                            .foregroundStyle(Theme.positive.opacity(0.7))
+                            .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [2, 3]))
+                            .annotation(position: .bottom, alignment: .center) {
+                                Text("돈이 일함")
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(Theme.positive)
+                            }
+                    }
                     PointMark(x: .value("나이", a.retire), y: .value("자산", result.peak))
                         .foregroundStyle(.blue)
                         .symbolSize(70)
@@ -385,6 +515,22 @@ private struct LifecycleSimSection: View {
                 }
                 .frame(height: 220)
 
+                // A — 분기점 설명: 곡선이 왜 휘는지.
+                if let cross = result.crossoverAge, cross < a.retire {
+                    Text("\(cross)세부터는 한 해 투자수익이 저축보다 커져요 — 여기서부터 돈이 당신 대신 법니다. 곡선이 직선에서 지수로 휘는 지점이에요.")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.positive)
+                }
+                // C — 밴드 설명: 단일 선은 환상, 띠가 현실.
+                Text("음영은 수익률이 해마다 출렁일 때의 ‘가운데 50%’ 범위예요(연 변동성 \(volatilityPct.isEmpty ? "0" : volatilityPct)% 가정). 미래는 선 하나가 아니라 이 폭 안에서 움직여요 — 시간이 갈수록 넓어지죠.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+                if scaleReturns {
+                    Text("‘규모별 수익률’ 가정이 켜져 있어요 — 자산이 클수록 연 수익률을 +0.5~1.5%p 더해 계산한 낙관 시나리오예요(Fagereng 2020·Piketty). 실제로 그 초과수익엔 더 큰 리스크가 따라요.")
+                        .font(.caption2)
+                        .foregroundStyle(.orange)
+                }
+
                 if result.depletionAge == nil, result.end > 0 {
                     Text("\(a.end)세까지 자산이 버팁니다. 희망 월수령액을 올려 여유를 확인해보세요.")
                         .font(.caption2)
@@ -407,6 +553,8 @@ private struct LifecycleSimSection: View {
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
                 simInputRow("희망 월수령액", text: $retireMonthly, suffix: "원", money: true)
+                    // 2단계 — 버킷: 이 돈으로 무엇을 누리고 싶은가(빼기 다음 더하기).
+                    .popoverTip(bucketListTip)
                 simMoneyChips($retireMonthly, steps: [("+10만", 100_000), ("+100만", 1_000_000), ("−10만", -100_000)])
                 simInputRow("시뮬레이션 종료 나이", text: $endAge, suffix: "세")
             }
@@ -422,6 +570,8 @@ private struct LifecycleSimSection: View {
                 simMoneyChips($grossSalary, steps: [("+100만", 1_000_000), ("+1,000만", 10_000_000), ("−100만", -1_000_000)])
                 simInputRow("연봉 인상률", text: $raisePct, suffix: "%", decimal: true)
                 simInputRow("월 생활비", text: $monthlyLiving, suffix: "원", money: true)
+                    // 1단계 — 거울: 허영을 덜어낸 '진짜 나의 만족점'은 얼마인가.
+                    .popoverTip(vanityMirrorTip)
                 simInputRow("월 패시브 인컴(배당·월세)", text: $passiveMonthly, suffix: "원", money: true)
                 simMoneyChips($passiveMonthly, steps: [("+10만", 100_000), ("+50만", 500_000), ("−10만", -100_000)])
                 simInputRow("은퇴 후 월 소득(연금 등)", text: $retirePension, suffix: "원", money: true)
@@ -442,6 +592,21 @@ private struct LifecycleSimSection: View {
                 simInputRow("현재 자산", text: $startAsset, suffix: "원", money: true)
                 simInputRow("연 수익률", text: $returnPct, suffix: "%", decimal: true)
                 simInputRow("물가상승률", text: $inflationPct, suffix: "%", decimal: true)
+                // C — 변동성: 밴드 폭을 정하는 가정. 프리셋으로 빠르게.
+                simInputRow("수익률 변동성", text: $volatilityPct, suffix: "%", decimal: true)
+                volatilityPresets
+                // B — 규모별 수익률 토글(낙관 가정).
+                Toggle(isOn: $scaleReturns) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("규모별 수익률 가정")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.textPrimary)
+                        Text("자산이 클수록 연 수익률 +0.5~1.5%p (낙관)")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                }
+                .tint(Theme.accent)
                 Text("나이·자산·수익률은 설정과 등록한 자산에서 자동으로 채워져요. 바꾸면 이 계산에만 반영됩니다.")
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
@@ -449,10 +614,52 @@ private struct LifecycleSimSection: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
         }
-        .onAppear { seedIfNeeded() }
+        .onAppear {
+            seedIfNeeded()
+            // 1단계 거울은 이 화면에 있을 때만 묻는다. 3단계 닻은 계산이 성립할 때.
+            VanityMirrorTip.onLifecycleScreen = true
+            EnoughAnchorTip.hasFeasibleResult = (sim.depletionAge == nil)
+        }
+        .onDisappear { VanityMirrorTip.onLifecycleScreen = false }
         // 값이 바뀌면 다시 반영할 수 있게 버튼 상태를 되돌린다.
         .onChange(of: [currentAge, retireAge, retireMonthly, returnPct, monthlyLiving, grossSalary]) { _, _ in
             reflected = false
+            // 결과가 성립(은퇴 가능)할 때만 3단계 닻을 깨운다.
+            EnoughAnchorTip.hasFeasibleResult = (sim.depletionAge == nil)
+        }
+        // 1단계(월 생활비)를 실제로 만지면 거울을 닫고, 2단계 버킷을 깨운다 — 빼기 다음 더하기.
+        .onChange(of: monthlyLiving) { _, _ in
+            vanityMirrorTip.invalidate(reason: .actionPerformed)
+            BucketListTip.mirrorDone = true
+        }
+        // 2단계(희망 월수령액)를 만지면 버킷 질문은 역할을 다한 것.
+        .onChange(of: retireMonthly) { _, _ in
+            bucketListTip.invalidate(reason: .actionPerformed)
+        }
+        // B 토글은 곡선 자체를 바꾸므로 판정도 다시 계산.
+        .onChange(of: scaleReturns) { _, _ in
+            reflected = false
+            EnoughAnchorTip.hasFeasibleResult = (sim.depletionAge == nil)
+        }
+    }
+
+    // 변동성 빠른 프리셋 — 보수(8)/균형(12)/공격(18)으로 한 탭 세팅.
+    private var volatilityPresets: some View {
+        HStack(spacing: 8) {
+            ForEach([("보수 8%", "8"), ("균형 12%", "12"), ("공격 18%", "18")], id: \.0) { label, value in
+                Button { volatilityPct = value } label: {
+                    Text(label)
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 7)
+                        .background(volatilityPct == value ? Theme.accent.opacity(0.25) : Theme.surfaceHigh)
+                        .foregroundStyle(Theme.textPrimary)
+                        .clipShape(Capsule())
+                        .overlay(Capsule().stroke(volatilityPct == value ? Theme.accent : Theme.hairline, lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+            }
+            Spacer()
         }
     }
 
@@ -505,6 +712,9 @@ private struct LifecycleSimSection: View {
         // 현재 패시브 인컴은 실제 보유 자산(주식 배당 등)에서만 나와야 한다.
         try? context.save()
         reflected = true
+        // 만족점을 다시 확정한 순간 — 4단계 재점검 타이머를 리셋하고 닻 질문은 닫는다.
+        ReflectionState.markReviewed()
+        enoughAnchorTip.invalidate(reason: .actionPerformed)
     }
 }
 

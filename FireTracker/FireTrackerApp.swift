@@ -29,6 +29,8 @@ struct FireTrackerApp: App {
                         .displayFrequency(.weekly),
                         .datastoreLocation(.applicationDefault)
                     ])
+                    // 4단계 — 마지막으로 만족점을 점검한 지 1년이 지났으면 재점검 팁을 깨운다.
+                    ReflectionState.refreshReviewDue()
                     // 앱이 켜질 때마다 로컬 자동 백업을 남긴다 — 실수로 데이터를
                     // 지워도 직전 상태로 복구할 수 있는 안전망.
                     BackupManager.autoBackup(context: sharedModelContainer.mainContext)

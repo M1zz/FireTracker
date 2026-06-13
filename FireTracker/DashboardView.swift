@@ -109,6 +109,8 @@ struct DashboardView: View {
     // 0→1로 올라가며 막대가 0선에서 자라나게 하는 진행도.
     @State private var barAnim: Double = 0
     private let milestoneSetupTip = MilestoneSetupTip()
+    // 4단계 — 반복되는 거울: 마지막 점검 후 1년이 지나면 만족점을 다시 묻는다.
+    private let reReflectTip = ReReflectTip()
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
     private var latest: NetWorthSnapshot? {
@@ -353,6 +355,9 @@ struct DashboardView: View {
                     ScrollView {
                         VStack(spacing: 20) {
                             welcomeCard
+                            // 4단계 — 1년 넘게 만족점을 안 봤으면 다시 비춰보라고 묻는다.
+                            TipView(reReflectTip)
+                                .tipBackground(Theme.surface)
                             if settings.monthsToRetire != nil {
                                 milestoneGoalsCard
                                 requiredSavingsCard

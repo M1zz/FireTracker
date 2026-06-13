@@ -22,6 +22,7 @@
 		A100000D /* SimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000D /* SimulatorView.swift */; };
 		A100000E /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000E /* RefreshManager.swift */; };
 		A100000F /* BackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000F /* BackupManager.swift */; };
+		A1000010 /* ReflectionTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000010 /* ReflectionTips.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		B100000D /* SimulatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorView.swift; sourceTree = "<group>"; };
 		B100000E /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		B100000F /* BackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManager.swift; sourceTree = "<group>"; };
+		B1000010 /* ReflectionTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflectionTips.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 				B100000D /* SimulatorView.swift */,
 				B100000E /* RefreshManager.swift */,
 				B100000F /* BackupManager.swift */,
+				B1000010 /* ReflectionTips.swift */,
 				B100000A /* Assets.xcassets */,
 			);
 			path = FireTracker;
@@ -176,6 +179,7 @@
 				A100000D /* SimulatorView.swift in Sources */,
 				A100000E /* RefreshManager.swift in Sources */,
 				A100000F /* BackupManager.swift in Sources */,
+				A1000010 /* ReflectionTips.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

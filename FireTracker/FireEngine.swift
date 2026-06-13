@@ -118,10 +118,16 @@ struct FireEngine {
 
 // Currency / number formatting shared across the UI.
 enum Fmt {
+    // 금액 표기 모드. 기본은 억/만 단위(읽기 쉬움). 설정에서 켜면 숫자(콤마)만.
+    // 앱 시작·설정 변경 시 RootView가 설정값으로 동기화한다.
+    static var numbersOnly = false
+
     // Formats a KRW amount into 억/만원 readable Korean string.
     static func krw(_ value: Double) -> String {
         // Int(NaN/Inf) traps — never let a bad number crash the money formatter.
         guard value.isFinite else { return "0" }
+        // 숫자만 모드 — 콤마 구분 정수로.
+        if numbersOnly { return won(value) }
         let eok = 100_000_000.0
         let man = 10_000.0
         let sign = value < 0 ? "-" : ""
@@ -149,16 +155,14 @@ enum Fmt {
         return Int(value.rounded()).formatted()
     }
 
-    // Full comma amount with its Korean reading appended so the unit is always
-    // clear, e.g. "36,000,000원 (3,600만)".
+    // 금액 + '원'. 표기 모드를 따른다(억/만 또는 숫자). 예) "3,600만원" 또는 "36,000,000원".
     static func wonKo(_ value: Double) -> String {
-        "\(won(value))원 (\(krw(value)))"
+        "\(krw(value))원"
     }
 
-    // Abbreviated form with the exact amount written alongside,
-    // e.g. "3,600만 (36,000,000원)".
+    // 금액 + '원'. wonKo와 동일하게 표기 모드를 따른다.
     static func krwBoth(_ value: Double) -> String {
-        "\(krw(value)) (\(won(value))원)"
+        "\(krw(value))원"
     }
 
     static func percent(_ value: Double, fraction: Int = 1) -> String {

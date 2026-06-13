@@ -29,6 +29,9 @@ struct FireTrackerApp: App {
                         .displayFrequency(.weekly),
                         .datastoreLocation(.applicationDefault)
                     ])
+                    // 앱이 켜질 때마다 로컬 자동 백업을 남긴다 — 실수로 데이터를
+                    // 지워도 직전 상태로 복구할 수 있는 안전망.
+                    BackupManager.autoBackup(context: sharedModelContainer.mainContext)
                 }
         }
         .modelContainer(sharedModelContainer)

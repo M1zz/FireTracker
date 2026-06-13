@@ -21,6 +21,8 @@ struct AssetsView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query private var settingsList: [FireSettings]
+    @Query private var snapshots: [NetWorthSnapshot]
+    @EnvironmentObject private var refresher: RefreshManager
     @State private var editing: Asset?
     @State private var showingNew = false
     @State private var showingRecord = false
@@ -48,10 +50,75 @@ struct AssetsView: View {
     private var lockedTotal: Double { total - liquidTotal }
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
     private var monthlyIncome: Double {
-        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } + settings.manualMonthlyDividend
+        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome }
     }
     private var totalDebtCost: Double { assets.reduce(0) { $0 + $1.monthlyDebtCost } }
     private var totalGain: Double { assets.reduce(0) { $0 + $1.gain } }
+    // 카탈로그 상태 지문 — 자산 추가·수정·삭제·시세 갱신으로 값이 바뀌면 변한다.
+    // 이 값이 바뀌면 이번 달 기록을 자동 갱신한다.
+    private var catalogSignature: String {
+        "\(assets.count)|\(total)|\(liquidTotal)|\(monthlyIncome)"
+    }
+
+    // 수동 새로고침 — 자동 시세 자산의 평가액과 주식·ETF 배당률을 즉시 최신화.
+    private func refreshNow() {
+        Task { await refresher.refresh(assets: assets, settings: settings, context: context) }
+    }
+
+    // 패시브 인컴 한 줄 — 어떤 자산이 어떤 종류(배당·월세·이자…)로 월 얼마를 내는지.
+    private struct IncomeLine: Identifiable {
+        let id: String
+        let name: String
+        let kind: String
+        let symbol: String      // SF Symbol
+        let monthly: Double
+        let note: String        // 배당률·근거 설명
+    }
+
+    // 수입을 내는 자산 + 설정의 수동 배당을, 월 금액 큰 순으로.
+    private var incomeLines: [IncomeLine] {
+        var lines: [IncomeLine] = assets
+            .filter { !$0.isDebt && $0.effectiveMonthlyIncome > 0 }
+            .map { a in
+                let note: String
+                if a.monthlyIncome > 0 {
+                    note = "직접 입력"
+                } else if a.annualYieldPct > 0 {
+                    note = "연 \(Fmt.trimNumber(a.annualYieldPct))% · 평가액 기준"
+                } else {
+                    note = ""
+                }
+                return IncomeLine(
+                    id: a.key.uuidString,
+                    name: a.name.isEmpty ? a.displayClassLabel : a.name,
+                    kind: a.incomeKind == .none ? "현금흐름" : a.incomeKind.label,
+                    symbol: incomeIcon(a.incomeKind),
+                    monthly: a.effectiveMonthlyIncome,
+                    note: note
+                )
+            }
+            .sorted { $0.monthly > $1.monthly }
+        return lines
+    }
+
+    // 종류별 합계 — 칩으로 한눈에(배당 월 50만 · 월세 월 80만 …).
+    private var incomeByKind: [(kind: String, monthly: Double)] {
+        var dict: [String: Double] = [:]
+        for line in incomeLines { dict[line.kind, default: 0] += line.monthly }
+        return dict.map { (kind: $0.key, monthly: $0.value) }
+            .sorted { $0.monthly > $1.monthly }
+    }
+
+    private func incomeIcon(_ kind: IncomeKind) -> String {
+        switch kind {
+        case .dividend: return "chart.pie.fill"
+        case .rent:     return "house.fill"
+        case .interest: return "banknote.fill"
+        case .pension:  return "figure.walk"
+        case .staking:  return "bitcoinsign.circle.fill"
+        case .other, .none: return "wonsign.circle.fill"
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -63,12 +130,36 @@ struct AssetsView: View {
                 }
             }
             .background(Theme.bg.ignoresSafeArea())
+            // 자산 탭에 들어올 때마다 최신화(15분 쓰로틀로 과도한 호출 방지).
+            .task {
+                await refresher.refreshIfStale(
+                    assets: assets, settings: settings, context: context,
+                    maxAge: RefreshManager.tabThrottle
+                )
+            }
+            // 자산이 추가·수정·삭제될 때마다 이번 주 기록을 자동 갱신 — 수동 저장 불필요.
+            .onChange(of: catalogSignature) { _, _ in
+                refresher.upsertCurrentPeriodSnapshot(
+                    assets: assets, settings: settings, snapshots: snapshots, context: context
+                )
+            }
             .navigationTitle("자산")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button { showingHistory = true } label: {
                         Image(systemName: "clock.arrow.circlepath")
                     }
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { refreshNow() } label: {
+                        if refresher.isRefreshing {
+                            ProgressView()
+                        } else {
+                            Image(systemName: "arrow.clockwise")
+                        }
+                    }
+                    .disabled(refresher.isRefreshing || assets.isEmpty)
+                    .accessibilityLabel("시세·배당 새로고침")
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
@@ -168,6 +259,20 @@ struct AssetsView: View {
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
             }
+            // 3.5) 패시브 인컴 상세 — 월 현금흐름이 있을 때만.
+            if monthlyIncome > 0 {
+                Section {
+                    passiveIncomeCard
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                }
+            }
+            // 3.6) 패시브 인컴 만들기 — 방법 안내 + 놓친 수입원 원탭 추가.
+            Section {
+                passiveIncomeGuideCard
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+            }
             // 4) 팁 + 추가.
             Section {
                 TipView(otherAssetsTip)
@@ -192,9 +297,6 @@ struct AssetsView: View {
             Text("\(Fmt.krw(liquidTotal))원")
                 .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Theme.positive)
-            Text("= \(Fmt.wonKo(liquidTotal))")
-                .font(.caption)
-                .foregroundStyle(Theme.textSecond)
             Text("지금 바로 현금화해 쓸 수 있는 자산(현금·주식·코인 등)이에요. 실거주 부동산·전세보증금·연금처럼 묶인 돈과 부채는 빠집니다.")
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
@@ -253,6 +355,168 @@ struct AssetsView: View {
                         .font(.caption2)
                         .foregroundStyle(net >= 0 ? Theme.positive : Theme.negative)
                 }
+            }
+            refreshStatus
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    // 시세·배당 마지막 갱신 시각 + 탭하면 즉시 새로고침.
+    @ViewBuilder private var refreshStatus: some View {
+        Divider().overlay(Theme.hairline)
+        Button { refreshNow() } label: {
+            HStack(spacing: 6) {
+                if refresher.isRefreshing {
+                    ProgressView().controlSize(.mini)
+                    Text(refresher.statusMessage ?? "갱신 중…")
+                } else {
+                    Image(systemName: "arrow.clockwise")
+                    if let when = refresher.lastRefreshText {
+                        Text("시세·배당 \(when) 갱신 · 탭하면 새로고침")
+                    } else {
+                        Text("시세·배당 새로고침")
+                    }
+                }
+            }
+            .font(.caption2)
+            .foregroundStyle(Theme.textSecond)
+        }
+        .buttonStyle(.plain)
+        .disabled(refresher.isRefreshing)
+    }
+
+    // 패시브 인컴 상세 — 월 현금흐름이 '어디서 얼마' 나오는지 펼쳐 보여준다.
+    private var passiveIncomeCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("패시브 인컴 상세")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                Text("월 +\(Fmt.krw(monthlyIncome))원")
+                    .font(.system(.subheadline, design: .rounded).weight(.bold))
+                    .foregroundStyle(Theme.positive)
+            }
+            Text("일하지 않아도 들어오는 돈이에요 — 어떤 자산이 어떤 방식으로 얼마씩 만드는지.")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+
+            // 종류별 합계 칩.
+            if incomeByKind.count > 1 {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(incomeByKind, id: \.kind) { g in
+                            Text("\(g.kind) 월 \(Fmt.krw(g.monthly))원")
+                                .font(.caption2.weight(.semibold))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(Theme.surfaceHigh)
+                                .foregroundStyle(Theme.textPrimary)
+                                .clipShape(Capsule())
+                        }
+                    }
+                }
+            }
+
+            Divider().overlay(Theme.hairline)
+
+            // 자산별 한 줄 — 큰 금액부터.
+            ForEach(incomeLines) { line in
+                HStack(spacing: 10) {
+                    Image(systemName: line.symbol)
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.accent)
+                        .frame(width: 22)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(line.name)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.textPrimary)
+                            .lineLimit(1)
+                        Text(line.note.isEmpty ? line.kind : "\(line.kind) · \(line.note)")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                            .lineLimit(1)
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 1) {
+                        Text("월 \(Fmt.krw(line.monthly))원")
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            .foregroundStyle(Theme.positive)
+                        Text("연 \(Fmt.krw(line.monthly * 12))원")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                    .lineLimit(1)
+                    .layoutPriority(1)
+                }
+            }
+
+            Text("연 합계 \(Fmt.krw(monthlyIncome * 12))원 (배당·이자·월세·연금·스테이킹 등)")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    // 패시브 인컴을 만드는 대표 경로 — 누르면 그 종류의 자산을 바로 추가.
+    private struct IncomeRoute { let title: String; let cls: AssetClass; let desc: String }
+    private var incomeRoutes: [IncomeRoute] {
+        [
+            .init(title: "배당주", cls: .stocks, desc: "주식 배당금 · 코스피 ~2%, S&P500 ~1.5%"),
+            .init(title: "고배당 ETF·펀드", cls: .fund, desc: "고배당 ETF ~4.5% · 자동 분산"),
+            .init(title: "월세 부동산", cls: .realEstate, desc: "오피스텔 ~5%, 아파트 ~2.4%"),
+            .init(title: "예금·적금 이자", cls: .cash, desc: "예금 ~3% · 가장 안전"),
+            .init(title: "채권 이자", cls: .bond, desc: "국채·회사채 표면이자"),
+            .init(title: "연금", cls: .pension, desc: "연금저축·IRP 운용수익 ~3~5%"),
+            .init(title: "코인 스테이킹", cls: .crypto, desc: "ETH 스테이킹 ~3~4%"),
+        ]
+    }
+
+    // "패시브 인컴 만들기" — 방법별 설명 + 원탭 추가. 놓친 수입원을 한눈에.
+    private var passiveIncomeGuideCard: some View {
+        let owned = collectedClasses
+        return VStack(alignment: .leading, spacing: 12) {
+            Text("패시브 인컴 만들기")
+                .font(.headline)
+                .foregroundStyle(Theme.textPrimary)
+            Text("일하지 않아도 돈이 들어오게 하는 대표적인 방법이에요. 누르면 바로 그 자산을 추가할 수 있어요.")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+            ForEach(incomeRoutes, id: \.title) { route in
+                Button { startNewAsset(route.cls, lock: true) } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: route.cls.symbolName)
+                            .font(.subheadline)
+                            .foregroundStyle(Color(hex: route.cls.colorHex))
+                            .frame(width: 24)
+                        VStack(alignment: .leading, spacing: 1) {
+                            HStack(spacing: 6) {
+                                Text(route.title)
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(Theme.textPrimary)
+                                if owned.contains(route.cls) {
+                                    Text("보유 중")
+                                        .font(.caption2.weight(.semibold))
+                                        .padding(.horizontal, 6).padding(.vertical, 2)
+                                        .background(Theme.positive.opacity(0.18))
+                                        .foregroundStyle(Theme.positive)
+                                        .clipShape(Capsule())
+                                }
+                            }
+                            Text(route.desc)
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                                .lineLimit(1)
+                        }
+                        Spacer()
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundStyle(Theme.accent)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -870,6 +1134,7 @@ struct AssetEditor: View {
     @State private var monthlyIncome = ""
     @State private var annualYieldPct = ""
     @State private var depositReceived = ""
+    @State private var depositLiquid = true
     @State private var costBasis = ""
     @State private var realEstateUse: RealEstateUse = .residence
 
@@ -916,6 +1181,7 @@ struct AssetEditor: View {
         _monthlyIncome = State(initialValue: asset.map { $0.monthlyIncome > 0 ? String(Int($0.monthlyIncome)) : "" } ?? "")
         _annualYieldPct = State(initialValue: asset.map { $0.annualYieldPct > 0 ? Fmt.trimNumber($0.annualYieldPct) : "" } ?? "")
         _depositReceived = State(initialValue: asset.map { $0.depositReceived > 0 ? String(Int($0.depositReceived)) : "" } ?? "")
+        _depositLiquid = State(initialValue: asset?.depositLiquid ?? true)
         _costBasis = State(initialValue: asset.map { $0.costBasis > 0 ? String(Int($0.costBasis)) : "" } ?? "")
         _realEstateUse = State(initialValue: asset?.realEstateUse ?? .residence)
         _liquidity = State(initialValue: asset?.liquidity ?? Liquidity.suggested(for: cls))
@@ -1051,11 +1317,6 @@ struct AssetEditor: View {
                                 .font(.system(.body, design: .rounded).weight(.semibold))
                                 .foregroundStyle(Theme.accent)
                         }
-                        if let v = Double(amount), v > 0 {
-                            Text("= \(Fmt.wonKo(v))")
-                                .font(.caption)
-                                .foregroundStyle(Theme.textSecond)
-                        }
                         if !status.isEmpty {
                             Text(status)
                                 .font(.caption)
@@ -1131,11 +1392,31 @@ struct AssetEditor: View {
             .navigationBarTitleDisplayMode(.inline)
             .scrollIndicators(.hidden)
             .keyboardDismissable()
+            .task { await autofillDividendIfNeeded() }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) { Button("저장") { save() } }
             }
         }
+    }
+
+    // 티커가 있는 주식·ETF인데 배당이 아직 없으면, 편집기를 열 때 배당률을 자동 조회해
+    // 채운다(저장하면 반영). 단가는 저장된 시세, 없으면 평가액÷수량으로 추정.
+    private func autofillDividendIfNeeded() async {
+        guard assetClass == .stocks || assetClass == .fund,
+              !symbol.trimmingCharacters(in: .whitespaces).isEmpty,
+              (Double(monthlyIncome) ?? 0) == 0,
+              (Double(annualYieldPct) ?? 0) == 0 else { return }
+        let qty = Double(quantity) ?? 0
+        let unit = unitPriceKRW > 0 ? unitPriceKRW : (qty > 0 ? (Double(amount) ?? 0) / qty : 0)
+        guard unit > 0,
+              let perShare = try? await PriceService.annualDividendKRWPerShare(
+                assetClass: assetClass, symbol: symbol, currency: currency),
+              perShare > 0 else { return }
+        let yieldPct = perShare / unit * 100
+        guard yieldPct > 0 else { return }
+        incomeKind = .dividend
+        annualYieldPct = Fmt.trimNumber(yieldPct)
     }
 
     private var namePlaceholder: String {
@@ -1169,7 +1450,6 @@ struct AssetEditor: View {
         let pct = total > 0 ? thisAmount / total : 0
         let sideLabel = isDebt ? "전체 부채" : "전체 자산"
         let tint = isDebt ? Theme.negative : Theme.accent
-        Divider().overlay(Theme.hairline)
         HStack {
             Text("현재 \(sideLabel)")
                 .font(.caption).foregroundStyle(Theme.textSecond)
@@ -1281,9 +1561,6 @@ struct AssetEditor: View {
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(g >= 0 ? Theme.positive : Theme.negative)
                 }
-                Text("= \(g >= 0 ? "+" : "-")\(Fmt.wonKo(abs(g)))")
-                    .font(.caption)
-                    .foregroundStyle(Theme.textSecond)
             }
         } header: {
             Text("투자 원금 · 평가 손익")
@@ -1495,12 +1772,17 @@ struct AssetEditor: View {
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
 
-                Divider().overlay(Theme.hairline)
+                Toggle("받은 보증금을 쓸 수 있는 돈(유동)에 포함", isOn: $depositLiquid)
+                    .font(.subheadline)
+                    .tint(Theme.accent)
+
                 Text("이 자산의 구성")
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
-                compositionRow("보유 현금 (돌려줘야 할 돈)",
-                               symbol: "banknote.fill", value: cash, tint: Theme.positive)
+                compositionRow(depositLiquid ? "보유 현금 (유동)" : "보유 현금 (묶임)",
+                               symbol: depositLiquid ? "banknote.fill" : "lock.fill",
+                               value: cash,
+                               tint: depositLiquid ? Theme.positive : Theme.textSecond)
                 compositionRow("\(assetClass.label) 지분 (묶임)",
                                symbol: "lock.fill", value: equity, tint: Theme.textSecond)
                 HStack {
@@ -1514,7 +1796,9 @@ struct AssetEditor: View {
         } header: {
             Text("전세 보증금")
         } footer: {
-            Text("받은 보증금은 언젠가 돌려줘야 하지만 지금은 현금으로 보유 중이라, 총자산은 평가액 그대로입니다. 단지 구성이 ‘현금 + 부동산 지분’으로 나뉘어, 실거주(전액 묶임)와 달리 쓸 수 있는 현금이 생깁니다.")
+            Text(depositLiquid
+                 ? "받은 보증금은 언젠가 돌려줘야 하지만 지금은 현금으로 보유 중이라, 총자산은 평가액 그대로입니다. 단지 구성이 ‘현금 + 부동산 지분’으로 나뉘어, 실거주(전액 묶임)와 달리 쓸 수 있는 현금이 생깁니다."
+                 : "보증금을 이미 다른 곳에 쓰셨다면 끄세요. 총자산(평가액)은 그대로지만, ‘쓸 수 있는 돈(유동)’에는 보증금이 포함되지 않습니다.")
                 .font(.caption)
         }
     }
@@ -1683,17 +1967,17 @@ struct AssetEditor: View {
             } else {
                 status = "단가 \(Fmt.krw(result.unit))원 × \(quantity.isEmpty ? "0" : quantity)"
             }
-            // 주식·ETF면 예상 배당도 자동으로 — 사용자가 배당을 안 넣었을 때만 채운다.
-            if assetClass == .stocks || assetClass == .fund {
+            // 주식·ETF면 예상 배당을 '배당률'로 저장 — 평가액 기준으로 자동 계산되고
+            // 평가액이 바뀌어도 따라간다. 사용자가 배당을 직접 안 넣었을 때만.
+            if (assetClass == .stocks || assetClass == .fund), result.unit > 0,
+               (Double(monthlyIncome) ?? 0) == 0 {
                 if let perShare = try? await PriceService.annualDividendKRWPerShare(
                         assetClass: assetClass, symbol: symbol, currency: currency),
                    perShare > 0 {
-                    let annual = perShare * qty
-                    if annual > 0, (Double(monthlyIncome) ?? 0) == 0 {
-                        incomeKind = .dividend
-                        monthlyIncome = String(Int((annual / 12).rounded()))
-                        status += " · 예상 배당 월 \(Fmt.krw(annual / 12))원 반영"
-                    }
+                    let yieldPct = perShare / result.unit * 100
+                    incomeKind = .dividend
+                    annualYieldPct = Fmt.trimNumber(yieldPct)
+                    status += " · 예상 배당률 \(Fmt.trimNumber(yieldPct))% 반영"
                 }
             }
         } catch {
@@ -1728,6 +2012,7 @@ struct AssetEditor: View {
         target.monthlyIncome = Double(monthlyIncome) ?? 0
         target.annualYieldPct = Double(annualYieldPct) ?? 0
         target.depositReceived = Double(depositReceived) ?? 0
+        target.depositLiquid = depositLiquid
         target.costBasis = Double(costBasis) ?? 0
         target.realEstateUse = realEstateUse
         target.liquidity = liquidity
@@ -1778,6 +2063,7 @@ struct RecordSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query private var settingsList: [FireSettings]
+    @Query private var snapshots: [NetWorthSnapshot]
 
     @State private var date = Date()
     @State private var netSavings = ""
@@ -1790,7 +2076,7 @@ struct RecordSheet: View {
     private var total: Double { assets.reduce(0) { $0 + $1.netValue } }
     private var liquidTotal: Double { assets.reduce(0) { $0 + $1.liquidValue } }
     private var passiveIncome: Double {
-        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } + settings.manualMonthlyDividend
+        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome }
     }
 
     var body: some View {
@@ -1895,16 +2181,24 @@ struct RecordSheet: View {
     }
 
     private func save() {
-        let snap = NetWorthSnapshot(
-            date: date,
-            note: note,
-            monthlyIncome: Double(income) ?? 0,
-            monthlyExpense: Double(expense) ?? 0,
-            monthlyNetSavings: Double(netSavings) ?? 0,
-            monthlyPassiveIncome: passiveIncome,
-            liquidNetWorth: liquidTotal
-        )
-        context.insert(snap)
+        // 같은 주 기록이 이미 있으면 새로 만들지 않고 그 기록을 갱신(자동 기록과 일관).
+        let cal = Calendar.current
+        let snap: NetWorthSnapshot
+        if let existing = snapshots.first(where: { cal.isDate($0.date, equalTo: date, toGranularity: .weekOfYear) }) {
+            snap = existing
+            for e in snap.entries { context.delete(e) }
+            snap.entries = []
+        } else {
+            snap = NetWorthSnapshot(date: date)
+            context.insert(snap)
+        }
+        snap.date = date
+        snap.note = note
+        snap.monthlyIncome = Double(income) ?? 0
+        snap.monthlyExpense = Double(expense) ?? 0
+        snap.monthlyNetSavings = Double(netSavings) ?? 0
+        snap.monthlyPassiveIncome = passiveIncome
+        snap.liquidNetWorth = liquidTotal
         for asset in assets where asset.netValue != 0 {
             let entry = AssetEntry(
                 assetClass: asset.assetClass,
@@ -2224,9 +2518,6 @@ struct NetWorthBreakdownView: View {
                             Text("\(Fmt.krw(netWorth))원")
                                 .font(.system(.title3, design: .rounded, weight: .bold))
                                 .foregroundStyle(netWorth >= 0 ? Theme.accent : Theme.negative)
-                            Text(Fmt.wonKo(netWorth))
-                                .font(.caption2)
-                                .foregroundStyle(Theme.textSecond)
                         }
                     }
                     Text("총자산 = 순자산(\(Fmt.krw(grossAssets))원) − 부채(\(Fmt.krw(debtTotal))원)")

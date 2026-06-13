@@ -343,6 +343,9 @@ final class Asset {
     // Deposit received by leasing the asset out (전세 보증금). A liability that
     // reduces net worth but is cash you can redeploy elsewhere.
     var depositReceived: Double = 0
+    // 받은 전세 보증금을 '쓸 수 있는 돈(유동)'으로 볼지 여부. 기본 true(현금 보유).
+    // 보증금을 이미 다른 곳에 묶어 썼다면 false로 두어 유동에서 제외한다.
+    var depositLiquid: Bool = true
 
     // Acquisition cost (취득가) — what you paid. Drives the 평가 차익 (capital gain).
     var costBasis: Double = 0
@@ -375,6 +378,7 @@ final class Asset {
          monthlyIncome: Double = 0,
          annualYieldPct: Double = 0,
          depositReceived: Double = 0,
+         depositLiquid: Bool = true,
          costBasis: Double = 0,
          realEstateUse: RealEstateUse = .residence,
          liquidity: Liquidity? = nil,
@@ -395,6 +399,7 @@ final class Asset {
         self.monthlyIncome = monthlyIncome
         self.annualYieldPct = annualYieldPct
         self.depositReceived = depositReceived
+        self.depositLiquid = depositLiquid
         self.costBasis = costBasis
         self.realEstateUseRaw = realEstateUse.rawValue
         self.liquidityRaw = (liquidity ?? Liquidity.suggested(for: assetClass)).rawValue
@@ -442,12 +447,14 @@ final class Asset {
     var depositCash: Double { min(depositReceived, amount) }
     var equityValue: Double { amount - depositCash }
 
-    // Spendable assets. Debt is excluded. Deposit cash is always liquid; the
-    // remaining equity counts only if the asset is liquid.
+    // Spendable assets. Debt is excluded. Deposit cash is liquid only when the
+    // user keeps it marked as spendable (depositLiquid); the remaining equity
+    // counts only if the asset itself is liquid.
     var liquidValue: Double {
         if isDebt { return 0 }
+        let depositLiquidPart = depositLiquid ? depositCash : 0
         let equityLiquid = liquidity == .liquid ? equityValue : 0
-        return depositCash + equityLiquid
+        return depositLiquidPart + equityLiquid
     }
 
     // Monthly cash flow the asset produces. Debts don't feed income here —
@@ -593,11 +600,9 @@ final class FireSettings {
         plannedNetSavings != 0 ? plannedNetSavings : monthlyTakeHome - plannedMonthlyExpense
     }
 
-    // Rough annual dividend / passive income entered by hand, for people who
-    // don't want to fill in each holding's dividend. Added on top of the
-    // per-asset cash flow; its monthly share feeds the dashboard & snapshots.
+    // 목표 연간 패시브 인컴(배당·월세·이자 등). 0이면 '월간 목표 지출'에서 도출.
+    // 현재 받는 패시브 인컴이 아니라 '목표'다 — 현재값은 보유 자산에서 계산한다.
     var manualAnnualDividend: Double = 0
-    var manualMonthlyDividend: Double { manualAnnualDividend / 12 }
 
     // --- 목표 측정 기준 & 기간(은퇴 시점) ---
     // Whether 달성률 is measured by assets, passive income, or both.
@@ -614,8 +619,11 @@ final class FireSettings {
         guard currentAge > 0, targetRetireAge > currentAge else { return nil }
         return (targetRetireAge - currentAge) * 12
     }
-    // The passive-income FIRE goal: the monthly spending you want covered.
-    var incomeGoalMonthly: Double { targetAnnualExpense / 12 }
+    // 목표 월 패시브 인컴 — 직접 입력한 목표(manualAnnualDividend)가 있으면 그걸,
+    // 없으면 '월간 목표 지출'(targetAnnualExpense)에서 도출.
+    var incomeGoalMonthly: Double {
+        manualAnnualDividend > 0 ? manualAnnualDividend / 12 : targetAnnualExpense / 12
+    }
 
     // --- API credentials for live price lookups (entered in 설정) ---
     // Finnhub token — 미국 주식 시세.

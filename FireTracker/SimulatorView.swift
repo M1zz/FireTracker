@@ -14,7 +14,7 @@ struct SimulatorView: View {
     private var totalNet: Double { assets.reduce(0) { $0 + $1.netValue } }
     // 지금 자산이 만드는 월 패시브 인컴(배당·월세·이자 + 수동 입력 배당).
     private var monthlyPassive: Double {
-        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } + settings.manualMonthlyDividend
+        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome }
     }
 
     enum SimMode: String, CaseIterable, Identifiable {
@@ -60,23 +60,52 @@ struct SimulatorView: View {
 
 // MARK: - 공용 입력 UI
 
-// 라벨 왼쪽 · 입력 오른쪽 한 줄 행.
+// 라벨 왼쪽 · 입력 오른쪽 한 줄 행. 금액 칸은 아래에 "= 6억원"처럼
+// 한글 단위 읽기를 실시간으로 달아 큰 숫자도 한눈에 읽히게 한다.
 private func simInputRow(_ label: String, text: Binding<String>, suffix: String,
                          money: Bool = false, decimal: Bool = false) -> some View {
-    HStack(spacing: 8) {
-        Text(label)
-            .font(.subheadline)
-            .foregroundStyle(Theme.textSecond)
-        Spacer()
-        TextField("0", text: money ? text.commaGrouped : text)
-            .keyboardType(decimal ? .decimalPad : .numberPad)
-            .multilineTextAlignment(.trailing)
-            .font(.system(.body, design: .rounded).weight(.semibold))
-            .foregroundStyle(Theme.textPrimary)
-            .frame(maxWidth: 150)
-        Text(suffix)
-            .font(.caption)
-            .foregroundStyle(Theme.textSecond)
+    // 금액은 설정값(억/만 단위 ↔ 숫자만)을 따라 한글 단위를 주 표기로 띄운다.
+    // '숫자만' 모드면 콤마 숫자가 곧 표기이므로 입력칸을 그대로 주 표기로 쓴다.
+    let showKoUnit = money && !Fmt.numbersOnly
+    return VStack(alignment: .trailing, spacing: 2) {
+        HStack(spacing: 8) {
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(Theme.textSecond)
+            Spacer()
+            if showKoUnit {
+                // 주 표기 — 한글 단위(예: "2,300만원"). 값이 없으면 "0원".
+                let v = Double(text.wrappedValue) ?? 0
+                Text("\(Fmt.krw(v))\(suffix)")
+                    .font(.system(.body, design: .rounded).weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+            } else {
+                TextField("0", text: money ? text.commaGrouped : text)
+                    .keyboardType(decimal ? .decimalPad : .numberPad)
+                    .multilineTextAlignment(.trailing)
+                    .font(.system(.body, design: .rounded).weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                    .frame(maxWidth: 150)
+                Text(suffix)
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            }
+        }
+        // 한글 단위 모드의 금액 — 실제 편집용 콤마 숫자를 작게 보조로 둔다.
+        if showKoUnit {
+            HStack(spacing: 8) {
+                Spacer()
+                TextField("0", text: text.commaGrouped)
+                    .keyboardType(.numberPad)
+                    .multilineTextAlignment(.trailing)
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+                    .frame(maxWidth: 150)
+                Text(suffix)
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            }
+        }
     }
 }
 
@@ -104,6 +133,33 @@ private func simMoneyChips(_ text: Binding<String>,
         }
         .padding(.vertical, 2)
     }
+}
+
+// 계산 결과를 자산/설정으로 보내는 큰 액션 버튼 — 확인 다이얼로그 포함.
+private func simActionButton(title: String, done: Bool,
+                            confirmTitle: String, confirmMessage: String,
+                            isPresented: Binding<Bool>,
+                            action: @escaping () -> Void) -> some View {
+    Button { isPresented.wrappedValue = true } label: {
+        HStack(spacing: 8) {
+            Image(systemName: done ? "checkmark.circle.fill" : "plus.circle.fill")
+            Text(title).font(.subheadline.weight(.semibold))
+            Spacer()
+            if !done { Image(systemName: "arrow.right") }
+        }
+        .foregroundStyle(done ? Theme.positive : Color.black)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 13)
+        .frame(maxWidth: .infinity)
+        .background(done ? Theme.surfaceHigh : Theme.accent)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+    .buttonStyle(.plain)
+    .disabled(done)
+    .confirmationDialog(confirmTitle, isPresented: isPresented, titleVisibility: .visible) {
+        Button("추가하기") { action() }
+        Button("취소", role: .cancel) {}
+    } message: { Text(confirmMessage) }
 }
 
 private func simStat(_ label: String, _ value: String, tint: Color = Theme.textPrimary) -> some View {
@@ -141,6 +197,10 @@ private struct LifecycleSimSection: View {
     @AppStorage("sim.life.returnPct")    private var returnPct = ""
     @AppStorage("sim.life.inflationPct") private var inflationPct = "2.5"
     @AppStorage("sim.life.seeded")       private var seeded = false
+
+    @Environment(\.modelContext) private var context
+    @State private var showReflectConfirm = false
+    @State private var reflected = false
 
     // 최초 1회만 설정·현재 자산값으로 빈 칸을 채운다(이후엔 저장된 값 유지).
     private func seedIfNeeded() {
@@ -237,23 +297,44 @@ private struct LifecycleSimSection: View {
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
 
-                // 한 줄 결론 — 희망 월수령액으로 몇 세까지 버티는지.
+                // 결과 판정 — 은퇴 가능한 전략인지 한눈에.
                 let want = Double(retireMonthly) ?? 0
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("은퇴 후 월 \(Fmt.krw(want))원 수령 시")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
+                let feasible = result.depletionAge == nil
+                let comfy = feasible && result.end >= result.peak
+                let tint: Color = feasible ? Theme.positive : Theme.negative
+                let icon = feasible
+                    ? (comfy ? "checkmark.seal.fill" : "checkmark.circle.fill")
+                    : "exclamationmark.triangle.fill"
+                let verdict = feasible
+                    ? (comfy ? "여유로운 은퇴 전략이에요" : "은퇴 가능한 전략이에요")
+                    : "은퇴하기엔 아직 부족한 전략이에요"
+                let reason: String = {
                     if let dep = result.depletionAge {
-                        Text("\(dep)세에 자산이 고갈돼요")
-                            .font(.system(.title3, design: .rounded, weight: .bold))
-                            .foregroundStyle(Theme.negative)
+                        return "은퇴 후 \(dep)세에 자산이 바닥나요. 희망 월수령액을 줄이거나, 은퇴를 늦추거나, 수익률·저축을 높여보세요."
+                    } else if comfy {
+                        return "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원을 써도 \(a.end)세에 \(Fmt.krw(result.end))원이 남아요."
                     } else {
-                        Text("\(a.end)세까지 버텨요 ✅")
-                            .font(.system(.title3, design: .rounded, weight: .bold))
-                            .foregroundStyle(Theme.positive)
+                        return "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원으로 \(a.end)세까지 버틸 수 있어요."
                     }
+                }()
+                HStack(spacing: 10) {
+                    Image(systemName: icon)
+                        .font(.title3)
+                        .foregroundStyle(tint)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(verdict)
+                            .font(.system(.title3, design: .rounded, weight: .bold))
+                            .foregroundStyle(tint)
+                        Text(reason)
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                    Spacer()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(12)
+                .background(tint.opacity(0.12))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
                 HStack(spacing: 0) {
                     simStat("은퇴(\(a.retire)세) 자산", "\(Fmt.krw(result.peak))원", tint: .blue)
@@ -317,6 +398,9 @@ private struct LifecycleSimSection: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
 
+            // 계산값을 그대로 목표·설정으로 — 따로 설정 탭에서 다시 입력할 필요 없이.
+            reflectButton
+
             // 목표 — 은퇴 후 얼마나 쓰고 싶은지.
             VStack(alignment: .leading, spacing: 12) {
                 Text("목표")
@@ -366,6 +450,61 @@ private struct LifecycleSimSection: View {
             .cardStyle()
         }
         .onAppear { seedIfNeeded() }
+        // 값이 바뀌면 다시 반영할 수 있게 버튼 상태를 되돌린다.
+        .onChange(of: [currentAge, retireAge, retireMonthly, returnPct, monthlyLiving, grossSalary]) { _, _ in
+            reflected = false
+        }
+    }
+
+    // 계산값을 그대로 목표·설정(설정 탭)으로 보내는 버튼.
+    private var reflectButton: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Button { showReflectConfirm = true } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: reflected ? "checkmark.circle.fill" : "target")
+                    Text(reflected ? "목표·설정에 반영됨" : "이 값을 목표·설정에 반영")
+                        .font(.subheadline.weight(.semibold))
+                    Spacer()
+                    if !reflected { Image(systemName: "arrow.right") }
+                }
+                .foregroundStyle(reflected ? Theme.positive : Color.black)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 13)
+                .frame(maxWidth: .infinity)
+                .background(reflected ? Theme.surfaceHigh : Theme.accent)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .confirmationDialog("현재 목표·설정을 이 계산값으로 덮어쓸까요?",
+                                isPresented: $showReflectConfirm, titleVisibility: .visible) {
+                Button("반영하기") { reflectToSettings() }
+                Button("취소", role: .cancel) {}
+            } message: {
+                Text("나이·은퇴 나이·연 수익률, 은퇴 후 월 지출(희망 월수령액), 월 생활비, 세후 월급이 설정 탭과 대시보드 목표에 저장됩니다. (현재 패시브 인컴은 보유 자산에서 자동 계산되므로 바꾸지 않아요.)")
+            }
+            if reflected {
+                Text("설정 탭과 대시보드 목표(FIRE 목표·은퇴 시점)에 반영됐어요.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            }
+        }
+    }
+
+    // 계산 입력값을 FireSettings에 기록 — 설정 탭과 대시보드 목표가 같은 값을 쓰게 한다.
+    private func reflectToSettings() {
+        // 설정 레코드가 아직 컨텍스트에 없으면(드묾) 먼저 넣어 반영이 저장되게 한다.
+        if settings.modelContext == nil { context.insert(settings) }
+        if let v = Int(currentAge), v > 0 { settings.currentAge = v }
+        if let v = Int(retireAge), v > 0 { settings.targetRetireAge = v }
+        if let v = Double(returnPct), v > 0 { settings.expectedAnnualReturn = v / 100 }
+        // 희망 월수령액 = 은퇴 후 월 지출 → FIRE 목표·목표 패시브 인컴의 기준.
+        if let v = Double(retireMonthly), v > 0 { settings.targetAnnualExpense = v * 12 }
+        if let v = Double(monthlyLiving), v > 0 { settings.plannedMonthlyExpense = v }
+        if let g = Double(grossSalary), g > 0 { settings.monthlyTakeHome = (netAnnual(g) / 12).rounded() }
+        // 월 패시브 인컴은 계산용 입력(자산에서 미리 채운 값)이라 반영하지 않는다.
+        // 현재 패시브 인컴은 실제 보유 자산(주식 배당 등)에서만 나와야 한다.
+        try? context.save()
+        reflected = true
     }
 }
 
@@ -376,6 +515,11 @@ private struct MortgageSimSection: View {
     @AppStorage("sim.mtg.ratePct")   private var ratePct = "4.2"
     @AppStorage("sim.mtg.years")     private var years = "30"
     @AppStorage("sim.mtg.method")    private var method: RepayMethod = .equalPayment
+
+    @Environment(\.modelContext) private var context
+    @Query(sort: \Asset.sortOrder) private var assets: [Asset]
+    @State private var added = false
+    @State private var showAddConfirm = false
 
     enum RepayMethod: String, CaseIterable, Identifiable {
         case equalPayment = "원리금균등"
@@ -507,8 +651,30 @@ private struct MortgageSimSection: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .cardStyle()
+
+                // 이 대출을 자산 목록에 부채로 추가 — 따로 입력할 필요 없이.
+                simActionButton(
+                    title: added ? "부채로 추가됨" : "이 대출을 자산에 부채로 추가",
+                    done: added,
+                    confirmTitle: "이 대출을 부채로 추가할까요?",
+                    confirmMessage: "남은 대출 잔액 \(Fmt.krw(p))원과 연 이자율 \(ratePct)%가 자산 탭에 ‘부채’로 등록됩니다.",
+                    isPresented: $showAddConfirm,
+                    action: addAsDebt
+                )
             }
         }
+    }
+
+    // 대출 조건을 부채 자산으로 만들어 카탈로그에 넣는다.
+    private func addAsDebt() {
+        let asset = Asset(name: "주택담보대출", assetClass: .debt,
+                          amount: Double(principal) ?? 0,
+                          incomeKind: .interest,
+                          annualYieldPct: Double(ratePct) ?? 0,
+                          sortOrder: assets.count)
+        context.insert(asset)
+        try? context.save()
+        added = true
     }
 
     // x축을 '년' 단위 라벨로.
@@ -537,6 +703,11 @@ private struct SavingsSimSection: View {
     @AppStorage("sim.sav.compound")  private var compound: CompoundKind = .simple
     @AppStorage("sim.sav.taxed")     private var taxed = true
     @AppStorage("sim.sav.goal")      private var goal = ""
+
+    @Environment(\.modelContext) private var context
+    @Query(sort: \Asset.sortOrder) private var assets: [Asset]
+    @State private var added = false
+    @State private var showAddConfirm = false
 
     enum SavingKind: String, CaseIterable, Identifiable {
         case deposit = "정기예금"
@@ -662,9 +833,12 @@ private struct SavingsSimSection: View {
                 Text("\(Fmt.krw(maturity))원")
                     .font(.system(.title2, design: .rounded, weight: .bold))
                     .foregroundStyle(Theme.positive)
-                Text("= \(Fmt.wonKo(maturity))")
-                    .font(.caption)
-                    .foregroundStyle(Theme.textSecond)
+                // 한글 단위 모드에서만 전체 숫자를 보조로. ('숫자만' 모드면 위와 중복이라 생략)
+                if !Fmt.numbersOnly {
+                    Text("= \(Fmt.won(maturity))원")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
 
                 // 원금 vs 이자 구성 — 한 막대.
                 GeometryReader { geo in
@@ -692,7 +866,31 @@ private struct SavingsSimSection: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
+
+            // 정기예금은 지금 넣어둔 원금이 곧 현재 자산 → 현금·예금으로 바로 추가.
+            if kind == .deposit, (Double(principal) ?? 0) > 0 {
+                simActionButton(
+                    title: added ? "현금·예금에 추가됨" : "이 예금을 자산에 추가",
+                    done: added,
+                    confirmTitle: "이 예금을 자산에 추가할까요?",
+                    confirmMessage: "원금 \(Fmt.krw(Double(principal) ?? 0))원이 ‘현금·예금’으로 등록되고, 연 \(ratePct)% 이자가 패시브 인컴에 반영됩니다.",
+                    isPresented: $showAddConfirm,
+                    action: addAsCash
+                )
+            }
         }
+    }
+
+    // 정기예금 원금을 현금·예금 자산으로 만들어 카탈로그에 넣는다.
+    private func addAsCash() {
+        let asset = Asset(name: "정기예금", assetClass: .cash,
+                          amount: Double(principal) ?? 0,
+                          incomeKind: .interest,
+                          annualYieldPct: Double(ratePct) ?? 0,
+                          sortOrder: assets.count)
+        context.insert(asset)
+        try? context.save()
+        added = true
     }
 
     // 월별 누적 잔액 곡선 + 목표선. 목표 대비 달성도도 함께.

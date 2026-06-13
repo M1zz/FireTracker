@@ -175,7 +175,7 @@ struct TrendView: View {
     private var currentPoint: TrendPoint {
         let net = assets.reduce(0) { $0 + $1.netValue }
         let liquid = assets.reduce(0) { $0 + $1.liquidValue }
-        let passive = assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } + settings.manualMonthlyDividend
+        let passive = assets.reduce(0) { $0 + $1.effectiveMonthlyIncome }
         var byClass: [AssetClass: Double] = [:]
         for ac in AssetClass.allCases {
             let t = assets.filter { $0.assetClass == ac }.reduce(0) { $0 + $1.netValue }
@@ -258,7 +258,7 @@ struct TrendView: View {
                     Text(shownIdx == count - 1 ? "현재 순자산" : "\(periodLabelFull(s.date)) 순자산")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
-                    Text("\(s.netWorth < 0 ? "−" : "")\(Fmt.won(abs(s.netWorth)))원")
+                    Text("\(s.netWorth < 0 ? "−" : "")\(Fmt.krw(abs(s.netWorth)))원")
                         .font(.system(.title2, design: .rounded, weight: .bold))
                         .foregroundStyle(Theme.textPrimary)
                         .lineLimit(1)

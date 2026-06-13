@@ -114,6 +114,16 @@ struct DashboardView: View {
     private var latest: NetWorthSnapshot? {
         snapshots.sorted { $0.date > $1.date }.first
     }
+    // 변화 비교 기준 — 이번 주가 아닌 가장 최근 스냅샷(보통 지난주). 이번 주 기록은
+    // 자산 탭이 바뀔 때마다 카탈로그를 그대로 따라가므로, 한 주 전 기록과 비교해야
+    // '이번 주 들어 얼마나 변했는지'가 의미 있게 보인다.
+    private var changeBaseline: NetWorthSnapshot? {
+        let cal = Calendar.current
+        let now = Date()
+        return snapshots
+            .filter { $0.date < now && !cal.isDate($0.date, equalTo: now, toGranularity: .weekOfYear) }
+            .max(by: { $0.date < $1.date })
+    }
     // Sum of the live catalog — used before the first record is saved so the
     // dashboard reflects registered assets immediately.
     private var hasCatalog: Bool { !assets.isEmpty }
@@ -143,7 +153,7 @@ struct DashboardView: View {
     // Passive cash flow the catalog produces, and how much of the FIRE target
     // expense it already covers — the real measure of financial independence.
     private var monthlyPassiveIncome: Double {
-        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome } + settings.manualMonthlyDividend
+        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome }
     }
     // Money debts pull out every month (이자/상환) — the opposite of income.
     private var monthlyDebtCost: Double { assets.reduce(0) { $0 + $1.monthlyDebtCost } }
@@ -220,7 +230,8 @@ struct DashboardView: View {
         )
     }
     private var delta: Double? {
-        FireEngine.latestDelta(snapshots: snapshots)
+        guard let base = changeBaseline else { return nil }
+        return netWorth - base.netWorth
     }
 
     // --- 첫 화면 요약: 지난 기록 이후 변화 & 목표 근접도 ---
@@ -229,7 +240,7 @@ struct DashboardView: View {
     // assets = 비부채 자산 증감 합, debt = 부채 증감 합(+면 빚이 늘어남).
     // 총자산(net) = assets − debt, 순자산(보유 자산) = assets.
     private var lastRecordChange: (assets: Double, debt: Double)? {
-        guard let last = latest else { return nil }
+        guard let last = changeBaseline else { return nil }
         // 자산별 키가 없는 옛 기록은 항목 귀속이 불가 → 순변화만.
         guard last.entries.contains(where: { $0.catalogKey != nil }) else {
             return (assets: netWorth - last.netWorth, debt: 0)
@@ -267,15 +278,15 @@ struct DashboardView: View {
         if let d = delta {
             if d > 0 {
                 out.append(.init(title: "자산 추세",
-                                 detail: "지난 기록보다 +\(Fmt.krw(d))원 — 늘고 있어요",
+                                 detail: "지난주보다 +\(Fmt.krw(d))원 — 늘고 있어요",
                                  level: .good, symbol: "arrow.up.right"))
             } else if d < 0 {
                 out.append(.init(title: "자산 추세",
-                                 detail: "지난 기록보다 \(Fmt.krw(d))원 — 줄고 있어요",
+                                 detail: "지난주보다 \(Fmt.krw(d))원 — 줄고 있어요",
                                  level: .bad, symbol: "arrow.down.right"))
             } else {
                 out.append(.init(title: "자산 추세",
-                                 detail: "지난 기록과 비슷해요", level: .caution, symbol: "arrow.right"))
+                                 detail: "지난주와 비슷해요", level: .caution, symbol: "arrow.right"))
             }
         } else {
             out.append(.init(title: "자산 추세",
@@ -342,7 +353,6 @@ struct DashboardView: View {
                     ScrollView {
                         VStack(spacing: 20) {
                             welcomeCard
-                            recordNudgeCard
                             if settings.monthsToRetire != nil {
                                 milestoneGoalsCard
                                 requiredSavingsCard
@@ -518,7 +528,7 @@ struct DashboardView: View {
 
     // 현재 카탈로그를 지난 기록(latest 스냅샷)과 항목별로 비교해 증감 목록을 만든다.
     private var assetDeltas: [AssetDelta] {
-        guard let last = latest else { return [] }
+        guard let last = changeBaseline else { return [] }
         // 자산별 키가 없는 옛 기록은 항목별 귀속 불가 → 목록을 비운다.
         guard last.entries.contains(where: { $0.catalogKey != nil }) else { return [] }
         var prior: [UUID: Double] = [:]
@@ -679,28 +689,23 @@ struct DashboardView: View {
         f.dateFormat = "M월 d일"
         return f.string(from: date)
     }
-    private func daysSince(_ date: Date) -> Int {
-        Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: date),
-                                        to: Calendar.current.startOfDay(for: Date())).day ?? 0
-    }
 
     private var welcomeCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             // 카드 타이틀 + 우측 상단 '총자산 변화' 토글.
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("지난 기록 대비 변화")
+                    Text("지난주 대비 변화")
                         .font(.headline)
                         .foregroundStyle(Theme.textPrimary)
-                    if let last = latest {
-                        let days = daysSince(last.date)
-                        Text(recordDateText(last.date) + (days > 0 ? " · \(days)일 전" : " · 오늘"))
+                    if let last = changeBaseline {
+                        Text(recordDateText(last.date) + " 기록 대비")
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
                     }
                 }
                 Spacer()
-                if latest != nil {
+                if changeBaseline != nil {
                     HStack(spacing: 6) {
                         Text("총자산 변화")
                             .font(.caption2)
@@ -713,7 +718,7 @@ struct DashboardView: View {
             }
 
             // 토글 ON: 총자산 변화량을 순자산·부채 라벨과 같은 크기로(롤링 애니메이션 유지).
-            if showTotalChange, latest != nil {
+            if showTotalChange, changeBaseline != nil {
                 let net = lastNetChange ?? 0
                 HStack(spacing: 4) {
                     Text("총자산")
@@ -729,8 +734,8 @@ struct DashboardView: View {
                 .transition(.opacity)
             }
 
-            // 지난 기록 대비 변화만 — 순자산·부채·총자산 증감을 가로 막대로.
-            if latest != nil {
+            // 지난주 대비 변화만 — 순자산·부채·총자산 증감을 가로 막대로.
+            if changeBaseline != nil {
                 netWorthChangeChart
                 changeBreakdownList
             } else {
@@ -738,7 +743,7 @@ struct DashboardView: View {
                     Text("아직 비교할 기록이 없어요")
                         .font(.subheadline.weight(.bold))
                         .foregroundStyle(Theme.textPrimary)
-                    Text("자산 탭에서 ‘이번 달 기록 저장’을 누르면 다음부터 변화가 여기 표시돼요.")
+                    Text("자산은 자동으로 기록돼요. 한 주가 지나면 지난주 대비 변화가 여기 표시됩니다.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -834,89 +839,141 @@ struct DashboardView: View {
             }
             .frame(height: 7)
             Text(gap < 1
-                 ? "이미 달성 🎉"
-                 : "\(Fmt.percent(progress, fraction: 0)) · \(isAsset ? "" : "월 ")\(Fmt.krw(gap))원 더 필요")
+                 ? "이미 달성 🎉 · 현재 \(isAsset ? "" : "월 ")\(Fmt.krw(current))원 (목표 \(isAsset ? "" : "월 ")\(Fmt.krw(target))원)"
+                 : "\(Fmt.percent(progress, fraction: 0)) · 현재 \(isAsset ? "" : "월 ")\(Fmt.krw(current))원 · \(isAsset ? "" : "월 ")\(Fmt.krw(gap))원 더 필요")
                 .font(.caption2)
-                .foregroundStyle(Theme.textSecond)
+                .foregroundStyle(gap < 1 ? Theme.positive : Theme.textSecond)
         }
     }
 
-    // Points along the required path from now to retirement (now → 이번달 →
-    // 올해 → 5년 → 은퇴). They sit on the linear trajectory, so a line through
-    // them *is* the path you need to climb.
-    // 지금 → 선택한 구간(upTo)까지의 궤도. 전체(은퇴)가 아니라 고른 구간만 그린다.
-    private func trajectoryPoints(metric: FireGoalType, upTo horizon: Int, endLabel: String) -> [TrajPoint] {
-        guard let m = settings.monthsToRetire else { return [] }
+    // 선택한 구간의 달력 경계. 이번 달=1일~말일, 올해=1월 1일~12월 31일,
+    // 5년·은퇴=이번 달 1일~N개월 뒤. X축을 이 범위로 고정한다.
+    private func periodBounds(label: String, months: Int) -> (start: Date, end: Date) {
+        let cal = Calendar.current
+        let now = Date()
+        let monthStart = cal.date(from: cal.dateComponents([.year, .month], from: now)) ?? now
+        switch label {
+        case "이번 달":
+            let next = cal.date(byAdding: .month, value: 1, to: monthStart) ?? now
+            let end = cal.date(byAdding: .second, value: -1, to: next) ?? next
+            return (monthStart, end)
+        case "올해":
+            let y = cal.component(.year, from: now)
+            let start = cal.date(from: DateComponents(year: y, month: 1, day: 1)) ?? monthStart
+            let end = cal.date(from: DateComponents(year: y, month: 12, day: 31, hour: 23, minute: 59, second: 59)) ?? now
+            return (start, end)
+        default: // 5년·은퇴 — 이번 달 1일부터 N개월 뒤까지.
+            let end = cal.date(byAdding: .month, value: months, to: now) ?? now
+            return (monthStart, end)
+        }
+    }
+
+    // 한 구간의 궤도 분석: 실제 기록·지금·기간 끝 목표 + 과거 추세 예상.
+    private struct TrajModel {
+        let start: Date
+        let end: Date
+        let now: Date
+        let current: Double
+        let goalEnd: Double          // 기간 끝에 도달해야 할 목표치
+        let actual: [TrajPoint]      // 기간 내 기록 + 지금 (시간순)
+        let spanDays: Double
+    }
+
+    private func trajectoryModel(metric: FireGoalType, label: String, months: Int) -> TrajModel? {
+        guard let m = settings.monthsToRetire else { return nil }
         let isAsset = metric == .assets
         let current = isAsset ? netWorth : monthlyPassiveIncome
         let goal = isAsset ? fireNumber : settings.incomeGoalMonthly
-        let cal = Calendar.current
         let now = Date()
-        func date(_ months: Int) -> Date { cal.date(byAdding: .month, value: months, to: now) ?? now }
-        var pts: [TrajPoint] = [TrajPoint(date: now, value: current, label: "지금")]
-        // 선택 구간보다 앞에 있는 중간 마일스톤만 함께 표시.
-        for (label, mo) in [("이번 달", 1), ("올해", max(1, monthsLeftInYear)), ("5년", 60)] where mo < horizon {
-            let t = FireEngine.milestoneTarget(current: current, goal: goal,
-                                               monthsToRetire: m, horizonMonths: mo)
-            pts.append(TrajPoint(date: date(mo), value: t, label: label))
+        let (start, end) = periodBounds(label: label, months: months)
+        func value(_ s: NetWorthSnapshot) -> Double { isAsset ? s.netWorth : s.monthlyPassiveIncome }
+
+        // 선형 은퇴 경로에서 특정 시점의 목표치(현재→목표 사이를 시간 비례로).
+        func target(at date: Date) -> Double {
+            guard m > 0, goal > current else { return goal }
+            let monthsAhead = max(0, date.timeIntervalSince(now) / (30.4375 * 86_400))
+            return current + (goal - current) * min(1, monthsAhead / Double(m))
         }
-        let endVal = horizon >= m ? goal
-            : FireEngine.milestoneTarget(current: current, goal: goal, monthsToRetire: m, horizonMonths: horizon)
-        pts.append(TrajPoint(date: date(horizon), value: endVal, label: endLabel))
-        return pts
+        let goalEnd = target(at: end)
+
+        var actual: [TrajPoint] = snapshots
+            .filter { $0.date >= start && $0.date <= now }
+            .map { TrajPoint(date: $0.date, value: value($0), label: "기록") }
+            .sorted { $0.date < $1.date }
+        actual.append(TrajPoint(date: now, value: current, label: "지금"))
+
+        return TrajModel(start: start, end: end, now: now, current: current,
+                         goalEnd: goalEnd, actual: actual,
+                         spanDays: end.timeIntervalSince(start) / 86_400)
     }
 
-    private func trajectoryChart(metric: FireGoalType, upTo horizon: Int, endLabel: String) -> some View {
-        let pts = trajectoryPoints(metric: metric, upTo: horizon, endLabel: endLabel)
-        let byYear = horizon > 18   // 짧은 구간은 월 단위 눈금, 길면 연 단위.
-        return Chart {
-            ForEach(pts) { p in
-                AreaMark(x: .value("시점", p.date), y: .value("값", p.value))
-                    .foregroundStyle(LinearGradient(
-                        colors: [Theme.accent.opacity(0.22), Theme.accent.opacity(0.02)],
-                        startPoint: .top, endPoint: .bottom))
-                    .interpolationMethod(.linear)
-            }
-            ForEach(pts) { p in
-                LineMark(x: .value("시점", p.date), y: .value("값", p.value))
-                    .foregroundStyle(Theme.accent)
-                    .interpolationMethod(.linear)
-                    .lineStyle(StrokeStyle(lineWidth: 2.5))
-            }
-            ForEach(pts) { p in
-                let edge = p.label == "지금" || p.label == endLabel
-                PointMark(x: .value("시점", p.date), y: .value("값", p.value))
-                    .foregroundStyle(p.label == "지금" ? Theme.positive : Theme.accent)
-                    .symbolSize(edge ? 90 : 45)
+    @ViewBuilder
+    private func trajectoryChart(metric: FireGoalType, label: String, months: Int) -> some View {
+        if let mdl = trajectoryModel(metric: metric, label: label, months: months) {
+            let goalPt = TrajPoint(date: mdl.end, value: mdl.goalEnd, label: "목표")
+            let nowPt = TrajPoint(date: mdl.now, value: mdl.current, label: "지금")
+            Chart {
+                // 지금 → 목표 (지금부터 필요한 페이스).
+                ForEach([nowPt, goalPt]) { p in
+                    LineMark(x: .value("시점", p.date), y: .value("값", p.value),
+                             series: .value("계열", "지금→목표"))
+                        .foregroundStyle(Theme.accent.opacity(0.7))
+                        .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [2, 3]))
+                }
+                // 기록 점 + 지금·목표 강조.
+                ForEach(mdl.actual.filter { $0.label == "기록" }) { p in
+                    PointMark(x: .value("시점", p.date), y: .value("값", p.value))
+                        .foregroundStyle(Theme.accent.opacity(0.4))
+                        .symbolSize(20)
+                }
+                PointMark(x: .value("시점", mdl.now), y: .value("값", mdl.current))
+                    .foregroundStyle(Theme.positive)
+                    .symbolSize(90)
                     .annotation(position: .top, spacing: 3) {
-                        if edge {
-                            Text(p.label)
-                                .font(.caption2.weight(.semibold))
-                                .foregroundStyle(p.label == "지금" ? Theme.positive : Theme.accent)
-                        }
+                        Text("지금").font(.caption2.weight(.semibold)).foregroundStyle(Theme.positive)
+                    }
+                PointMark(x: .value("시점", mdl.end), y: .value("값", mdl.goalEnd))
+                    .foregroundStyle(Theme.accent)
+                    .symbolSize(90)
+                    .annotation(position: .top, spacing: 3) {
+                        Text("목표").font(.caption2.weight(.semibold)).foregroundStyle(Theme.accent)
                     }
             }
-        }
-        .chartYAxis {
-            AxisMarks(position: .leading) { value in
-                AxisGridLine().foregroundStyle(Theme.hairline)
-                AxisValueLabel {
-                    if let v = value.as(Double.self) {
-                        Text("\(Fmt.krw(v))원")
-                            .font(.caption2)
-                            .foregroundStyle(Theme.textSecond)
+            .chartXScale(domain: mdl.start...mdl.end)
+            .chartYAxis {
+                AxisMarks(position: .leading) { value in
+                    AxisGridLine().foregroundStyle(Theme.hairline)
+                    AxisValueLabel {
+                        if let v = value.as(Double.self) {
+                            Text("\(Fmt.krw(v))원")
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                        }
                     }
                 }
             }
-        }
-        .chartXAxis {
-            AxisMarks(values: .stride(by: byYear ? .year : .month, count: byYear ? 1 : 2)) { value in
-                AxisGridLine().foregroundStyle(Theme.hairline)
-                AxisValueLabel(format: byYear ? .dateTime.year() : .dateTime.month(.abbreviated))
+            .chartXAxis {
+                // 이번 달=일 단위, 1년 안=월 단위, 그 이상=연 단위 눈금.
+                if mdl.spanDays <= 45 {
+                    AxisMarks(values: .stride(by: .day, count: 7)) { _ in
+                        AxisGridLine().foregroundStyle(Theme.hairline)
+                        AxisValueLabel(format: .dateTime.day())
+                    }
+                } else if mdl.spanDays <= 550 {
+                    AxisMarks(values: .stride(by: .month, count: 2)) { _ in
+                        AxisGridLine().foregroundStyle(Theme.hairline)
+                        AxisValueLabel(format: .dateTime.month(.abbreviated))
+                    }
+                } else {
+                    AxisMarks(values: .stride(by: .year, count: 1)) { _ in
+                        AxisGridLine().foregroundStyle(Theme.hairline)
+                        AxisValueLabel(format: .dateTime.year())
+                    }
+                }
             }
+            .frame(height: 190)
+            .animation(.smooth(duration: 0.5), value: months)
         }
-        .frame(height: 190)
-        .animation(.smooth(duration: 0.5), value: horizon)
     }
 
     // The retirement goal, sliced into 이번달·올해·5년·은퇴 so progress isn't only
@@ -950,8 +1007,9 @@ struct DashboardView: View {
                 .pickerStyle(.segmented)
             }
 
-            // 지금 위치에서 선택한 구간 목표까지 올라야 할 길.
-            trajectoryChart(metric: metric, upTo: sel.months, endLabel: sel.label)
+            // 선택한 구간을 달력 범위로 — 이번 달 1일~말일, 올해 1월~12월.
+            // 실제 기록(지금까지) + 지금→목표 안내선만 — 현재 대비 목표는 아래 진행도에서.
+            trajectoryChart(metric: metric, label: sel.label, months: sel.months)
             Text("\(sel.label) 목표까지 · \(horizonRemainText(sel.months))")
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
@@ -962,30 +1020,6 @@ struct DashboardView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
-    }
-
-    // 마지막 기록이 오래됐으면 "변화 있었나요?" 넛지. (7일 이상)
-    @ViewBuilder
-    private var recordNudgeCard: some View {
-        if let last = latest {
-            let days = daysSince(last.date)
-            if days >= 7 {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "bell.badge.fill")
-                            .foregroundStyle(Theme.accent)
-                        Text("자산에 변화가 있었나요?")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Theme.textPrimary)
-                    }
-                    Text("마지막 기록이 \(days)일 전이에요. 시세가 움직였거나 입출금이 있었다면 자산 탭에서 ‘이번 달 기록 저장’으로 최신 상태를 남겨두세요.")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .cardStyle()
-            }
-        }
     }
 
     // 목표(FIRE 자산)까지 은퇴 시점에 도달하려면 하루/주/월 얼마를 모아야 하는지.
@@ -1103,7 +1137,7 @@ struct DashboardView: View {
                         .foregroundStyle(Theme.textSecond)
                 }
                 Spacer()
-                InfoPopoverButton(text: "일하지 않아도 들어오는 돈이에요 — 월세·배당·이자·연금·스테이킹과 설정의 ‘연간 배당수익’을 합산했어요. 주 수입은 월÷4.345로 환산했고, 막대는 원하는 월 지출(연간 목표 지출÷12)을 얼마나 커버하는지 보여줘요.")
+                InfoPopoverButton(text: "지금 받고 있는 패시브 인컴이에요(목표 아님) — 자산 탭에 등록한 월세·배당·이자·연금·스테이킹에서 자동으로 합산해요. 주 수입은 월÷4.345로 환산했고, 막대는 원하는 월 지출(연간 목표 지출÷12)을 얼마나 커버하는지 보여줘요. 목표 대비 달성률은 아래 ‘패시브 인컴 목표 달성률’에 있어요.")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -1303,9 +1337,6 @@ struct DashboardView: View {
             Text("\(Fmt.krw(projectedYearEnd))원")
                 .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Theme.accent)
-            Text("= \(Fmt.wonKo(projectedYearEnd))")
-                .font(.caption)
-                .foregroundStyle(Theme.textSecond)
 
             if plannedSavings != 0 || monthlyPassiveIncome > 0 {
                 Text("현재 \(Fmt.krw(projectionBase))원 + (월 저축 \(Fmt.krw(plannedSavings))원"
@@ -1635,9 +1666,6 @@ struct ProjectionDetailView: View {
                 Text("\(Fmt.krw(value))원")
                     .font(.system(big ? .title3 : .body, design: .rounded).weight(.bold))
                     .foregroundStyle(tint)
-                Text("\(Fmt.wonKo(value))")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.textSecond)
             }
         }
     }

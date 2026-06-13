@@ -5,9 +5,16 @@ import LocalAuthentication
 struct RootView: View {
     @Environment(\.modelContext) private var context
     @Query private var settingsList: [FireSettings]
+    @Query(sort: \Asset.sortOrder) private var assets: [Asset]
+    @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
+    @StateObject private var refresher = RefreshManager()
+    @AppStorage("amountNumbersOnly") private var amountNumbersOnly = false
     @State private var selectedTab = 0
 
     var body: some View {
+        // 금액 표기 모드를 전역 포매터에 반영. 이 값을 읽으므로 토글이 바뀌면
+        // RootView가 다시 그려지고, 그 안에서 만들어진 모든 탭도 새 표기로 갱신된다.
+        let _ = (Fmt.numbersOnly = amountNumbersOnly)
         AppLockGate {
             TabView(selection: $selectedTab) {
             DashboardView()
@@ -43,6 +50,18 @@ struct RootView: View {
             )
         }
         .onAppear { bootstrapSettings() }
+        .environmentObject(refresher)
+        // 앱 시작 시 — 마지막 갱신이 7일 이상 지났으면 시세·배당을 자동 갱신하고,
+        // 이번 달 기록이 없으면 최신 평가액으로 월 1회 자동 스냅샷을 남긴다.
+        .task {
+            let s = settingsList.first ?? FireSettings()
+            await refresher.refreshIfStale(
+                assets: assets, settings: s, context: context, maxAge: RefreshManager.weekly
+            )
+            refresher.autoRecordIfNeeded(
+                assets: assets, settings: s, snapshots: snapshots, context: context
+            )
+        }
         }
     }
 

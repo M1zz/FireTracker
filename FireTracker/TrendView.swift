@@ -9,7 +9,7 @@ struct TrendView: View {
     @State private var mode: TrendMode = .netWorth
     @State private var period: TrendPeriod = .month
     @State private var selectedIndex: Int?
-    @State private var thisMonthSel: Date?
+    @State private var thisMonthSel: Int?
     @State private var passiveSel: Date?
     @State private var allocSel: Date?
 
@@ -59,8 +59,8 @@ struct TrendView: View {
         let byClass: [AssetClass: Double]
         let byAsset: [String: AssetSlice]
         func total(for ac: AssetClass) -> Double { byClass[ac] ?? 0 }
-        // 부채 규모(양수)와 보유 자산 합계(사용자 용어로 '순자산').
-        // 총자산(net) = 순자산 − 부채 = netWorth.
+        // 부채 규모(양수)와 총자산(보유 자산 합).
+        // 순자산 = 총자산 − 부채 = netWorth.
         var debt: Double { abs(byClass[.debt] ?? 0) }
         var grossAssets: Double { netWorth + debt }
     }
@@ -264,22 +264,11 @@ struct TrendView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
                         .contentTransition(.numericText())
-                    HStack(spacing: 8) {
-                        Text("자산 \(Fmt.krw(s.grossAssets))")
-                        if s.debt > 0 {
-                            Text("부채 −\(Fmt.krw(s.debt))")
-                        }
-                        if let prev {
-                            let d = s.netWorth - prev.netWorth
-                            if abs(d) >= 1 {
-                                Text("\(d > 0 ? "▲" : "▼") \(Fmt.krw(abs(d)))")
-                                    .fontWeight(.semibold)
-                                    .foregroundStyle(d > 0 ? Theme.rise : Theme.fall)
-                            }
-                        }
-                    }
-                    .font(.caption2)
-                    .foregroundStyle(Theme.textSecond)
+                    headerSummaryLine(s, prev: prev)
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                 }
                 Spacer()
                 // 비교할 데이터가 있는 기간만 — 한 기간뿐이면 세그먼트를 숨긴다.
@@ -297,7 +286,7 @@ struct TrendView: View {
                     BarMark(
                         x: .value("기간", item.idx),
                         yStart: .value("기준", 0.0),
-                        yEnd: .value("순자산", item.point.grossAssets),
+                        yEnd: .value("자산", item.point.grossAssets),
                         width: .ratio(0.55)
                     )
                     .foregroundStyle(Theme.positive)
@@ -316,14 +305,14 @@ struct TrendView: View {
                 ForEach(pts, id: \.idx) { item in
                     LineMark(
                         x: .value("기간", item.idx),
-                        y: .value("총자산", item.point.netWorth)
+                        y: .value("순자산", item.point.netWorth)
                     )
                     .foregroundStyle(Theme.accent)
                     .interpolationMethod(.catmullRom)
                     .lineStyle(StrokeStyle(lineWidth: 2.5))
                     PointMark(
                         x: .value("기간", item.idx),
-                        y: .value("총자산", item.point.netWorth)
+                        y: .value("순자산", item.point.netWorth)
                     )
                     .symbol {
                         Circle()
@@ -384,85 +373,83 @@ struct TrendView: View {
         return f.string(from: date)
     }
 
-    // 이번 달 카드: 막대(자산/부채)+라인(순자산)을 일 단위로. 탭하면 그 날 값이 위에.
+    // 이번 달 카드: 막대(자산/부채)+라인(순자산). 메인 추이 차트와 같은 인덱스
+    // x축·스타일로 그려서 두 차트가 한 세트로 읽히게 한다. 탭하면 그 날 값이 위에.
     private var thisMonthChart: some View {
-        let pts = thisMonthPoints
-        let cal = Calendar.current
-        let month = cal.dateInterval(of: .month, for: Date())
-        // 탭한 날짜에 가장 가까운 기록(없으면 최근)을 정보 카드로.
-        let shown: TrendPoint? = thisMonthSel.flatMap { sel in
-            pts.min { abs($0.date.timeIntervalSince(sel)) < abs($1.date.timeIntervalSince(sel)) }
-        } ?? pts.last
+        let pts = thisMonthPoints.enumerated().map { (idx: $0.offset, point: $0.element) }
+        let count = pts.count
+        let shownIdx = (thisMonthSel.flatMap { (0..<count).contains($0) ? $0 : nil }) ?? (count - 1)
+        let s = pts[shownIdx].point
         return VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("이번 달")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
                 Spacer()
-                if pts.count >= 2 {
-                    Text("기록 \(pts.count - 1)개 + 오늘")
+                if count >= 2 {
+                    Text("기록 \(count - 1)개 + 오늘")
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
                 }
             }
-            if let s = shown {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("\(thisMonthDayLabel(s.date)) 기준")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
-                    HStack(spacing: 10) {
-                        Text("순자산 \(s.netWorth < 0 ? "−" : "")\(Fmt.krw(abs(s.netWorth)))")
-                            .foregroundStyle(Theme.accent)
-                        Text("자산 \(Fmt.krw(s.grossAssets))")
-                            .foregroundStyle(Theme.positive)
-                        if s.debt > 0 {
-                            Text("부채 −\(Fmt.krw(s.debt))")
-                                .foregroundStyle(Theme.textSecond)
-                        }
-                    }
+            VStack(alignment: .leading, spacing: 3) {
+                Text("\(thisMonthDayLabel(s.date)) 기준")
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+                thisMonthSummaryLine(s)
                     .font(.caption.weight(.semibold))
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             Chart {
-                ForEach(pts) { p in
-                    BarMark(x: .value("날짜", p.date, unit: .day),
+                ForEach(pts, id: \.idx) { item in
+                    BarMark(x: .value("날짜", item.idx),
                             yStart: .value("기준", 0.0),
-                            yEnd: .value("자산", p.grossAssets),
-                            width: .ratio(0.6))
+                            yEnd: .value("자산", item.point.grossAssets),
+                            width: .ratio(0.55))
                         .foregroundStyle(Theme.positive)
-                        .cornerRadius(2)
-                    BarMark(x: .value("날짜", p.date, unit: .day),
+                        .cornerRadius(3)
+                    BarMark(x: .value("날짜", item.idx),
                             yStart: .value("기준", 0.0),
-                            yEnd: .value("부채", -p.debt),
-                            width: .ratio(0.6))
+                            yEnd: .value("부채", -item.point.debt),
+                            width: .ratio(0.55))
                         .foregroundStyle(Theme.textSecond.opacity(0.3))
-                        .cornerRadius(2)
+                        .cornerRadius(3)
                 }
                 RuleMark(y: .value("0", 0.0))
                     .foregroundStyle(Theme.hairline)
-                ForEach(pts) { p in
-                    LineMark(x: .value("날짜", p.date, unit: .day),
-                             y: .value("순자산", p.netWorth))
+                ForEach(pts, id: \.idx) { item in
+                    LineMark(x: .value("날짜", item.idx),
+                             y: .value("순자산", item.point.netWorth))
                         .foregroundStyle(Theme.accent)
                         .interpolationMethod(.catmullRom)
-                        .lineStyle(StrokeStyle(lineWidth: 2))
-                    PointMark(x: .value("날짜", p.date, unit: .day),
-                              y: .value("순자산", p.netWorth))
+                        .lineStyle(StrokeStyle(lineWidth: 2.5))
+                    PointMark(x: .value("날짜", item.idx),
+                              y: .value("순자산", item.point.netWorth))
                         .symbol {
                             Circle()
                                 .fill(Theme.surface)
-                                .frame(width: 8, height: 8)
-                                .overlay(Circle().stroke(Theme.accent, lineWidth: 2))
+                                .frame(width: 10, height: 10)
+                                .overlay(Circle().stroke(Theme.accent, lineWidth: 2.5))
                         }
                 }
             }
-            .chartXScale(domain: (month?.start ?? Date()) ... (month?.end ?? Date()))
             .chartYAxis(.hidden)
-            .chartXAxis(.hidden)
+            .chartXAxis {
+                AxisMarks(values: labelIndices(count)) { value in
+                    if let i = value.as(Int.self), (0..<count).contains(i) {
+                        AxisValueLabel {
+                            Text(thisMonthDayLabel(pts[i].point.date))
+                                .font(.caption2)
+                                .foregroundStyle(i == count - 1 ? Theme.accent : Theme.textSecond)
+                        }
+                    }
+                }
+            }
             .chartXSelection(value: $thisMonthSel)
             .frame(height: 150)
-            if pts.count < 2 {
+            if count < 2 {
                 Text("기록을 저장할수록 이번 달 안의 변화가 촘촘하게 그려져요.")
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
@@ -533,10 +520,9 @@ struct TrendView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     // 카테고리 헤더: 아이콘 + 이름 + 카테고리 합계 변화.
                     HStack(spacing: 6) {
-                        Image(systemName: g.cls.symbolName)
-                            .font(.caption)
-                            .foregroundStyle(Color(hex: g.cls.colorHex))
-                            .frame(width: 16)
+                        Circle()
+                            .fill(Color(hex: g.cls.colorHex))
+                            .frame(width: 8, height: 8)
                         Text(g.cls.label)
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(Theme.textPrimary)
@@ -550,14 +536,17 @@ struct TrendView: View {
                                 .font(.caption)
                                 .foregroundStyle(Theme.textSecond)
                                 .lineLimit(1)
-                                .padding(.leading, 22)
+                                .padding(.leading, 14)
                             Spacer()
                             arrowText(it.net)
                                 .font(.system(.caption2, design: .rounded).weight(.semibold))
+                                .lineLimit(1)
                             Text("\(it.current < 0 ? "−" : "")\(Fmt.krw(abs(it.current)))원")
                                 .font(.system(.caption, design: .rounded).weight(.semibold))
                                 .foregroundStyle(Theme.textPrimary)
                                 .frame(minWidth: 76, alignment: .trailing)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.75)
                         }
                     }
                     if g.items.count > 5 {
@@ -571,6 +560,33 @@ struct TrendView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
+    }
+
+    // 자산·부채·변화를 이어붙인 한 줄 요약 — 조각별 Text로 두면 금액이 길 때
+    // 각 조각이 제멋대로 줄바꿈돼 못나 보인다. 한 Text로 잇고 넘치면 축소.
+    private func headerSummaryLine(_ s: TrendPoint, prev: TrendPoint?) -> Text {
+        var t = Text("자산 \(Fmt.krw(s.grossAssets))")
+        if s.debt > 0 { t = t + Text(" · 부채 −\(Fmt.krw(s.debt))") }
+        if let prev {
+            let d = s.netWorth - prev.netWorth
+            if abs(d) >= 1 {
+                t = t + Text(" · ")
+                    + Text("\(d > 0 ? "▲" : "▼") \(Fmt.krw(abs(d)))")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(d > 0 ? Theme.rise : Theme.fall)
+            }
+        }
+        return t
+    }
+
+    private func thisMonthSummaryLine(_ s: TrendPoint) -> Text {
+        var t = Text("순자산 \(s.netWorth < 0 ? "−" : "")\(Fmt.krw(abs(s.netWorth)))")
+            .foregroundStyle(Theme.accent)
+        t = t + Text("  자산 \(Fmt.krw(s.grossAssets))").foregroundStyle(Theme.positive)
+        if s.debt > 0 {
+            t = t + Text("  부채 −\(Fmt.krw(s.debt))").foregroundStyle(Theme.textSecond)
+        }
+        return t
     }
 
     // 라벨을 찍을 인덱스 — 처음·끝을 포함해 4칸 안팎으로 솎는다.
@@ -744,6 +760,8 @@ struct TrendView: View {
                 Text("카테고리별 자산 · 순자산")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
                 Spacer()
                 if let s = shown {
                     VStack(alignment: .trailing, spacing: 1) {
@@ -752,6 +770,8 @@ struct TrendView: View {
                         Text("순자산 \(Fmt.krw(s.netWorth))원")
                             .font(.system(.subheadline, design: .rounded).weight(.bold))
                             .foregroundStyle(Theme.accent)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
                             .contentTransition(.numericText())
                     }
                 }

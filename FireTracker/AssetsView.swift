@@ -25,7 +25,6 @@ struct AssetsView: View {
     @EnvironmentObject private var refresher: RefreshManager
     @State private var editing: Asset?
     @State private var showingNew = false
-    @State private var showingRecord = false
     @State private var showingHistory = false
     @State private var showingImport = false
     @State private var showingBreakdown = false
@@ -54,11 +53,6 @@ struct AssetsView: View {
     }
     private var totalDebtCost: Double { assets.reduce(0) { $0 + $1.monthlyDebtCost } }
     private var totalGain: Double { assets.reduce(0) { $0 + $1.gain } }
-    // 카탈로그 상태 지문 — 자산 추가·수정·삭제·시세 갱신으로 값이 바뀌면 변한다.
-    // 이 값이 바뀌면 이번 달 기록을 자동 갱신한다.
-    private var catalogSignature: String {
-        "\(assets.count)|\(total)|\(liquidTotal)|\(monthlyIncome)"
-    }
 
     // 수동 새로고침 — 자동 시세 자산의 평가액과 주식·ETF 배당률을 즉시 최신화.
     private func refreshNow() {
@@ -137,12 +131,7 @@ struct AssetsView: View {
                     maxAge: RefreshManager.tabThrottle
                 )
             }
-            // 자산이 추가·수정·삭제될 때마다 이번 주 기록을 자동 갱신 — 수동 저장 불필요.
-            .onChange(of: catalogSignature) { _, _ in
-                refresher.upsertCurrentPeriodSnapshot(
-                    assets: assets, settings: settings, snapshots: snapshots, context: context
-                )
-            }
+            // 자산 변동 자동 기록은 RootView가 앱 전역에서 감지한다.
             .navigationTitle("자산")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -175,9 +164,6 @@ struct AssetsView: View {
                     } label: { Image(systemName: "plus") }
                 }
             }
-            .safeAreaInset(edge: .bottom) {
-                if !assets.isEmpty { recordBar }
-            }
             .sheet(isPresented: $showingNew) {
                 AssetEditor(asset: nil, nextSortOrder: assets.count,
                             initialClass: newClass, initialCustomLabel: newCustomLabel,
@@ -203,7 +189,6 @@ struct AssetsView: View {
                     showingCategoryPicker = false
                 }
             }
-            .sheet(isPresented: $showingRecord) { RecordSheet() }
             .sheet(isPresented: $showingHistory) { SnapshotsView() }
             .sheet(isPresented: $showingImport) {
                 ScreenshotImportView(startingSortOrder: assets.count)
@@ -313,7 +298,7 @@ struct AssetsView: View {
             Button { showingBreakdown = true } label: {
                 HStack(spacing: 4) {
                     VStack(alignment: .leading, spacing: 1) {
-                        Text("총자산 \(Fmt.krw(total))원")
+                        Text("순자산 \(Fmt.krw(total))원")
                             .font(.caption)
                         Text("\(Fmt.wonKo(total)) · 내역 보기")
                             .font(.caption2)
@@ -487,10 +472,9 @@ struct AssetsView: View {
             ForEach(incomeRoutes, id: \.title) { route in
                 Button { startNewAsset(route.cls, lock: true) } label: {
                     HStack(spacing: 10) {
-                        Image(systemName: route.cls.symbolName)
-                            .font(.subheadline)
-                            .foregroundStyle(Color(hex: route.cls.colorHex))
-                            .frame(width: 24)
+                        Circle()
+                            .fill(Color(hex: route.cls.colorHex))
+                            .frame(width: 8, height: 8)
                         VStack(alignment: .leading, spacing: 1) {
                             HStack(spacing: 6) {
                                 Text(route.title)
@@ -673,8 +657,12 @@ struct AssetsView: View {
                 .opacity(selSlice == nil || selSlice?.assetClass == item.assetClass ? 1 : 0.3)
             }
             .chartAngleSelection(value: $selectedSlice)
-            .chartBackground { _ in
+            // 중앙 라벨은 차트 위(overlay)에 — 배경에 두면 긴 금액이 도넛 링에
+            // 가려진다. 구멍 폭 안에서만 그리고 길면 자동 축소해 항상 보이게.
+            .chartOverlay { _ in
                 GeometryReader { geo in
+                    // 도넛 구멍 지름 ≈ 차트 짧은 변 × innerRadius(0.62), 여유 8pt.
+                    let hole = min(geo.size.width, geo.size.height) * 0.62 - 8
                     VStack(spacing: 2) {
                         Text(selSlice?.assetClass.label ?? "전체")
                             .font(.caption2)
@@ -682,13 +670,17 @@ struct AssetsView: View {
                         Text("\(Fmt.krw(selSlice?.amount ?? sum))원")
                             .font(.system(.subheadline, design: .rounded).weight(.bold))
                             .foregroundStyle(selSlice.map { Color(hex: $0.assetClass.colorHex) } ?? Theme.textPrimary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
                         if let selSlice, sum > 0 {
                             Text(Fmt.percent(selSlice.amount / sum, fraction: 0))
                                 .font(.caption2)
                                 .foregroundStyle(Theme.textSecond)
                         }
                     }
+                    .frame(maxWidth: hole)
                     .frame(width: geo.size.width, height: geo.size.height)
+                    .allowsHitTesting(false)   // 도넛 조각 탭 선택은 그대로 동작.
                 }
             }
             .frame(height: 170)
@@ -810,13 +802,10 @@ struct AssetsView: View {
     }
 
     private func row(_ asset: Asset) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: asset.assetClass.symbolName)
-                .font(.system(.subheadline))
-                .foregroundStyle(Color(hex: asset.assetClass.colorHex))
-                .frame(width: 32, height: 32)
-                .background(Color(hex: asset.assetClass.colorHex).opacity(0.15))
-                .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
+        HStack(spacing: 10) {
+            Circle()
+                .fill(Color(hex: asset.assetClass.colorHex))
+                .frame(width: 8, height: 8)
             VStack(alignment: .leading, spacing: 3) {
                 Text(asset.name.isEmpty ? asset.displayClassLabel : asset.name)
                     .font(.subheadline.weight(.semibold))
@@ -824,7 +813,7 @@ struct AssetsView: View {
                     .lineLimit(1)
                 HStack(spacing: 6) {
                     if asset.assetClass == .realEstate {
-                        Label(asset.realEstateUse.label, systemImage: asset.realEstateUse.icon)
+                        Text(asset.realEstateUse.label)
                             .foregroundStyle(Color(hex: asset.assetClass.colorHex))
                     } else {
                         Text(asset.displayClassLabel)
@@ -878,24 +867,6 @@ struct AssetsView: View {
                 .layoutPriority(1)
         }
         .padding(.vertical, 4)
-    }
-
-    private var recordBar: some View {
-        Button { showingRecord = true } label: {
-            HStack {
-                Image(systemName: "square.and.arrow.down.on.square")
-                Text("이번 달 기록 저장")
-                    .font(.subheadline.weight(.semibold))
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
-            .background(Theme.accent)
-            .foregroundStyle(Color.black)
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 8)
-        .background(Theme.bg.opacity(0.9))
     }
 
     private var emptyState: some View {
@@ -990,9 +961,9 @@ struct AssetsView: View {
                     .font(.caption2.weight(.bold))
                     .foregroundStyle(Theme.textSecond)
                     .frame(width: 10)
-                Image(systemName: group.assetClass.symbolName)
-                    .font(.caption)
-                    .foregroundStyle(Color(hex: group.assetClass.colorHex))
+                Circle()
+                    .fill(Color(hex: group.assetClass.colorHex))
+                    .frame(width: 8, height: 8)
                 Text(group.title)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
@@ -1048,10 +1019,9 @@ struct CategoryPickerSheet: View {
                     ForEach(AssetClass.allCases.filter { $0 != .custom }) { ac in
                         Button { onPick(ac, "") } label: {
                             HStack(spacing: 10) {
-                                Image(systemName: ac.symbolName)
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color(hex: ac.colorHex))
-                                    .frame(width: 26)
+                                Circle()
+                                    .fill(Color(hex: ac.colorHex))
+                                    .frame(width: 8, height: 8)
                                 Text(ac.label)
                                     .foregroundStyle(Theme.textPrimary)
                                 Spacer()
@@ -1155,6 +1125,14 @@ struct AssetEditor: View {
     @State private var newDetailName = ""
     @State private var newDetailAmount = ""
 
+    // 추매(추가 매수) 입력 — 기본은 매수 금액 하나. 원하면 수량·주당 단가로 상세 입력.
+    @State private var showBuyMore = false
+    @State private var buyAmount = ""
+    @State private var showBuyDetail = false
+    @State private var buyQty = ""
+    @State private var buyPrice = ""
+    @State private var buyMoreApplied = false
+
     // Seed all editor state directly from the asset so that opening the editor
     // does not mutate `assetClass` (which would trigger onChange and clobber the
     // stored liquidity/income with class-suggested defaults).
@@ -1214,7 +1192,7 @@ struct AssetEditor: View {
                     if lockedClass {
                         // 그룹에서 들어옴 — 종류는 고정, 현재 그룹 합계를 컨텍스트로.
                         HStack {
-                            Label(lockedTitle, systemImage: assetClass.symbolName)
+                            Text(lockedTitle)
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(Color(hex: assetClass.colorHex))
                             Spacer()
@@ -1325,8 +1303,11 @@ struct AssetEditor: View {
                     } else {
                         TextField(isDebt ? "남은 대출 잔액 (원)" : "금액 (원)", text: $amount.commaGrouped)
                             .keyboardType(.numberPad)
+                        // 타이핑 대신 좌우 스와이프로 금액을 조절 — 5,000만 → 2,500만
+                        // 같은 굵직한 변경을 몇 번 미는 걸로 끝낸다.
+                        AmountScrubber(value: $amount)
                         if let v = Double(amount), v > 0 {
-                            Text(isDebt ? "총자산에서 −\(Fmt.krwBoth(v)) 차감됩니다."
+                            Text(isDebt ? "순자산에서 −\(Fmt.krwBoth(v)) 차감됩니다."
                                         : "= \(Fmt.krwBoth(v))")
                                 .font(.caption)
                                 .foregroundStyle(isDebt ? Theme.negative : Theme.textSecond)
@@ -1339,6 +1320,12 @@ struct AssetEditor: View {
                 // 평가액과 따로 관리하고, 평가 손익을 자동 계산한다.
                 if !isDebt && assetClass.tracksCostBasis {
                     costBasisSection
+                }
+
+                // 기존 주식·펀드·코인 자산은 추매를 바로 기록할 수 있게 한다 —
+                // 수량·단가만 넣으면 보유수량·투자원금·평가액이 함께 갱신된다.
+                if asset != nil && supportsBuyMore {
+                    buyMoreSection
                 }
 
                 // 간단 입력(새 자산 기본): 여기까지만 — 종류·이름·금액이면 끝.
@@ -1568,6 +1555,132 @@ struct AssetEditor: View {
             Text("투자 원금(산 가격)은 그대로 두고, 평가액은 시세에 따라 바뀝니다. 둘의 차이가 평가 손익이에요. 평가액은 위 ‘평가액’ 칸 또는 시세 자동으로 갱신돼요.")
                 .font(.caption)
         }
+    }
+
+    // --- 추매 (추가 매수) ---
+    private var supportsBuyMore: Bool {
+        assetClass == .stocks || assetClass == .fund || assetClass == .crypto
+    }
+
+    private var buyUnitLabel: String { assetClass == .crypto ? "개" : "주" }
+
+    // 상세 입력(수량 × 단가)이 유효하면 그 값을 돌려준다.
+    private var buyDetailInput: (qty: Double, price: Double)? {
+        guard showBuyDetail,
+              let q = Double(buyQty), q > 0,
+              let p = Double(buyPrice), p > 0 else { return nil }
+        return (q, p)
+    }
+
+    // 이번 추매의 매수 금액 — 상세 입력이 있으면 수량 × 단가, 없으면 직접 입력값.
+    private var buyCost: Double {
+        if let d = buyDetailInput { return d.qty * d.price }
+        return Double(buyAmount) ?? 0
+    }
+
+    private var buyMoreSection: some View {
+        Section {
+            if !showBuyMore {
+                Button {
+                    withAnimation { showBuyMore = true }
+                } label: {
+                    Label("추매 기록", systemImage: "plus.circle.fill")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.accent)
+                }
+            } else {
+                if !showBuyDetail {
+                    TextField("추가 매수 금액 (원)", text: $buyAmount.commaGrouped)
+                        .keyboardType(.numberPad)
+                    Button {
+                        withAnimation { showBuyDetail = true }
+                    } label: {
+                        Label("\(buyUnitLabel)당 얼마에 샀는지 입력 (선택)", systemImage: "chevron.down")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                } else {
+                    TextField("추가 매수 수량 (\(buyUnitLabel))", text: $buyQty)
+                        .keyboardType(.decimalPad)
+                    TextField("\(buyUnitLabel)당 매수 단가 (원)", text: $buyPrice.commaGrouped)
+                        .keyboardType(.numberPad)
+                }
+                if buyCost > 0 {
+                    HStack {
+                        Text("매수 금액")
+                        Spacer()
+                        Text("\(Fmt.krw(buyCost))원")
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            .foregroundStyle(Theme.textPrimary)
+                    }
+                    let newCostBasis = (Double(costBasis) ?? 0) + buyCost
+                    HStack {
+                        Text("적용 후 투자 원금")
+                        Spacer()
+                        Text("\(Fmt.krw(newCostBasis))원")
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            .foregroundStyle(Theme.accent)
+                    }
+                    if let d = buyDetailInput {
+                        let newQty = (Double(quantity) ?? 0) + d.qty
+                        HStack {
+                            Text("적용 후 보유")
+                            Spacer()
+                            Text("\(Fmt.trimNumber(newQty))\(buyUnitLabel) · 평단 \(Fmt.krw(newCostBasis / newQty))원")
+                                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                                .foregroundStyle(Theme.accent)
+                        }
+                    }
+                    Button {
+                        applyBuyMore()
+                    } label: {
+                        Label("추매 반영", systemImage: "checkmark.circle.fill")
+                            .font(.subheadline.weight(.semibold))
+                    }
+                }
+                if buyMoreApplied {
+                    Label("반영됐어요. 상단 ‘저장’을 누르면 확정됩니다.", systemImage: "checkmark.seal.fill")
+                        .font(.caption)
+                        .foregroundStyle(Theme.positive)
+                }
+            }
+        } header: {
+            Text("추매")
+        } footer: {
+            if showBuyMore {
+                Text(currency == "USD"
+                     ? "금액은 원화 환산으로 입력하세요. 반영하면 투자 원금과 평가액이 갱신되고, 수량을 넣으면 보유 수량·평단도 함께 계산됩니다."
+                     : "반영하면 투자 원금과 평가액이 갱신되고, 수량을 넣으면 보유 수량·평단도 함께 계산됩니다.")
+                    .font(.caption)
+            } else {
+                Text("추가 매수한 금액만 넣으면 투자 원금과 평가액이 자동으로 갱신돼요.")
+                    .font(.caption)
+            }
+        }
+    }
+
+    // 추매를 편집 중인 값에 반영한다. 투자 원금에 매수 금액을 더하고, 평가액은
+    // 시세 자동(수량 입력 시)이면 저장된 단가로 재계산, 아니면 매수 금액만큼 증가.
+    private func applyBuyMore() {
+        let cost = buyCost
+        guard cost > 0 else { return }
+        let newCostBasis = (Double(costBasis) ?? 0) + cost
+        costBasis = String(Int(newCostBasis.rounded()))
+        if let d = buyDetailInput {
+            let newQty = (Double(quantity) ?? 0) + d.qty
+            quantity = Fmt.trimNumber(newQty)
+            if auto, unitPriceKRW > 0 {
+                amount = String(Int((newQty * unitPriceKRW).rounded()))
+            } else {
+                amount = String(Int(((Double(amount) ?? 0) + cost).rounded()))
+            }
+        } else {
+            amount = String(Int(((Double(amount) ?? 0) + cost).rounded()))
+        }
+        buyAmount = ""
+        buyQty = ""
+        buyPrice = ""
+        withAnimation { buyMoreApplied = true }
     }
 
     // One-tap yield presets so dividends don't have to be entered won-by-won.
@@ -2056,167 +2169,133 @@ struct AssetEditor: View {
     }
 }
 
-// Captures the current catalog as a dated NetWorthSnapshot, plus the month's
-// income/expense, so the dashboard and trend screens can track over time.
-struct RecordSheet: View {
-    @Environment(\.modelContext) private var context
-    @Environment(\.dismiss) private var dismiss
-    @Query(sort: \Asset.sortOrder) private var assets: [Asset]
-    @Query private var settingsList: [FireSettings]
-    @Query private var snapshots: [NetWorthSnapshot]
+// 금액을 좌우 스와이프(드래그)로 조절하는 컨트롤 — 타이핑 없이 선택한 단위만큼
+// 증감한다. 밀 때마다 값이 단위 배수로 스냅되어 5,000만 → 2,500만 같은 굵직한
+// 변경이 몇 번의 스와이프로 끝난다.
+struct AmountScrubber: View {
+    @Binding var value: String   // 콤마 없는 숫자 문자열 (예: "50000000")
 
-    @State private var date = Date()
-    @State private var netSavings = ""
-    @State private var income = ""
-    @State private var expense = ""
-    @State private var note = ""
+    private static let units: [(label: String, step: Double)] = [
+        ("1만", 10_000), ("10만", 100_000), ("100만", 1_000_000), ("1000만", 10_000_000)
+    ]
+    // 사용자가 단위를 고르기 전엔 값 크기에 맞는 단위를 자동 선택.
+    @State private var unitIndex: Int?
+    // 룰러 상태 — 눈금의 시각적 오프셋과 드래그 증분·스텝 누적.
+    @State private var phase: CGFloat = 0
+    @State private var lastDragX: CGFloat = 0
+    @State private var stepAccum: CGFloat = 0
+    private let tickSpacing: CGFloat = 12
 
-    private var settings: FireSettings { settingsList.first ?? FireSettings() }
+    private var numeric: Double { Double(value) ?? 0 }
 
-    private var total: Double { assets.reduce(0) { $0 + $1.netValue } }
-    private var liquidTotal: Double { assets.reduce(0) { $0 + $1.liquidValue } }
-    private var passiveIncome: Double {
-        assets.reduce(0) { $0 + $1.effectiveMonthlyIncome }
+    private var autoUnitIndex: Int {
+        switch numeric {
+        case ..<1_000_000:    return 0   // 100만 미만 → 1만
+        case ..<30_000_000:   return 1   // 3천만 미만 → 10만
+        case ..<300_000_000:  return 2   // 3억 미만 → 100만
+        default:              return 3   // 그 이상 → 1000만
+        }
     }
+    private var currentUnitIndex: Int { unitIndex ?? autoUnitIndex }
+    private var step: Double { Self.units[currentUnitIndex].step }
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("기간") {
-                    DatePicker("월", selection: $date, displayedComponents: .date)
-                }
-                Section("이번 달 총자산") {
-                    HStack {
-                        Text("쓸 수 있는 돈 (유동)")
-                        Spacer()
-                        Text("\(Fmt.krw(liquidTotal))원")
-                            .font(.system(.body, design: .rounded).weight(.semibold))
-                            .foregroundStyle(Theme.positive)
+        VStack(spacing: 8) {
+            ruler
+            HStack(spacing: 6) {
+                Text("단위")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+                ForEach(Self.units.indices, id: \.self) { i in
+                    let selected = currentUnitIndex == i
+                    Button { unitIndex = i } label: {
+                        Text(Self.units[i].label)
+                            .font(.caption.weight(.semibold))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(selected ? Theme.accent.opacity(0.2) : Theme.surfaceHigh)
+                            .foregroundStyle(selected ? Theme.accent : Theme.textPrimary)
+                            .clipShape(Capsule())
                     }
-                    HStack {
-                        Text("총자산")
-                        Spacer()
-                        Text("\(Fmt.krw(total))원")
-                            .font(.system(.body, design: .rounded).weight(.semibold))
-                            .foregroundStyle(Theme.accent)
-                    }
-                    if passiveIncome > 0 {
-                        HStack {
-                            Text("월 현금흐름")
-                            Spacer()
-                            Text("\(Fmt.krw(passiveIncome))원")
-                                .foregroundStyle(Theme.positive)
-                        }
-                    }
-                    Text("현재 \(assets.count)개 자산이 이 기록에 저장됩니다.")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
+                    .buttonStyle(.borderless)
                 }
-                Section {
-                    HStack {
-                        TextField("수입 − 지출", text: $netSavings.commaGrouped)
-                            .keyboardType(.numberPad)
-                        Text("원").foregroundStyle(Theme.textSecond)
-                    }
-                    if let v = Double(netSavings), v > 0 {
-                        Text("= \(Fmt.wonKo(v))")
-                            .font(.caption)
-                            .foregroundStyle(Theme.textSecond)
-                    }
-                } header: {
-                    Text("이번 달 저축 (수입 − 지출)")
-                } footer: {
-                    Text("수입·지출을 나눠 적기 번거로우면 차액(저축액)만 적으세요. 아래에 수입/지출을 따로 적으면 그 차액이 우선 쓰이고 저축률도 계산됩니다.")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
-                }
-
-                Section {
-                    TextField("월 수입", text: $income.commaGrouped).keyboardType(.numberPad)
-                    MoneyReadout(amount: income)
-                    TextField("월 지출", text: $expense.commaGrouped).keyboardType(.numberPad)
-                    MoneyReadout(amount: expense)
-                    if let inc = Double(income), inc > 0 {
-                        let exp = Double(expense) ?? 0
-                        HStack {
-                            Text("저축률")
-                            Spacer()
-                            Text(Fmt.percent((inc - exp) / inc, fraction: 0))
-                                .foregroundStyle(Theme.accent)
-                        }
-                    }
-                } header: {
-                    Text("수입 / 지출 따로 (선택 · 저축률용)")
-                } footer: {
-                    Text("설정의 세후 월급·월 지출이 자동으로 채워집니다. 이번 달 실제 값으로 수정할 수 있어요.")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
-                }
-                Section("메모") {
-                    TextField("메모 (선택)", text: $note, axis: .vertical)
-                }
-            }
-            .navigationTitle("이번 달 기록 저장")
-            .navigationBarTitleDisplayMode(.inline)
-            .scrollIndicators(.hidden)
-            .keyboardDismissable()
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("저장") { save() }.disabled(assets.isEmpty)
-                }
-            }
-            .onAppear {
-                // Prefill from settings, matching how the user set up savings:
-                // salary/spending breakdown, or a single net-savings number.
-                guard income.isEmpty, expense.isEmpty, netSavings.isEmpty else { return }
-                if settings.monthlyTakeHome > 0 || settings.plannedMonthlyExpense > 0 {
-                    if settings.monthlyTakeHome > 0 { income = String(Int(settings.monthlyTakeHome)) }
-                    if settings.plannedMonthlyExpense > 0 { expense = String(Int(settings.plannedMonthlyExpense)) }
-                } else if settings.plannedMonthlySavings > 0 {
-                    netSavings = String(Int(settings.plannedMonthlySavings))
-                }
+                Spacer()
             }
         }
+        .padding(.vertical, 2)
+        .sensoryFeedback(.selection, trigger: value)
     }
 
-    private func save() {
-        // 같은 주 기록이 이미 있으면 새로 만들지 않고 그 기록을 갱신(자동 기록과 일관).
-        let cal = Calendar.current
-        let snap: NetWorthSnapshot
-        if let existing = snapshots.first(where: { cal.isDate($0.date, equalTo: date, toGranularity: .weekOfYear) }) {
-            snap = existing
-            for e in snap.entries { context.delete(e) }
-            snap.entries = []
-        } else {
-            snap = NetWorthSnapshot(date: date)
-            context.insert(snap)
+    // 측정 테이프처럼 눈금이 손가락을 따라 흐르는 룰러 — 가운데 포인터가 기준점.
+    // 오른쪽으로 밀면 증가, 왼쪽으로 밀면 감소. 눈금 한 칸에 한 단위씩, 칸마다 햅틱.
+    private var ruler: some View {
+        ZStack {
+            Canvas { ctx, size in
+                let mid = size.width / 2
+                // 굵은 눈금(5칸 주기)이 이어져 보이도록 주기 단위로 오프셋을 순환.
+                let period = tickSpacing * 5
+                let shift = phase.truncatingRemainder(dividingBy: period)
+                let count = Int(size.width / tickSpacing) + 12
+                for k in (-count / 2)...(count / 2) {
+                    let x = mid + CGFloat(k) * tickSpacing + shift
+                    guard x >= 4, x <= size.width - 4 else { continue }
+                    let isMajor = k % 5 == 0
+                    let h: CGFloat = isMajor ? 18 : 10
+                    var line = Path()
+                    line.move(to: CGPoint(x: x, y: (size.height - h) / 2))
+                    line.addLine(to: CGPoint(x: x, y: (size.height + h) / 2))
+                    // 가장자리로 갈수록 옅게 — 테이프가 계속 이어지는 느낌.
+                    let edge = min(x, size.width - x) / (size.width / 2)
+                    let alpha = 0.18 + 0.55 * Double(min(1, edge * 2.2))
+                    ctx.stroke(line, with: .color(Theme.textSecond.opacity(alpha)),
+                               lineWidth: isMajor ? 1.6 : 1)
+                }
+            }
+            // 중앙 포인터 — 현재 값의 기준선.
+            Capsule()
+                .fill(Theme.accent)
+                .frame(width: 3, height: 26)
+                .shadow(color: Theme.accent.opacity(0.5), radius: 3)
+            // 방향 힌트.
+            HStack {
+                Image(systemName: "chevron.compact.left")
+                Spacer()
+                Image(systemName: "chevron.compact.right")
+            }
+            .font(.footnote)
+            .foregroundStyle(Theme.textSecond.opacity(0.6))
+            .padding(.horizontal, 8)
         }
-        snap.date = date
-        snap.note = note
-        snap.monthlyIncome = Double(income) ?? 0
-        snap.monthlyExpense = Double(expense) ?? 0
-        snap.monthlyNetSavings = Double(netSavings) ?? 0
-        snap.monthlyPassiveIncome = passiveIncome
-        snap.liquidNetWorth = liquidTotal
-        for asset in assets where asset.netValue != 0 {
-            let entry = AssetEntry(
-                assetClass: asset.assetClass,
-                name: asset.name,
-                amount: asset.netValue,
-                catalogKey: asset.key,
-                symbol: asset.symbol,
-                quantity: asset.quantity,
-                currency: asset.currency,
-                autoPriced: asset.autoPriced,
-                unitPriceKRW: asset.unitPriceKRW,
-                lastPriced: asset.lastPriced
-            )
-            entry.snapshot = snap
-            snap.entries.append(entry)
-        }
-        try? context.save()
-        dismiss()
+        .frame(height: 46)
+        .background(Theme.surfaceHigh)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .contentShape(Rectangle())
+        .gesture(
+            DragGesture(minimumDistance: 1)
+                .onChanged { g in
+                    let delta = g.translation.width - lastDragX
+                    lastDragX = g.translation.width
+                    phase += delta
+                    stepAccum += delta
+                    while stepAccum >= tickSpacing { stepAccum -= tickSpacing; apply(deltaSteps: 1) }
+                    while stepAccum <= -tickSpacing { stepAccum += tickSpacing; apply(deltaSteps: -1) }
+                }
+                .onEnded { _ in
+                    lastDragX = 0
+                    stepAccum = 0
+                    // 눈금을 가장 가까운 칸에 스냅해 '딱' 멈춘 느낌으로.
+                    withAnimation(.snappy(duration: 0.18)) {
+                        phase = (phase / tickSpacing).rounded() * tickSpacing
+                    }
+                }
+        )
+    }
+
+    // 현재 값을 단위 배수로 스냅한 뒤 스텝만큼 증감. 0 아래로는 내려가지 않는다.
+    private func apply(deltaSteps: Int) {
+        let snapped = (numeric / step).rounded() * step
+        let next = max(0, snapped + Double(deltaSteps) * step)
+        value = next > 0 ? String(Int(next.rounded())) : ""
     }
 }
 
@@ -2496,7 +2575,7 @@ struct MoneyReadout: View {
 }
 
 // Itemized basis for net worth — shows how each asset/debt contributes so the
-// user can see exactly why 총자산(net) = 순자산(보유 자산) − 부채 lands where it does.
+// user can see exactly why 순자산 = 총자산(보유 자산 합) − 부채 lands where it does.
 struct NetWorthBreakdownView: View {
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
@@ -2512,7 +2591,7 @@ struct NetWorthBreakdownView: View {
             Form {
                 Section {
                     HStack {
-                        Text("총자산").font(.headline)
+                        Text("순자산").font(.headline)
                         Spacer()
                         VStack(alignment: .trailing, spacing: 1) {
                             Text("\(Fmt.krw(netWorth))원")
@@ -2520,11 +2599,11 @@ struct NetWorthBreakdownView: View {
                                 .foregroundStyle(netWorth >= 0 ? Theme.accent : Theme.negative)
                         }
                     }
-                    Text("총자산 = 순자산(\(Fmt.krw(grossAssets))원) − 부채(\(Fmt.krw(debtTotal))원)")
+                    Text("순자산 = 총자산(\(Fmt.krw(grossAssets))원) − 부채(\(Fmt.krw(debtTotal))원)")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 } footer: {
-                    Text("아래에서 순자산·부채가 각각 총자산에 얼마씩 더하고 빼는지 확인하세요. 빚을 1,100만 졌는데 총자산이 −600만이라면, 순자산(보유 자산) 합이 500만이라는 뜻이에요.")
+                    Text("아래에서 자산·부채가 각각 순자산에 얼마씩 더하고 빼는지 확인하세요. 빚을 1,100만 졌는데 순자산이 −600만이라면, 총자산(보유 자산 합)이 500만이라는 뜻이에요.")
                         .font(.caption)
                 }
 
@@ -2535,7 +2614,7 @@ struct NetWorthBreakdownView: View {
                     ForEach(positives) { a in
                         breakdownRow(a, value: a.netValue, sign: "+", tint: Theme.positive)
                     }
-                    subtotal("순자산", grossAssets, tint: Theme.textPrimary)
+                    subtotal("총자산", grossAssets, tint: Theme.textPrimary)
                 } header: {
                     Text("보유 자산 (+)")
                 }
@@ -2554,7 +2633,7 @@ struct NetWorthBreakdownView: View {
             .scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)
             .background(Theme.bg.ignoresSafeArea())
-            .navigationTitle("총자산 내역")
+            .navigationTitle("순자산 내역")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("닫기") { dismiss() } }
@@ -2563,10 +2642,10 @@ struct NetWorthBreakdownView: View {
     }
 
     private func breakdownRow(_ a: Asset, value: Double, sign: String, tint: Color) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: a.assetClass.symbolName)
-                .foregroundStyle(Color(hex: a.assetClass.colorHex))
-                .frame(width: 22)
+        HStack(spacing: 10) {
+            Circle()
+                .fill(Color(hex: a.assetClass.colorHex))
+                .frame(width: 8, height: 8)
             VStack(alignment: .leading, spacing: 1) {
                 Text(a.name.isEmpty ? a.assetClass.label : a.name)
                     .font(.subheadline)

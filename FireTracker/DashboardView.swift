@@ -12,6 +12,23 @@ struct MilestoneSetupTip: Tip {
     var image: Image? { Image(systemName: "target") }
 }
 
+// 기간별 목표 차트의 '기록 점' 안내 — 점을 처음 탭했을 때 떠서, 그 기록을
+// 어디서 수정·삭제하는지 알려준다. 닫으면 다시 나오지 않는다.
+struct RecordDotTip: Tip {
+    // 차트에서 기록 점을 탭한 적이 있는지 — 탭 전에는 뜨지 않는다.
+    @Parameter static var dotTapped: Bool = false
+
+    var title: Text { Text("이 점은 저장된 기록이에요") }
+    var message: Text? {
+        Text("자산 탭 상단의 시계 아이콘(기록)에서 이 기록을 수정하거나 지울 수 있어요. 잘못 튄 점도 거기서 고치면 됩니다.")
+    }
+    var image: Image? { Image(systemName: "clock.arrow.circlepath") }
+
+    var rules: [Rule] {
+        #Rule(Self.$dotTapped) { $0 == true }
+    }
+}
+
 // One-time nudge teaching that the small ⓘ buttons reveal each card's details.
 struct InfoButtonTip: Tip {
     var title: Text { Text("자세한 설명은 ⓘ에서") }
@@ -49,8 +66,8 @@ struct InfoPopoverButton: View {
 // Which total the asset-composition card headlines: gross holdings (사용자 용어
 // '순자산') or net after debt (사용자 용어 '총자산').
 enum AssetTotalMode: String, CaseIterable, Identifiable {
-    case gross = "순자산"
-    case net   = "총자산"
+    case gross = "총자산"
+    case net   = "순자산"
     var id: String { rawValue }
 }
 
@@ -434,8 +451,8 @@ struct DashboardView: View {
                             detail: "설정 탭에서 연 목표 지출·인출률 입력",
                             symbol: "target")
                     stepRow(number: 3,
-                            title: "매달 기록 저장",
-                            detail: "자산 탭에서 한 번씩 저장하면 추이가 쌓여요",
+                            title: "자동으로 쌓이는 기록",
+                            detail: "자산에 변동이 생기면 그날 기록이 자동 저장돼요",
                             symbol: "chart.xyaxis.line")
                 }
 
@@ -604,16 +621,16 @@ struct DashboardView: View {
         }
     }
 
-    // 우측 상단 토글: OFF = 순자산·부채 두 막대, ON = 총자산 한 막대.
+    // 우측 상단 토글: OFF = 자산·부채 두 막대, ON = 순자산 한 막대.
     // 차트를 통째로 갈아끼우지 않고 같은 막대가 변한 값만큼 늘어나고 줄어든다 —
-    // 토글 ON이면 순자산 막대가 총자산 길이로 변하고 부채 막대는 그 끝점으로
-    // 수렴(폭 0)해, 둘이 합쳐져 총자산이 되는 과정이 그대로 보인다.
+    // 토글 ON이면 자산 막대가 순자산 길이로 변하고 부채 막대는 그 끝점으로
+    // 수렴(폭 0)해, 둘이 합쳐져 순자산이 되는 과정이 그대로 보인다.
     private var netWorthChangeChart: some View {
         let c = lastRecordChange
-        let assetsBar = AssetChangeBar(label: "순자산", value: c?.assets ?? 0,  positiveIsGood: true)
+        let assetsBar = AssetChangeBar(label: "자산", value: c?.assets ?? 0,  positiveIsGood: true)
         let debtBar   = AssetChangeBar(label: "부채",   value: -(c?.debt ?? 0), positiveIsGood: true)
-        let totalBar  = AssetChangeBar(label: "총자산", value: lastNetChange ?? 0, positiveIsGood: true)
-        // 부채가 순자산과 같은 부호면 순자산 끝에서 이어 그려 겹치지 않게 한다.
+        let totalBar  = AssetChangeBar(label: "순자산", value: lastNetChange ?? 0, positiveIsGood: true)
+        // 부채가 자산과 같은 부호면 자산 끝에서 이어 그려 겹치지 않게 한다.
         let debtStart = assetsBar.value * debtBar.value > 0 ? assetsBar.value : 0
         let aEnd   = showTotalChange ? totalBar.value : assetsBar.value
         // 토글 ON: 부채 막대는 가운데 0선으로 모여들며 사라진다.
@@ -697,7 +714,7 @@ struct DashboardView: View {
 
     private var welcomeCard: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // 카드 타이틀 + 우측 상단 '총자산 변화' 토글.
+            // 카드 타이틀 + 우측 상단 '순자산 변화' 토글.
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("지난주 대비 변화")
@@ -712,7 +729,7 @@ struct DashboardView: View {
                 Spacer()
                 if changeBaseline != nil {
                     HStack(spacing: 6) {
-                        Text("총자산 변화")
+                        Text("순자산 변화")
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
                         Toggle("", isOn: $showTotalChange.animation(.smooth(duration: 0.55)))
@@ -722,11 +739,11 @@ struct DashboardView: View {
                 }
             }
 
-            // 토글 ON: 총자산 변화량을 순자산·부채 라벨과 같은 크기로(롤링 애니메이션 유지).
+            // 토글 ON: 순자산 변화량을 자산·부채 라벨과 같은 크기로(롤링 애니메이션 유지).
             if showTotalChange, changeBaseline != nil {
                 let net = lastNetChange ?? 0
                 HStack(spacing: 4) {
-                    Text("총자산")
+                    Text("순자산")
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
                     Text(signedKRW(animatedTotalChange))
@@ -912,12 +929,27 @@ struct DashboardView: View {
                          spanDays: end.timeIntervalSince(start) / 86_400)
     }
 
+    // 궤적 차트에서 탭으로 고른 시점 — 가장 가까운 기록 점의 정보를 보여준다.
+    @State private var trajSel: Date?
+    private let recordDotTip = RecordDotTip()
+
     @ViewBuilder
     private func trajectoryChart(metric: FireGoalType, label: String, months: Int) -> some View {
         if let mdl = trajectoryModel(metric: metric, label: label, months: months) {
             let goalPt = TrajPoint(date: mdl.end, value: mdl.goalEnd, label: "목표")
             let nowPt = TrajPoint(date: mdl.now, value: mdl.current, label: "지금")
+            let records = mdl.actual.filter { $0.label == "기록" }
+            VStack(alignment: .leading, spacing: 8) {
             Chart {
+                // 과거 기록 → 지금까지는 실선으로 이어 실제 흐름을 보여주고,
+                // 지금 → 목표는 점선으로 — 아직 오지 않은 '필요한 페이스'라서.
+                ForEach(mdl.actual) { p in
+                    LineMark(x: .value("시점", p.date), y: .value("값", p.value),
+                             series: .value("계열", "실제"))
+                        .foregroundStyle(Theme.accent)
+                        .interpolationMethod(.catmullRom)
+                        .lineStyle(StrokeStyle(lineWidth: 2))
+                }
                 // 지금 → 목표 (지금부터 필요한 페이스).
                 ForEach([nowPt, goalPt]) { p in
                     LineMark(x: .value("시점", p.date), y: .value("값", p.value),
@@ -976,8 +1008,32 @@ struct DashboardView: View {
                     }
                 }
             }
+            .chartXSelection(value: $trajSel)
+            .onChange(of: trajSel) { _, new in
+                // 점을 탭하는 순간부터 팁이 뜰 자격을 얻는다(닫기 전까지).
+                if new != nil { RecordDotTip.dotTapped = true }
+            }
             .frame(height: 190)
             .animation(.smooth(duration: 0.5), value: months)
+
+            // 점 안내 — 탭하면 그 기록의 날짜·값, 평소엔 점이 뭔지 한 줄 설명.
+            if let sel = trajSel,
+               let hit = records.min(by: {
+                   abs($0.date.timeIntervalSince(sel)) < abs($1.date.timeIntervalSince(sel))
+               }) {
+                Text("\(recordDateText(hit.date)) 기록 · \(metric == .assets ? "" : "월 ")\(Fmt.krw(hit.value))원")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.accent)
+            } else if !records.isEmpty {
+                Text("옅은 점은 그 시점에 저장된 기록이에요. 점 근처를 탭하면 날짜와 값이 보여요.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            // 수정·삭제 경로 안내는 팁킷으로 — 점을 탭한 뒤 한 번만 보여주고,
+            // 닫으면 다시 나타나지 않는다.
+            TipView(recordDotTip)
+                .tipBackground(Theme.surface)
+            }
         }
     }
 

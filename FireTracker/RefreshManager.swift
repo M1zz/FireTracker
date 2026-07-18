@@ -122,8 +122,9 @@ final class RefreshManager: ObservableObject {
         try? context.save()
     }
 
-    // 자산 탭 데이터가 바뀔 때마다 호출 — 이번 주 기록을 현재 카탈로그로 자동 갱신.
-    // 이번 주 기록이 있으면 항목·평가액·패시브 인컴을 최신화하고, 없으면 새로 만든다.
+    // 자산이 바뀔 때마다 호출(추가·수정·삭제·시세 갱신) — 오늘 기록을 현재
+    // 카탈로그로 자동 갱신한다. 저장 버튼 없이도 변동이 생긴 날마다 기록이 하나씩
+    // 쌓여, 날짜별 변화량이 그대로 남는다. 같은 날 여러 번 바뀌면 그날 기록만 갱신.
     // 사용자가 직접 만든 기록의 소득·지출 입력은 보존한다(자동 기록만 설정값으로 갱신).
     func upsertCurrentPeriodSnapshot(assets: [Asset], settings: FireSettings,
                                      snapshots: [NetWorthSnapshot], context: ModelContext) {
@@ -132,7 +133,7 @@ final class RefreshManager: ObservableObject {
         let now = Date()
         let passive = passiveTotal(assets, settings)
         let liquid = assets.reduce(0) { $0 + $1.liquidValue }
-        if let snap = snapshots.first(where: { cal.isDate($0.date, equalTo: now, toGranularity: .weekOfYear) }) {
+        if let snap = snapshots.first(where: { cal.isDate($0.date, equalTo: now, toGranularity: .day) }) {
             snap.date = now
             snap.monthlyPassiveIncome = passive
             snap.liquidNetWorth = liquid

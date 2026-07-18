@@ -2,9 +2,13 @@ import SwiftUI
 import SwiftData
 import Charts
 import TipKit
+#if canImport(FoundationModels)
+import FoundationModels
+#endif
 
 // 계산 탭 — 참고용 시뮬레이터 모음.
-// 생애주기(모으고 쓰는 인생 자산 곡선) · 주담대(상환 흐름) · 예적금(만기 수령액).
+// 생애주기(모으고 쓰는 인생 자산 곡선) · 대출(종류별 상환 흐름) ·
+// 저축(예금·적금·파킹 만기 수령액) · 투자(내 자산의 앞으로의 범위 예측).
 struct SimulatorView: View {
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query private var settingsList: [FireSettings]
@@ -20,8 +24,9 @@ struct SimulatorView: View {
 
     enum SimMode: String, CaseIterable, Identifiable {
         case lifecycle = "생애주기"
-        case mortgage = "주담대"
-        case savings = "예적금"
+        case loan = "대출"
+        case savings = "저축"
+        case invest = "투자"
         var id: String { rawValue }
     }
 
@@ -38,10 +43,12 @@ struct SimulatorView: View {
                     case .lifecycle:
                         LifecycleSimSection(settings: settings, startAssetValue: totalNet,
                                             passiveIncomeValue: monthlyPassive)
-                    case .mortgage:
+                    case .loan:
                         MortgageSimSection()
                     case .savings:
                         SavingsSimSection()
+                    case .invest:
+                        InvestForecastSection()
                     }
 
                     Text("입력값을 바탕으로 계산한 참고용 결과예요. 세금·수수료·시장 변동에 따라 실제와 다를 수 있습니다.")
@@ -725,6 +732,8 @@ private struct MortgageSimSection: View {
     @AppStorage("sim.mtg.ratePct")   private var ratePct = "4.2"
     @AppStorage("sim.mtg.years")     private var years = "30"
     @AppStorage("sim.mtg.method")    private var method: RepayMethod = .equalPayment
+    // 대출 종류 — 고르면 원금·금리·기간·상환방식이 그 대출의 일반적인 조건으로 채워진다.
+    @AppStorage("sim.mtg.kind")      private var loanKind: LoanKind = .mortgage
 
     @Environment(\.modelContext) private var context
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
@@ -736,6 +745,36 @@ private struct MortgageSimSection: View {
         case equalPrincipal = "원금균등"
         case bullet = "만기일시"
         var id: String { rawValue }
+    }
+
+    enum LoanKind: String, CaseIterable, Identifiable {
+        case mortgage = "주담대"
+        case jeonse   = "전세대출"
+        case credit   = "신용대출"
+        case car      = "자동차 할부"
+        case minus    = "마이너스통장"
+        var id: String { rawValue }
+
+        // 자산 탭에 부채로 추가할 때 쓰는 정식 이름.
+        var assetName: String {
+            switch self {
+            case .mortgage: return "주택담보대출"
+            case .jeonse:   return "전세자금대출"
+            case .credit:   return "신용대출"
+            case .car:      return "자동차 할부"
+            case .minus:    return "마이너스통장"
+            }
+        }
+        // 종류별 일반적인 조건(2026 기준 근사) — 선택 시 입력칸에 시드된다.
+        var defaults: (principal: String, rate: String, years: String, method: RepayMethod) {
+            switch self {
+            case .mortgage: return ("300000000", "4.2", "30", .equalPayment)
+            case .jeonse:   return ("150000000", "3.8", "2",  .bullet)
+            case .credit:   return ("50000000",  "5.5", "5",  .equalPayment)
+            case .car:      return ("30000000",  "5.2", "5",  .equalPayment)
+            case .minus:    return ("30000000",  "6.0", "1",  .bullet)
+            }
+        }
     }
 
     private struct PayPoint: Identifiable {
@@ -795,6 +834,7 @@ private struct MortgageSimSection: View {
                 Text("대출 조건")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
+                loanKindChips
                 simInputRow("대출 원금", text: $principal, suffix: "원", money: true)
                 simMoneyChips($principal, steps: [("+1,000만", 10_000_000), ("+1억", 100_000_000), ("−1,000만", -10_000_000)])
                 simInputRow("연 이자율", text: $ratePct, suffix: "%", decimal: true)
@@ -875,9 +915,43 @@ private struct MortgageSimSection: View {
         }
     }
 
+    // 대출 종류 선택 칩 — 고르면 그 대출의 일반적인 조건으로 입력칸을 채운다.
+    private var loanKindChips: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(LoanKind.allCases) { k in
+                    let selected = loanKind == k
+                    Button {
+                        loanKind = k
+                        let d = k.defaults
+                        principal = d.principal
+                        ratePct = d.rate
+                        years = d.years
+                        method = d.method
+                        added = false
+                    } label: {
+                        Text(k.rawValue)
+                            .font(.caption.weight(.semibold))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(selected ? Theme.accent.opacity(0.2) : Theme.surfaceHigh)
+                            .foregroundStyle(selected ? Theme.accent : Theme.textPrimary)
+                            .clipShape(Capsule())
+                            .overlay(
+                                Capsule().stroke(selected ? Theme.accent.opacity(0.6) : Theme.hairline,
+                                                 lineWidth: 1)
+                            )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.vertical, 2)
+        }
+    }
+
     // 대출 조건을 부채 자산으로 만들어 카탈로그에 넣는다.
     private func addAsDebt() {
-        let asset = Asset(name: "주택담보대출", assetClass: .debt,
+        let asset = Asset(name: loanKind.assetName, assetClass: .debt,
                           amount: Double(principal) ?? 0,
                           incomeKind: .interest,
                           annualYieldPct: Double(ratePct) ?? 0,
@@ -922,7 +996,17 @@ private struct SavingsSimSection: View {
     enum SavingKind: String, CaseIterable, Identifiable {
         case deposit = "정기예금"
         case installment = "적금"
+        case parking = "파킹·CMA"
         var id: String { rawValue }
+
+        // 종류별 일반적인 금리 시드 — 선택 시 이자율 칸에 채워진다.
+        var defaultRate: String {
+            switch self {
+            case .deposit:     return "3.5"
+            case .installment: return "4.0"
+            case .parking:     return "3.0"
+            }
+        }
     }
     enum CompoundKind: String, CaseIterable, Identifiable {
         case simple = "단리"
@@ -953,6 +1037,14 @@ private struct SavingsSimSection: View {
                 interest = i > 0 ? d * ((pow(1 + i, Double(m)) - 1) / i) - total : 0
             }
             return (total, interest)
+        case .parking:
+            // 자유 입출금(파킹·CMA) — 원금 + 매달 자유 입금, 월 복리로 근사.
+            let p = Double(principal) ?? 0
+            let d = Double(monthly) ?? 0
+            var value = p
+            for _ in 0..<m { value = value * (1 + i) + d }
+            let total = p + d * Double(m)
+            return (total, max(0, value - total))
         }
     }
 
@@ -985,6 +1077,16 @@ private struct SavingsSimSection: View {
                 }
                 pts.append(SavPoint(month: k, value: contributed + interest * taxFactor))
             }
+        case .parking:
+            let p = Double(principal) ?? 0
+            let d = Double(monthly) ?? 0
+            var value = p
+            pts.append(SavPoint(month: 0, value: p))
+            for k in 1...m {
+                value = value * (1 + i) + d
+                let contributed = p + d * Double(k)
+                pts.append(SavPoint(month: k, value: contributed + max(0, value - contributed) * taxFactor))
+            }
         }
         return pts
     }
@@ -1005,20 +1107,36 @@ private struct SavingsSimSection: View {
                     ForEach(SavingKind.allCases) { Text($0.rawValue).tag($0) }
                 }
                 .pickerStyle(.segmented)
+                .onChange(of: kind) { _, newValue in
+                    ratePct = newValue.defaultRate
+                    added = false
+                }
 
-                if kind == .deposit {
+                switch kind {
+                case .deposit:
                     simInputRow("원금", text: $principal, suffix: "원", money: true)
                     simMoneyChips($principal, steps: [("+100만", 1_000_000), ("+1,000만", 10_000_000), ("−100만", -1_000_000)])
-                } else {
+                case .installment:
                     simInputRow("월 납입액", text: $monthly, suffix: "원", money: true)
+                    simMoneyChips($monthly, steps: [("+10만", 100_000), ("+50만", 500_000), ("−10만", -100_000)])
+                case .parking:
+                    simInputRow("현재 잔액", text: $principal, suffix: "원", money: true)
+                    simMoneyChips($principal, steps: [("+100만", 1_000_000), ("+1,000만", 10_000_000), ("−100만", -1_000_000)])
+                    simInputRow("월 추가 입금 (선택)", text: $monthly, suffix: "원", money: true)
                     simMoneyChips($monthly, steps: [("+10만", 100_000), ("+50만", 500_000), ("−10만", -100_000)])
                 }
                 simInputRow("기간", text: $months, suffix: "개월")
                 simInputRow("연 이자율", text: $ratePct, suffix: "%", decimal: true)
-                Picker("", selection: $compound) {
-                    ForEach(CompoundKind.allCases) { Text($0.rawValue).tag($0) }
+                if kind == .parking {
+                    Text("파킹·CMA는 매일 이자가 붙어 월 복리로 근사해서 계산해요.")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                } else {
+                    Picker("", selection: $compound) {
+                        ForEach(CompoundKind.allCases) { Text($0.rawValue).tag($0) }
+                    }
+                    .pickerStyle(.segmented)
                 }
-                .pickerStyle(.segmented)
                 Toggle(isOn: $taxed) {
                     Text("이자과세 15.4%")
                         .font(.subheadline)
@@ -1077,13 +1195,13 @@ private struct SavingsSimSection: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
 
-            // 정기예금은 지금 넣어둔 원금이 곧 현재 자산 → 현금·예금으로 바로 추가.
-            if kind == .deposit, (Double(principal) ?? 0) > 0 {
+            // 예금·파킹은 지금 넣어둔 원금이 곧 현재 자산 → 현금·예금으로 바로 추가.
+            if kind != .installment, (Double(principal) ?? 0) > 0 {
                 simActionButton(
-                    title: added ? "현금·예금에 추가됨" : "이 예금을 자산에 추가",
+                    title: added ? "현금·예금에 추가됨" : "이 \(kind == .deposit ? "예금" : "잔액")을 자산에 추가",
                     done: added,
-                    confirmTitle: "이 예금을 자산에 추가할까요?",
-                    confirmMessage: "원금 \(Fmt.krw(Double(principal) ?? 0))원이 ‘현금·예금’으로 등록되고, 연 \(ratePct)% 이자가 패시브 인컴에 반영됩니다.",
+                    confirmTitle: "자산에 추가할까요?",
+                    confirmMessage: "\(kind == .deposit ? "원금" : "잔액") \(Fmt.krw(Double(principal) ?? 0))원이 ‘현금·예금’으로 등록되고, 연 \(ratePct)% 이자가 패시브 인컴에 반영됩니다.",
                     isPresented: $showAddConfirm,
                     action: addAsCash
                 )
@@ -1091,9 +1209,9 @@ private struct SavingsSimSection: View {
         }
     }
 
-    // 정기예금 원금을 현금·예금 자산으로 만들어 카탈로그에 넣는다.
+    // 예금·파킹 원금을 현금·예금 자산으로 만들어 카탈로그에 넣는다.
     private func addAsCash() {
-        let asset = Asset(name: "정기예금", assetClass: .cash,
+        let asset = Asset(name: kind == .deposit ? "정기예금" : "파킹통장", assetClass: .cash,
                           amount: Double(principal) ?? 0,
                           incomeKind: .interest,
                           annualYieldPct: Double(ratePct) ?? 0,
@@ -1174,3 +1292,440 @@ private struct SavingsSimSection: View {
         .cardStyle()
     }
 }
+
+// MARK: - 투자 예측 (내 자산이 앞으로 어떻게 될까)
+
+// 보유 자산의 과거 기록(스냅샷)과 자산 종류별 일반 변동성을 함께 써서, 앞으로의
+// 자산 흐름을 몬테카를로로 추정한다. 정확한 예언이 아니라 '이 정도 범위' 감각용 —
+// 변동성이 큰 자산(코인·주식)이 많을수록 범위 밴드가 넓게 벌어진다.
+private struct InvestForecastSection: View {
+    @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
+    @Query(sort: \Asset.sortOrder) private var assets: [Asset]
+
+    @AppStorage("sim.invest.years")   private var yearsText = "5"
+    @AppStorage("sim.invest.monthly") private var monthlyAdd = "0"
+
+    // 예측에 쓰는 자산 종류 하나 — 현재액 + 가정한 연 수익률·변동성.
+    private struct ClassAssumption: Identifiable {
+        let id = UUID()
+        let assetClass: AssetClass
+        let current: Double
+        let mu: Double          // 연 기대수익률
+        let sigma: Double       // 연 변동성
+        let fromHistory: Bool   // 과거 기록으로 보정했는지
+    }
+
+    private struct BandPoint: Identifiable {
+        let id = UUID()
+        let month: Int
+        let low: Double     // 보수적 (하위 10%)
+        let mid: Double     // 중앙값
+        let high: Double    // 낙관적 (상위 10%)
+    }
+
+    // xorshift 고정 시드 난수 — 입력이 같으면 그래프도 같게(리렌더 안정).
+    private struct RNG {
+        var state: UInt64
+        mutating func uniform() -> Double {
+            state ^= state << 13; state ^= state >> 7; state ^= state << 17
+            return Double(state % 1_000_000) / 1_000_000
+        }
+        mutating func normal() -> Double {
+            let u1 = max(uniform(), 1e-9), u2 = uniform()
+            return sqrt(-2 * log(u1)) * cos(2 * .pi * u2)
+        }
+    }
+
+    // 자산 종류별 일반적인 연 수익률·변동성 (장기 통계 근사).
+    private static func prior(for ac: AssetClass) -> (mu: Double, sigma: Double) {
+        switch ac {
+        case .stocks:     return (0.07,  0.15)
+        case .fund:       return (0.06,  0.12)
+        case .crypto:     return (0.15,  0.60)
+        case .bond:       return (0.035, 0.05)
+        case .cash:       return (0.03,  0.005)
+        case .realEstate: return (0.04,  0.08)
+        case .pension:    return (0.04,  0.06)
+        case .jeonse:     return (0.0,   0.0)
+        case .deposit:    return (0.025, 0.01)
+        case .insurance:  return (0.03,  0.03)
+        default:          return (0.03,  0.05)
+        }
+    }
+
+    private var years: Int { min(30, max(1, Int(yearsText) ?? 5)) }
+
+    // 부채를 뺀, 값이 있는 자산 종류별 현재 합계.
+    private var currentByClass: [(ac: AssetClass, value: Double)] {
+        AssetClass.allCases.compactMap { ac in
+            guard ac != .debt else { return nil }
+            let v = assets.filter { $0.assetClass == ac }.reduce(0) { $0 + $1.netValue }
+            return v > 0 ? (ac, v) : nil
+        }
+    }
+
+    private var currentTotal: Double { currentByClass.reduce(0) { $0 + $1.value } }
+
+    // 과거 스냅샷에서 이 종류의 월 수익률을 추정해 일반값과 반반 섞는다.
+    // 기록엔 저축 입금도 섞여 있어 수익률이 부풀 수 있으니 상한을 함께 둔다.
+    private func estimate(for ac: AssetClass) -> (mu: Double, sigma: Double, fromHistory: Bool) {
+        let prior = Self.prior(for: ac)
+        let series = snapshots.compactMap { s -> (date: Date, value: Double)? in
+            let v = s.total(for: ac)
+            return v > 0 ? (s.date, v) : nil
+        }
+        var rets: [Double] = []
+        for k in 1..<max(1, series.count) {
+            let dtMonths = series[k].date.timeIntervalSince(series[k - 1].date) / 86_400 / 30.44
+            guard dtMonths > 0.25 else { continue }
+            let r = log(series[k].value / series[k - 1].value) / dtMonths
+            if r.isFinite { rets.append(max(-0.5, min(0.5, r))) }
+        }
+        guard rets.count >= 4 else { return (prior.mu, prior.sigma, false) }
+        let meanM = rets.reduce(0, +) / Double(rets.count)
+        let varM = rets.reduce(0) { $0 + pow($1 - meanM, 2) } / Double(max(1, rets.count - 1))
+        // 기록이 쌓일수록 과거 데이터의 가중치를 올린다 — 4개(1/3 남짓)부터 시작해
+        // 2년치(24개)면 70%까지. 입금이 섞인 왜곡은 상한 클램프로 계속 막는다.
+        let w = min(0.7, Double(rets.count) / 24)
+        let mu = max(-0.10, min(0.20, meanM * 12 * w + prior.mu * (1 - w)))
+        let sigma = max(0.005, min(0.80, sqrt(varM * 12) * w + prior.sigma * (1 - w)))
+        return (mu, sigma, true)
+    }
+
+    // 시장 공통 충격에 대한 민감도 — 주식·펀드는 거의 같이 움직이고, 코인·부동산도
+    // 어느 정도 따라간다. 위험자산이 동시에 빠지는 현실을 밴드에 반영한다.
+    private static func marketBeta(for ac: AssetClass) -> Double {
+        switch ac {
+        case .stocks, .fund: return 0.85
+        case .crypto:        return 0.5
+        case .realEstate:    return 0.3
+        case .bond:          return 0.15
+        default:             return 0.05
+        }
+    }
+
+    private var assumptions: [ClassAssumption] {
+        currentByClass.map { item in
+            let e = estimate(for: item.ac)
+            return ClassAssumption(assetClass: item.ac, current: item.value,
+                                   mu: e.mu, sigma: e.sigma, fromHistory: e.fromHistory)
+        }
+    }
+
+    // 비율(0.07)을 %로 바꿔 소수 둘째 자리까지 반올림 — 부동소수점 꼬리
+    // (7.000000000001%) 가 그대로 노출되지 않게 한다.
+    private func pct2(_ ratio: Double) -> String {
+        Fmt.trimNumber((ratio * 10_000).rounded() / 100)
+    }
+
+    private func pctile(_ sorted: [Double], _ p: Double) -> Double {
+        guard !sorted.isEmpty else { return 0 }
+        let idx = min(sorted.count - 1, max(0, Int(Double(sorted.count - 1) * p)))
+        return sorted[idx]
+    }
+
+    // 몬테카를로 — 종류별로 매달 (μ, σ) 로그정규 성장을 굴려 합산, 분위수 밴드로.
+    private func makeBand(_ asm: [ClassAssumption]) -> [BandPoint] {
+        guard !asm.isEmpty else { return [] }
+        let months = years * 12
+        let add = Double(monthlyAdd) ?? 0
+        let total = asm.reduce(0) { $0 + $1.current }
+        let weights = asm.map { $0.current / max(total, 1) }
+        let paths = 200
+        var totalsByMonth = Array(repeating: [Double](), count: months + 1)
+        var rng = RNG(state: 88_172_645_463_325_252)
+        for _ in 0..<paths {
+            var values = asm.map(\.current)
+            totalsByMonth[0].append(values.reduce(0, +))
+            for mIdx in 1...months {
+                // 이번 달의 시장 공통 충격 — 각 자산은 베타만큼 함께 흔들리고,
+                // 나머지는 자기만의 충격으로 움직인다.
+                let zMarket = rng.normal()
+                for c in asm.indices {
+                    let muM = asm[c].mu / 12
+                    let sigM = asm[c].sigma / sqrt(12)
+                    let beta = Self.marketBeta(for: asm[c].assetClass)
+                    let z = beta * zMarket + sqrt(max(0, 1 - beta * beta)) * rng.normal()
+                    let growth = exp(muM - sigM * sigM / 2 + sigM * z)
+                    values[c] = values[c] * growth + add * weights[c]
+                }
+                totalsByMonth[mIdx].append(values.reduce(0, +))
+            }
+        }
+        let step = max(1, months / 60)
+        return (0...months).compactMap { mIdx in
+            guard mIdx % step == 0 || mIdx == months else { return nil }
+            let sortedVals = totalsByMonth[mIdx].sorted()
+            return BandPoint(month: mIdx,
+                             low: pctile(sortedVals, 0.10),
+                             mid: pctile(sortedVals, 0.50),
+                             high: pctile(sortedVals, 0.90))
+        }
+    }
+
+    var body: some View {
+        let asm = assumptions
+        let band = makeBand(asm)
+        VStack(spacing: 20) {
+            if asm.isEmpty {
+                VStack(spacing: 10) {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                        .font(.system(.largeTitle))
+                        .foregroundStyle(Theme.textSecond)
+                    Text("자산 탭에 자산을 등록하면\n앞으로의 흐름을 예측해드려요.")
+                        .multilineTextAlignment(.center)
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.textSecond)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 50)
+                .cardStyle()
+            } else {
+                inputCard
+                forecastCard(band)
+                assumptionCard(asm)
+                // 온디바이스 파운데이션 모델 해석 — 숫자 예측은 몬테카를로가 하고,
+                // 모델은 그 결과의 '읽기'(리스크 구성·조언)만 맡는다.
+                #if canImport(FoundationModels)
+                if #available(iOS 26.0, *),
+                   case .available = SystemLanguageModel.default.availability {
+                    ForecastAICard(prompt: aiPrompt(asm, band: band))
+                }
+                #endif
+            }
+        }
+    }
+
+    // 모델에게 넘길 요약 — 구성·가정·예측 범위를 짧은 한국어 프롬프트로.
+    private func aiPrompt(_ asm: [ClassAssumption], band: [BandPoint]) -> String {
+        let comp = asm.map {
+            "\($0.assetClass.label) \(Fmt.krw($0.current))원(연 \(pct2($0.mu))%±\(pct2($0.sigma))%)"
+        }.joined(separator: ", ")
+        let tail = band.last.map {
+            "\(years)년 뒤 중앙값 \(Fmt.krw($0.mid))원, 보수적 \(Fmt.krw($0.low))원 ~ 낙관적 \(Fmt.krw($0.high))원"
+        } ?? ""
+        return """
+        다음은 한 개인 투자자의 자산 구성과 몬테카를로 예측 결과다.
+        구성: \(comp).
+        예측: \(tail).
+        위 숫자를 바탕으로, 포트폴리오의 변동성 구성이 예측 범위에 어떤 영향을 주는지와 \
+        범위를 좁히고 싶을 때 고려할 점을 한국어 존댓말 3문장 이내로 설명하라. \
+        새로운 숫자를 지어내지 말고, 특정 종목 추천은 하지 마라.
+        """
+    }
+
+    private var inputCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("예측 조건")
+                .font(.headline)
+                .foregroundStyle(Theme.textPrimary)
+            HStack(spacing: 8) {
+                ForEach([1, 3, 5, 10], id: \.self) { y in
+                    let selected = years == y
+                    Button {
+                        yearsText = String(y)
+                    } label: {
+                        Text("\(y)년")
+                            .font(.caption.weight(.semibold))
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 7)
+                            .background(selected ? Theme.accent.opacity(0.2) : Theme.surfaceHigh)
+                            .foregroundStyle(selected ? Theme.accent : Theme.textPrimary)
+                            .clipShape(Capsule())
+                            .overlay(
+                                Capsule().stroke(selected ? Theme.accent.opacity(0.6) : Theme.hairline,
+                                                 lineWidth: 1)
+                            )
+                    }
+                    .buttonStyle(.plain)
+                }
+                Spacer()
+            }
+            simInputRow("월 추가 투자 (선택)", text: $monthlyAdd, suffix: "원", money: true)
+            simMoneyChips($monthlyAdd, steps: [("+50만", 500_000), ("+100만", 1_000_000), ("−50만", -500_000)])
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    private func forecastCard(_ band: [BandPoint]) -> some View {
+        let last = band.last
+        let year1 = band.first { $0.month >= 12 }
+        return VStack(alignment: .leading, spacing: 14) {
+            Text("\(years)년 뒤 내 자산은")
+                .font(.headline)
+                .foregroundStyle(Theme.textPrimary)
+            if let last {
+                Text("\(Fmt.krw(last.mid))원")
+                    .font(.system(.title2, design: .rounded, weight: .bold))
+                    .foregroundStyle(Theme.accent)
+                Text("보수적 \(Fmt.krw(last.low))원 ~ 낙관적 \(Fmt.krw(last.high))원")
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            }
+
+            Chart {
+                ForEach(band) { p in
+                    AreaMark(x: .value("개월", p.month),
+                             yStart: .value("보수적", p.low),
+                             yEnd: .value("낙관적", p.high))
+                        .foregroundStyle(Theme.accent.opacity(0.14))
+                        .interpolationMethod(.catmullRom)
+                    LineMark(x: .value("개월", p.month), y: .value("중앙값", p.mid))
+                        .foregroundStyle(Theme.accent)
+                        .interpolationMethod(.catmullRom)
+                        .lineStyle(StrokeStyle(lineWidth: 2.5))
+                }
+                RuleMark(y: .value("지금", currentTotal))
+                    .foregroundStyle(Theme.hairline)
+                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 4]))
+                    .annotation(position: .top, alignment: .leading) {
+                        Text("지금 \(Fmt.krw(currentTotal))원")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+            }
+            .chartYAxis {
+                AxisMarks(position: .leading) { value in
+                    AxisGridLine().foregroundStyle(Theme.hairline)
+                    AxisValueLabel {
+                        if let v = value.as(Double.self) {
+                            Text("\(Fmt.krw(v))").font(.caption2).foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                }
+            }
+            .chartXAxis {
+                AxisMarks(values: .automatic(desiredCount: 5)) { value in
+                    AxisGridLine().foregroundStyle(Theme.hairline)
+                    if let mm = value.as(Int.self) {
+                        AxisValueLabel {
+                            Text(mm >= 12 ? "\(mm / 12)년" : "지금")
+                                .font(.caption2).foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                }
+            }
+            .frame(height: 220)
+
+            HStack(spacing: 0) {
+                if let year1 {
+                    simStat("1년 후 (중앙값)", "\(Fmt.krw(year1.mid))원")
+                }
+                if let last {
+                    simStat("\(years)년 후 범위", "\(Fmt.krw(last.low)) ~ \(Fmt.krw(last.high))원", tint: Theme.accent)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    private func assumptionCard(_ asm: [ClassAssumption]) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("종류별 가정")
+                .font(.headline)
+                .foregroundStyle(Theme.textPrimary)
+            ForEach(asm) { a in
+                HStack(spacing: 8) {
+                    Circle()
+                        .fill(Color(hex: a.assetClass.colorHex))
+                        .frame(width: 8, height: 8)
+                    Text(a.assetClass.label)
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.textPrimary)
+                    if a.fromHistory {
+                        Text("기록 기반")
+                            .font(.caption2.weight(.semibold))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Theme.accent.opacity(0.15))
+                            .foregroundStyle(Theme.accent)
+                            .clipShape(Capsule())
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 1) {
+                        Text("\(Fmt.krw(a.current))원")
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            .foregroundStyle(Theme.textPrimary)
+                        Text("연 \(pct2(a.mu))% ± \(pct2(a.sigma))%")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                }
+            }
+            Text("‘기록 기반’은 추이 기록으로 수익률을 보정한 종류예요. 기록에는 저축 입금도 섞여 있어 실제 수익률보다 높게 잡힐 수 있고, 그래서 종류별 일반값과 반반 섞어 계산합니다.")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+}
+
+// MARK: - 파운데이션 모델 해석 카드 (iOS 26 + Apple Intelligence 기기 전용)
+
+#if canImport(FoundationModels)
+// 예측 결과를 온디바이스 모델이 자연어로 풀어주는 카드 — 수치는 건드리지 않고
+// '읽는 법'만 돕는다. 버튼을 눌렀을 때만 생성하고, 결과는 참고용임을 명시한다.
+@available(iOS 26.0, *)
+private struct ForecastAICard: View {
+    let prompt: String
+
+    @State private var summary: String?
+    @State private var loading = false
+    @State private var failed = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Label("AI 해석", systemImage: "sparkles")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                if loading { ProgressView() }
+            }
+            if let summary {
+                Text(summary)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.textPrimary)
+                    .fixedSize(horizontal: false, vertical: true)
+            } else if !loading {
+                Button {
+                    generate()
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "text.bubble")
+                        Text(failed ? "다시 시도" : "이 예측, 어떻게 읽어야 할까?")
+                            .font(.subheadline.weight(.semibold))
+                    }
+                    .foregroundStyle(Theme.accent)
+                }
+                .buttonStyle(.borderless)
+            }
+            Text("기기 안에서 동작하는 애플 파운데이션 모델의 참고용 해석이에요. 투자 조언이 아닙니다.")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+        // 기간·구성이 바뀌어 프롬프트가 달라지면 이전 해석은 비운다.
+        .onChange(of: prompt) { _, _ in summary = nil; failed = false }
+    }
+
+    private func generate() {
+        loading = true
+        failed = false
+        let request = prompt
+        Task { @MainActor in
+            defer { loading = false }
+            do {
+                let session = LanguageModelSession()
+                summary = try await session.respond(to: request).content
+            } catch {
+                failed = true
+            }
+        }
+    }
+}
+#endif

@@ -9,13 +9,37 @@ struct RootView: View {
     @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
     @StateObject private var refresher = RefreshManager()
     @AppStorage("amountNumbersOnly") private var amountNumbersOnly = false
+    @AppStorage(DemoData.activeKey) private var demoActive = false
     @State private var selectedTab = 0
+
+    // 온보딩 대신 — 아무 데이터도 없는 첫 사용자거나, 데모를 보는 중일 때만
+    // 최상단에 데모 토글 배너를 띄운다.
+    private var showDemoBanner: Bool {
+        demoActive || (assets.isEmpty && snapshots.isEmpty)
+    }
+
+    // 자산 상태 지문 — 어느 탭에서든 자산이 추가·수정·삭제되거나 시세가 갱신되면
+    // 값이 바뀐다. 바뀔 때마다 오늘 기록을 자동 갱신해, 저장 버튼 없이도
+    // 변동이 생긴 날의 기록과 변화량이 앱에 그대로 남는다.
+    private var assetsFingerprint: Int {
+        var h = Hasher()
+        for a in assets {
+            h.combine(a.key)
+            h.combine(a.amount)
+            h.combine(a.quantity)
+            h.combine(a.costBasis)
+            h.combine(a.assetClassRaw)
+        }
+        return h.finalize()
+    }
 
     var body: some View {
         // 금액 표기 모드를 전역 포매터에 반영. 이 값을 읽으므로 토글이 바뀌면
         // RootView가 다시 그려지고, 그 안에서 만들어진 모든 탭도 새 표기로 갱신된다.
         let _ = (Fmt.numbersOnly = amountNumbersOnly)
         AppLockGate {
+            VStack(spacing: 0) {
+            if showDemoBanner { demoBanner }
             TabView(selection: $selectedTab) {
             DashboardView()
                 .tabItem { Label("대시보드", systemImage: "flame.fill") }
@@ -50,6 +74,13 @@ struct RootView: View {
             )
         }
         .onAppear { bootstrapSettings() }
+        // 자산에 변동이 생기면(어느 탭이든) 오늘 기록을 자동 갱신 — 수동 저장 불필요.
+        .onChange(of: assetsFingerprint) { _, _ in
+            let s = settingsList.first ?? FireSettings()
+            refresher.upsertCurrentPeriodSnapshot(
+                assets: assets, settings: s, snapshots: snapshots, context: context
+            )
+        }
         .environmentObject(refresher)
         // 앱 시작 시 — 마지막 갱신이 7일 이상 지났으면 시세·배당을 자동 갱신하고,
         // 이번 달 기록이 없으면 최신 평가액으로 월 1회 자동 스냅샷을 남긴다.
@@ -63,6 +94,48 @@ struct RootView: View {
             )
         }
         }
+        }
+    }
+
+    // 최상단 데모 토글 배너 — 온보딩 대신, 스위치 하나로 데모 데이터를 넣었다 뺐다.
+    private var demoBanner: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "sparkles")
+                .font(.subheadline)
+                .foregroundStyle(Theme.accent)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(demoActive ? "데모 데이터로 보는 중" : "처음이신가요?")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                Text(demoActive
+                     ? "끄면 원래 내 데이터로 그대로 돌아가요."
+                     : "켜면 가상 인물의 자산으로 앱을 둘러볼 수 있어요.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            Spacer()
+            Toggle("", isOn: demoToggleBinding)
+                .labelsHidden()
+                .tint(Theme.accent)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(Theme.surface)
+        .overlay(alignment: .bottom) { Theme.hairline.frame(height: 0.5) }
+    }
+
+    // 켜면 지금 데이터를 스태시에 보관하고 데모로, 끄면 스태시에서 그대로 복귀 —
+    // 데이터가 사라지지 않으니 확인 없이 바로 토글한다.
+    private var demoToggleBinding: Binding<Bool> {
+        Binding(
+            get: { demoActive },
+            set: { on in
+                withAnimation {
+                    if on { try? DemoData.enable(context: context) }
+                    else { try? DemoData.disable(context: context) }
+                }
+            }
+        )
     }
 
     // Ensure exactly one settings record exists.

@@ -63,6 +63,9 @@ struct SettingsView: View {
     // load() 중에는 onChange→persist 연쇄 저장을 막는 가드.
     @State private var isLoading = false
 
+    // 데모 데이터 토글 상태 — 내 데이터와 데모 데이터를 오간다.
+    @AppStorage(DemoData.activeKey) private var demoActive = false
+
     var body: some View {
         NavigationStack {
             settingsForm
@@ -79,6 +82,8 @@ struct SettingsView: View {
             passiveIncomeSection
             apiSection
             backupSection
+            demoSection
+            DeveloperContactSection()
         }
         .navigationTitle("설정")
         .scrollIndicators(.hidden)
@@ -338,6 +343,54 @@ struct SettingsView: View {
         }
     }
 
+    // MARK: - 데모 데이터
+
+    // 가상 인물(36세 직장인)의 데이터와 내 데이터를 토글로 오간다. 켜면 지금
+    // 데이터가 스태시 파일에 보관되고, 끄면 그대로 돌아오므로 확인이 필요 없다.
+    private var demoSection: some View {
+        Section {
+            Toggle(isOn: demoToggleBinding) {
+                Label("데모 데이터", systemImage: "sparkles")
+            }
+            .tint(Theme.accent)
+        } header: {
+            Text("테스트")
+        } footer: {
+            Text(demoActive
+                 ? "끄면 원래 내 데이터로 그대로 돌아갑니다. 데모에서 바꾼 내용은 저장되지 않아요."
+                 : "켜면 내 데이터는 안전하게 보관되고, 가상 인물(36세 직장인, 55세 은퇴 목표)의 자산·9개월 기록으로 자산·추이·계산·대시보드를 둘러볼 수 있어요. 끄면 내 데이터가 그대로 돌아옵니다.")
+        }
+    }
+
+    private var demoToggleBinding: Binding<Bool> {
+        Binding(
+            get: { demoActive },
+            set: { on in
+                if on { enableDemo() } else { disableDemo() }
+            }
+        )
+    }
+
+    private func enableDemo() {
+        do {
+            try DemoData.enable(context: context)
+            load()   // 화면 입력칸도 데모 설정값으로 새로고침.
+            show(message: "데모 데이터로 전환했어요. 자산·추이·계산 탭을 확인해보세요. 토글을 끄면 내 데이터가 그대로 돌아옵니다.")
+        } catch {
+            show(message: "데모 데이터를 넣지 못했어요: \(error.localizedDescription)")
+        }
+    }
+
+    private func disableDemo() {
+        do {
+            try DemoData.disable(context: context)
+            load()
+            show(message: "내 데이터로 돌아왔어요.")
+        } catch {
+            show(message: "데이터를 되돌리지 못했어요: \(error.localizedDescription)")
+        }
+    }
+
     private func exportBackup() {
         do {
             shareURL = try BackupManager.exportFileURL(context: context)
@@ -557,6 +610,28 @@ struct SettingsView: View {
         target.kisAppSecret = kisAppSecret
         target.dataGoKey = dataGoKey
         try? context.save()
+    }
+}
+
+// MARK: - 개발자 문의
+struct DeveloperContactSection: View {
+    var body: some View {
+        Section {
+            Link(destination: URL(string: "mailto:leeo@kakao.com")!) {
+                Label("이메일로 문의하기", systemImage: "envelope")
+                    .foregroundStyle(Theme.accent)
+            }
+            Link(destination: URL(string: "https://instagram.com/lee25_ios")!) {
+                Label("인스타그램 DM (@lee25_ios)", systemImage: "paperplane")
+                    .foregroundStyle(Theme.accent)
+            }
+        } header: {
+            Text("개발자에게 문의")
+        } footer: {
+            Text("버그 제보와 기능 제안을 환영합니다.")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+        }
     }
 }
 

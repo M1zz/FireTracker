@@ -1487,13 +1487,13 @@ struct DashboardView: View {
     private var allocationSlices: [AllocationSlice] {
         var slices = assetSlices.map {
             AllocationSlice(id: $0.0.rawValue, label: $0.0.label,
-                            amount: $0.1, color: Color(hex: $0.0.colorHex))
+                            amount: $0.1, color: Color(hexCode: $0.0.colorHex))
         }
         if effectiveMode == .net && totalDebt > 0 {
             slices.append(AllocationSlice(id: AssetClass.debt.rawValue,
                                           label: AssetClass.debt.label,
                                           amount: totalDebt,
-                                          color: Color(hex: AssetClass.debt.colorHex)))
+                                          color: Color(hexCode: AssetClass.debt.colorHex)))
         }
         return slices
     }

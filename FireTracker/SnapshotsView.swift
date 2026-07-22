@@ -124,7 +124,7 @@ struct SnapshotDetail: View {
                     ForEach(snapshot.entries.sorted { $0.amount > $1.amount }) { entry in
                         HStack(spacing: 10) {
                             Circle()
-                                .fill(Color(hex: entry.assetClass.colorHex))
+                                .fill(Color(hexCode: entry.assetClass.colorHex))
                                 .frame(width: 8, height: 8)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(entry.name.isEmpty ? entry.assetClass.label : entry.name)

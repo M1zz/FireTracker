@@ -1,9 +1,14 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import LeeoKit
 
 @main
 struct FireTrackerApp: App {
+    init() {
+        LeeoEngagement.shared.registerLaunch()
+    }
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             FireSettings.self,
@@ -35,6 +40,7 @@ struct FireTrackerApp: App {
                     // 지워도 직전 상태로 복구할 수 있는 안전망.
                     BackupManager.autoBackup(context: sharedModelContainer.mainContext)
                 }
+                .leeoSatisfactionCheck(FireTrackerSpec.self)
         }
         .modelContainer(sharedModelContainer)
     }

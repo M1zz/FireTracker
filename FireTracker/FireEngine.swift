@@ -216,7 +216,7 @@ extension Binding where Value == String {
 }
 
 extension Color {
-    init(hex: String) {
+    init(hexCode hex: String) {
         let scanner = Scanner(string: hex)
         var rgb: UInt64 = 0
         scanner.scanHexInt64(&rgb)

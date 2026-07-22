@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import LocalAuthentication
 import UniformTypeIdentifiers
+import LeeoKit
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var context
@@ -83,6 +84,11 @@ struct SettingsView: View {
             apiSection
             backupSection
             demoSection
+            Section {
+                LeeoSupportSection<FireTrackerSpec>()
+            } header: {
+                Text("지원")
+            }
             DeveloperContactSection()
         }
         .navigationTitle("설정")

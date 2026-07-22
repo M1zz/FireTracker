@@ -1629,7 +1629,7 @@ private struct InvestForecastSection: View {
             ForEach(asm) { a in
                 HStack(spacing: 8) {
                     Circle()
-                        .fill(Color(hex: a.assetClass.colorHex))
+                        .fill(Color(hexCode: a.assetClass.colorHex))
                         .frame(width: 8, height: 8)
                     Text(a.assetClass.label)
                         .font(.subheadline)

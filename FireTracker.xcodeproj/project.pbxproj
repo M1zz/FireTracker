@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1565B7348B6849C756363468 /* FireTrackerSpec.swift */; };
 		A1000001 /* FireTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* FireTrackerApp.swift */; };
 		A1000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000002 /* Models.swift */; };
 		A1000003 /* FireEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000003 /* FireEngine.swift */; };
@@ -24,9 +25,11 @@
 		A100000F /* BackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000F /* BackupManager.swift */; };
 		A1000010 /* ReflectionTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000010 /* ReflectionTips.swift */; };
 		A1000011 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000011 /* DemoData.swift */; };
+		EE2A5530FE505FB7D9D0AFE6 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2FA7A0D0A2BBD3B0B029E932 /* LeeoKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1565B7348B6849C756363468 /* FireTrackerSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerSpec.swift; sourceTree = "<group>"; };
 		B0000000 /* FireTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FireTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1000001 /* FireTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireTrackerApp.swift; sourceTree = "<group>"; };
 		B1000002 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
@@ -52,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE2A5530FE505FB7D9D0AFE6 /* LeeoKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +90,7 @@
 				B1000010 /* ReflectionTips.swift */,
 				B1000011 /* DemoData.swift */,
 				B100000A /* Assets.xcassets */,
+				1565B7348B6849C756363468 /* FireTrackerSpec.swift */,
 			);
 			path = FireTracker;
 			sourceTree = "<group>";
@@ -114,6 +119,9 @@
 			dependencies = (
 			);
 			name = FireTracker;
+			packageProductDependencies = (
+				2FA7A0D0A2BBD3B0B029E932 /* LeeoKit */,
+			);
 			productName = FireTracker;
 			productReference = B0000000 /* FireTracker.app */;
 			productType = "com.apple.product-type.application";
@@ -143,6 +151,9 @@
 				ko,
 			);
 			mainGroup = D0000000;
+			packageReferences = (
+				BEE699AD62A47D748947EC6E /* XCLocalSwiftPackageReference "LeeoKit" */,
+			);
 			productRefGroup = D0000002 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -184,6 +195,7 @@
 				A100000F /* BackupManager.swift in Sources */,
 				A1000010 /* ReflectionTips.swift in Sources */,
 				A1000011 /* DemoData.swift in Sources */,
+				66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,6 +380,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		BEE699AD62A47D748947EC6E /* XCLocalSwiftPackageReference "LeeoKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../LeeoKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2FA7A0D0A2BBD3B0B029E932 /* LeeoKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BEE699AD62A47D748947EC6E /* XCLocalSwiftPackageReference "LeeoKit" */;
+			productName = LeeoKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = G0000000 /* Project object */;
 }

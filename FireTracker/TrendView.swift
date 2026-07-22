@@ -521,7 +521,7 @@ struct TrendView: View {
                     // 카테고리 헤더: 아이콘 + 이름 + 카테고리 합계 변화.
                     HStack(spacing: 6) {
                         Circle()
-                            .fill(Color(hex: g.cls.colorHex))
+                            .fill(Color(hexCode: g.cls.colorHex))
                             .frame(width: 8, height: 8)
                         Text(g.cls.label)
                             .font(.caption.weight(.semibold))
@@ -786,7 +786,7 @@ struct TrendView: View {
                         HStack(spacing: 8) {
                             ForEach(comp, id: \.0) { item in
                                 HStack(spacing: 4) {
-                                    Circle().fill(Color(hex: item.0.colorHex)).frame(width: 7, height: 7)
+                                    Circle().fill(Color(hexCode: item.0.colorHex)).frame(width: 7, height: 7)
                                     Text(item.0.label).font(.caption2).foregroundStyle(Theme.textSecond)
                                     Text("\(Fmt.krw(item.1))원").font(.caption2.weight(.semibold)).foregroundStyle(Theme.textPrimary)
                                 }
@@ -807,7 +807,7 @@ struct TrendView: View {
                                 x: .value("기간", s.date, unit: period.component),
                                 y: .value("금액", amount)
                             )
-                            .foregroundStyle(Color(hex: ac.colorHex))
+                            .foregroundStyle(Color(hexCode: ac.colorHex))
                         }
                     }
                 }
@@ -834,7 +834,7 @@ struct TrendView: View {
             }
             .chartForegroundStyleScale(
                 domain: present.map { $0.label },
-                range: present.map { Color(hex: $0.colorHex) }
+                range: present.map { Color(hexCode: $0.colorHex) }
             )
             .chartYAxis { krwYAxis() }
             .chartXSelection(value: $allocSel)

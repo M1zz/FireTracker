@@ -473,7 +473,7 @@ struct AssetsView: View {
                 Button { startNewAsset(route.cls, lock: true) } label: {
                     HStack(spacing: 10) {
                         Circle()
-                            .fill(Color(hex: route.cls.colorHex))
+                            .fill(Color(hexCode: route.cls.colorHex))
                             .frame(width: 8, height: 8)
                         VStack(alignment: .leading, spacing: 1) {
                             HStack(spacing: 6) {
@@ -652,7 +652,7 @@ struct AssetsView: View {
                     innerRadius: .ratio(0.62),
                     angularInset: 2
                 )
-                .foregroundStyle(Color(hex: item.assetClass.colorHex))
+                .foregroundStyle(Color(hexCode: item.assetClass.colorHex))
                 .cornerRadius(4)
                 .opacity(selSlice == nil || selSlice?.assetClass == item.assetClass ? 1 : 0.3)
             }
@@ -669,7 +669,7 @@ struct AssetsView: View {
                             .foregroundStyle(Theme.textSecond)
                         Text("\(Fmt.krw(selSlice?.amount ?? sum))원")
                             .font(.system(.subheadline, design: .rounded).weight(.bold))
-                            .foregroundStyle(selSlice.map { Color(hex: $0.assetClass.colorHex) } ?? Theme.textPrimary)
+                            .foregroundStyle(selSlice.map { Color(hexCode: $0.assetClass.colorHex) } ?? Theme.textPrimary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.5)
                         if let selSlice, sum > 0 {
@@ -693,7 +693,7 @@ struct AssetsView: View {
                     let selected = selSlice?.assetClass == item.assetClass
                     HStack(spacing: 10) {
                         Circle()
-                            .fill(Color(hex: item.assetClass.colorHex))
+                            .fill(Color(hexCode: item.assetClass.colorHex))
                             .frame(width: 10, height: 10)
                         Text(item.assetClass.label)
                             .font(.subheadline)
@@ -709,7 +709,7 @@ struct AssetsView: View {
                     }
                     .padding(.vertical, 6)
                     .padding(.horizontal, 8)
-                    .background(selected ? Color(hex: item.assetClass.colorHex).opacity(0.14) : Color.clear)
+                    .background(selected ? Color(hexCode: item.assetClass.colorHex).opacity(0.14) : Color.clear)
                     .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                     .contentShape(Rectangle())
                     .onTapGesture {
@@ -759,7 +759,7 @@ struct AssetsView: View {
                         VStack(spacing: 5) {
                             Image(systemName: owned ? ac.symbolName : "plus")
                                 .font(.subheadline)
-                                .foregroundStyle(owned ? Color(hex: ac.colorHex) : Theme.textSecond.opacity(0.5))
+                                .foregroundStyle(owned ? Color(hexCode: ac.colorHex) : Theme.textSecond.opacity(0.5))
                                 .frame(height: 18)
                             Text(ac.label)
                                 .font(.caption2)
@@ -769,11 +769,11 @@ struct AssetsView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 9)
-                        .background(owned ? Color(hex: ac.colorHex).opacity(0.13) : Theme.surface)
+                        .background(owned ? Color(hexCode: ac.colorHex).opacity(0.13) : Theme.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                         .overlay(
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .stroke(owned ? Color(hex: ac.colorHex).opacity(0.45) : Theme.hairline,
+                                .stroke(owned ? Color(hexCode: ac.colorHex).opacity(0.45) : Theme.hairline,
                                         style: owned ? StrokeStyle(lineWidth: 1)
                                                      : StrokeStyle(lineWidth: 1, dash: [4, 3]))
                         )
@@ -804,7 +804,7 @@ struct AssetsView: View {
     private func row(_ asset: Asset) -> some View {
         HStack(spacing: 10) {
             Circle()
-                .fill(Color(hex: asset.assetClass.colorHex))
+                .fill(Color(hexCode: asset.assetClass.colorHex))
                 .frame(width: 8, height: 8)
             VStack(alignment: .leading, spacing: 3) {
                 Text(asset.name.isEmpty ? asset.displayClassLabel : asset.name)
@@ -814,7 +814,7 @@ struct AssetsView: View {
                 HStack(spacing: 6) {
                     if asset.assetClass == .realEstate {
                         Text(asset.realEstateUse.label)
-                            .foregroundStyle(Color(hex: asset.assetClass.colorHex))
+                            .foregroundStyle(Color(hexCode: asset.assetClass.colorHex))
                     } else {
                         Text(asset.displayClassLabel)
                             .foregroundStyle(Theme.textSecond)
@@ -962,7 +962,7 @@ struct AssetsView: View {
                     .foregroundStyle(Theme.textSecond)
                     .frame(width: 10)
                 Circle()
-                    .fill(Color(hex: group.assetClass.colorHex))
+                    .fill(Color(hexCode: group.assetClass.colorHex))
                     .frame(width: 8, height: 8)
                 Text(group.title)
                     .font(.subheadline.weight(.semibold))
@@ -1020,7 +1020,7 @@ struct CategoryPickerSheet: View {
                         Button { onPick(ac, "") } label: {
                             HStack(spacing: 10) {
                                 Circle()
-                                    .fill(Color(hex: ac.colorHex))
+                                    .fill(Color(hexCode: ac.colorHex))
                                     .frame(width: 8, height: 8)
                                 Text(ac.label)
                                     .foregroundStyle(Theme.textPrimary)
@@ -1194,7 +1194,7 @@ struct AssetEditor: View {
                         HStack {
                             Text(lockedTitle)
                                 .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Color(hex: assetClass.colorHex))
+                                .foregroundStyle(Color(hexCode: assetClass.colorHex))
                             Spacer()
                             if let t = classTotal, t != 0 {
                                 Text("현재 \(Fmt.krw(t))원")
@@ -2644,7 +2644,7 @@ struct NetWorthBreakdownView: View {
     private func breakdownRow(_ a: Asset, value: Double, sign: String, tint: Color) -> some View {
         HStack(spacing: 10) {
             Circle()
-                .fill(Color(hex: a.assetClass.colorHex))
+                .fill(Color(hexCode: a.assetClass.colorHex))
                 .frame(width: 8, height: 8)
             VStack(alignment: .leading, spacing: 1) {
                 Text(a.name.isEmpty ? a.assetClass.label : a.name)

@@ -5,7 +5,7 @@ import SwiftUI
 extension Color {
     init(light: String, dark: String) {
         self = Color(uiColor: UIColor { trait in
-            UIColor(Color(hex: trait.userInterfaceStyle == .dark ? dark : light))
+            UIColor(Color(hexCode: trait.userInterfaceStyle == .dark ? dark : light))
         })
     }
 }
@@ -17,7 +17,7 @@ enum Theme {
     static let surface     = Color(light: "FFFFFF", dark: "1C1916")
     static let surfaceHigh = Color(light: "F0EAE0", dark: "262119")
     // Same gold in both modes so black-on-accent buttons stay legible.
-    static let accent      = Color(hex: "E8A33D")
+    static let accent      = Color(hexCode: "E8A33D")
     static let accentSoft  = accent.opacity(0.15)
     static let positive    = Color(light: "2E9E78", dark: "4CAF8E")
     static let negative    = Color(light: "D6493B", dark: "EF6B5B")
@@ -30,10 +30,10 @@ enum Theme {
 
     // Dynamic UIColors for UIKit appearance proxies (nav/tab bars).
     static let surfaceUI = UIColor { trait in
-        UIColor(Color(hex: trait.userInterfaceStyle == .dark ? "1C1916" : "FFFFFF"))
+        UIColor(Color(hexCode: trait.userInterfaceStyle == .dark ? "1C1916" : "FFFFFF"))
     }
     static let bgUI = UIColor { trait in
-        UIColor(Color(hex: trait.userInterfaceStyle == .dark ? "12100E" : "FAF6F0"))
+        UIColor(Color(hexCode: trait.userInterfaceStyle == .dark ? "12100E" : "FAF6F0"))
     }
 }
 

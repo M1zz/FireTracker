@@ -17,7 +17,15 @@ struct FireTrackerApp: App {
             Asset.self,
             AssetDetail.self
         ])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        // 이 앱의 SwiftData 저장소는 기기 안에만 둔다(백업은 BackupManager가 파일로 담당).
+        // cloudKitDatabase를 지정하지 않으면, entitlements에 있는 iCloud 권한
+        // (피드백 허브 LeeoKit용 컨테이너)을 보고 SwiftData가 CloudKit 동기화를 자동으로 켠다.
+        // 그러면 "모든 속성은 optional이거나 기본값이 있어야 하고 관계도 optional이어야 한다"는
+        // CloudKit 요구를 모델이 못 맞춰 스토어 로드가 실패하고 실행 즉시 죽는다.
+        // 나중에 진짜 iCloud 동기화를 붙일 땐 이 앱 전용 컨테이너를 만들고
+        // 모델 속성에 전부 기본값(관계는 optional)을 주는 작업이 먼저다.
+        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false,
+                                        cloudKitDatabase: .none)
         do {
             return try ModelContainer(for: schema, configurations: [config])
         } catch {

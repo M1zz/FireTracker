@@ -223,6 +223,14 @@
   - 설정·자산에서 프리필(나이·생활비·목표 월수령액·수익률·현재 자산), 금액 빠른 증감 칩(+100만 등)
   - 생애주기에 월 패시브 인컴 입력 추가 — 등록 자산의 현재 패시브 인컴 프리필, 일할 때·은퇴 후 모두 유입, 물가만큼 성장 가정
 
+- [x] 실행 즉시 크래시 수정 — SwiftData가 CloudKit 동기화를 자동으로 켜던 문제 (2026-07-30)
+  - 증상: `Could not create ModelContainer: loadIssueModelContainer` → 앱이 뜨자마자 죽음
+  - 원인: entitlements의 iCloud(피드백 허브 `iCloud.com.Ysoup.FeedbackHub`, 커밋 78c44c7)를 보고
+    SwiftData가 CloudKit 미러링을 자동 활성화 → "모든 속성 optional/기본값, 관계도 optional" 요구를
+    모델이 못 맞춰(`Asset: amount`, `FireSettings: targetAnnualExpense`, 관계 `Asset: details` 등) 스토어 로드 실패
+  - 조치: `ModelConfiguration(..., cloudKitDatabase: .none)`으로 미러링 명시적 차단(데이터는 기기 로컬 + BackupManager 파일 백업)
+  - 나중에 진짜 iCloud 동기화를 붙이려면 앱 전용 컨테이너 + 모델 속성 전부 기본값(관계 optional)이 선행 조건
+
 ## 다음에 해볼 만한 것
 - [ ] (논의) 부채만 등록하고 대응 현금을 안 넣으면 총자산0/순자산−로 보임 — 부채 잔액을 현금으로 자동 인식 옵션 검토
 - [ ] '만약에' 시나리오 확장: '투자했더라면', '빚 안 갚고 뒀다면 낸 이자' 추가 가능

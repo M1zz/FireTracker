@@ -113,6 +113,8 @@ enum BackupManager {
         "sim.mtg.principal", "sim.mtg.ratePct", "sim.mtg.years", "sim.mtg.method",
         "sim.sav.kind", "sim.sav.principal", "sim.sav.monthly", "sim.sav.months",
         "sim.sav.ratePct", "sim.sav.compound", "sim.sav.goal",
+        // 월급(실질임금) — 연도별 기록은 JSON 문자열 한 칸에 담긴다.
+        "sim.wage.entries", "sim.wage.mode",
     ]
     static let boolKeys: [String] = [
         "sim.life.seeded", "sim.sav.taxed", "amountNumbersOnly", "appLockEnabled",

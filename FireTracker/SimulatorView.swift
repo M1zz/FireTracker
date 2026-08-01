@@ -8,7 +8,8 @@ import FoundationModels
 
 // 계산 탭 — 참고용 시뮬레이터 모음.
 // 생애주기(모으고 쓰는 인생 자산 곡선) · 대출(종류별 상환 흐름) ·
-// 저축(예금·적금·파킹 만기 수령액) · 투자(내 자산의 앞으로의 범위 예측).
+// 저축(예금·적금·파킹 만기 수령액) · 투자(내 자산의 앞으로의 범위 예측) ·
+// 월급(과거 월급을 물가로 나눈 실질임금 = 내 구매력 변화).
 struct SimulatorView: View {
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query private var settingsList: [FireSettings]
@@ -27,6 +28,7 @@ struct SimulatorView: View {
         case loan = "대출"
         case savings = "저축"
         case invest = "투자"
+        case wage = "월급"
         var id: String { rawValue }
     }
 
@@ -49,6 +51,8 @@ struct SimulatorView: View {
                         SavingsSimSection()
                     case .invest:
                         InvestForecastSection()
+                    case .wage:
+                        WageSimSection()
                     }
 
                     Text("입력값을 바탕으로 계산한 참고용 결과예요. 세금·수수료·시장 변동에 따라 실제와 다를 수 있습니다.")
@@ -1657,6 +1661,541 @@ private struct InvestForecastSection: View {
             Text("‘기록 기반’은 추이 기록으로 수익률을 보정한 종류예요. 기록에는 저축 입금도 섞여 있어 실제 수익률보다 높게 잡힐 수 있고, 그래서 종류별 일반값과 반반 섞어 계산합니다.")
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+}
+
+// 연도를 문자열로 — Text 보간에 Int를 그대로 넣으면 "2,026년"처럼 천 단위가 끼어든다.
+private func yearLabel(_ year: Int) -> String { String(year) }
+
+// MARK: - 월급 · 실질임금(구매력)
+
+// 과거 월급을 연도별로 적어두면 그때의 물가로 나눠 '실질임금'을 계산한다.
+// 명목 월급이 올라도 물가가 더 오르면 실제로 살 수 있는 양(구매력)은 줄어드는데,
+// 그 차이를 두 가지 기준으로 보여준다.
+//   · 지금 돈 기준 — 그때 월급이 오늘 물가로 얼마인지 환산 (× 기준연도 CPI ÷ 그해 CPI)
+//   · 2020년 기준 — 명목 ÷ CPI × 100, 통계청·고용노동부가 쓰는 실질임금 그 자체
+// 물가표는 나라별(CPIData)이라 해외 근무·이민 이력도 그 나라 물가로 계산된다.
+private struct WageSimSection: View {
+    @AppStorage("sim.wage.entries") private var entriesJSON = ""
+    @AppStorage("sim.wage.mode")    private var realMode: RealMode = .today
+    @AppStorage("sim.wage.country") private var countryCode = "KR"
+
+    @State private var entries: [WageEntry] = []
+    @State private var newYear = WageSimSection.thisYear
+    @State private var loaded = false
+
+    private static var thisYear: Int { Calendar.current.component(.year, from: Date()) }
+    // 물가를 적용할 나라 — 금액 표기(통화)도 여기를 따른다.
+    private var country: CPICountry { CPIData.country(countryCode) }
+    // 환산 기준연도 — 올해. 아직 확정 물가가 없으면 그 나라 표의 마지막 해로 맞춘다.
+    private var baseYear: Int { min(Self.thisYear, country.lastYear) }
+
+    enum RealMode: String, CaseIterable, Identifiable {
+        case today = "지금 돈 기준"
+        case index2020 = "2020년 기준"
+        var id: String { rawValue }
+    }
+
+    private struct WageEntry: Codable, Identifiable, Equatable {
+        var id = UUID()
+        var year: Int
+        var monthly: Double
+    }
+
+    // 한 해치 계산 결과. 증감률은 '직전 기록과의 간격'으로 연평균 환산한다
+    // (2016 → 2021처럼 띄엄띄엄 적어도 왜곡되지 않게).
+    private struct WageRow: Identifiable {
+        var id: Int { year }
+        let year: Int
+        let nominal: Double
+        let realToday: Double    // 올해 물가로 환산한 금액
+        let realIndexed: Double  // 명목 ÷ CPI × 100 (2020년 물가 기준 금액)
+        let gapYears: Int
+        let nominalRate: Double? // 내 월급 인상률(연평균)
+        let inflationRate: Double? // 같은 구간 물가상승률(연평균)
+        let realRate: Double?    // 실질임금 증감률(연평균)
+    }
+
+    private var validEntries: [WageEntry] {
+        entries.filter { $0.monthly > 0 }.sorted { $0.year < $1.year }
+    }
+
+    private var rows: [WageRow] {
+        let list = validEntries
+        return list.enumerated().map { i, e in
+            let cpi = country.cpi(e.year)
+            let realIdx = cpi > 0 ? e.monthly / cpi * 100 : 0
+            let realToday = realIdx * country.cpi(baseYear) / 100
+            var gap = 0
+            var nRate: Double?
+            var iRate: Double?
+            var rRate: Double?
+            if i > 0 {
+                let prev = list[i - 1]
+                gap = max(1, e.year - prev.year)
+                let n = 1.0 / Double(gap)
+                let prevCPI = country.cpi(prev.year)
+                let prevReal = prevCPI > 0 ? prev.monthly / prevCPI * 100 : 0
+                if prev.monthly > 0 { nRate = pow(e.monthly / prev.monthly, n) - 1 }
+                if prevCPI > 0 { iRate = pow(cpi / prevCPI, n) - 1 }
+                if prevReal > 0 { rRate = pow(realIdx / prevReal, n) - 1 }
+            }
+            return WageRow(year: e.year, nominal: e.monthly, realToday: realToday,
+                           realIndexed: realIdx, gapYears: gap,
+                           nominalRate: nRate, inflationRate: iRate, realRate: rRate)
+        }
+    }
+
+    // 첫 기록 → 마지막 기록 구간 요약.
+    private var span: (first: WageRow, last: WageRow, years: Int)? {
+        let r = rows
+        guard let f = r.first, let l = r.last, f.year != l.year else { return nil }
+        return (f, l, max(1, l.year - f.year))
+    }
+
+    var body: some View {
+        VStack(spacing: 20) {
+            inputCard
+
+            if let span {
+                purchasingPowerCard(span)
+                if rows.count >= 2 { chartCard }
+                yearlyCard
+                summaryCard(span)
+            } else if rows.count == 1, let only = rows.first {
+                singleEntryCard(only)
+            }
+
+            Text(sourceNote)
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .onAppear(perform: load)
+        .onChange(of: entries) { _, _ in save() }
+        .onChange(of: countryCode) { _, _ in
+            newYear = min(max(newYear, country.firstYear), max(Self.thisYear, country.lastYear))
+        }
+    }
+
+    // 자료 출처 + 그 나라 확정 물가가 어디까지인지.
+    private var sourceNote: String {
+        let range = "\(yearLabel(country.firstYear))~\(yearLabel(country.lastYear))년"
+        let clamped = Self.thisYear > country.lastYear
+            ? " \(yearLabel(country.lastYear))년 이후 월급은 \(yearLabel(country.lastYear))년 물가로 계산해요(그 뒤 물가는 아직 확정 전)."
+            : ""
+        return "물가는 \(country.flag) \(country.name)의 소비자물가지수(2020년 = 100) 연평균이고 \(range) 자료가 들어 있어요.\(clamped) 출처는 World Bank(원자료는 각국 통계기관)이고, 전국 평균이라 내가 실제로 쓰는 품목과는 다를 수 있어요."
+    }
+
+    // MARK: 입력
+
+    private var inputCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("내 월급 기록")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                // 물가·통화를 적용할 나라. 해외 근무 이력이 있으면 바꿔서 본다.
+                Picker("나라", selection: $countryCode) {
+                    ForEach(CPIData.all) { c in
+                        Text("\(c.flag) \(c.name)").tag(c.code)
+                    }
+                }
+                .pickerStyle(.menu)
+                .tint(Theme.accent)
+            }
+            Text("기억나는 해의 월급만 적어도 돼요. 세전·세후 중 하나로만 통일하면 비교는 정확해요. 금액은 \(country.name) 통화 기준이에요.")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+
+            ForEach(entries.sorted { $0.year < $1.year }) { entry in
+                if let idx = entries.firstIndex(where: { $0.id == entry.id }) {
+                    entryRow(idx)
+                }
+            }
+
+            Divider().overlay(Theme.hairline)
+
+            HStack(spacing: 10) {
+                Picker("연도", selection: $newYear) {
+                    ForEach(yearOptions, id: \.self) { Text("\(yearLabel($0))년").tag($0) }
+                }
+                .pickerStyle(.menu)
+                .tint(Theme.accent)
+                Spacer()
+                Button {
+                    addYear(newYear)
+                } label: {
+                    Label("추가", systemImage: "plus.circle.fill")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.accent)
+                }
+                .buttonStyle(.plain)
+            }
+
+            if entries.isEmpty, country.code == "KR" {
+                Button {
+                    fillExample()
+                } label: {
+                    Text("예시로 채워보기")
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 7)
+                        .background(Theme.surfaceHigh)
+                        .foregroundStyle(Theme.textPrimary)
+                        .clipShape(Capsule())
+                        .overlay(Capsule().stroke(Theme.hairline, lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+            } else if entries.isEmpty {
+                Text("연도를 고르고 그때 받던 월급을 적어보세요. 두 해 이상이면 구매력 변화가 보여요.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            } else if !entries.contains(where: { $0.year >= baseYear }) {
+                Text("지금 월급도 넣으면 최근 물가(\(yearLabel(baseYear))년)까지 이어서 볼 수 있어요.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    private func entryRow(_ idx: Int) -> some View {
+        // 삭제는 인덱스가 아니라 id로 — 배열을 읽으면서 동시에 지우지 않도록.
+        let rowID = entries[idx].id
+        return HStack(spacing: 10) {
+            Text("\(yearLabel(entries[idx].year))년")
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(Theme.textSecond)
+                .frame(width: 62, alignment: .leading)
+            TextField("0", text: amountBinding(idx).commaGrouped)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.trailing)
+                .font(.system(.body, design: .rounded).weight(.semibold))
+                .foregroundStyle(Theme.textPrimary)
+            Text(country.symbol.trimmingCharacters(in: .whitespaces))
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+            Button {
+                entries.removeAll { $0.id == rowID }
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(Theme.textSecond.opacity(0.6))
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    private func amountBinding(_ idx: Int) -> Binding<String> {
+        Binding(
+            get: {
+                guard entries.indices.contains(idx), entries[idx].monthly > 0 else { return "" }
+                return String(Int(entries[idx].monthly))
+            },
+            set: { newValue in
+                guard entries.indices.contains(idx) else { return }
+                entries[idx].monthly = Double(newValue.filter(\.isNumber)) ?? 0
+            }
+        )
+    }
+
+    private var yearOptions: [Int] {
+        Array((country.firstYear...max(Self.thisYear, country.lastYear)).reversed())
+    }
+
+    private func addYear(_ year: Int) {
+        guard !entries.contains(where: { $0.year == year }) else { return }
+        entries.append(WageEntry(year: year, monthly: 0))
+        entries.sort { $0.year < $1.year }
+        // 다음 추가는 그 다음 해가 기본값이 되도록.
+        newYear = min(year + 1, max(Self.thisYear, country.lastYear))
+    }
+
+    private func fillExample() {
+        entries = [
+            WageEntry(year: 2016, monthly: 2_500_000),
+            WageEntry(year: 2021, monthly: 3_200_000),
+            WageEntry(year: baseYear, monthly: 4_230_000),
+        ]
+    }
+
+    private func load() {
+        guard !loaded else { return }
+        loaded = true
+        guard let data = entriesJSON.data(using: .utf8),
+              let list = try? JSONDecoder().decode([WageEntry].self, from: data) else { return }
+        entries = list.sorted { $0.year < $1.year }
+    }
+
+    private func save() {
+        guard let data = try? JSONEncoder().encode(entries),
+              let text = String(data: data, encoding: .utf8) else { return }
+        entriesJSON = text
+    }
+
+    // MARK: 결과
+
+    // 첫 월급이 오늘 물가로 얼마인지 vs 지금 월급 — 구매력이 늘었는지 줄었는지.
+    private func purchasingPowerCard(_ span: (first: WageRow, last: WageRow, years: Int)) -> some View {
+        let change = span.first.realIndexed > 0
+            ? span.last.realIndexed / span.first.realIndexed - 1 : 0
+        let up = change >= 0
+        let thenInToday = span.first.realToday
+        let nowNominal = span.last.nominal
+        let peak = max(thenInToday, nowNominal, 1)
+        return VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("내 구매력")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                Text("\(yearLabel(span.first.year)) → \(yearLabel(span.last.year))년")
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            Text("\(up ? "▲" : "▼") \(Fmt.percent(abs(change)))")
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                .foregroundStyle(up ? Theme.rise : Theme.fall)
+                .contentTransition(.numericText())
+            Text(up
+                 ? "물가를 빼고 봐도 \(span.years)년 동안 실제 살 수 있는 양이 늘었어요."
+                 : "월급은 올랐어도 물가가 더 올라서, 실제 살 수 있는 양은 줄었어요.")
+                .font(.subheadline)
+                .foregroundStyle(Theme.textSecond)
+                .fixedSize(horizontal: false, vertical: true)
+
+            // 같은 잣대(오늘 물가)로 옮겨 놓고 나란히 비교.
+            VStack(spacing: 10) {
+                compareBar(label: "\(yearLabel(span.first.year))년 월급을 오늘 물가로",
+                           value: thenInToday, peak: peak, color: Theme.textSecond.opacity(0.45))
+                compareBar(label: "\(yearLabel(span.last.year))년 월급",
+                           value: nowNominal, peak: peak, color: up ? Theme.rise : Theme.fall)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    private func compareBar(label: String, value: Double, peak: Double, color: Color) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            HStack {
+                Text(label)
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+                Spacer()
+                Text(country.money(value))
+                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+            }
+            GeometryReader { geo in
+                Capsule()
+                    .fill(color)
+                    .frame(width: max(3, geo.size.width * min(1, value / peak)))
+            }
+            .frame(height: 8)
+            .background(Theme.surfaceHigh, in: Capsule())
+        }
+    }
+
+    // 명목(막대) vs 실질(선) — 두 선이 벌어질수록 물가에 깎인 몫이다.
+    private var chartCard: some View {
+        let data = rows
+        let realLabel = realMode == .today ? "\(yearLabel(baseYear))년 물가 기준" : "2020년 물가 기준"
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("명목 vs 실질")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+            }
+            Picker("", selection: $realMode) {
+                ForEach(RealMode.allCases) { Text($0.rawValue).tag($0) }
+            }
+            .pickerStyle(.segmented)
+
+            Chart {
+                ForEach(data) { r in
+                    BarMark(x: .value("연도", "\(r.year)"),
+                            y: .value("명목", r.nominal),
+                            width: .ratio(0.45))
+                        .foregroundStyle(Theme.textSecond.opacity(0.3))
+                        .cornerRadius(4)
+                }
+                ForEach(data) { r in
+                    LineMark(x: .value("연도", "\(r.year)"),
+                             y: .value("실질", realValue(r)))
+                        .foregroundStyle(Theme.accent)
+                        .lineStyle(StrokeStyle(lineWidth: 2.5))
+                    PointMark(x: .value("연도", "\(r.year)"),
+                              y: .value("실질", realValue(r)))
+                        .foregroundStyle(Theme.accent)
+                        .symbolSize(50)
+                }
+            }
+            .chartYAxis {
+                AxisMarks(position: .leading) { value in
+                    AxisGridLine().foregroundStyle(Theme.hairline)
+                    AxisValueLabel {
+                        if let v = value.as(Double.self) {
+                            Text(country.money(v)).font(.caption2).foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                }
+            }
+            .chartXAxis {
+                AxisMarks { value in
+                    AxisGridLine().foregroundStyle(Theme.hairline)
+                    AxisValueLabel {
+                        if let s = value.as(String.self) {
+                            Text(s).font(.caption2).foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                }
+            }
+            .frame(height: 210)
+            .animation(.easeInOut(duration: 0.35), value: realMode)
+
+            HStack(spacing: 14) {
+                legendDot(color: Theme.textSecond.opacity(0.35), text: "명목(통장에 찍힌 돈)")
+                legendDot(color: Theme.accent, text: "실질 · \(realLabel)")
+            }
+            .font(.caption2)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    private func legendDot(color: Color, text: String) -> some View {
+        HStack(spacing: 5) {
+            Circle().fill(color).frame(width: 7, height: 7)
+            Text(text).foregroundStyle(Theme.textSecond)
+        }
+    }
+
+    private func realValue(_ r: WageRow) -> Double {
+        realMode == .today ? r.realToday : r.realIndexed
+    }
+
+    // 연도별 상세 — 직전 기록 대비 내 인상률과 물가상승률을 나란히.
+    private var yearlyCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("연도별로 보기")
+                .font(.headline)
+                .foregroundStyle(Theme.textPrimary)
+            ForEach(rows) { r in
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("\(yearLabel(r.year))년")
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            .foregroundStyle(Theme.textPrimary)
+                            .frame(width: 62, alignment: .leading)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(country.money(r.nominal))
+                                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                                .foregroundStyle(Theme.textPrimary)
+                            Text(realMode == .today
+                                 ? "지금 돈으로 \(country.money(r.realToday))"
+                                 : "실질 \(country.money(r.realIndexed)) (2020년 기준)")
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                        }
+                        Spacer()
+                        if let real = r.realRate {
+                            VStack(alignment: .trailing, spacing: 2) {
+                                Text("\(real >= 0 ? "▲" : "▼") \(Fmt.percent(abs(real)))")
+                                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                                    .foregroundStyle(real >= 0 ? Theme.rise : Theme.fall)
+                                Text(r.gapYears > 1 ? "실질 · 연평균" : "실질")
+                                    .font(.caption2)
+                                    .foregroundStyle(Theme.textSecond)
+                            }
+                        } else {
+                            Text("시작")
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                    if let n = r.nominalRate, let i = r.inflationRate {
+                        Text("내 인상 \(signed(n)) · 물가 \(signed(i))\(r.gapYears > 1 ? " (\(r.gapYears)년 연평균)" : "")")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.textSecond)
+                            .padding(.leading, 62)
+                    }
+                }
+                if r.id != rows.last?.id {
+                    Divider().overlay(Theme.hairline)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    private func signed(_ v: Double) -> String {
+        "\(v >= 0 ? "+" : "−")\(Fmt.percent(abs(v)))"
+    }
+
+    // 구간 전체 숫자 정리 — 명목 상승, 물가 상승, 그리고 남은 몫.
+    private func summaryCard(_ span: (first: WageRow, last: WageRow, years: Int)) -> some View {
+        let years = Double(span.years)
+        let nominalTotal = span.first.nominal > 0
+            ? span.last.nominal / span.first.nominal - 1 : 0
+        let priceTotal = country.inflation(from: span.first.year, to: span.last.year)
+        let realTotal = span.first.realIndexed > 0
+            ? span.last.realIndexed / span.first.realIndexed - 1 : 0
+        let nominalCAGR = pow(1 + nominalTotal, 1 / years) - 1
+        let priceCAGR = pow(1 + priceTotal, 1 / years) - 1
+        let realCAGR = pow(1 + realTotal, 1 / years) - 1
+        let lost = span.last.nominal - span.first.realToday
+        return VStack(alignment: .leading, spacing: 14) {
+            Text("\(span.years)년 동안")
+                .font(.headline)
+                .foregroundStyle(Theme.textPrimary)
+            HStack(spacing: 0) {
+                simStat("명목 월급", signed(nominalTotal))
+                simStat("물가", signed(priceTotal), tint: Theme.negative)
+                simStat("실질(구매력)", signed(realTotal),
+                        tint: realTotal >= 0 ? Theme.rise : Theme.fall)
+            }
+            HStack(spacing: 0) {
+                simStat("연평균 인상", signed(nominalCAGR))
+                simStat("연평균 물가", signed(priceCAGR), tint: Theme.negative)
+                simStat("연평균 실질", signed(realCAGR),
+                        tint: realCAGR >= 0 ? Theme.rise : Theme.fall)
+            }
+            Divider().overlay(Theme.hairline)
+            Text(realTotal >= 0
+                 ? "지금 월급 \(country.money(span.last.nominal))은 \(yearLabel(span.first.year))년 월급을 오늘 물가로 옮긴 \(country.money(span.first.realToday))보다 \(country.money(abs(lost))) 많아요."
+                 : "지금 월급 \(country.money(span.last.nominal))은 \(yearLabel(span.first.year))년 월급을 오늘 물가로 옮긴 \(country.money(span.first.realToday))보다 \(country.money(abs(lost))) 적어요. 그만큼 구매력이 깎인 셈이에요.")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("실질임금 = 명목임금 ÷ 소비자물가지수 × 100. 인상률이 그해 물가상승률보다 낮으면 실질임금은 마이너스예요.")
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    // 기록이 하나뿐일 때 — 그 월급의 오늘 가치만이라도 바로 보여준다.
+    private func singleEntryCard(_ r: WageRow) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("\(yearLabel(r.year))년 \(country.money(r.nominal))은")
+                .font(.subheadline)
+                .foregroundStyle(Theme.textSecond)
+            Text("지금 \(country.money(r.realToday))")
+                .font(.system(.title2, design: .rounded, weight: .bold))
+                .foregroundStyle(Theme.accent)
+            Text("\(yearLabel(r.year))년 → \(yearLabel(baseYear))년 물가가 \(Fmt.percent(country.inflation(from: r.year, to: baseYear))) 올랐어요. 다른 해의 월급도 한 줄 더 넣으면 구매력 변화를 볼 수 있어요.")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()

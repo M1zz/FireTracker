@@ -223,14 +223,6 @@
   - 설정·자산에서 프리필(나이·생활비·목표 월수령액·수익률·현재 자산), 금액 빠른 증감 칩(+100만 등)
   - 생애주기에 월 패시브 인컴 입력 추가 — 등록 자산의 현재 패시브 인컴 프리필, 일할 때·은퇴 후 모두 유입, 물가만큼 성장 가정
 
-- [x] 실행 즉시 크래시 수정 — SwiftData가 CloudKit 동기화를 자동으로 켜던 문제 (2026-07-30)
-  - 증상: `Could not create ModelContainer: loadIssueModelContainer` → 앱이 뜨자마자 죽음
-  - 원인: entitlements의 iCloud(피드백 허브 `iCloud.com.Ysoup.FeedbackHub`, 커밋 78c44c7)를 보고
-    SwiftData가 CloudKit 미러링을 자동 활성화 → "모든 속성 optional/기본값, 관계도 optional" 요구를
-    모델이 못 맞춰(`Asset: amount`, `FireSettings: targetAnnualExpense`, 관계 `Asset: details` 등) 스토어 로드 실패
-  - 조치: `ModelConfiguration(..., cloudKitDatabase: .none)`으로 미러링 명시적 차단(데이터는 기기 로컬 + BackupManager 파일 백업)
-  - 나중에 진짜 iCloud 동기화를 붙이려면 앱 전용 컨테이너 + 모델 속성 전부 기본값(관계 optional)이 선행 조건
-
 - [x] 계산 탭에 '월급' 신설 — 과거 월급 입력 → 실질임금·구매력 계산 (2026-07-30)
   - KoreaCPI: 소비자물가지수(2020=100) 연평균 1995~2026 내장, 2026은 한은 전망(2.7%) 반영 추정치
   - 실질임금 = 명목 ÷ CPI × 100 (고용노동부 사업체노동력조사와 동일 정의)
@@ -247,6 +239,25 @@
   - 월급 카드 헤더에 나라 피커, 금액 표기도 그 나라 통화(한국만 억/만원 표기 유지)
   - 기준연도 = 그 나라 확정 물가의 마지막 해(미국이면 2024) — 범례·안내 문구에 명시
   - 대만·유로존 합계는 이 지표에 없어 제외
+
+- [x] 실행 즉시 크래시 수정 — SwiftData가 CloudKit 동기화를 자동으로 켜던 문제 (2026-07-30)
+  - 증상: `Could not create ModelContainer: loadIssueModelContainer` → 앱이 뜨자마자 죽음
+  - 원인: entitlements의 iCloud(피드백 허브 `iCloud.com.Ysoup.FeedbackHub`, 커밋 78c44c7)를 보고
+    SwiftData가 CloudKit 미러링을 자동 활성화 → "모든 속성 optional/기본값, 관계도 optional" 요구를
+    모델이 못 맞춰(`Asset: amount`, `FireSettings: targetAnnualExpense`, 관계 `Asset: details` 등) 스토어 로드 실패
+  - 조치: `ModelConfiguration(..., cloudKitDatabase: .none)`으로 미러링 명시적 차단(데이터는 기기 로컬 + BackupManager 파일 백업)
+  - 나중에 진짜 iCloud 동기화를 붙이려면 앱 전용 컨테이너 + 모델 속성 전부 기본값(관계 optional)이 선행 조건
+
+- [x] 주식 매매 원장 — 언제 몇 주를 얼마에 샀는지 기록 (2026-07-30)
+  - 새 모델 `AssetTrade`(날짜·매수/매도·수량·단가·금액) + `Asset.trades` cascade 관계, 스키마 등록
+  - `TradeLedger.replay`: 원장을 날짜순 재생 → 보유 수량·투자 원금·평단·실현손익(평균단가법, 매도 시 평단만큼 원금 차감)
+  - 자산 편집의 '추매' 섹션 → '매매 내역'으로 교체: 요약(지금 보유·평단·원금·실현손익) + 거래 목록 + 거래 추가 폼(매수/매도·날짜·수량·단가, 수량 모르면 금액만)
+  - 거래 행 탭 = 수정(폼 프리필), 스와이프 = 삭제. 지난 거래 수정 시엔 평가액을 건드리지 않음(시세와 어긋나지 않게)
+  - 원장을 쓰기 시작할 때 '지금 보유분을 최초 매수로 넣기' 한 번에 이관(날짜·금액 수정 가능)
+  - 원장이 있으면 보유 수량·투자 원금 입력칸은 잠금(🔒) — 원장에서 계산되는 파생값이라
+  - 자산 목록 행에 '150주 · 평단 7만원' 한 줄 추가 (주식·펀드·코인)
+  - 백업/복원에 원장 포함(구버전 백업은 trades 없으므로 optional로 호환)
+  - 확인: 기존 스토어 위 설치(경량 마이그레이션) OK, 시드→요약→저장→재진입 영속성 OK. 매도·실현손익은 코드만(런타임 미확인)
 
 ## 다음에 해볼 만한 것
 - [ ] (논의) 부채만 등록하고 대응 현금을 안 넣으면 총자산0/순자산−로 보임 — 부채 잔액을 현금으로 자동 인식 옵션 검토

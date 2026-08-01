@@ -15,7 +15,8 @@ struct FireTrackerApp: App {
             NetWorthSnapshot.self,
             AssetEntry.self,
             Asset.self,
-            AssetDetail.self
+            AssetDetail.self,
+            AssetTrade.self
         ])
         // 이 앱의 SwiftData 저장소는 기기 안에만 둔다(백업은 BackupManager가 파일로 담당).
         // cloudKitDatabase를 지정하지 않으면, entitlements에 있는 iCloud 권한

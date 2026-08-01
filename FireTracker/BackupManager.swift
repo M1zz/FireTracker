@@ -67,12 +67,23 @@ struct BackupData: Codable {
         var sortOrder: Int
         var createdAt: Date
         var details: [DetailDTO]
+        // 매매 원장. 예전 백업 파일엔 없으므로 optional로 두고 복원 때 빈 배열로 본다.
+        var trades: [TradeDTO]?
     }
 
     struct DetailDTO: Codable {
         var name: String
         var amount: Double
         var sortOrder: Int
+    }
+
+    struct TradeDTO: Codable {
+        var date: Date
+        var kindRaw: String
+        var quantity: Double
+        var unitPrice: Double
+        var amount: Double
+        var note: String
     }
 
     struct SnapshotDTO: Codable {
@@ -168,6 +179,7 @@ enum BackupManager {
     static func restore(from backup: BackupData, context: ModelContext) throws {
         // 1) 기존 데이터 전부 삭제. 부모를 지우면 자식(세부 종목·자산 항목)은 cascade.
         try context.delete(model: AssetDetail.self)
+        try context.delete(model: AssetTrade.self)
         try context.delete(model: AssetEntry.self)
         try context.delete(model: Asset.self)
         try context.delete(model: NetWorthSnapshot.self)
@@ -223,6 +235,14 @@ enum BackupManager {
                 let detail = AssetDetail(name: d.name, amount: d.amount, sortOrder: d.sortOrder)
                 context.insert(detail)
                 return detail
+            }
+            asset.trades = (a.trades ?? []).map { t in
+                let trade = AssetTrade(date: t.date,
+                                       kind: TradeKind(rawValue: t.kindRaw) ?? .buy,
+                                       quantity: t.quantity, unitPrice: t.unitPrice,
+                                       amount: t.amount, note: t.note)
+                context.insert(trade)
+                return trade
             }
         }
 
@@ -376,6 +396,10 @@ enum BackupManager {
               sortOrder: a.sortOrder, createdAt: a.createdAt,
               details: a.sortedDetails.map {
                   .init(name: $0.name, amount: $0.amount, sortOrder: $0.sortOrder)
+              },
+              trades: a.trades.sorted { $0.date < $1.date }.map {
+                  .init(date: $0.date, kindRaw: $0.kindRaw, quantity: $0.quantity,
+                        unitPrice: $0.unitPrice, amount: $0.amount, note: $0.note)
               })
     }
 

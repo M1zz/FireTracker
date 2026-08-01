@@ -364,6 +364,11 @@ final class Asset {
     @Relationship(deleteRule: .cascade, inverse: \AssetDetail.asset)
     var details: [AssetDetail] = []
 
+    // 매매 원장 — 언제 몇 주를 얼마에 사고팔았는지. 기록이 하나라도 있으면
+    // 보유 수량(quantity)과 투자 원금(costBasis)은 이 원장을 재생해서 채운다.
+    @Relationship(deleteRule: .cascade, inverse: \AssetTrade.asset)
+    var trades: [AssetTrade] = []
+
     init(name: String = "",
          assetClass: AssetClass = .stocks,
          customLabel: String = "",
@@ -488,6 +493,113 @@ final class Asset {
     // 종목에 할당된 금액 합과, 평가액에서 아직 할당하지 않은 잔액.
     var allocatedAmount: Double { details.reduce(0) { $0 + $1.amount } }
     var unallocatedAmount: Double { amount - allocatedAmount }
+
+    // --- 매매 원장 ---
+    // 최근 거래가 위로 오게 — 화면 목록용.
+    var recentTrades: [AssetTrade] { trades.sorted { $0.date > $1.date } }
+    var hasTrades: Bool { !trades.isEmpty }
+    // 원장을 재생한 결과(보유 수량·투자 원금·평단·실현손익).
+    var ledger: TradeLedger {
+        TradeLedger.replay(trades.map(TradeRow.init))
+    }
+    // 평단 — 원장이 없으면 저장된 수량·원금으로 계산한다.
+    var averagePrice: Double {
+        if hasTrades { return ledger.avgPrice }
+        return quantity > 0 ? costBasis / quantity : 0
+    }
+}
+
+// 매매 종류. 원장에는 매수/매도 두 가지만 남는다.
+enum TradeKind: String, Codable, CaseIterable, Identifiable {
+    case buy
+    case sell
+    var id: String { rawValue }
+    var label: String { self == .buy ? "매수" : "매도" }
+}
+
+// 한 번의 매매 — 언제, 몇 주를, 주당 얼마에, 총 얼마어치.
+// 수량을 모를 땐 금액만 남겨도 되고(원금은 맞고 평단만 안 나옴), 그 반대는 없다.
+@Model
+final class AssetTrade {
+    var date: Date = Date.now
+    var kindRaw: String = TradeKind.buy.rawValue
+    var quantity: Double = 0     // 주 / 개
+    var unitPrice: Double = 0    // 1주(개)당 단가, 원
+    var amount: Double = 0       // 거래 금액(원). 수량·단가를 넣었으면 그 곱.
+    var note: String = ""
+    var asset: Asset?
+
+    var kind: TradeKind {
+        get { TradeKind(rawValue: kindRaw) ?? .buy }
+        set { kindRaw = newValue.rawValue }
+    }
+
+    init(date: Date = .now, kind: TradeKind = .buy, quantity: Double = 0,
+         unitPrice: Double = 0, amount: Double = 0, note: String = "") {
+        self.date = date
+        self.kindRaw = kind.rawValue
+        self.quantity = quantity
+        self.unitPrice = unitPrice
+        self.amount = amount
+        self.note = note
+    }
+}
+
+// 저장 전 편집 중인 거래까지 같은 방식으로 계산하려고 쓰는 값 타입.
+struct TradeRow: Identifiable, Equatable {
+    var id = UUID()
+    var date: Date = .now
+    var kind: TradeKind = .buy
+    var quantity: Double = 0
+    var amount: Double = 0
+
+    // 주당 단가 — 수량이 없으면 0(금액만 기록한 거래).
+    var unitPrice: Double { quantity > 0 ? amount / quantity : 0 }
+
+    init(id: UUID = UUID(), date: Date = .now, kind: TradeKind = .buy,
+         quantity: Double = 0, amount: Double = 0) {
+        self.id = id
+        self.date = date
+        self.kind = kind
+        self.quantity = quantity
+        self.amount = amount
+    }
+
+    init(_ trade: AssetTrade) {
+        self.init(date: trade.date, kind: trade.kind,
+                  quantity: trade.quantity, amount: trade.amount)
+    }
+}
+
+// 원장을 날짜순으로 재생해 지금 상태를 낸다. 평균단가법 —
+// 팔면 그 시점 평단만큼 투자 원금이 빠지고, 판 금액과의 차이가 실현손익이 된다.
+struct TradeLedger {
+    var quantity: Double = 0
+    var costBasis: Double = 0
+    var realized: Double = 0
+
+    var avgPrice: Double { quantity > 0 ? costBasis / quantity : 0 }
+
+    static func replay(_ rows: [TradeRow]) -> TradeLedger {
+        var l = TradeLedger()
+        for r in rows.sorted(by: { $0.date < $1.date }) {
+            switch r.kind {
+            case .buy:
+                l.quantity += r.quantity
+                l.costBasis += r.amount
+            case .sell:
+                // 가진 것보다 많이 팔 수는 없다(오타 방어).
+                let sold = min(r.quantity, l.quantity)
+                let avg = l.quantity > 0 ? l.costBasis / l.quantity : 0
+                l.quantity -= sold
+                l.costBasis -= avg * sold
+                l.realized += r.amount - avg * sold
+            }
+        }
+        l.quantity = max(0, l.quantity)
+        l.costBasis = max(0, l.costBasis)
+        return l
+    }
 }
 
 // 자산 안의 세부 종목 한 줄 — 이름 + 할당 금액. 예) 주식 3,000만원 중

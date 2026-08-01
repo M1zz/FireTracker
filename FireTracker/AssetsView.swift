@@ -838,6 +838,18 @@ struct AssetsView: View {
                 }
                 .font(.caption2)
                 .lineLimit(1)
+                // 보유 수량 한 줄 — 예) 32주 · 평단 387,500원. 목록에서 바로 몇 주인지 보이게.
+                if asset.quantity > 0,
+                   asset.assetClass == .stocks || asset.assetClass == .fund || asset.assetClass == .crypto {
+                    let unit = asset.assetClass == .crypto ? "개" : "주"
+                    let avg = asset.averagePrice
+                    Text(avg > 0
+                         ? "\(Fmt.trimNumber(asset.quantity))\(unit) · 평단 \(Fmt.krw(avg))원"
+                         : "\(Fmt.trimNumber(asset.quantity))\(unit)")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                        .lineLimit(1)
+                }
                 // 세부 종목 한 줄 요약 — 예) 삼성전자 1,000만 · 애플 2,000만
                 if !asset.details.isEmpty {
                     Text(asset.sortedDetails.map { "\($0.name) \(Fmt.krw($0.amount))" }
@@ -1125,13 +1137,17 @@ struct AssetEditor: View {
     @State private var newDetailName = ""
     @State private var newDetailAmount = ""
 
-    // 추매(추가 매수) 입력 — 기본은 매수 금액 하나. 원하면 수량·주당 단가로 상세 입력.
-    @State private var showBuyMore = false
-    @State private var buyAmount = ""
-    @State private var showBuyDetail = false
-    @State private var buyQty = ""
-    @State private var buyPrice = ""
-    @State private var buyMoreApplied = false
+    // 매매 원장 드래프트 — 저장 시점에 Asset.trades로 동기화한다.
+    // 원장이 비어 있지 않으면 보유 수량·투자 원금은 여기서 계산한 값이 진실.
+    @State private var tradeRows: [TradeRow] = []
+    @State private var showTradeForm = false
+    @State private var tradeKind: TradeKind = .buy
+    @State private var tradeDate = Date()
+    @State private var tradeQty = ""
+    @State private var tradePrice = ""
+    @State private var tradeAmountText = ""
+    // 수정 중인 거래 — 비어 있으면 새 거래를 추가하는 중.
+    @State private var editingTradeID: UUID?
 
     // Seed all editor state directly from the asset so that opening the editor
     // does not mutate `assetClass` (which would trigger onChange and clobber the
@@ -1151,6 +1167,7 @@ struct AssetEditor: View {
         _amount = State(initialValue: asset.map { $0.amount > 0 ? String(Int($0.amount)) : "" } ?? "")
         _symbol = State(initialValue: asset?.symbol ?? "")
         _quantity = State(initialValue: asset.map { $0.quantity > 0 ? Fmt.trimNumber($0.quantity) : "" } ?? "")
+        _tradeRows = State(initialValue: asset?.recentTrades.map(TradeRow.init) ?? [])
         _currency = State(initialValue: asset?.currency ?? "KRW")
         _auto = State(initialValue: asset?.autoPriced ?? false)
         _unitPriceKRW = State(initialValue: asset?.unitPriceKRW ?? 0)
@@ -1322,10 +1339,10 @@ struct AssetEditor: View {
                     costBasisSection
                 }
 
-                // 기존 주식·펀드·코인 자산은 추매를 바로 기록할 수 있게 한다 —
-                // 수량·단가만 넣으면 보유수량·투자원금·평가액이 함께 갱신된다.
+                // 주식·펀드·코인은 매매 원장을 둔다 — 언제 몇 주를 얼마에 샀는지
+                // 한 줄씩 남기면 보유 수량·투자 원금·평단이 거기서 계산된다.
                 if asset != nil && supportsBuyMore {
-                    buyMoreSection
+                    tradeSection
                 }
 
                 // 간단 입력(새 자산 기본): 여기까지만 — 종류·이름·금액이면 끝.
@@ -1528,9 +1545,23 @@ struct AssetEditor: View {
     // 취득가 대비 평가 차익 — 자산이 값이 올라서 만든 부가가치.
     private var costBasisSection: some View {
         Section {
-            TextField("투자 원금 (산 가격, 원)", text: $costBasis.commaGrouped)
-                .keyboardType(.numberPad)
-            MoneyReadout(amount: costBasis)
+            if hasTrades {
+                // 매매 내역이 진실의 원천 — 원금은 거기서 나온 값이라 직접 수정 금지.
+                HStack {
+                    Text("투자 원금")
+                    Spacer()
+                    Text("\(Fmt.krw(Double(costBasis) ?? 0))원")
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.textSecond)
+                    Image(systemName: "lock.fill")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                }
+            } else {
+                TextField("투자 원금 (산 가격, 원)", text: $costBasis.commaGrouped)
+                    .keyboardType(.numberPad)
+                MoneyReadout(amount: costBasis)
+            }
             if let cb = Double(costBasis), cb > 0 {
                 let cur = Double(amount) ?? 0
                 HStack {
@@ -1552,135 +1583,257 @@ struct AssetEditor: View {
         } header: {
             Text("투자 원금 · 평가 손익")
         } footer: {
-            Text("투자 원금(산 가격)은 그대로 두고, 평가액은 시세에 따라 바뀝니다. 둘의 차이가 평가 손익이에요. 평가액은 위 ‘평가액’ 칸 또는 시세 자동으로 갱신돼요.")
+            Text(hasTrades
+                 ? "투자 원금과 보유 수량은 아래 ‘매매 내역’에서 자동으로 계산돼요. 평가액은 시세나 위 ‘평가액’ 칸을 따르고, 둘의 차이가 평가 손익입니다."
+                 : "투자 원금(산 가격)은 그대로 두고, 평가액은 시세에 따라 바뀝니다. 둘의 차이가 평가 손익이에요. 평가액은 위 ‘평가액’ 칸 또는 시세 자동으로 갱신돼요.")
                 .font(.caption)
         }
     }
 
-    // --- 추매 (추가 매수) ---
+    // --- 매매 원장 (언제 몇 주를 얼마에 샀는지) ---
     private var supportsBuyMore: Bool {
         assetClass == .stocks || assetClass == .fund || assetClass == .crypto
     }
 
     private var buyUnitLabel: String { assetClass == .crypto ? "개" : "주" }
 
-    // 상세 입력(수량 × 단가)이 유효하면 그 값을 돌려준다.
-    private var buyDetailInput: (qty: Double, price: Double)? {
-        guard showBuyDetail,
-              let q = Double(buyQty), q > 0,
-              let p = Double(buyPrice), p > 0 else { return nil }
-        return (q, p)
+    // 편집 중인 원장을 재생한 결과 — 보유 수량·투자 원금·평단·실현손익.
+    private var ledger: TradeLedger { TradeLedger.replay(tradeRows) }
+    private var hasTrades: Bool { !tradeRows.isEmpty }
+
+    // 입력 중인 거래의 금액 — 수량 × 단가가 있으면 그 곱, 없으면 직접 입력한 금액.
+    private var tradeAmount: Double {
+        let q = Double(tradeQty) ?? 0
+        let p = Double(tradePrice) ?? 0
+        if q > 0, p > 0 { return q * p }
+        return Double(tradeAmountText) ?? 0
     }
 
-    // 이번 추매의 매수 금액 — 상세 입력이 있으면 수량 × 단가, 없으면 직접 입력값.
-    private var buyCost: Double {
-        if let d = buyDetailInput { return d.qty * d.price }
-        return Double(buyAmount) ?? 0
-    }
-
-    private var buyMoreSection: some View {
+    private var tradeSection: some View {
         Section {
-            if !showBuyMore {
+            if hasTrades {
+                let l = ledger
+                HStack {
+                    Text("지금 보유")
+                    Spacer()
+                    Text(l.quantity > 0
+                         ? "\(Fmt.trimNumber(l.quantity))\(buyUnitLabel) · 평단 \(Fmt.krw(l.avgPrice))원"
+                         : "없음 (전량 매도)")
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.accent)
+                }
+                HStack {
+                    Text("투자 원금")
+                    Spacer()
+                    Text("\(Fmt.krw(l.costBasis))원")
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.textPrimary)
+                }
+                if l.realized != 0 {
+                    HStack {
+                        Text("실현 손익")
+                        Spacer()
+                        Text("\(l.realized >= 0 ? "+" : "−")\(Fmt.krw(abs(l.realized)))원")
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            .foregroundStyle(l.realized >= 0 ? Theme.positive : Theme.negative)
+                    }
+                }
+            }
+
+            // 최근 거래가 위로. 스와이프로 삭제.
+            ForEach(tradeRows.sorted { $0.date > $1.date }) { row in
+                Button { beginEditing(row) } label: { tradeRowView(row) }
+                    .buttonStyle(.plain)
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            tradeRows.removeAll { $0.id == row.id }
+                        } label: { Label("삭제", systemImage: "trash") }
+                    }
+            }
+
+            if showTradeForm {
+                tradeForm
+            } else {
                 Button {
-                    withAnimation { showBuyMore = true }
+                    tradeDate = Date()
+                    withAnimation { showTradeForm = true }
                 } label: {
-                    Label("추매 기록", systemImage: "plus.circle.fill")
+                    Label("거래 추가", systemImage: "plus.circle.fill")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.accent)
                 }
-            } else {
-                if !showBuyDetail {
-                    TextField("추가 매수 금액 (원)", text: $buyAmount.commaGrouped)
-                        .keyboardType(.numberPad)
-                    Button {
-                        withAnimation { showBuyDetail = true }
-                    } label: {
-                        Label("\(buyUnitLabel)당 얼마에 샀는지 입력 (선택)", systemImage: "chevron.down")
-                            .font(.caption)
+            }
+
+            // 원장을 처음 쓰기 시작할 때 — 이미 들고 있던 몫을 한 줄로 옮겨 담는다.
+            if !hasTrades, openingQuantity > 0 || openingCost > 0 {
+                Button {
+                    seedOpeningTrade()
+                } label: {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Label("지금 보유분을 ‘최초 매수’로 넣기", systemImage: "tray.and.arrow.down.fill")
+                            .font(.subheadline.weight(.semibold))
+                        Text(openingSummary)
+                            .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
                     }
-                } else {
-                    TextField("추가 매수 수량 (\(buyUnitLabel))", text: $buyQty)
-                        .keyboardType(.decimalPad)
-                    TextField("\(buyUnitLabel)당 매수 단가 (원)", text: $buyPrice.commaGrouped)
-                        .keyboardType(.numberPad)
-                }
-                if buyCost > 0 {
-                    HStack {
-                        Text("매수 금액")
-                        Spacer()
-                        Text("\(Fmt.krw(buyCost))원")
-                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                            .foregroundStyle(Theme.textPrimary)
-                    }
-                    let newCostBasis = (Double(costBasis) ?? 0) + buyCost
-                    HStack {
-                        Text("적용 후 투자 원금")
-                        Spacer()
-                        Text("\(Fmt.krw(newCostBasis))원")
-                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                            .foregroundStyle(Theme.accent)
-                    }
-                    if let d = buyDetailInput {
-                        let newQty = (Double(quantity) ?? 0) + d.qty
-                        HStack {
-                            Text("적용 후 보유")
-                            Spacer()
-                            Text("\(Fmt.trimNumber(newQty))\(buyUnitLabel) · 평단 \(Fmt.krw(newCostBasis / newQty))원")
-                                .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                                .foregroundStyle(Theme.accent)
-                        }
-                    }
-                    Button {
-                        applyBuyMore()
-                    } label: {
-                        Label("추매 반영", systemImage: "checkmark.circle.fill")
-                            .font(.subheadline.weight(.semibold))
-                    }
-                }
-                if buyMoreApplied {
-                    Label("반영됐어요. 상단 ‘저장’을 누르면 확정됩니다.", systemImage: "checkmark.seal.fill")
-                        .font(.caption)
-                        .foregroundStyle(Theme.positive)
                 }
             }
         } header: {
-            Text("추매")
+            Text("매매 내역")
         } footer: {
-            if showBuyMore {
+            if hasTrades {
                 Text(currency == "USD"
-                     ? "금액은 원화 환산으로 입력하세요. 반영하면 투자 원금과 평가액이 갱신되고, 수량을 넣으면 보유 수량·평단도 함께 계산됩니다."
-                     : "반영하면 투자 원금과 평가액이 갱신되고, 수량을 넣으면 보유 수량·평단도 함께 계산됩니다.")
+                     ? "금액은 원화 환산으로 넣으세요. 보유 수량·투자 원금·평단은 이 내역에서 자동으로 계산됩니다(평균단가법)."
+                     : "보유 수량·투자 원금·평단은 이 내역에서 자동으로 계산됩니다(평균단가법). 평가액은 시세나 위 ‘평가액’ 칸을 따릅니다.")
                     .font(.caption)
             } else {
-                Text("추가 매수한 금액만 넣으면 투자 원금과 평가액이 자동으로 갱신돼요.")
+                Text("살 때마다 한 줄씩 남겨두면 지금 몇 \(buyUnitLabel)인지, 언제 얼마에 샀는지 그대로 남아요.")
                     .font(.caption)
             }
         }
     }
 
-    // 추매를 편집 중인 값에 반영한다. 투자 원금에 매수 금액을 더하고, 평가액은
-    // 시세 자동(수량 입력 시)이면 저장된 단가로 재계산, 아니면 매수 금액만큼 증가.
-    private func applyBuyMore() {
-        let cost = buyCost
-        guard cost > 0 else { return }
-        let newCostBasis = (Double(costBasis) ?? 0) + cost
-        costBasis = String(Int(newCostBasis.rounded()))
-        if let d = buyDetailInput {
-            let newQty = (Double(quantity) ?? 0) + d.qty
-            quantity = Fmt.trimNumber(newQty)
-            if auto, unitPriceKRW > 0 {
-                amount = String(Int((newQty * unitPriceKRW).rounded()))
-            } else {
-                amount = String(Int(((Double(amount) ?? 0) + cost).rounded()))
+    private func tradeRowView(_ row: TradeRow) -> some View {
+        HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(Self.tradeDateText(row.date))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                Text(row.quantity > 0
+                     ? "\(row.kind.label) \(Fmt.trimNumber(row.quantity))\(buyUnitLabel) · \(buyUnitLabel)당 \(Fmt.krw(row.unitPrice))원"
+                     : "\(row.kind.label) · 금액만 기록")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
             }
-        } else {
-            amount = String(Int(((Double(amount) ?? 0) + cost).rounded()))
+            Spacer()
+            Text("\(row.kind == .buy ? "+" : "−")\(Fmt.krw(row.amount))원")
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(row.kind == .buy ? Theme.rise : Theme.fall)
         }
-        buyAmount = ""
-        buyQty = ""
-        buyPrice = ""
-        withAnimation { buyMoreApplied = true }
+    }
+
+    private var tradeForm: some View {
+        Group {
+            Picker("", selection: $tradeKind) {
+                ForEach(TradeKind.allCases) { Text($0.label).tag($0) }
+            }
+            .pickerStyle(.segmented)
+            DatePicker("날짜", selection: $tradeDate, displayedComponents: .date)
+                .environment(\.locale, Locale(identifier: "ko_KR"))
+            TextField("수량 (\(buyUnitLabel))", text: $tradeQty)
+                .keyboardType(.decimalPad)
+            TextField("\(buyUnitLabel)당 단가 (원)", text: $tradePrice.commaGrouped)
+                .keyboardType(.numberPad)
+            // 수량·단가를 모르면 금액만 남겨도 된다(원금은 맞고 평단만 안 나옴).
+            if (Double(tradeQty) ?? 0) <= 0 || (Double(tradePrice) ?? 0) <= 0 {
+                TextField("또는 거래 금액만 (원)", text: $tradeAmountText.commaGrouped)
+                    .keyboardType(.numberPad)
+            }
+            if tradeAmount > 0 {
+                HStack {
+                    Text("\(tradeKind.label) 금액")
+                    Spacer()
+                    Text("\(Fmt.krw(tradeAmount))원")
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.textPrimary)
+                }
+            }
+            HStack {
+                Button {
+                    withAnimation { resetTradeForm() }
+                } label: {
+                    Text("취소").font(.subheadline).foregroundStyle(Theme.textSecond)
+                }
+                .buttonStyle(.borderless)
+                Spacer()
+                Button {
+                    addTrade()
+                } label: {
+                    Label(editingTradeID == nil ? "기록" : "수정",
+                          systemImage: "checkmark.circle.fill")
+                        .font(.subheadline.weight(.semibold))
+                }
+                .buttonStyle(.borderless)
+                .disabled(tradeAmount <= 0)
+            }
+        }
+    }
+
+    private static func tradeDateText(_ date: Date) -> String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ko_KR")
+        f.dateFormat = "yyyy.MM.dd"
+        return f.string(from: date)
+    }
+
+    // 원장을 쓰기 전부터 들고 있던 몫 — '최초 매수' 한 줄로 옮겨 담을 값.
+    private var openingQuantity: Double { Double(quantity) ?? 0 }
+    private var openingCost: Double {
+        let cb = Double(costBasis) ?? 0
+        return cb > 0 ? cb : (Double(amount) ?? 0)
+    }
+    private var openingSummary: String {
+        let qty = openingQuantity > 0 ? "\(Fmt.trimNumber(openingQuantity))\(buyUnitLabel) · " : ""
+        return "\(qty)\(Fmt.krw(openingCost))원으로 시작한 걸로 남겨요 (날짜·금액은 나중에 고칠 수 있어요)"
+    }
+
+    private func seedOpeningTrade() {
+        let cost = openingCost
+        guard cost > 0 || openingQuantity > 0 else { return }
+        withAnimation {
+            tradeRows.append(TradeRow(date: asset?.createdAt ?? Date(), kind: .buy,
+                                      quantity: openingQuantity, amount: cost))
+        }
+    }
+
+    // 기존 거래를 눌렀을 때 — 그 값을 폼에 채워 수정 모드로 들어간다.
+    private func beginEditing(_ row: TradeRow) {
+        editingTradeID = row.id
+        tradeKind = row.kind
+        tradeDate = row.date
+        tradeQty = row.quantity > 0 ? Fmt.trimNumber(row.quantity) : ""
+        tradePrice = row.quantity > 0 ? String(Int(row.unitPrice.rounded())) : ""
+        tradeAmountText = row.quantity > 0 ? "" : String(Int(row.amount.rounded()))
+        withAnimation { showTradeForm = true }
+    }
+
+    // 거래 한 줄을 원장에 넣거나 고친다. 보유 수량·투자 원금은 원장을 다시 재생해 맞추고,
+    // 평가액은 — 새 거래일 때만 — 시세 자동이면 수량 × 단가로, 아니면 거래 금액만큼 움직인다.
+    // (지난 거래를 고칠 때 평가액까지 건드리면 지금 시세와 어긋나므로 그대로 둔다.)
+    private func addTrade() {
+        let cost = tradeAmount
+        guard cost > 0 else { return }
+        let qty = Double(tradeQty) ?? 0
+        let isEditing = editingTradeID != nil
+        withAnimation {
+            if let id = editingTradeID, let idx = tradeRows.firstIndex(where: { $0.id == id }) {
+                tradeRows[idx] = TradeRow(id: id, date: tradeDate, kind: tradeKind,
+                                          quantity: qty, amount: cost)
+            } else {
+                tradeRows.append(TradeRow(date: tradeDate, kind: tradeKind,
+                                          quantity: qty, amount: cost))
+            }
+        }
+
+        let l = TradeLedger.replay(tradeRows)
+        quantity = l.quantity > 0 ? Fmt.trimNumber(l.quantity) : ""
+        costBasis = String(Int(l.costBasis.rounded()))
+        if auto, unitPriceKRW > 0, l.quantity > 0 {
+            amount = String(Int((l.quantity * unitPriceKRW).rounded()))
+        } else if !isEditing {
+            let delta = tradeKind == .buy ? cost : -cost
+            amount = String(Int(max(0, (Double(amount) ?? 0) + delta).rounded()))
+        }
+        resetTradeForm()
+    }
+
+    private func resetTradeForm() {
+        editingTradeID = nil
+        tradeQty = ""
+        tradePrice = ""
+        tradeAmountText = ""
+        tradeKind = .buy
+        showTradeForm = false
     }
 
     // One-tap yield presets so dividends don't have to be entered won-by-won.
@@ -2008,12 +2161,26 @@ struct AssetEditor: View {
     @ViewBuilder
     private var quantityInputs: some View {
         switch assetClass {
-        case .crypto:
-            TextField("수량", text: $quantity)
-                .keyboardType(.decimalPad)
-        case .stocks, .fund:
-            TextField("보유 수량 (주/좌)", text: $quantity)
-                .keyboardType(.decimalPad)
+        case .crypto, .stocks, .fund:
+            if hasTrades {
+                // 매매 내역이 있으면 보유 수량은 그 합계다 — 직접 못 고치게 막고 근거를 보여준다.
+                HStack {
+                    Text(assetClass == .crypto ? "수량" : "보유 수량")
+                    Spacer()
+                    Text("\(quantity.isEmpty ? "0" : quantity)\(buyUnitLabel)")
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.textSecond)
+                    Image(systemName: "lock.fill")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                }
+            } else if assetClass == .crypto {
+                TextField("수량", text: $quantity)
+                    .keyboardType(.decimalPad)
+            } else {
+                TextField("보유 수량 (주/좌)", text: $quantity)
+                    .keyboardType(.decimalPad)
+            }
         case .realEstate:
             Text("아파트명은 위 ‘이름’ 칸, 법정동코드는 위 칸을 사용합니다.")
                 .font(.caption)
@@ -2152,6 +2319,18 @@ struct AssetEditor: View {
             let amt = Double(d.amount) ?? 0
             guard !nm.isEmpty, amt > 0 else { return nil }
             return AssetDetail(name: nm, amount: amt, sortOrder: idx)
+        }
+        // 매매 원장 동기화 — 세부 종목과 같은 방식으로 통째로 다시 쓴다.
+        for old in target.trades { context.delete(old) }
+        target.trades = supportsBuyMore ? tradeRows.map { r in
+            AssetTrade(date: r.date, kind: r.kind, quantity: r.quantity,
+                       unitPrice: r.unitPrice, amount: r.amount)
+        } : []
+        // 원장이 있으면 보유 수량·투자 원금은 원장을 재생한 값이 진실.
+        if supportsBuyMore, !tradeRows.isEmpty {
+            let l = TradeLedger.replay(tradeRows)
+            target.quantity = l.quantity
+            target.costBasis = l.costBasis
         }
         try? context.save()
         return target

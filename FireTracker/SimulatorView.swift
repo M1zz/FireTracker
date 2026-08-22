@@ -9,7 +9,7 @@ import FoundationModels
 // 계산 탭 — 참고용 시뮬레이터 모음.
 // 생애주기(모으고 쓰는 인생 자산 곡선) · 대출(종류별 상환 흐름) ·
 // 저축(예금·적금·파킹 만기 수령액) · 투자(내 자산의 앞으로의 범위 예측) ·
-// 월급(과거 월급을 물가로 나눈 실질임금 = 내 구매력 변화) ·
+// 구매력(과거 월급을 물가로 나눈 실질임금 = 내 구매력 변화) ·
 // 시간(돈을 시간으로 환산해 하루의 밀도·순증, 저장 vs 시급 성장을 비교).
 struct SimulatorView: View {
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
@@ -29,7 +29,7 @@ struct SimulatorView: View {
         case loan = "대출"
         case savings = "저축"
         case invest = "투자"
-        case wage = "월급"
+        case wage = "구매력"
         case time = "시간"
         var id: String { rawValue }
     }

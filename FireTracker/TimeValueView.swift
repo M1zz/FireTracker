@@ -17,6 +17,10 @@ struct TimeSimSection: View {
     let settings: FireSettings
     let netWorth: Double
 
+    // 구매력 탭(WageSimSection)에 적어 둔 월급 기록 — 여기서 그대로 읽어 쓴다.
+    @AppStorage("sim.wage.entries")      private var wageEntriesJSON = ""
+    @AppStorage("sim.wage.country")      private var wageCountry = "KR"
+
     // 시급
     @AppStorage("sim.time.netMonthly")   private var netMonthly = ""
     @AppStorage("sim.time.weeklyHours")  private var weeklyHours = "50"
@@ -38,6 +42,12 @@ struct TimeSimSection: View {
     @State private var loaded = false
 
     // MARK: 모델
+
+    // 구매력 탭이 저장한 월급 한 줄을 읽기 위한 최소 타입.
+    fileprivate struct WageRecord: Codable {
+        var year: Int
+        var monthly: Double
+    }
 
     // 시간을 돌려받는 지출 한 줄. 주기가 달라도(매일 택시 / 매주 가사도우미) 하루 기준으로 환산해서 합친다.
     fileprivate struct TimeBuy: Codable, Identifiable, Equatable {
@@ -70,7 +80,23 @@ struct TimeSimSection: View {
 
     // MARK: 계산 — 시급
 
-    private var monthlyIncome: Double { tvNum(netMonthly) }
+    // 구매력 탭 기록 중 가장 최근 해의 월급. 그쪽은 나라별 통화라
+    // 원화 계산과 섞이지 않게 한국 기록일 때만 가져온다.
+    private var latestWageRecord: (year: Int, monthly: Double)? {
+        guard wageCountry == "KR" else { return nil }
+        guard let data = wageEntriesJSON.data(using: .utf8),
+              let list = try? JSONDecoder().decode([WageRecord].self, from: data),
+              let last = list.filter({ $0.monthly > 0 }).max(by: { $0.year < $1.year })
+        else { return nil }
+        return (last.year, last.monthly)
+    }
+
+    // 직접 적은 값이 있으면 그것이 우선, 비어 있으면 구매력 탭 기록을 쓴다.
+    // 그래서 월급을 이미 적어 둔 사람은 근로시간만 넣으면 시급이 바로 나온다.
+    private var monthlyIncome: Double {
+        let typed = tvNum(netMonthly)
+        return typed > 0 ? typed : (latestWageRecord?.monthly ?? 0)
+    }
     private var hoursPerWeek: Double { max(1, tvNum(weeklyHours, 50)) }
     // 한 달에 실제로 쏟는 시간 (주 → 월: 52 ÷ 12 = 4.345주).
     private var monthlyHours: Double { hoursPerWeek * 52.0 / 12.0 }
@@ -160,6 +186,25 @@ struct TimeSimSection: View {
 
     // MARK: 1 — 시급 세 가지
 
+    // 월소득을 어디서 가져왔는지 한 줄로 밝힌다. 구매력 탭에 이미 적어 둔 사람은
+    // 근로시간만 넣으면 되고, 다른 통화로 적어 둔 사람은 왜 안 가져왔는지 알 수 있게.
+    private var incomeSourceNote: String {
+        if tvNum(netMonthly) > 0 {
+            if let r = latestWageRecord {
+                return "직접 적은 금액으로 계산해요. 구매력 탭 기록은 \(r.year)년 \(tvWon(r.monthly))이에요."
+            }
+            return "세전이 아니라 실제로 통장에 들어오는 금액으로 적어야 시급이 정직해져요."
+        }
+        if let r = latestWageRecord {
+            return "구매력 탭에 적어 둔 \(r.year)년 월급 \(tvWon(r.monthly))을 쓰고 있어요. 근로시간만 넣으면 시급이 나와요."
+        }
+        if wageCountry != "KR" {
+            let c = CPIData.country(wageCountry)
+            return "구매력 탭 기록이 \(c.flag) \(c.name) 통화라 원화 계산과 섞이지 않게 가져오지 않았어요. 여기 직접 적어 주세요."
+        }
+        return "구매력 탭에 월급을 적어 두면 여기서 자동으로 가져와요."
+    }
+
     private var wageCard: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("내 시급 세 가지")
@@ -171,7 +216,14 @@ struct TimeSimSection: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             VStack(spacing: 10) {
-                tvRow("세후 월소득", $netMonthly, suffix: "원", money: true)
+                tvRow("세후 월소득", $netMonthly, suffix: "원", money: true,
+                      placeholder: latestWageRecord.map { Fmt.won($0.monthly) } ?? "0")
+                Text(incomeSourceNote)
+                    .font(.caption2)
+                    .foregroundStyle(latestWageRecord != nil && tvNum(netMonthly) <= 0
+                                     ? Theme.accent : Theme.textSecond)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
                 tvRow("주 실제 투입시간", $weeklyHours, suffix: "시간", decimal: true)
                 Text("근무만이 아니라 출퇴근·준비·업무 생각까지 넣어야 정직한 시급이 나와요.")
                     .font(.caption2)

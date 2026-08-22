@@ -9,7 +9,8 @@ import FoundationModels
 // 계산 탭 — 참고용 시뮬레이터 모음.
 // 생애주기(모으고 쓰는 인생 자산 곡선) · 대출(종류별 상환 흐름) ·
 // 저축(예금·적금·파킹 만기 수령액) · 투자(내 자산의 앞으로의 범위 예측) ·
-// 월급(과거 월급을 물가로 나눈 실질임금 = 내 구매력 변화).
+// 월급(과거 월급을 물가로 나눈 실질임금 = 내 구매력 변화) ·
+// 시간(돈을 시간으로 환산해 하루의 밀도·순증, 저장 vs 시급 성장을 비교).
 struct SimulatorView: View {
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query private var settingsList: [FireSettings]
@@ -29,6 +30,7 @@ struct SimulatorView: View {
         case savings = "저축"
         case invest = "투자"
         case wage = "월급"
+        case time = "시간"
         var id: String { rawValue }
     }
 
@@ -36,10 +38,28 @@ struct SimulatorView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    Picker("", selection: $mode) {
-                        ForEach(SimMode.allCases) { Text($0.rawValue).tag($0) }
+                    // 모드가 6개라 세그먼트로는 '생애주기' 같은 라벨이 잘린다 → 가로 스크롤 칩.
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(SimMode.allCases) { m in
+                                Button {
+                                    mode = m
+                                } label: {
+                                    Text(m.rawValue)
+                                        .font(.subheadline.weight(.semibold))
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 8)
+                                        .background(mode == m ? Theme.accent : Theme.surfaceHigh)
+                                        .foregroundStyle(mode == m ? Color.black : Theme.textSecond)
+                                        .clipShape(Capsule())
+                                        .overlay(Capsule().stroke(Theme.hairline, lineWidth: 1))
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.vertical, 2)
                     }
-                    .pickerStyle(.segmented)
+                    .animation(.easeInOut(duration: 0.2), value: mode)
 
                     switch mode {
                     case .lifecycle:
@@ -53,6 +73,8 @@ struct SimulatorView: View {
                         InvestForecastSection()
                     case .wage:
                         WageSimSection()
+                    case .time:
+                        TimeSimSection(settings: settings, netWorth: totalNet)
                     }
 
                     Text("입력값을 바탕으로 계산한 참고용 결과예요. 세금·수수료·시장 변동에 따라 실제와 다를 수 있습니다.")

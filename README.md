@@ -5,7 +5,7 @@
 ## 링크
 - 지원 페이지: https://m1zz.github.io/FireTracker/
 - 개인정보처리방침: https://m1zz.github.io/FireTracker/privacy.html
-- 문의: mizzking75@gmail.com
+- 문의: leeo@kakao.com
 
 ## 빌드
 1. `FireTracker.xcodeproj`를 Xcode 15+ 에서 열기

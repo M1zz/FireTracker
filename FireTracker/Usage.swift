@@ -16,6 +16,7 @@
 //
 
 import Foundation
+import CloudKit
 import LeeoKit
 
 enum AppUsage {
@@ -124,5 +125,38 @@ enum AppUsage {
 
     private static func cachedMetrics() -> [String: Double] {
         UserDefaults.standard.dictionary(forKey: metricsKey) as? [String: Double] ?? [:]
+    }
+
+    // MARK: - 진단 (개발자용)
+
+    /// 이 설치를 가리키는 익명 ID. 허브에서 이 기기를 찾을 때 쓴다
+    /// (레코드 이름이 `usage-<이 값>`).
+    static var installID: String { reporter.installID }
+
+    /// 마지막으로 스냅샷을 실제로 보낸 시각. nil이면 아직 한 번도 못 보냈다는 뜻이고,
+    /// 그건 거의 항상 iCloud 계정 문제다(전송 실패 시 이 값은 갱신되지 않는다).
+    static var lastSentAt: Date? {
+        let c = FireTrackerSpec.feedback
+        let key = "leeo.usage.lastSnapshotAt.\(c.containerIdentifier).\(c.appIdentifier ?? "-")"
+        return UserDefaults.standard.object(forKey: key) as? Date
+    }
+
+    /// 지금 보내고 있는 지표 — 허브에 실릴 값 그대로.
+    static var currentMetrics: [String: Double] { cachedMetrics() }
+
+    /// 허브로 쓸 수 있는 상태인지. 사용 통계가 안 잡히는 원인은 대부분 여기다.
+    static func iCloudStatus() async -> String {
+        let container = CKContainer(identifier: FireTrackerSpec.feedback.containerIdentifier)
+        guard let status = try? await container.accountStatus() else {
+            return "확인 실패"
+        }
+        switch status {
+        case .available:                 return "사용 가능"
+        case .noAccount:                 return "iCloud 미로그인 — 전송 안 됨"
+        case .restricted:                return "제한됨(기기 관리 정책) — 전송 안 됨"
+        case .couldNotDetermine:         return "확인 불가 — 전송 안 됨"
+        case .temporarilyUnavailable:    return "일시적으로 불가 — 나중에 재시도"
+        @unknown default:                return "알 수 없음"
+        }
     }
 }

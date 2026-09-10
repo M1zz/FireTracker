@@ -5,6 +5,8 @@ import LeeoKit
 
 @main
 struct FireTrackerApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+
     init() {
         // 계약(FireTrackerSpec)에 선언한 것들을 실제로 켠다 — 사용량 기록, 크래시·행 진단,
         // DEBUG 프리플라이트. 사용현황 스냅샷만 여기서 끄고 앱이 직접 보낸다(AppUsage):
@@ -56,5 +58,15 @@ struct FireTrackerApp: App {
                 .leeoSatisfactionCheck(FireTrackerSpec.self)
         }
         .modelContainer(sharedModelContainer)
+        // 포그라운드로 돌아올 때마다 사용 스냅샷을 다시 시도한다.
+        //
+        // 콜드 런치 때 한 번만 보내면, 그 순간 iCloud가 준비 안 된 사람(로그인 전,
+        // 비행기 모드, 네트워크 없음)은 그 세션이 통째로 유실되고 다음 콜드 런치까지
+        // 기다린다. 앱을 백그라운드에 두고 며칠씩 쓰는 사람은 그동안 허브에서
+        // 활성으로 잡히지 않는다 — lastActiveAt 이 곧 활성 사용자 기준이기 때문.
+        // 전송량은 LeeoKit이 12시간 쓰로틀로 막아 주므로 여기선 부담 없이 부른다.
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { AppUsage.reportSnapshot() }
+        }
     }
 }

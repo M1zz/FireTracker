@@ -274,3 +274,46 @@ struct SavedCalcsView: View {
         try? context.save()
     }
 }
+
+// MARK: - 사용 통계 전송 진단 (개발자 전용)
+
+/// "허브에 이 앱 사용자가 왜 안 잡히지"를 기기에서 바로 확인하는 칸.
+///
+/// 전송은 조용히 실패한다 — iCloud에 로그인 안 된 기기는 아무 소리 없이 아무것도
+/// 안 보낸다. 허브 쪽만 보면 사용자가 없는 건지 전송이 막힌 건지 구분이 안 되므로,
+/// 보내는 쪽 상태를 여기서 보여준다.
+struct UsageDiagnosticsSection: View {
+    @State private var cloudStatus = "확인 중…"
+
+    var body: some View {
+        Section {
+            row("iCloud 상태", cloudStatus, warn: cloudStatus.contains("안 됨"))
+            row("마지막 전송",
+                AppUsage.lastSentAt.map(Fmt.date) ?? "아직 없음",
+                warn: AppUsage.lastSentAt == nil)
+            row("이 기기 ID", String(AppUsage.installID.prefix(8)) + "…")
+            let m = AppUsage.currentMetrics
+            row("보내는 지표", m.isEmpty ? "아직 없음" : "\(m.count)개", warn: m.isEmpty)
+        } header: {
+            Text("사용 통계 전송 (개발자)")
+        } footer: {
+            Text("허브 레코드 이름은 usage-\(AppUsage.installID) 예요. 마지막 전송이 ‘아직 없음’이면 이 기기는 한 번도 허브에 닿지 못한 거고, 원인은 대부분 iCloud 로그인입니다. 전송은 12시간에 한 번으로 제한돼요.")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+        }
+        .task { cloudStatus = await AppUsage.iCloudStatus() }
+    }
+
+    private func row(_ label: String, _ value: String, warn: Bool = false) -> some View {
+        HStack {
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(Theme.textPrimary)
+            Spacer()
+            Text(value)
+                .font(.system(.subheadline, design: .rounded))
+                .foregroundStyle(warn ? Theme.negative : Theme.textSecond)
+                .multilineTextAlignment(.trailing)
+        }
+    }
+}

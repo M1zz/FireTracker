@@ -63,6 +63,9 @@ struct SettingsView: View {
             } header: {
                 Text("지원")
             }
+            if isMasterMode {
+                UsageDiagnosticsSection()
+            }
             DeveloperContactSection()
         }
         .navigationTitle("설정")

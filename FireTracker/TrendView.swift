@@ -12,6 +12,8 @@ struct TrendView: View {
     @State private var thisMonthSel: Int?
     @State private var passiveSel: Date?
     @State private var allocSel: Date?
+    // 기록(스냅샷) 편집 — 이 탭이 그리는 데이터라 이 탭에서 고친다(예전엔 자산 탭 툴바).
+    @State private var showingHistory = false
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
 
@@ -69,8 +71,18 @@ struct TrendView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    // 차트가 가장 먼저 — 탭에 들어오자마자 추이 그래프가 보인다.
-                    // (주/월 기준은 차트 카드 헤더에, 모드 전환은 차트 아래에)
+                    // 1) 남은 길 — 목표까지 얼마나 왔고 얼마를 더 모아야 하나.
+                    JourneyGoalsSection()
+
+                    // 2) 무엇을 보고 있는지 먼저 고르고, 그 다음 차트.
+                    //    (예전엔 세그먼트가 차트 아래에 있어서 뭘 보는지 모른 채 스크롤했다.)
+                    if availableModes.count > 1 {
+                        Picker("", selection: $mode) {
+                            ForEach(availableModes) { Text($0.rawValue).tag($0) }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+
                     // 기록이 한 칸뿐이어도 빈 안내 대신 현재 값으로 바로 그린다.
                     if sorted.isEmpty {
                         emptyState
@@ -88,14 +100,6 @@ struct TrendView: View {
                     // 이번 달 — 월 버킷에 가려진 한 달 안의 움직임 + 현재 상태.
                     if mode == .netWorth, !thisMonthPoints.isEmpty {
                         thisMonthChart
-                    }
-
-                    // 데이터가 있는 모드가 둘 이상일 때만 전환 세그먼트를 만든다.
-                    if availableModes.count > 1 {
-                        Picker("", selection: $mode) {
-                            ForEach(availableModes) { Text($0.rawValue).tag($0) }
-                        }
-                        .pickerStyle(.segmented)
                     }
 
                     if mode != .netWorth, availablePeriods.count > 1 {
@@ -116,7 +120,24 @@ struct TrendView: View {
             }
             .scrollIndicators(.hidden)
             .background(Theme.bg.ignoresSafeArea())
-            .navigationTitle("추이")
+            .navigationTitle("여정")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { showingHistory = true } label: {
+                        Image(systemName: "clock.arrow.circlepath")
+                    }
+                    .accessibilityLabel("기록")
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        GoalSettingsView()
+                    } label: {
+                        Image(systemName: "target")
+                    }
+                    .accessibilityLabel("내 목표")
+                }
+            }
+            .sheet(isPresented: $showingHistory) { SnapshotsView() }
             .onAppear { clampSelections() }
             .onChange(of: snapshots.count) { _, _ in clampSelections() }
         }

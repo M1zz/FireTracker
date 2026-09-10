@@ -32,6 +32,18 @@ struct SimulatorView: View {
         case wage = "구매력"
         case time = "시간"
         var id: String { rawValue }
+
+        /// 사용 통계 이벤트 이름에 쓰는 ASCII 키 (`calc_time` 처럼 나간다).
+        var metricKey: String {
+            switch self {
+            case .lifecycle: return "lifecycle"
+            case .loan:      return "loan"
+            case .savings:   return "savings"
+            case .invest:    return "invest"
+            case .wage:      return "wage"
+            case .time:      return "time"
+            }
+        }
     }
 
     var body: some View {
@@ -44,6 +56,7 @@ struct SimulatorView: View {
                             ForEach(SimMode.allCases) { m in
                                 Button {
                                     mode = m
+                                    AppUsage.logCalc(m.metricKey)
                                 } label: {
                                     Text(m.rawValue)
                                         .font(.subheadline.weight(.semibold))
@@ -88,7 +101,25 @@ struct SimulatorView: View {
             .keyboardDismissable()
             .background(Theme.bg.ignoresSafeArea())
             .navigationTitle("계산")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        // 불러오면 저장해 둔 모드가 펼쳐진 채로 돌아온다.
+                        SavedCalcsView(onRestore: { mode = savedMode })
+                    } label: {
+                        Image(systemName: "bookmark")
+                    }
+                    .accessibilityLabel("저장한 계산")
+                }
+            }
         }
+    }
+
+    /// 불러오기가 UserDefaults에 적어 둔 모드를 읽어 온다.
+    /// (@AppStorage는 바깥에서 값이 바뀌어도 곧바로 따라오지 않아 직접 읽는다.)
+    private var savedMode: SimMode {
+        let raw = UserDefaults.standard.string(forKey: "sim.mode") ?? ""
+        return SimMode(rawValue: raw) ?? mode
     }
 }
 
@@ -428,9 +459,38 @@ private struct LifecycleSimSection: View {
         return sorted[min(max(i, 0), sorted.count - 1)]
     }
 
+    // 결과 판정 — 화면의 배지와 저장 목록의 한 줄이 같은 문구를 쓰도록 한곳에서 만든다.
+    private var verdict: (feasible: Bool, comfy: Bool, headline: String, reason: String) {
+        let result = sim
+        let a = ages
+        let want = Double(retireMonthly) ?? 0
+        let feasible = result.depletionAge == nil
+        let comfy = feasible && result.end >= result.peak
+        let headline = feasible
+            ? (comfy ? "여유로운 은퇴 전략이에요" : "은퇴 가능한 전략이에요")
+            : "은퇴하기엔 아직 부족한 전략이에요"
+        let reason: String
+        if let dep = result.depletionAge {
+            reason = "은퇴 후 \(dep)세에 자산이 바닥나요. 희망 월수령액을 줄이거나, 은퇴를 늦추거나, 수익률·저축을 높여보세요."
+        } else if comfy {
+            reason = "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원을 써도 \(a.end)세에 \(Fmt.krw(result.end))원이 남아요."
+        } else {
+            reason = "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원으로 \(a.end)세까지 버틸 수 있어요."
+        }
+        return (feasible, comfy, headline, reason)
+    }
+
+    /// 저장 목록에 남길 조건 요약.
+    private var conditionSummary: String {
+        let a = ages
+        return "\(a.cur)세 → \(a.retire)세 은퇴 · 시작 \(Fmt.krw(Double(startAsset) ?? 0))원 · "
+            + "연봉 \(Fmt.krw(Double(grossSalary) ?? 0))원 · 수익률 \(returnPct)% · 희망 월 \(Fmt.krw(Double(retireMonthly) ?? 0))원"
+    }
+
     var body: some View {
         let result = sim
         let a = ages
+        let v = verdict
         VStack(spacing: 20) {
             // 결과 — 차트가 먼저.
             VStack(alignment: .leading, spacing: 14) {
@@ -439,25 +499,14 @@ private struct LifecycleSimSection: View {
                     .foregroundStyle(Theme.textPrimary)
 
                 // 결과 판정 — 은퇴 가능한 전략인지 한눈에.
-                let want = Double(retireMonthly) ?? 0
-                let feasible = result.depletionAge == nil
-                let comfy = feasible && result.end >= result.peak
+                let feasible = v.feasible
+                let comfy = v.comfy
                 let tint: Color = feasible ? Theme.positive : Theme.negative
                 let icon = feasible
                     ? (comfy ? "checkmark.seal.fill" : "checkmark.circle.fill")
                     : "exclamationmark.triangle.fill"
-                let verdict = feasible
-                    ? (comfy ? "여유로운 은퇴 전략이에요" : "은퇴 가능한 전략이에요")
-                    : "은퇴하기엔 아직 부족한 전략이에요"
-                let reason: String = {
-                    if let dep = result.depletionAge {
-                        return "은퇴 후 \(dep)세에 자산이 바닥나요. 희망 월수령액을 줄이거나, 은퇴를 늦추거나, 수익률·저축을 높여보세요."
-                    } else if comfy {
-                        return "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원을 써도 \(a.end)세에 \(Fmt.krw(result.end))원이 남아요."
-                    } else {
-                        return "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원으로 \(a.end)세까지 버틸 수 있어요."
-                    }
-                }()
+                let verdict = v.headline
+                let reason = v.reason
                 HStack(spacing: 10) {
                     Image(systemName: icon)
                         .font(.title3)
@@ -646,6 +695,8 @@ private struct LifecycleSimSection: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
+
+            CalcSaveRow(kind: .lifecycle, headline: v.headline, detail: conditionSummary)
         }
         .onAppear {
             seedIfNeeded()
@@ -936,6 +987,12 @@ private struct MortgageSimSection: View {
                     confirmMessage: "남은 대출 잔액 \(Fmt.krw(p))원과 연 이자율 \(ratePct)%가 자산 탭에 ‘부채’로 등록됩니다.",
                     isPresented: $showAddConfirm,
                     action: addAsDebt
+                )
+
+                CalcSaveRow(
+                    kind: .loan,
+                    headline: "총 이자 \(Fmt.krw(totalInterest))원 · 총 상환 \(Fmt.krw(totalPaid))원",
+                    detail: "\(loanKind.rawValue) · 원금 \(Fmt.krw(p))원 · 연 \(ratePct)% · \(years)년 · \(method.rawValue)"
                 )
             }
         }
@@ -1232,6 +1289,12 @@ private struct SavingsSimSection: View {
                     action: addAsCash
                 )
             }
+
+            CalcSaveRow(
+                kind: .savings,
+                headline: "만기 \(Fmt.krw(maturity))원 · 세후 이자 \(Fmt.krw(afterTax))원",
+                detail: "\(kind.rawValue) · \(kind == .installment ? "월 \(Fmt.krw(Double(monthly) ?? 0))원" : "원금 \(Fmt.krw(Double(principal) ?? 0))원") · \(months)개월 · 연 \(ratePct)%\(taxed ? " · 이자소득세 반영" : "")"
+            )
         }
     }
 
@@ -1518,6 +1581,14 @@ private struct InvestForecastSection: View {
                     ForecastAICard(prompt: aiPrompt(asm, band: band))
                 }
                 #endif
+
+                if let tail = band.last {
+                    CalcSaveRow(
+                        kind: .invest,
+                        headline: "\(yearsText)년 뒤 중앙값 \(Fmt.krw(tail.mid))원",
+                        detail: "보수 \(Fmt.krw(tail.low))원 ~ 낙관 \(Fmt.krw(tail.high))원 · 월 추가 \(Fmt.krw(Double(monthlyAdd) ?? 0))원 · 자산 \(asm.count)종"
+                    )
+                }
             }
         }
     }
@@ -1789,6 +1860,16 @@ private struct WageSimSection: View {
                 summaryCard(span)
             } else if rows.count == 1, let only = rows.first {
                 singleEntryCard(only)
+            }
+
+            if let span {
+                let change = span.first.realIndexed > 0
+                    ? span.last.realIndexed / span.first.realIndexed - 1 : 0
+                CalcSaveRow(
+                    kind: .wage,
+                    headline: "\(yearLabel(span.first.year))→\(yearLabel(span.last.year))년 구매력 \(change >= 0 ? "▲" : "▼") \(Fmt.percent(abs(change)))",
+                    detail: "\(country.flag) \(country.name) 물가 기준 · 월급 기록 \(rows.count)개 · \(span.years)년"
+                )
             }
 
             Text(sourceNote)

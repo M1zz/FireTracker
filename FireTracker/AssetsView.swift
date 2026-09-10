@@ -25,7 +25,6 @@ struct AssetsView: View {
     @EnvironmentObject private var refresher: RefreshManager
     @State private var editing: Asset?
     @State private var showingNew = false
-    @State private var showingHistory = false
     @State private var showingImport = false
     @State private var showingBreakdown = false
     @State private var totalMode: AssetTotalMode = .gross
@@ -56,6 +55,7 @@ struct AssetsView: View {
 
     // 수동 새로고침 — 자동 시세 자산의 평가액과 주식·ETF 배당률을 즉시 최신화.
     private func refreshNow() {
+        AppUsage.log(.priceRefreshed)
         Task { await refresher.refresh(assets: assets, settings: settings, context: context) }
     }
 
@@ -135,11 +135,6 @@ struct AssetsView: View {
             .navigationTitle("자산")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button { showingHistory = true } label: {
-                        Image(systemName: "clock.arrow.circlepath")
-                    }
-                }
-                ToolbarItem(placement: .topBarLeading) {
                     Button { refreshNow() } label: {
                         if refresher.isRefreshing {
                             ProgressView()
@@ -189,7 +184,6 @@ struct AssetsView: View {
                     showingCategoryPicker = false
                 }
             }
-            .sheet(isPresented: $showingHistory) { SnapshotsView() }
             .sheet(isPresented: $showingImport) {
                 ScreenshotImportView(startingSortOrder: assets.count)
             }
@@ -2276,6 +2270,7 @@ struct AssetEditor: View {
         } else {
             target = Asset(sortOrder: nextSortOrder)
             context.insert(target)
+            AppUsage.log(.assetAdded)
         }
         target.name = name
         target.assetClass = assetClass
@@ -2326,6 +2321,7 @@ struct AssetEditor: View {
             AssetTrade(date: r.date, kind: r.kind, quantity: r.quantity,
                        unitPrice: r.unitPrice, amount: r.amount)
         } : []
+        if !target.trades.isEmpty { AppUsage.log(.tradeLogged) }
         // 원장이 있으면 보유 수량·투자 원금은 원장을 재생한 값이 진실.
         if supportsBuyMore, !tradeRows.isEmpty {
             let l = TradeLedger.replay(tradeRows)

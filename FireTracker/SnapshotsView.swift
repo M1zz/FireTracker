@@ -184,6 +184,7 @@ struct SnapshotDetail: View {
         snapshot.monthlyPassiveIncome = Double(passiveIncome) ?? 0
         snapshot.note = note
         try? context.save()
+        AppUsage.log(.snapshotSaved)
         dismiss()
     }
 

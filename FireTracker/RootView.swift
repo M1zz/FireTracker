@@ -50,7 +50,7 @@ struct RootView: View {
                 .tag(1)
 
             TrendView()
-                .tabItem { Label("추이", systemImage: "chart.xyaxis.line") }
+                .tabItem { Label("여정", systemImage: "chart.xyaxis.line") }
                 .tag(2)
 
             SimulatorView()
@@ -73,13 +73,18 @@ struct RootView: View {
                 to: nil, from: nil, for: nil
             )
         }
-        .onAppear { bootstrapSettings() }
+        .onAppear {
+            bootstrapSettings()
+            // 익명 사용 스냅샷 — 지표를 먼저 채운 다음 보낸다(첫 실행에도 값이 실리도록).
+            reportUsage()
+        }
         // 자산에 변동이 생기면(어느 탭이든) 오늘 기록을 자동 갱신 — 수동 저장 불필요.
         .onChange(of: assetsFingerprint) { _, _ in
             let s = settingsList.first ?? FireSettings()
             refresher.upsertCurrentPeriodSnapshot(
                 assets: assets, settings: s, snapshots: snapshots, context: context
             )
+            updateUsageMetrics()
         }
         .environmentObject(refresher)
         // 앱 시작 시 — 마지막 갱신이 7일 이상 지났으면 시세·배당을 자동 갱신하고,
@@ -131,11 +136,35 @@ struct RootView: View {
             get: { demoActive },
             set: { on in
                 withAnimation {
-                    if on { try? DemoData.enable(context: context) }
+                    if on {
+                        try? DemoData.enable(context: context)
+                        AppUsage.log(.demoOn)
+                    }
                     else { try? DemoData.disable(context: context) }
                 }
             }
         )
+    }
+
+    // 대시보드에 실어 보낼 이 앱만의 지표 — 개수와 on/off 뿐, 금액은 나가지 않는다.
+    private func updateUsageMetrics() {
+        let s = settingsList.first
+        AppUsage.updateMetrics(
+            assetCount: assets.count,
+            debtCount: assets.filter(\.isDebt).count,
+            autoPricedCount: assets.filter(\.autoPriced).count,
+            tradeCount: assets.reduce(0) { $0 + $1.trades.count },
+            snapshotCount: snapshots.count,
+            hasGoal: (s?.monthsToRetire) != nil,
+            hasPriceKey: !(s?.finnhubKey.isEmpty ?? true)
+                || !(s?.kisAppKey.isEmpty ?? true)
+                || !(s?.dataGoKey.isEmpty ?? true)
+        )
+    }
+
+    private func reportUsage() {
+        updateUsageMetrics()
+        AppUsage.reportSnapshot()
     }
 
     // Ensure exactly one settings record exists.

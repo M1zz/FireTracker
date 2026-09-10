@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1565B7348B6849C756363468 /* FireTrackerSpec.swift */; };
+		A1000012 /* Usage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000012 /* Usage.swift */; };
+		A1000016 /* JourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000016 /* JourneyView.swift */; };
+		A1000015 /* GoalSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000015 /* GoalSettingsView.swift */; };
+		A1000014 /* SavedCalcsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000014 /* SavedCalcsView.swift */; };
+		A1000013 /* SavedCalc.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000013 /* SavedCalc.swift */; };
 		A1000001 /* FireTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* FireTrackerApp.swift */; };
 		A1000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000002 /* Models.swift */; };
 		A1000003 /* FireEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000003 /* FireEngine.swift */; };
@@ -52,6 +57,11 @@
 		B100000F /* BackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManager.swift; sourceTree = "<group>"; };
 		B1000010 /* ReflectionTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflectionTips.swift; sourceTree = "<group>"; };
 		B1000011 /* DemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoData.swift; sourceTree = "<group>"; };
+		B1000012 /* Usage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Usage.swift; sourceTree = "<group>"; };
+		B1000016 /* JourneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyView.swift; sourceTree = "<group>"; };
+		B1000015 /* GoalSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalSettingsView.swift; sourceTree = "<group>"; };
+		B1000014 /* SavedCalcsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedCalcsView.swift; sourceTree = "<group>"; };
+		B1000013 /* SavedCalc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedCalc.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +107,11 @@
 				B1000011 /* DemoData.swift */,
 				B100000A /* Assets.xcassets */,
 				1565B7348B6849C756363468 /* FireTrackerSpec.swift */,
+				B1000012 /* Usage.swift */,
+				B1000016 /* JourneyView.swift */,
+				B1000015 /* GoalSettingsView.swift */,
+				B1000014 /* SavedCalcsView.swift */,
+				B1000013 /* SavedCalc.swift */,
 			);
 			path = FireTracker;
 			sourceTree = "<group>";
@@ -204,6 +219,11 @@
 				A1000010 /* ReflectionTips.swift in Sources */,
 				A1000011 /* DemoData.swift in Sources */,
 				66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */,
+				A1000012 /* Usage.swift in Sources */,
+				A1000016 /* JourneyView.swift in Sources */,
+				A1000015 /* GoalSettingsView.swift in Sources */,
+				A1000014 /* SavedCalcsView.swift in Sources */,
+				A1000013 /* SavedCalc.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,7 +339,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = FireTracker/FireTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "퇴사각";
@@ -329,7 +349,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.devkoan.FireTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -347,7 +367,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = FireTracker/FireTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "퇴사각";
@@ -357,7 +377,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.devkoan.FireTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -397,7 +417,7 @@
 			repositoryURL = "https://github.com/M1zz/LeeoKit.git";
 			requirement = {
 				kind = exactVersion;
-				version = 2.7.0;
+				version = 3.7.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

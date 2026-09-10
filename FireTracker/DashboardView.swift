@@ -7,7 +7,7 @@ import TipKit
 struct MilestoneSetupTip: Tip {
     var title: Text { Text("기간별 목표를 켜보세요") }
     var message: Text? {
-        Text("설정 ▸ ‘목표 측정 & 기간’에서 현재 나이와 목표 은퇴 나이를 넣으면, 은퇴까지 필요한 속도로 이번달·올해·5년·은퇴 목표를 단계별로 보여드려요.")
+        Text("여정 탭 ▸ 내 목표(과녁 아이콘)에서 현재 나이와 목표 은퇴 나이를 넣으면, 은퇴까지 필요한 속도로 이번달·올해·5년·은퇴 목표를 단계별로 보여드려요.")
     }
     var image: Image? { Image(systemName: "target") }
 }
@@ -20,7 +20,7 @@ struct RecordDotTip: Tip {
 
     var title: Text { Text("이 점은 저장된 기록이에요") }
     var message: Text? {
-        Text("자산 탭 상단의 시계 아이콘(기록)에서 이 기록을 수정하거나 지울 수 있어요. 잘못 튄 점도 거기서 고치면 됩니다.")
+        Text("여정 탭 상단의 시계 아이콘(기록)에서 이 기록을 수정하거나 지울 수 있어요. 잘못 튄 점도 거기서 고치면 됩니다.")
     }
     var image: Image? { Image(systemName: "clock.arrow.circlepath") }
 
@@ -80,14 +80,6 @@ private struct AllocationSlice: Identifiable {
     let color: Color
 }
 
-// One point on the FIRE trajectory: where you should be at a given time.
-private struct TrajPoint: Identifiable {
-    let id = UUID()
-    let date: Date
-    let value: Double
-    let label: String
-}
-
 // Traffic-light reading of a single financial signal.
 enum SignalLevel {
     case good, caution, bad, neutral
@@ -116,10 +108,6 @@ struct DashboardView: View {
 
     @State private var showingAddAsset = false
     @State private var totalMode: AssetTotalMode = .gross
-    @State private var milestoneMetric: FireGoalType = .assets
-    // 기간별 목표 그래프에서 보고 있는 구간(이번 달/올해/5년/은퇴). 전체를 한 번에
-    // 펼치지 않고 고른 구간만 확대해 본다.
-    @State private var milestoneHorizonLabel: String = "올해"
     // 변화 카드 우측 상단 토글: 켜면 총자산 변화량을 롤링 숫자로 강조.
     @State private var showTotalChange = false
     @State private var animatedTotalChange: Double = 0
@@ -371,18 +359,16 @@ struct DashboardView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 20) {
+                            // 앱 이름이 걸린 질문의 답이 맨 위에 온다.
+                            // (예전엔 열두 번째 카드라 스크롤 끝까지 가야 보였다.)
+                            goalProgressCard
                             welcomeCard
                             // 4단계 — 1년 넘게 만족점을 안 봤으면 다시 비춰보라고 묻는다.
                             TipView(reReflectTip)
                                 .tipBackground(Theme.surface)
-                            if settings.monthsToRetire != nil {
-                                milestoneGoalsCard
-                                requiredSavingsCard
-                            } else {
-                                TipView(milestoneSetupTip)
-                                    .tipBackground(Theme.surface)
-                            }
+                            liquidityCard
                             cashFlowCard
+                            signalCard
                             capitalNeededCard
                             NavigationLink {
                                 ProjectionDetailView(startingAssets: projectionBase,
@@ -395,7 +381,6 @@ struct DashboardView: View {
                                 projectionCard
                             }
                             .buttonStyle(.plain)
-                            liquidityCard
                             metricsGrid
                             NavigationLink {
                                 WhatIfView(defaultAmount: totalDebt,
@@ -404,9 +389,6 @@ struct DashboardView: View {
                                 whatIfCard
                             }
                             .buttonStyle(.plain)
-                            allocationCard
-                            signalCard
-                            goalProgressCard
                         }
                         .padding(20)
                     }
@@ -821,321 +803,6 @@ struct DashboardView: View {
         .cardStyle()
     }
 
-    // Horizons to slice the retirement goal into. Only those nearer than
-    // retirement get their own row; the final row is always 은퇴.
-    private var milestoneHorizons: [(label: String, months: Int)] {
-        guard let m = settings.monthsToRetire else { return [] }
-        var out: [(String, Int)] = []
-        for (label, mo) in [("이번 달", 1), ("올해", max(1, monthsLeftInYear)), ("5년", 60)] where mo < m {
-            out.append((label, mo))
-        }
-        out.append(("은퇴", m))
-        return out
-    }
-
-    private func milestoneRow(label: String, months: Int, metric: FireGoalType) -> some View {
-        let isAsset = metric == .assets
-        let current = isAsset ? netWorth : monthlyPassiveIncome
-        let goal = isAsset ? fireNumber : settings.incomeGoalMonthly
-        let target = FireEngine.milestoneTarget(current: current, goal: goal,
-                                                monthsToRetire: settings.monthsToRetire ?? 0,
-                                                horizonMonths: months)
-        let progress = target > 0 ? min(current / target, 1) : 0
-        let gap = max(0, target - current)
-        return VStack(alignment: .leading, spacing: 5) {
-            HStack {
-                Text(label)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.textPrimary)
-                Spacer()
-                Text(isAsset ? "\(Fmt.krw(target))원" : "월 \(Fmt.krw(target))원")
-                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                    .foregroundStyle(Theme.accent)
-            }
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule().fill(Theme.hairline)
-                    Capsule().fill(progress >= 1 ? Theme.positive : Theme.accent)
-                        .frame(width: max(2, geo.size.width * progress))
-                }
-            }
-            .frame(height: 7)
-            Text(gap < 1
-                 ? "이미 달성 🎉 · 현재 \(isAsset ? "" : "월 ")\(Fmt.krw(current))원 (목표 \(isAsset ? "" : "월 ")\(Fmt.krw(target))원)"
-                 : "\(Fmt.percent(progress, fraction: 0)) · 현재 \(isAsset ? "" : "월 ")\(Fmt.krw(current))원 · \(isAsset ? "" : "월 ")\(Fmt.krw(gap))원 더 필요")
-                .font(.caption2)
-                .foregroundStyle(gap < 1 ? Theme.positive : Theme.textSecond)
-        }
-    }
-
-    // 선택한 구간의 달력 경계. 이번 달=1일~말일, 올해=1월 1일~12월 31일,
-    // 5년·은퇴=이번 달 1일~N개월 뒤. X축을 이 범위로 고정한다.
-    private func periodBounds(label: String, months: Int) -> (start: Date, end: Date) {
-        let cal = Calendar.current
-        let now = Date()
-        let monthStart = cal.date(from: cal.dateComponents([.year, .month], from: now)) ?? now
-        switch label {
-        case "이번 달":
-            let next = cal.date(byAdding: .month, value: 1, to: monthStart) ?? now
-            let end = cal.date(byAdding: .second, value: -1, to: next) ?? next
-            return (monthStart, end)
-        case "올해":
-            let y = cal.component(.year, from: now)
-            let start = cal.date(from: DateComponents(year: y, month: 1, day: 1)) ?? monthStart
-            let end = cal.date(from: DateComponents(year: y, month: 12, day: 31, hour: 23, minute: 59, second: 59)) ?? now
-            return (start, end)
-        default: // 5년·은퇴 — 이번 달 1일부터 N개월 뒤까지.
-            let end = cal.date(byAdding: .month, value: months, to: now) ?? now
-            return (monthStart, end)
-        }
-    }
-
-    // 한 구간의 궤도 분석: 실제 기록·지금·기간 끝 목표 + 과거 추세 예상.
-    private struct TrajModel {
-        let start: Date
-        let end: Date
-        let now: Date
-        let current: Double
-        let goalEnd: Double          // 기간 끝에 도달해야 할 목표치
-        let actual: [TrajPoint]      // 기간 내 기록 + 지금 (시간순)
-        let spanDays: Double
-    }
-
-    private func trajectoryModel(metric: FireGoalType, label: String, months: Int) -> TrajModel? {
-        guard let m = settings.monthsToRetire else { return nil }
-        let isAsset = metric == .assets
-        let current = isAsset ? netWorth : monthlyPassiveIncome
-        let goal = isAsset ? fireNumber : settings.incomeGoalMonthly
-        let now = Date()
-        let (start, end) = periodBounds(label: label, months: months)
-        func value(_ s: NetWorthSnapshot) -> Double { isAsset ? s.netWorth : s.monthlyPassiveIncome }
-
-        // 선형 은퇴 경로에서 특정 시점의 목표치(현재→목표 사이를 시간 비례로).
-        func target(at date: Date) -> Double {
-            guard m > 0, goal > current else { return goal }
-            let monthsAhead = max(0, date.timeIntervalSince(now) / (30.4375 * 86_400))
-            return current + (goal - current) * min(1, monthsAhead / Double(m))
-        }
-        let goalEnd = target(at: end)
-
-        var actual: [TrajPoint] = snapshots
-            .filter { $0.date >= start && $0.date <= now }
-            .map { TrajPoint(date: $0.date, value: value($0), label: "기록") }
-            .sorted { $0.date < $1.date }
-        actual.append(TrajPoint(date: now, value: current, label: "지금"))
-
-        return TrajModel(start: start, end: end, now: now, current: current,
-                         goalEnd: goalEnd, actual: actual,
-                         spanDays: end.timeIntervalSince(start) / 86_400)
-    }
-
-    // 궤적 차트에서 탭으로 고른 시점 — 가장 가까운 기록 점의 정보를 보여준다.
-    @State private var trajSel: Date?
-    private let recordDotTip = RecordDotTip()
-
-    @ViewBuilder
-    private func trajectoryChart(metric: FireGoalType, label: String, months: Int) -> some View {
-        if let mdl = trajectoryModel(metric: metric, label: label, months: months) {
-            let goalPt = TrajPoint(date: mdl.end, value: mdl.goalEnd, label: "목표")
-            let nowPt = TrajPoint(date: mdl.now, value: mdl.current, label: "지금")
-            let records = mdl.actual.filter { $0.label == "기록" }
-            VStack(alignment: .leading, spacing: 8) {
-            Chart {
-                // 과거 기록 → 지금까지는 실선으로 이어 실제 흐름을 보여주고,
-                // 지금 → 목표는 점선으로 — 아직 오지 않은 '필요한 페이스'라서.
-                ForEach(mdl.actual) { p in
-                    LineMark(x: .value("시점", p.date), y: .value("값", p.value),
-                             series: .value("계열", "실제"))
-                        .foregroundStyle(Theme.accent)
-                        .interpolationMethod(.catmullRom)
-                        .lineStyle(StrokeStyle(lineWidth: 2))
-                }
-                // 지금 → 목표 (지금부터 필요한 페이스).
-                ForEach([nowPt, goalPt]) { p in
-                    LineMark(x: .value("시점", p.date), y: .value("값", p.value),
-                             series: .value("계열", "지금→목표"))
-                        .foregroundStyle(Theme.accent.opacity(0.7))
-                        .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [2, 3]))
-                }
-                // 기록 점 + 지금·목표 강조.
-                ForEach(mdl.actual.filter { $0.label == "기록" }) { p in
-                    PointMark(x: .value("시점", p.date), y: .value("값", p.value))
-                        .foregroundStyle(Theme.accent.opacity(0.4))
-                        .symbolSize(20)
-                }
-                PointMark(x: .value("시점", mdl.now), y: .value("값", mdl.current))
-                    .foregroundStyle(Theme.positive)
-                    .symbolSize(90)
-                    .annotation(position: .top, spacing: 3) {
-                        Text("지금").font(.caption2.weight(.semibold)).foregroundStyle(Theme.positive)
-                    }
-                PointMark(x: .value("시점", mdl.end), y: .value("값", mdl.goalEnd))
-                    .foregroundStyle(Theme.accent)
-                    .symbolSize(90)
-                    .annotation(position: .top, spacing: 3) {
-                        Text("목표").font(.caption2.weight(.semibold)).foregroundStyle(Theme.accent)
-                    }
-            }
-            .chartXScale(domain: mdl.start...mdl.end)
-            .chartYAxis {
-                AxisMarks(position: .leading) { value in
-                    AxisGridLine().foregroundStyle(Theme.hairline)
-                    AxisValueLabel {
-                        if let v = value.as(Double.self) {
-                            Text("\(Fmt.krw(v))원")
-                                .font(.caption2)
-                                .foregroundStyle(Theme.textSecond)
-                        }
-                    }
-                }
-            }
-            .chartXAxis {
-                // 이번 달=일 단위, 1년 안=월 단위, 그 이상=연 단위 눈금.
-                if mdl.spanDays <= 45 {
-                    AxisMarks(values: .stride(by: .day, count: 7)) { _ in
-                        AxisGridLine().foregroundStyle(Theme.hairline)
-                        AxisValueLabel(format: .dateTime.day())
-                    }
-                } else if mdl.spanDays <= 550 {
-                    AxisMarks(values: .stride(by: .month, count: 2)) { _ in
-                        AxisGridLine().foregroundStyle(Theme.hairline)
-                        AxisValueLabel(format: .dateTime.month(.abbreviated))
-                    }
-                } else {
-                    AxisMarks(values: .stride(by: .year, count: 1)) { _ in
-                        AxisGridLine().foregroundStyle(Theme.hairline)
-                        AxisValueLabel(format: .dateTime.year())
-                    }
-                }
-            }
-            .chartXSelection(value: $trajSel)
-            .onChange(of: trajSel) { _, new in
-                // 점을 탭하는 순간부터 팁이 뜰 자격을 얻는다(닫기 전까지).
-                if new != nil { RecordDotTip.dotTapped = true }
-            }
-            .frame(height: 190)
-            .animation(.smooth(duration: 0.5), value: months)
-
-            // 점 안내 — 탭하면 그 기록의 날짜·값, 평소엔 점이 뭔지 한 줄 설명.
-            if let sel = trajSel,
-               let hit = records.min(by: {
-                   abs($0.date.timeIntervalSince(sel)) < abs($1.date.timeIntervalSince(sel))
-               }) {
-                Text("\(recordDateText(hit.date)) 기록 · \(metric == .assets ? "" : "월 ")\(Fmt.krw(hit.value))원")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.accent)
-            } else if !records.isEmpty {
-                Text("옅은 점은 그 시점에 저장된 기록이에요. 점 근처를 탭하면 날짜와 값이 보여요.")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.textSecond)
-            }
-            // 수정·삭제 경로 안내는 팁킷으로 — 점을 탭한 뒤 한 번만 보여주고,
-            // 닫으면 다시 나타나지 않는다.
-            TipView(recordDotTip)
-                .tipBackground(Theme.surface)
-            }
-        }
-    }
-
-    // The retirement goal, sliced into 이번달·올해·5년·은퇴 so progress isn't only
-    // measured against the far-off finish line.
-    private var milestoneGoalsCard: some View {
-        let metric = settings.fireGoalType == .both ? milestoneMetric : settings.fireGoalType
-        let horizons = milestoneHorizons
-        // 선택한 구간 — 저장된 라벨이 목록에 없으면 가장 가까운 구간으로.
-        let sel = horizons.first { $0.label == milestoneHorizonLabel } ?? horizons.first ?? ("은퇴", settings.monthsToRetire ?? 0)
-        return VStack(alignment: .leading, spacing: 14) {
-            HStack {
-                Text("기간별 목표")
-                    .font(.headline)
-                    .foregroundStyle(Theme.textPrimary)
-                Spacer()
-                if settings.fireGoalType == .both {
-                    Picker("", selection: $milestoneMetric) {
-                        Text("자산").tag(FireGoalType.assets)
-                        Text("패시브 인컴").tag(FireGoalType.income)
-                    }
-                    .pickerStyle(.segmented)
-                    .fixedSize()
-                }
-            }
-
-            // 구간 선택 — 고른 구간만 확대해서 본다(전체 은퇴까지 한 번에 X).
-            if horizons.count > 1 {
-                Picker("", selection: $milestoneHorizonLabel.animation(.smooth(duration: 0.5))) {
-                    ForEach(horizons, id: \.label) { h in Text(h.label).tag(h.label) }
-                }
-                .pickerStyle(.segmented)
-            }
-
-            // 선택한 구간을 달력 범위로 — 이번 달 1일~말일, 올해 1월~12월.
-            // 실제 기록(지금까지) + 지금→목표 안내선만 — 현재 대비 목표는 아래 진행도에서.
-            trajectoryChart(metric: metric, label: sel.label, months: sel.months)
-            Text("\(sel.label) 목표까지 · \(horizonRemainText(sel.months))")
-                .font(.caption2)
-                .foregroundStyle(Theme.textSecond)
-
-            Divider().overlay(Theme.hairline)
-            // 선택한 구간의 진행도만 — 다른 구간은 위 선택기로 전환.
-            milestoneRow(label: sel.label, months: sel.months, metric: metric)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .cardStyle()
-    }
-
-    // 목표(FIRE 자산)까지 은퇴 시점에 도달하려면 하루/주/월 얼마를 모아야 하는지.
-    @ViewBuilder
-    private var requiredSavingsCard: some View {
-        if let months = settings.monthsToRetire, months > 0, fireNumber > 0, goalRemaining > 0 {
-            let monthly = goalRemaining / Double(months)
-            let weekly = monthly * 12 / 52
-            let daily = monthly * 12 / 365
-            VStack(alignment: .leading, spacing: 12) {
-                Text("목표까지 필요 저축")
-                    .font(.headline)
-                    .foregroundStyle(Theme.textPrimary)
-                Text("FIRE 목표 \(Fmt.krw(fireNumber))원까지 \(months / 12)년 \(months % 12)개월 · 남은 \(Fmt.krw(goalRemaining))원")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.textSecond)
-                HStack(spacing: 0) {
-                    paceStat("하루", daily)
-                    paceStat("주", weekly)
-                    paceStat("월", monthly)
-                }
-                if monthlySavingsNow > 0 {
-                    let ratio = monthlySavingsNow / monthly
-                    Text(ratio >= 1
-                         ? "지금 월 저축 \(Fmt.krw(monthlySavingsNow))원 — 목표 페이스를 넘었어요 🎉"
-                         : "지금 월 저축 \(Fmt.krw(monthlySavingsNow))원 · 목표 페이스의 \(Fmt.percent(ratio, fraction: 0))")
-                        .font(.caption2)
-                        .foregroundStyle(ratio >= 1 ? Theme.positive : Theme.textSecond)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .cardStyle()
-        }
-    }
-
-    private func paceStat(_ label: String, _ value: Double) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
-            Text(label).font(.caption2).foregroundStyle(Theme.textSecond)
-            Text("\(Fmt.krw(value))원")
-                .font(.system(.subheadline, design: .rounded).weight(.bold))
-                .foregroundStyle(Theme.accent)
-                .lineLimit(1).minimumScaleFactor(0.7)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    // "3개월"·"2년 4개월"·"오늘" 같은 남은 기간 텍스트.
-    private func horizonRemainText(_ months: Int) -> String {
-        if months <= 0 { return "이번 달" }
-        let y = months / 12, mo = months % 12
-        if y > 0 && mo > 0 { return "\(y)년 \(mo)개월 뒤" }
-        if y > 0 { return "\(y)년 뒤" }
-        return "\(mo)개월 뒤"
-    }
-
     // Hero: the cash-flow question — does the income my assets produce cover the
     // monthly spending I want? This, not a static asset total, is the real
     // measure of financial independence and current liquidity.
@@ -1519,84 +1186,6 @@ struct DashboardView: View {
             Image(systemName: "chevron.right")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .cardStyle()
-    }
-
-    private var allocationCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack {
-                Text("자산 구성")
-                    .font(.headline)
-                    .foregroundStyle(Theme.textPrimary)
-                Spacer()
-                // Only offer the toggle when debt makes 총자산 ≠ 순자산.
-                if hasDebt {
-                    Picker("", selection: $totalMode) {
-                        ForEach(AssetTotalMode.allCases) { mode in
-                            Text(mode.rawValue).tag(mode)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .fixedSize()
-                }
-            }
-
-            // Headline total for the selected mode, with the other figure as context.
-            VStack(alignment: .leading, spacing: 2) {
-                Text(effectiveMode == .gross ? "총자산" : "순자산")
-                    .font(.caption)
-                    .foregroundStyle(Theme.textSecond)
-                Text("\(Fmt.krw(effectiveMode == .gross ? grossAssets : netAssets))원")
-                    .font(.system(.title, design: .rounded, weight: .bold))
-                    .foregroundStyle(effectiveMode == .gross ? Theme.textPrimary : Theme.accent)
-                if hasDebt {
-                    Text(effectiveMode == .gross
-                         ? "부채 \(Fmt.krw(totalDebt))원 차감 시 순자산 \(Fmt.krw(netAssets))원"
-                         : "총자산 \(Fmt.krw(grossAssets))원 − 부채 \(Fmt.krw(totalDebt))원")
-                        .font(.caption2)
-                        .foregroundStyle(Theme.textSecond)
-                }
-            }
-
-            if allocationSlices.isEmpty {
-                Text("기록된 자산이 없습니다.")
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.textSecond)
-            } else {
-                Chart(allocationSlices) { slice in
-                    SectorMark(
-                        angle: .value("금액", slice.amount),
-                        innerRadius: .ratio(0.6),
-                        angularInset: 2
-                    )
-                    .foregroundStyle(slice.color)
-                    .cornerRadius(4)
-                }
-                .frame(height: 180)
-                .animation(.easeInOut(duration: 0.45), value: allocationSlices.map(\.amount))
-
-                VStack(spacing: 8) {
-                    ForEach(allocationSlices) { slice in
-                        let isDebt = slice.id == AssetClass.debt.rawValue
-                        HStack {
-                            Circle()
-                                .fill(slice.color)
-                                .frame(width: 10, height: 10)
-                            Text(slice.label)
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.textPrimary)
-                            Spacer()
-                            Text("\(isDebt ? "-" : "")\(Fmt.krw(slice.amount))원")
-                                .font(.subheadline.monospacedDigit())
-                                .foregroundStyle(isDebt ? Theme.negative : Theme.textSecond)
-                        }
-                        .transition(.opacity.combined(with: .move(edge: .top)))
-                    }
-                }
-                .animation(.easeInOut(duration: 0.45), value: allocationSlices.map(\.id))
-            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()

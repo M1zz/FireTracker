@@ -6,7 +6,10 @@ import LeeoKit
 @main
 struct FireTrackerApp: App {
     init() {
-        LeeoEngagement.shared.registerLaunch()
+        // 계약(FireTrackerSpec)에 선언한 것들을 실제로 켠다 — 사용량 기록, 크래시·행 진단,
+        // DEBUG 프리플라이트. 사용현황 스냅샷만 여기서 끄고 앱이 직접 보낸다(AppUsage):
+        // 이 앱만의 지표(자산 수·기록 수 등)를 함께 실어야 해서다.
+        LeeoKit.bootstrap(FireTrackerSpec.self, usageReporting: false)
     }
 
     var sharedModelContainer: ModelContainer = {
@@ -16,7 +19,8 @@ struct FireTrackerApp: App {
             AssetEntry.self,
             Asset.self,
             AssetDetail.self,
-            AssetTrade.self
+            AssetTrade.self,
+            SavedCalc.self
         ])
         // 이 앱의 SwiftData 저장소는 기기 안에만 둔다(백업은 BackupManager가 파일로 담당).
         // cloudKitDatabase를 지정하지 않으면, entitlements에 있는 iCloud 권한

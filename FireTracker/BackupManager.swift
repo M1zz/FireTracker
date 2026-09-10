@@ -21,6 +21,7 @@ struct BackupData: Codable {
     var settings: SettingsDTO?
     var assets: [AssetDTO]
     var snapshots: [SnapshotDTO]
+    var calcs: [CalcDTO]?
 
     // UserDefaults — 계산 탭/표시 설정. 문자열·불리언으로 나눠 보관.
     var stringDefaults: [String: String]
@@ -97,6 +98,16 @@ struct BackupData: Codable {
         var entries: [EntryDTO]
     }
 
+    /// 저장한 계산. 예전 백업엔 없으므로 옵셔널 — 없으면 빈 목록으로 복원한다.
+    struct CalcDTO: Codable {
+        var savedAt: Date
+        var kindRaw: String
+        var title: String
+        var headline: String
+        var detail: String
+        var inputsJSON: String
+    }
+
     struct EntryDTO: Codable {
         var assetClassRaw: String
         var name: String
@@ -128,8 +139,12 @@ enum BackupManager {
         "sim.wage.entries", "sim.wage.mode",
     ]
     static let boolKeys: [String] = [
-        "sim.life.seeded", "sim.sav.taxed", "amountNumbersOnly", "appLockEnabled",
+        "sim.life.seeded", "sim.life.scaleReturns", "sim.sav.taxed", "sim.time.seeded",
+        "amountNumbersOnly", "appLockEnabled",
     ]
+
+    /// 계산기 입력(`sim.`)이 아닌, 앱 자체의 표시·보안 설정.
+    static let appPreferenceKeys: Set<String> = ["amountNumbersOnly", "appLockEnabled"]
 
     // MARK: 백업 만들기
 
@@ -139,14 +154,21 @@ enum BackupManager {
         let assets = try context.fetch(FetchDescriptor<Asset>())
         let snapshots = try context.fetch(FetchDescriptor<NetWorthSnapshot>())
 
+        let calcs = try context.fetch(FetchDescriptor<SavedCalc>())
+
+        // 계산기 입력값은 전부 `sim.` 으로 시작한다. 키를 하나씩 나열하면 계산기를
+        // 늘릴 때마다 빠뜨리므로(실제로 시간·투자 탭이 빠져 있었다) 접두사로 쓸어 담는다.
         let defaults = UserDefaults.standard
+        let boolSet = Set(boolKeys)
         var stringDefaults: [String: String] = [:]
-        for key in stringKeys where defaults.object(forKey: key) != nil {
-            if let v = defaults.string(forKey: key) { stringDefaults[key] = v }
-        }
         var boolDefaults: [String: Bool] = [:]
-        for key in boolKeys where defaults.object(forKey: key) != nil {
-            boolDefaults[key] = defaults.bool(forKey: key)
+        for (key, raw) in defaults.dictionaryRepresentation()
+        where key.hasPrefix("sim.") || appPreferenceKeys.contains(key) {
+            if boolSet.contains(key) {
+                if let n = raw as? NSNumber { boolDefaults[key] = n.boolValue }
+            } else if let v = raw as? String {
+                stringDefaults[key] = v
+            }
         }
 
         return BackupData(
@@ -155,6 +177,7 @@ enum BackupManager {
             settings: settings.map(settingsDTO),
             assets: assets.map(assetDTO),
             snapshots: snapshots.map(snapshotDTO),
+            calcs: calcs.map(calcDTO),
             stringDefaults: stringDefaults,
             boolDefaults: boolDefaults
         )
@@ -184,6 +207,7 @@ enum BackupManager {
         try context.delete(model: Asset.self)
         try context.delete(model: NetWorthSnapshot.self)
         try context.delete(model: FireSettings.self)
+        try context.delete(model: SavedCalc.self)
 
         // 2) 설정 복원 (단일 인스턴스).
         if let s = backup.settings {
@@ -267,6 +291,18 @@ enum BackupManager {
                 context.insert(entry)
                 return entry
             }
+        }
+
+        // 4.5) 저장한 계산.
+        for c in backup.calcs ?? [] {
+            let calc = SavedCalc()
+            calc.savedAt = c.savedAt
+            calc.kindRaw = c.kindRaw
+            calc.title = c.title
+            calc.headline = c.headline
+            calc.detail = c.detail
+            calc.inputsJSON = c.inputsJSON
+            context.insert(calc)
         }
 
         try context.save()
@@ -401,6 +437,11 @@ enum BackupManager {
                   .init(date: $0.date, kindRaw: $0.kindRaw, quantity: $0.quantity,
                         unitPrice: $0.unitPrice, amount: $0.amount, note: $0.note)
               })
+    }
+
+    private static func calcDTO(_ c: SavedCalc) -> BackupData.CalcDTO {
+        BackupData.CalcDTO(savedAt: c.savedAt, kindRaw: c.kindRaw, title: c.title,
+                           headline: c.headline, detail: c.detail, inputsJSON: c.inputsJSON)
     }
 
     private static func snapshotDTO(_ s: NetWorthSnapshot) -> BackupData.SnapshotDTO {

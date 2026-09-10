@@ -179,6 +179,13 @@ struct TimeSimSection: View {
             crossoverCard
             oneHourCard
             conclusionCard
+
+            CalcSaveRow(
+                kind: .time,
+                headline: "한계 시급 \(tvWon(marginalWage)) · 하루 밀도 ×\(String(format: "%.2f", density))",
+                detail: "회계적 시급 \(tvWon(accountingWage)) · FIRE 시급 \(tvWon(fireWage)) · 주 \(Int(hoursPerWeek))시간"
+                    + (boughtHours > 0 ? " · 순증 \(tvHours(netGain))" : "")
+            )
         }
         .onAppear(perform: load)
         .onChange(of: buys) { _, _ in save() }

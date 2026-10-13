@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import Charts
 import TipKit
+import LeeoKit
 #if canImport(FoundationModels)
 import FoundationModels
 #endif
@@ -16,6 +17,8 @@ struct SimulatorView: View {
     @Query private var settingsList: [FireSettings]
     // 마지막으로 보던 계산 모드를 저장해 다시 와도 그대로.
     @AppStorage("sim.mode") private var mode: SimMode = .lifecycle
+    @EnvironmentObject private var pro: LeeoStore
+    @State private var paywallFeature: ProFeature?
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
     private var totalNet: Double { assets.reduce(0) { $0 + $1.netValue } }
@@ -23,27 +26,68 @@ struct SimulatorView: View {
     private var monthlyPassive: Double {
         assets.reduce(0) { $0 + $1.effectiveMonthlyIncome }
     }
+    // 등록한 부채 합계(양수) — '빚 vs 투자'의 투입 금액 기본값.
+    private var totalDebt: Double {
+        assets.filter(\.isDebt).reduce(0) { $0 + abs($1.netValue) }
+    }
 
+    // 순서 = 퇴사각에 가까운 순. 앞의 셋이 "언제 그만둘 수 있나"를 직접 다루고,
+    // 뒤의 넷은 그 답을 바꾸는 생활의 결정(빚·저축·월급·시간)을 다룬다.
     enum SimMode: String, CaseIterable, Identifiable {
         case lifecycle = "생애주기"
+        case invest = "투자"
+        case debtVsInvest = "빚 vs 투자"
         case loan = "대출"
         case savings = "저축"
-        case invest = "투자"
         case wage = "구매력"
         case time = "시간"
         var id: String { rawValue }
 
+        /// 칩에 보이는 이름.
+        var title: LocalizedStringKey { LocalizedStringKey(rawValue) }
+
+        /// 이 계산이 퇴사각과 어떻게 이어지는지 한 줄.
+        var purpose: LocalizedStringKey {
+            switch self {
+            case .lifecycle:    return "모으는 시기와 쓰는 시기를 한 곡선으로 그려, 은퇴 후 자산이 몇 살까지 버티는지 봐요."
+            case .invest:       return "지금 자산이 앞으로 어디까지 갈지, 좋을 때와 나쁠 때의 범위로 봐요."
+            case .debtVsInvest: return "같은 돈으로 빚을 갚을까, 투자할까. 어느 쪽이 퇴사를 앞당기는지 비교해요."
+            case .loan:         return "대출 상환에 매달 얼마가 묶이는지 봐요. 빚이 끝나는 날이 퇴사각을 바꿔요."
+            case .savings:      return "예금·적금 만기에 얼마를 받는지, 이자에 세금은 얼마인지 계산해요."
+            case .wage:         return "지난 월급을 물가로 나눠, 내 실질 구매력이 늘었는지 봐요."
+            case .time:         return "돈을 내 시간으로 바꿔 보고, 자산 수익이 시급을 넘는 시점을 찾아요."
+            }
+        }
+
+        /// 프로로 열리는 모드면 그 기능, 무료면 nil.
+        var proFeature: ProFeature? {
+            switch self {
+            case .invest:       return .investForecast
+            case .debtVsInvest: return .debtVsInvest
+            case .wage:         return .purchasingPower
+            case .time:         return .timeValue
+            case .lifecycle, .loan, .savings: return nil
+            }
+        }
+
         /// 사용 통계 이벤트 이름에 쓰는 ASCII 키 (`calc_time` 처럼 나간다).
         var metricKey: String {
             switch self {
-            case .lifecycle: return "lifecycle"
-            case .loan:      return "loan"
-            case .savings:   return "savings"
-            case .invest:    return "invest"
-            case .wage:      return "wage"
-            case .time:      return "time"
+            case .lifecycle:    return "lifecycle"
+            case .loan:         return "loan"
+            case .savings:      return "savings"
+            case .invest:       return "invest"
+            case .debtVsInvest: return "debt_vs_invest"
+            case .wage:         return "wage"
+            case .time:         return "time"
             }
         }
+    }
+
+    /// 지금 모드가 잠겨 있으면 그 기능.
+    private func lockedFeature(_ m: SimMode) -> ProFeature? {
+        guard let f = m.proFeature, !pro.gate.allows(f.rawValue) else { return nil }
+        return f
     }
 
     var body: some View {
@@ -58,8 +102,13 @@ struct SimulatorView: View {
                                     mode = m
                                     AppUsage.logCalc(m.metricKey)
                                 } label: {
-                                    Text(m.rawValue)
-                                        .font(.subheadline.weight(.semibold))
+                                    HStack(spacing: 4) {
+                                        if lockedFeature(m) != nil {
+                                            Image(systemName: "lock.fill")
+                                        }
+                                        Text(m.title)
+                                    }
+                                        .font(.body.weight(.semibold))
                                         .padding(.horizontal, 14)
                                         .padding(.vertical, 8)
                                         .background(mode == m ? Theme.accent : Theme.surfaceHigh)
@@ -74,24 +123,41 @@ struct SimulatorView: View {
                     }
                     .animation(.easeInOut(duration: 0.2), value: mode)
 
-                    switch mode {
-                    case .lifecycle:
-                        LifecycleSimSection(settings: settings, startAssetValue: totalNet,
-                                            passiveIncomeValue: monthlyPassive)
-                    case .loan:
-                        MortgageSimSection()
-                    case .savings:
-                        SavingsSimSection()
-                    case .invest:
-                        InvestForecastSection()
-                    case .wage:
-                        WageSimSection()
-                    case .time:
-                        TimeSimSection(settings: settings, netWorth: totalNet)
+                    if let feature = lockedFeature(mode) {
+                        ProLockedCard(feature: feature) {
+                            AppUsage.log(.paywallShown)
+                            paywallFeature = feature
+                        }
+                    } else {
+                        // 이 계산이 퇴사각과 어떻게 이어지는지 한 줄 (잠긴 카드는 자기 설명이 있다).
+                        Text(mode.purpose)
+                            .font(.body)
+                            .foregroundStyle(Theme.textSecond)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                        switch mode {
+                        case .lifecycle:
+                            LifecycleSimSection(settings: settings, startAssetValue: totalNet,
+                                                passiveIncomeValue: monthlyPassive)
+                        case .invest:
+                            InvestForecastSection()
+                        case .debtVsInvest:
+                            WhatIfView(defaultAmount: totalDebt,
+                                       defaultInvestRatePct: settings.expectedAnnualReturn * 100,
+                                       embedded: true)
+                        case .loan:
+                            MortgageSimSection()
+                        case .savings:
+                            SavingsSimSection()
+                        case .wage:
+                            WageSimSection()
+                        case .time:
+                            TimeSimSection(settings: settings, netWorth: totalNet)
+                        }
                     }
 
                     Text("입력값을 바탕으로 계산한 참고용 결과예요. 세금·수수료·시장 변동에 따라 실제와 다를 수 있습니다.")
-                        .font(.caption2)
+                        .font(.body)
                         .foregroundStyle(Theme.textSecond)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -101,6 +167,7 @@ struct SimulatorView: View {
             .keyboardDismissable()
             .background(Theme.bg.ignoresSafeArea())
             .navigationTitle("계산")
+            .proPaywall($paywallFeature)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
@@ -771,11 +838,11 @@ private struct LifecycleSimSection: View {
                 Button("반영하기") { reflectToSettings() }
                 Button("취소", role: .cancel) {}
             } message: {
-                Text("나이·은퇴 나이·연 수익률, 은퇴 후 월 지출(희망 월수령액), 월 생활비, 세후 월급이 설정 탭과 대시보드 목표에 저장됩니다. (현재 패시브 인컴은 보유 자산에서 자동 계산되므로 바꾸지 않아요.)")
+                Text("나이·은퇴 나이·연 수익률, 은퇴 후 월 지출(희망 월수령액), 월 생활비, 세후 월급이 내 목표(여정 탭)에 저장되고 대시보드 퇴사각에 바로 반영됩니다. (현재 패시브 인컴은 보유 자산에서 자동 계산되므로 바꾸지 않아요.)")
             }
             if reflected {
-                Text("설정 탭과 대시보드 목표(FIRE 목표·은퇴 시점)에 반영됐어요.")
-                    .font(.caption2)
+                Text("내 목표에 반영했어요. 대시보드 퇴사각이 이 값으로 다시 계산돼요.")
+                    .font(.body)
                     .foregroundStyle(Theme.textSecond)
             }
         }

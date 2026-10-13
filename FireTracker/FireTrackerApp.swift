@@ -6,6 +6,8 @@ import LeeoKit
 @main
 struct FireTrackerApp: App {
     @Environment(\.scenePhase) private var scenePhase
+    // 퇴사각 프로 권한 — 앱 전역에서 하나. 구매·복원·환불이 어느 화면에서든 바로 반영된다.
+    @StateObject private var proStore = ProAccess.makeStore()
 
     init() {
         // 계약(FireTrackerSpec)에 선언한 것들을 실제로 켠다 — 사용량 기록, 크래시·행 진단,
@@ -56,6 +58,7 @@ struct FireTrackerApp: App {
                     BackupManager.autoBackup(context: sharedModelContainer.mainContext)
                 }
                 .leeoSatisfactionCheck(FireTrackerSpec.self)
+                .environmentObject(proStore)
         }
         .modelContainer(sharedModelContainer)
         // 포그라운드로 돌아올 때마다 사용 스냅샷을 다시 시도한다.

@@ -40,6 +40,10 @@ enum AppUsage {
         case calcSaved = "calc_saved"
         /// 데모 데이터를 켜 봤다 (온보딩 대신 쓰는 길)
         case demoOn = "demo_on"
+        /// 잠긴 기능에 부딪혀 페이월을 봤다
+        case paywallShown = "paywall_shown"
+        /// 퇴사각 프로를 샀다
+        case proPurchased = "pro_purchased"
     }
 
     private static var reporter: LeeoUsageReporter {

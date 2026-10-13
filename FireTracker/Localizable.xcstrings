@@ -1,0 +1,1334 @@
+{
+  "sourceLanguage": "ko",
+  "strings": {
+    " · 지난 기록보다 %@ 가까워졌어요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · %@ closer than last record"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · 지난 기록보다 %@ 가까워졌어요"
+          }
+        }
+      }
+    },
+    " · 지난 기록보다 %@ 멀어졌어요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · %@ further than last record"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · 지난 기록보다 %@ 멀어졌어요"
+          }
+        }
+      }
+    },
+    "%@ · 한 번 결제로 평생": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · Pay once, keep forever"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · 한 번 결제로 평생"
+          }
+        }
+      }
+    },
+    "%@ 기능은 프로에서 열려요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is part of Pro."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 기능은 프로에서 열려요."
+          }
+        }
+      }
+    },
+    "%@년, %lld세에 퇴사할 수 있어요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can quit in %1$@, at age %2$lld"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@년, %lld세에 퇴사할 수 있어요"
+          }
+        }
+      }
+    },
+    "%@년에 퇴사할 수 있어요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can quit in %@"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@년에 퇴사할 수 있어요"
+          }
+        }
+      }
+    },
+    "같은 돈으로 빚을 갚을까, 투자할까. 어느 쪽이 퇴사를 앞당기는지 비교해요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pay off debt or invest the same money? Compare which brings your quit date closer."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "같은 돈으로 빚을 갚을까, 투자할까. 어느 쪽이 퇴사를 앞당기는지 비교해요."
+          }
+        }
+      }
+    },
+    "같은 돈으로 빚을 갚을지 투자할지, 어느 쪽이 퇴사를 앞당기는지 비교해요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compare paying off debt with investing the same money, and see which brings your quit date closer."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "같은 돈으로 빚을 갚을지 투자할지, 어느 쪽이 퇴사를 앞당기는지 비교해요."
+          }
+        }
+      }
+    },
+    "개인정보처리방침": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy Policy"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "개인정보처리방침"
+          }
+        }
+      }
+    },
+    "계산 무제한 저장": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlimited Saved Calculations"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "계산 무제한 저장"
+          }
+        }
+      }
+    },
+    "구독이 아니에요. 다시 결제할 일이 없어요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not a subscription. You never pay again."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "구독이 아니에요. 다시 결제할 일이 없어요."
+          }
+        }
+      }
+    },
+    "구매 복원": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore Purchase"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "구매 복원"
+          }
+        }
+      }
+    },
+    "구매력": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Purchasing Power"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "구매력"
+          }
+        }
+      }
+    },
+    "구매를 복원했어요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your purchase has been restored."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "구매를 복원했어요."
+          }
+        }
+      }
+    },
+    "권한 강제 (개발자)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Force Access (Developer)"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "권한 강제 (개발자)"
+          }
+        }
+      }
+    },
+    "내 목표에 반영했어요. 대시보드 퇴사각이 이 값으로 다시 계산돼요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved to your goals. The quit date on the Dashboard now uses these values."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "내 목표에 반영했어요. 대시보드 퇴사각이 이 값으로 다시 계산돼요."
+          }
+        }
+      }
+    },
+    "내 시급으로 돈을 시간으로 바꿔 보고, 저축이 시급을 넘는 시점을 찾아요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn money into hours at your hourly wage, and find when your savings out-earn your work."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "내 시급으로 돈을 시간으로 바꿔 보고, 저축이 시급을 넘는 시점을 찾아요."
+          }
+        }
+      }
+    },
+    "닫기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "닫기"
+          }
+        }
+      }
+    },
+    "대출": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loan"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "대출"
+          }
+        }
+      }
+    },
+    "대출 상환에 매달 얼마가 묶이는지 봐요. 빚이 끝나는 날이 퇴사각을 바꿔요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See how much loan repayment ties up every month. The day your debt ends moves your quit date."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "대출 상환에 매달 얼마가 묶이는지 봐요. 빚이 끝나는 날이 퇴사각을 바꿔요."
+          }
+        }
+      }
+    },
+    "돈과 시간": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Money & Time"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "돈과 시간"
+          }
+        }
+      }
+    },
+    "돈을 내 시간으로 바꿔 보고, 자산 수익이 시급을 넘는 시점을 찾아요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn money into your hours, and find when your investment income out-earns your hourly wage."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "돈을 내 시간으로 바꿔 보고, 자산 수익이 시급을 넘는 시점을 찾아요."
+          }
+        }
+      }
+    },
+    "매매 원장": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trade Ledger"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "매매 원장"
+          }
+        }
+      }
+    },
+    "매매 원장은 프로 기능이에요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The trade ledger is a Pro feature"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "매매 원장은 프로 기능이에요"
+          }
+        }
+      }
+    },
+    "모으는 시기와 쓰는 시기를 한 곡선으로 그려, 은퇴 후 자산이 몇 살까지 버티는지 봐요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Draw saving and spending years as one curve, and see how long your money lasts after you retire."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "모으는 시기와 쓰는 시기를 한 곡선으로 그려, 은퇴 후 자산이 몇 살까지 버티는지 봐요."
+          }
+        }
+      }
+    },
+    "목표 %@원 중 %@원 남음": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%2$@ won left of %1$@ won"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "목표 %@원 중 %@원 남음"
+          }
+        }
+      }
+    },
+    "목표 생활비 정하기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set your target living costs"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "목표 생활비 정하기"
+          }
+        }
+      }
+    },
+    "목표 생활비를 정해 주세요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set your target living costs"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "목표 생활비를 정해 주세요"
+          }
+        }
+      }
+    },
+    "목표 자산(연간 목표 지출 ÷ 인출률)에 닿는 시점이에요. 지금 순자산에서 시작해 월 저축과 기대 수익률로 계산했어요. 목표는 여정 탭 오른쪽 위 과녁에서 바꿀 수 있어요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This is when you reach your target (annual spending ÷ withdrawal rate), starting from today's net worth with your monthly savings and expected return. Change the target from the target icon at the top right of the Journey tab."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "목표 자산(연간 목표 지출 ÷ 인출률)에 닿는 시점이에요. 지금 순자산에서 시작해 월 저축과 기대 수익률로 계산했어요. 목표는 여정 탭 오른쪽 위 과녁에서 바꿀 수 있어요."
+          }
+        }
+      }
+    },
+    "목표 자산까지": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toward your target"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "목표 자산까지"
+          }
+        }
+      }
+    },
+    "목표 자산을 이미 넘었어요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You've already passed your target."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "목표 자산을 이미 넘었어요."
+          }
+        }
+      }
+    },
+    "목표한 %lld세보다 %lld년 늦어요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%2$lld years later than your target age of %1$lld"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "목표한 %lld세보다 %lld년 늦어요"
+          }
+        }
+      }
+    },
+    "목표한 %lld세보다 %lld년 빨라요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%2$lld years earlier than your target age of %1$lld"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "목표한 %lld세보다 %lld년 빨라요"
+          }
+        }
+      }
+    },
+    "목표한 %lld세에 딱 맞아요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Right on your target age of %lld"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "목표한 %lld세에 딱 맞아요"
+          }
+        }
+      }
+    },
+    "무료 저장 %lld개를 다 썼어요. 프로는 제한 없이 저장해요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You've used all %lld free saves. Pro saves without limits."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "무료 저장 %lld개를 다 썼어요. 프로는 제한 없이 저장해요."
+          }
+        }
+      }
+    },
+    "무료로 %lld개 더 저장할 수 있어요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld more free saves left"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "무료로 %lld개 더 저장할 수 있어요"
+          }
+        }
+      }
+    },
+    "무료로는 3개까지 저장할 수 있어요. 프로는 제한 없이 저장해요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save up to 3 calculations for free. Pro saves without limits."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "무료로는 3개까지 저장할 수 있어요. 프로는 제한 없이 저장해요."
+          }
+        }
+      }
+    },
+    "복원할 구매가 없어요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No purchase to restore."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "복원할 구매가 없어요."
+          }
+        }
+      }
+    },
+    "빚 vs 투자": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Debt vs Invest"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "빚 vs 투자"
+          }
+        }
+      }
+    },
+    "빚 갚기 vs 투자하기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pay Off Debt vs Invest"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "빚 갚기 vs 투자하기"
+          }
+        }
+      }
+    },
+    "상품 다시 불러오기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reload"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상품 다시 불러오기"
+          }
+        }
+      }
+    },
+    "생애주기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Life Cycle"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "생애주기"
+          }
+        }
+      }
+    },
+    "스크린샷으로 추가": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add from Screenshot"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "스크린샷으로 추가"
+          }
+        }
+      }
+    },
+    "스크린샷으로 한 번에 추가": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import from a Screenshot"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "스크린샷으로 한 번에 추가"
+          }
+        }
+      }
+    },
+    "시간": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시간"
+          }
+        }
+      }
+    },
+    "알아보기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learn More"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "알아보기"
+          }
+        }
+      }
+    },
+    "약 %@ 뒤": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In about %@"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "약 %@ 뒤"
+          }
+        }
+      }
+    },
+    "언제 몇 주를 얼마에 샀는지 남기면 평단과 실현 손익이 자동으로 계산돼요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log when you bought how many shares at what price, and your average cost and realized gains are calculated for you."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "언제 몇 주를 얼마에 샀는지 남기면 평단과 실현 손익이 자동으로 계산돼요."
+          }
+        }
+      }
+    },
+    "언제 퇴사할 수 있는지 계산해 볼까요?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready to find out when you can quit?"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "언제 퇴사할 수 있는지 계산해 볼까요?"
+          }
+        }
+      }
+    },
+    "여정 탭 오른쪽 위 과녁에서 목표 생활비·나이 입력": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter living costs and age from the target icon in the Journey tab"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "여정 탭 오른쪽 위 과녁에서 목표 생활비·나이 입력"
+          }
+        }
+      }
+    },
+    "예금·적금 만기에 얼마를 받는지, 이자에 세금은 얼마인지 계산해요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Work out what a deposit or savings plan pays at maturity, and the tax on its interest."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "예금·적금 만기에 얼마를 받는지, 이자에 세금은 얼마인지 계산해요."
+          }
+        }
+      }
+    },
+    "월 %@원 중 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%2$@ of %1$@ won a month"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "월 %@원 중 %@"
+          }
+        }
+      }
+    },
+    "월 저축 %@원 · 기대 수익률 %@ 기준": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Based on saving %1$@ won a month at a %2$@ expected return"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "월 저축 %@원 · 기대 수익률 %@ 기준"
+          }
+        }
+      }
+    },
+    "월 저축을 늘리거나 목표 생활비를 줄이면 퇴사 시점이 생겨요. 계산 탭의 생애주기에서 바꿔 볼 수 있어요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save more each month or lower your target living costs to get a quit date. Try it in the Life Cycle calculator."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "월 저축을 늘리거나 목표 생활비를 줄이면 퇴사 시점이 생겨요. 계산 탭의 생애주기에서 바꿔 볼 수 있어요."
+          }
+        }
+      }
+    },
+    "월급 구매력": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salary Purchasing Power"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "월급 구매력"
+          }
+        }
+      }
+    },
+    "이 계산으로 저장해 둔 것 %lld개": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld saved with this calculator"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이 계산으로 저장해 둔 것 %lld개"
+          }
+        }
+      }
+    },
+    "입력값을 바탕으로 계산한 참고용 결과예요. 세금·수수료·시장 변동에 따라 실제와 다를 수 있습니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These results are estimates based on your inputs. Taxes, fees and market moves can make reality differ."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "입력값을 바탕으로 계산한 참고용 결과예요. 세금·수수료·시장 변동에 따라 실제와 다를 수 있습니다."
+          }
+        }
+      }
+    },
+    "자산 기록, 여정, 대시보드, 생애주기 계산, 백업은 계속 무료예요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asset tracking, Journey, Dashboard, the life-cycle calculator and backups stay free."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "자산 기록, 여정, 대시보드, 생애주기 계산, 백업은 계속 무료예요."
+          }
+        }
+      }
+    },
+    "자산과 목표 생활비를 넣으면\n퇴사할 수 있는 시점을 알려드려요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add your assets and target living costs,\nand we'll tell you when you can quit."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "자산과 목표 생활비를 넣으면\n퇴사할 수 있는 시점을 알려드려요."
+          }
+        }
+      }
+    },
+    "잠금": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Locked"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "잠금"
+          }
+        }
+      }
+    },
+    "저축": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Savings"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "저축"
+          }
+        }
+      }
+    },
+    "정상": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "정상"
+          }
+        }
+      }
+    },
+    "증권사 앱 화면을 캡처하면 종목과 평가액을 한 번에 불러와요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take a screenshot of your brokerage app to import holdings and values in one go."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "증권사 앱 화면을 캡처하면 종목과 평가액을 한 번에 불러와요."
+          }
+        }
+      }
+    },
+    "지금 속도로는 닿지 않아요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not reachable at this pace"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지금 속도로는 닿지 않아요"
+          }
+        }
+      }
+    },
+    "지금 자산이 앞으로 어디까지 갈지 좋을 때와 나쁠 때의 범위로 보여줘요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See where your assets could go, as a range between good and bad markets."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지금 자산이 앞으로 어디까지 갈지 좋을 때와 나쁠 때의 범위로 보여줘요."
+          }
+        }
+      }
+    },
+    "지금 자산이 앞으로 어디까지 갈지, 좋을 때와 나쁠 때의 범위로 봐요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See where your assets could go, as a range between good and bad markets."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지금 자산이 앞으로 어디까지 갈지, 좋을 때와 나쁠 때의 범위로 봐요."
+          }
+        }
+      }
+    },
+    "지금 퇴사해도 돼요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can quit now"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지금 퇴사해도 돼요"
+          }
+        }
+      }
+    },
+    "지난 월급을 물가로 나눠 내 실질 구매력이 늘었는지 알려줘요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adjust past salaries for inflation to see whether your real purchasing power grew."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지난 월급을 물가로 나눠 내 실질 구매력이 늘었는지 알려줘요."
+          }
+        }
+      }
+    },
+    "지난 월급을 물가로 나눠, 내 실질 구매력이 늘었는지 봐요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adjust past salaries for inflation to see whether your real purchasing power grew."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지난 월급을 물가로 나눠, 내 실질 구매력이 늘었는지 봐요."
+          }
+        }
+      }
+    },
+    "퇴사 날짜를 더 깊이 계산하는 도구를 엽니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock deeper tools for working out your quit date."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "퇴사 날짜를 더 깊이 계산하는 도구를 엽니다."
+          }
+        }
+      }
+    },
+    "퇴사각": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When Can I Quit?"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "퇴사각"
+          }
+        }
+      }
+    },
+    "퇴사각 프로": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FireTracker Pro"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "퇴사각 프로"
+          }
+        }
+      }
+    },
+    "퇴사각 프로 · 먼저 써 주신 분께 드리는 혜택": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FireTracker Pro · A thank-you for early users"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "퇴사각 프로 · 먼저 써 주신 분께 드리는 혜택"
+          }
+        }
+      }
+    },
+    "퇴사각 프로로 열기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock with FireTracker Pro"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "퇴사각 프로로 열기"
+          }
+        }
+      }
+    },
+    "퇴사각 프로를 쓰고 있어요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have FireTracker Pro"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "퇴사각 프로를 쓰고 있어요"
+          }
+        }
+      }
+    },
+    "퇴사각 프로를 쓰고 있어요. 모든 기능이 열려 있어요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have FireTracker Pro. Everything is unlocked."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "퇴사각 프로를 쓰고 있어요. 모든 기능이 열려 있어요."
+          }
+        }
+      }
+    },
+    "투자": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invest"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "투자"
+          }
+        }
+      }
+    },
+    "투자 예측": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Investment Forecast"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "투자 예측"
+          }
+        }
+      }
+    },
+    "패시브 인컴이 생활비를 대신하는 정도": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Living costs covered by passive income"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "패시브 인컴이 생활비를 대신하는 정도"
+          }
+        }
+      }
+    },
+    "프로": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pro"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "프로"
+          }
+        }
+      }
+    },
+    "한 달에 얼마면 살 수 있는지 넣으면 퇴사 시점을 계산해 드려요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tell us what you need to live on each month and we'll work out when you can quit"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한 달에 얼마면 살 수 있는지 넣으면 퇴사 시점을 계산해 드려요"
+          }
+        }
+      }
+    },
+    "한 번 결제로 평생 쓰는 상품이에요. 자산 기록과 퇴사 계산의 핵심 기능은 계속 무료예요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A one-time purchase you keep forever. Asset tracking and the core quit-date features stay free."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한 번 결제로 평생 쓰는 상품이에요. 자산 기록과 퇴사 계산의 핵심 기능은 계속 무료예요."
+          }
+        }
+      }
+    },
+    "해제": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlocked"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "해제"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

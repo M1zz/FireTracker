@@ -1,0 +1,41 @@
+{
+  "identifier" : "6F3A2C1D",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "9900",
+      "familyShareable" : true,
+      "internalID" : "6740000001",
+      "localizations" : [
+        {
+          "description" : "Unlock every calculator, unlimited saves, trade ledger and screenshot import.",
+          "displayName" : "FireTracker Pro",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "모든 계산기, 계산 무제한 저장, 매매 원장, 스크린샷 일괄 추가를 엽니다.",
+          "displayName" : "퇴사각 프로",
+          "locale" : "ko"
+        }
+      ],
+      "productID" : "com.devkoan.FireTracker.pro",
+      "referenceName" : "FireTracker Pro (Lifetime)",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "",
+    "_developerTeamID" : "",
+    "_locale" : "ko",
+    "_storefront" : "KOR"
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

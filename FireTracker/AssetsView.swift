@@ -4,6 +4,7 @@ import Charts
 import TipKit
 import PhotosUI
 import Vision
+import LeeoKit
 
 // Occasional nudge to capture assets the user may have forgotten.
 struct OtherAssetsTip: Tip {
@@ -23,6 +24,8 @@ struct AssetsView: View {
     @Query private var settingsList: [FireSettings]
     @Query private var snapshots: [NetWorthSnapshot]
     @EnvironmentObject private var refresher: RefreshManager
+    @EnvironmentObject private var pro: LeeoStore
+    @State private var paywallFeature: ProFeature?
     @State private var editing: Asset?
     @State private var showingNew = false
     @State private var showingImport = false
@@ -153,8 +156,17 @@ struct AssetsView: View {
                         Button { startNewAsset() } label: {
                             Label("직접 추가", systemImage: "square.and.pencil")
                         }
-                        Button { showingImport = true } label: {
-                            Label("스크린샷으로 추가", systemImage: "text.viewfinder")
+                        Button {
+                            if pro.gate.allows(ProFeature.screenshotImport.rawValue) {
+                                showingImport = true
+                            } else {
+                                AppUsage.log(.paywallShown)
+                                paywallFeature = .screenshotImport
+                            }
+                        } label: {
+                            Label("스크린샷으로 추가",
+                                  systemImage: pro.gate.allows(ProFeature.screenshotImport.rawValue)
+                                      ? "text.viewfinder" : "lock.fill")
                         }
                     } label: { Image(systemName: "plus") }
                 }
@@ -188,6 +200,7 @@ struct AssetsView: View {
                 ScreenshotImportView(startingSortOrder: assets.count)
             }
             .sheet(isPresented: $showingBreakdown) { NetWorthBreakdownView() }
+            .proPaywall($paywallFeature)
         }
     }
 
@@ -1080,6 +1093,8 @@ struct AssetEditor: View {
     @Query private var settingsList: [FireSettings]
     @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
     @Query(sort: \Asset.sortOrder) private var allAssets: [Asset]
+    @EnvironmentObject private var pro: LeeoStore
+    @State private var paywallFeature: ProFeature?
 
     let asset: Asset?
     let nextSortOrder: Int
@@ -1391,6 +1406,7 @@ struct AssetEditor: View {
             .scrollIndicators(.hidden)
             .keyboardDismissable()
             .task { await autofillDividendIfNeeded() }
+            .proPaywall($paywallFeature)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) { Button("저장") { save() } }
@@ -1645,7 +1661,23 @@ struct AssetEditor: View {
                     }
             }
 
-            if showTradeForm {
+            if !pro.gate.allows(ProFeature.tradeLedger.rawValue) {
+                // 무료 — 이미 적힌 거래는 보고 지울 수 있지만, 새 거래는 프로에서.
+                Button {
+                    AppUsage.log(.paywallShown)
+                    paywallFeature = .tradeLedger
+                } label: {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Label("매매 원장은 프로 기능이에요", systemImage: "lock.fill")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Theme.accent)
+                        Text(ProFeature.tradeLedger.leeoDetail)
+                            .font(.body)
+                            .foregroundStyle(Theme.textSecond)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            } else if showTradeForm {
                 tradeForm
             } else {
                 Button {
@@ -1659,7 +1691,8 @@ struct AssetEditor: View {
             }
 
             // 원장을 처음 쓰기 시작할 때 — 이미 들고 있던 몫을 한 줄로 옮겨 담는다.
-            if !hasTrades, openingQuantity > 0 || openingCost > 0 {
+            if pro.gate.allows(ProFeature.tradeLedger.rawValue),
+               !hasTrades, openingQuantity > 0 || openingCost > 0 {
                 Button {
                     seedOpeningTrade()
                 } label: {

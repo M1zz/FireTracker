@@ -27,6 +27,9 @@
 		A100000C /* AssetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000C /* AssetsView.swift */; };
 		A100000D /* SimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000D /* SimulatorView.swift */; };
 		A1000020 /* CPIData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000020 /* CPIData.swift */; };
+		A1000030 /* ProAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000030 /* ProAccess.swift */; };
+		A1000031 /* ProPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000031 /* ProPaywallView.swift */; };
+		A1000032 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B1000032 /* Localizable.xcstrings */; };
 		A1000021 /* TimeValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* TimeValueView.swift */; };
 		A100000E /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000E /* RefreshManager.swift */; };
 		A100000F /* BackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000F /* BackupManager.swift */; };
@@ -52,6 +55,9 @@
 		B100000C /* AssetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsView.swift; sourceTree = "<group>"; };
 		B100000D /* SimulatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorView.swift; sourceTree = "<group>"; };
 		B1000020 /* CPIData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPIData.swift; sourceTree = "<group>"; };
+		B1000030 /* ProAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProAccess.swift; sourceTree = "<group>"; };
+		B1000031 /* ProPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProPaywallView.swift; sourceTree = "<group>"; };
+		B1000032 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B1000021 /* TimeValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeValueView.swift; sourceTree = "<group>"; };
 		B100000E /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		B100000F /* BackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManager.swift; sourceTree = "<group>"; };
@@ -101,6 +107,9 @@
 				B100000D /* SimulatorView.swift */,
 				B1000020 /* CPIData.swift */,
 				B1000021 /* TimeValueView.swift */,
+				B1000032 /* Localizable.xcstrings */,
+				B1000031 /* ProPaywallView.swift */,
+				B1000030 /* ProAccess.swift */,
 				B100000E /* RefreshManager.swift */,
 				B100000F /* BackupManager.swift */,
 				B1000010 /* ReflectionTips.swift */,
@@ -190,6 +199,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A100000A /* Assets.xcassets in Resources */,
+				A1000032 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +224,8 @@
 				A100000D /* SimulatorView.swift in Sources */,
 				A1000020 /* CPIData.swift in Sources */,
 				A1000021 /* TimeValueView.swift in Sources */,
+				A1000031 /* ProPaywallView.swift in Sources */,
+				A1000030 /* ProAccess.swift in Sources */,
 				A100000E /* RefreshManager.swift in Sources */,
 				A100000F /* BackupManager.swift in Sources */,
 				A1000010 /* ReflectionTips.swift in Sources */,

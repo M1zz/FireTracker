@@ -23,15 +23,29 @@ struct FutureContext {
     let settings: FireSettings
     let assets: [Asset]
     let snapshots: [NetWorthSnapshot]
+    /// 진짜 퇴사 나이 — 몬테카를로를 여러 번 돌려야 해서 만들 때 한 번만 구해 둔다.
+    private(set) var realQuitAge: Int?
 
-    // 굴릴 수 있는 돈 — 실거주 집·보증금·차처럼 살면서 쓰는 자산은 빼고, 빚은 뺀다.
+    init(profile: FutureProfile, settings: FireSettings, assets: [Asset], snapshots: [NetWorthSnapshot]) {
+        self.profile = profile
+        self.settings = settings
+        self.assets = assets
+        self.snapshots = snapshots
+        self.realQuitAge = nil
+        if profile.quitAge == 0, settings.currentAge > 0 { self.realQuitAge = searchRealQuitAge() }
+    }
+
+    // 굴릴 수 있는 돈 — 실거주 집·보증금·차처럼 살면서 쓰는 자산은 빼고,
+    // 빚은 집·보증금으로 먼저 갚는다고 보고 그걸 넘는 몫만 뺀다(주담대가 집값 안이면 영향 없음).
     static let investableClasses: Set<AssetClass> = [
         .cash, .stocks, .fund, .bond, .crypto, .pension, .insurance, .receivable, .valuables, .other, .custom,
     ]
     var investable: Double {
         let pos = assets.filter { Self.investableClasses.contains($0.assetClass) }.reduce(0) { $0 + $1.amount }
         let debt = assets.filter(\.isDebt).reduce(0) { $0 + $1.amount }
-        return max(0, pos - debt)
+        let secured = assets.filter { $0.assetClass == .realEstate || $0.assetClass == .jeonse || $0.assetClass == .deposit }
+            .reduce(0) { $0 + $1.amount }
+        return max(0, pos - max(0, debt - secured))
     }
     var pensionAssets: Double {
         assets.filter { $0.assetClass == .pension }.reduce(0) { $0 + $1.amount }
@@ -65,9 +79,8 @@ struct FutureContext {
     }
     var realReturn: Double { profile.realReturnPct / 100 }
 
-    /// 퇴사 나이 — 직접 정했으면 그 나이, 아니면 대시보드 퇴사각(목표 자산 도달) 나이.
-    var quitAge: Int {
-        if profile.quitAge > 0 { return max(currentAge, profile.quitAge) }
+    /// 대시보드 퇴사각 나이 — 순자산(집·보증금 포함)이 목표 자산에 닿는 나이.
+    var assetQuitAge: Int {
         let netWorth = assets.reduce(0) { $0 + $1.netValue }
         let years = FireEngine.yearsToFire(currentNetWorth: netWorth, fireNumber: settings.fireNumber,
                                            monthlySavings: monthlySavings,
@@ -77,7 +90,30 @@ struct FutureContext {
         }
         return currentAge + Int(y.rounded(.up))
     }
-    var quitYear: Int { Calendar.current.component(.year, from: Date()) + max(0, quitAge - currentAge) }
+    /// 진짜 퇴사 나이 — 꺼내 쓸 수 있는 돈만으로 끝 나이까지 버틸 확률이 85%를 넘는 가장 이른 나이.
+    /// 집값을 목표 자산에 세는 대시보드 숫자보다 늦을 수 있다. 계산 범위 안에 없으면 nil.
+    static let safeThreshold = 0.85
+    private func searchRealQuitAge() -> Int? {
+        let safeThreshold = Self.safeThreshold
+        let endAge = effectiveProfile.endAge
+        guard currentAge < endAge - 1 else { return nil }
+        var lo = currentAge, hi = min(endAge - 1, currentAge + 45)
+        // 늦게 그만둘수록 확률이 오르므로 이분 탐색.
+        guard monteCarlo(quitAge: hi, paths: 400).successRate >= safeThreshold else { return nil }
+        while lo < hi {
+            let mid = (lo + hi) / 2
+            if monteCarlo(quitAge: mid, paths: 400).successRate >= safeThreshold { hi = mid } else { lo = mid + 1 }
+        }
+        return lo
+    }
+
+    /// 미리보기가 그리는 퇴사 나이 — 직접 정했으면 그 나이, 아니면 진짜 퇴사 나이(없으면 대시보드 나이).
+    var quitAge: Int {
+        if profile.quitAge > 0 { return max(currentAge, profile.quitAge) }
+        return realQuitAge ?? assetQuitAge
+    }
+    func year(at age: Int) -> Int { Calendar.current.component(.year, from: Date()) + max(0, age - currentAge) }
+    var quitYear: Int { year(at: quitAge) }
 
     /// 퇴사 때 굴릴 수 있는 돈(오늘 돈 기준, 평균 수익률로 단순 계산).
     func investableAt(age: Int, savingsFactor: Double = 1) -> Double {
@@ -106,29 +142,32 @@ struct FutureContext {
         return p
     }
 
-    var costs: PostQuitCosts {
-        PostQuitCosts.compute(effectiveProfile, quitAge: quitAge, quitYear: quitYear)
+    var costs: PostQuitCosts { costs(at: quitAge) }
+    func costs(at age: Int) -> PostQuitCosts {
+        PostQuitCosts.compute(effectiveProfile, quitAge: age, quitYear: year(at: age))
     }
 
     /// 퇴사 후 한 해에 나가는 돈 — 생활비 + 새로 생기는 고정비 − 월세처럼 계속 들어오는 돈.
-    var annualSpendAfterQuit: Double {
-        max(0, (monthlySpend + costs.monthlyFixed) * 12 - annualRent)
+    var annualSpendAfterQuit: Double { annualSpend(at: quitAge) }
+    func annualSpend(at age: Int) -> Double {
+        max(0, (monthlySpend + costs(at: age).monthlyFixed) * 12 - annualRent)
     }
 
     func monteCarlo(quitAge q: Int? = nil, savingsFactor: Double = 1, spendFactor: Double = 1,
                     paths: Int = 2000) -> MonteCarloResult {
         let p = effectiveProfile
         let qa = q ?? quitAge
+        let c = costs(at: qa)
         return MonteCarlo.run(.init(
             startAssets: investable,
             currentAge: currentAge,
             quitAge: qa,
             endAge: max(qa + 1, p.endAge),
             annualSavingsUntilQuit: monthlySavings * 12 * savingsFactor,
-            annualSpendAfterQuit: annualSpendAfterQuit * spendFactor,
+            annualSpendAfterQuit: annualSpend(at: qa) * spendFactor,
             publicPensionAnnual: p.publicPensionMonthly * 12,
             publicPensionStart: p.publicPensionStartAge,
-            oneTimeAtQuit: costs.unemploymentTotal,
+            oneTimeAtQuit: c.unemploymentTotal,
             realReturn: realReturn,
             volatility: p.volatilityPct / 100,
             paths: paths
@@ -235,6 +274,7 @@ struct FuturePreviewView: View {
             Text("그날 굴릴 수 있는 돈 \(Fmt.krw(c.investableAt(age: c.quitAge)))원 (오늘 돈 기준)")
                 .font(.body)
                 .foregroundStyle(Theme.textSecond)
+            realQuitNote(c)
             NavigationLink {
                 FutureTimingEditor(model: model, ctx: c)
             } label: {
@@ -245,6 +285,31 @@ struct FuturePreviewView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
+    }
+
+    /// 대시보드 퇴사각과 진짜 퇴사 나이가 다를 때 — 왜 다른지가 이 화면의 핵심 통찰이다.
+    @ViewBuilder
+    private func realQuitNote(_ c: FutureContext) -> some View {
+        if model.profile.quitAge == 0 {
+            if let real = c.realQuitAge {
+                if real > c.assetQuitAge {
+                    Text("대시보드의 \(c.assetQuitAge)세는 집과 보증금까지 목표 자산에 센 나이예요. 꺼내 쓸 수 있는 돈만으로 \(c.effectiveProfile.endAge)세까지 버틸 확률이 85%를 넘는 건 \(real)세부터예요.")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(Theme.negative)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Text("꺼내 쓸 수 있는 돈만으로 \(c.effectiveProfile.endAge)세까지 버틸 확률이 85%를 넘는 가장 이른 나이예요.")
+                        .font(.body)
+                        .foregroundStyle(Theme.textSecond)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            } else {
+                Text("지금 계획으로는 \(c.currentAge + 45)세 전에 버틸 확률 85%에 닿지 않아요. 저축을 늘리거나 생활비를 줄이는 시나리오를 아래에서 비교해 보세요.")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Theme.negative)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
     }
 
     // 2) 매달 나가는 돈
@@ -296,6 +361,12 @@ struct FuturePreviewView: View {
                     .font(.body)
                     .foregroundStyle(Theme.textSecond)
                     .fixedSize(horizontal: false, vertical: true)
+                if c.effectiveProfile.publicPensionMonthly <= 0 {
+                    Label("예상 국민연금을 넣지 않아 연금 없이 계산했어요. 매달 나가는 돈에서 넣을 수 있어요.", systemImage: "exclamationmark.circle")
+                        .font(.body)
+                        .foregroundStyle(Theme.accent)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
@@ -321,11 +392,9 @@ struct FuturePreviewView: View {
             VStack(alignment: .leading, spacing: 12) {
                 cardTitle("어느 계좌부터 꺼낼까", trailing: true)
                 VStack(alignment: .leading, spacing: 8) {
-                    stepLine(1, c.quitAge < KoreaRules2026.pensionStartAge
-                             ? String(localized: "\(c.quitAge)~54세: 일반계좌와 ISA에서 꺼내 써요")
-                             : String(localized: "일반계좌와 ISA는 연금 저율 한도를 넘는 몫만"))
-                    stepLine(2, String(localized: "55세부터: 연금계좌에서 해마다 1,500만원까지 먼저"))
-                    stepLine(3, String(localized: "\(c.effectiveProfile.publicPensionStartAge)세부터: 국민연금이 들어와 꺼낼 돈이 줄어요"))
+                    ForEach(Array(withdrawalSteps(c).enumerated()), id: \.offset) { i, text in
+                        stepLine(i + 1, text)
+                    }
                 }
                 if saved > 0 {
                     Text("필요할 때 연금부터 한꺼번에 꺼내는 것보다 세금이 \(Fmt.krw(saved))원 줄어요.")
@@ -338,6 +407,23 @@ struct FuturePreviewView: View {
             .cardStyle()
         }
         .buttonStyle(.plain)
+    }
+
+    private func withdrawalSteps(_ c: FutureContext) -> [String] {
+        let start = KoreaRules2026.pensionStartAge
+        let nps = c.effectiveProfile.publicPensionStartAge
+        var steps: [String] = []
+        if c.quitAge < start {
+            steps.append(String(localized: "\(c.quitAge)~\(start - 1)세: 일반계좌와 ISA에서 꺼내 써요"))
+            steps.append(String(localized: "\(start)세부터: 연금계좌에서 해마다 1,500만원까지 먼저, 모자란 몫은 일반계좌에서"))
+        } else {
+            steps.append(String(localized: "\(c.quitAge)세부터: 연금계좌에서 해마다 1,500만원까지 먼저"))
+            steps.append(String(localized: "모자란 몫은 일반계좌, 그다음 ISA에서"))
+        }
+        if c.effectiveProfile.publicPensionMonthly > 0 {
+            steps.append(String(localized: "\(nps)세부터: 국민연금이 들어와 꺼낼 돈이 줄어요"))
+        }
+        return steps
     }
 
     // 5) 다른 선택이라면
@@ -460,6 +546,7 @@ struct SurvivalChart: View {
                 .foregroundStyle(Theme.textSecond.opacity(0.6))
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
         }
+        .chartXScale(domain: (bands.first?.age ?? 0)...(bands.last?.age ?? 100))
         .chartYAxis {
             AxisMarks(position: .leading) { v in
                 AxisGridLine()
@@ -779,7 +866,7 @@ struct SurvivalDetailView: View {
                         .font(.body)
                         .foregroundStyle(Theme.textSecond)
                         .fixedSize(horizontal: false, vertical: true)
-                    Text("실거주 집, 보증금, 차는 살면서 쓰는 자산이라 빼고, 빚은 뺐어요.")
+                    Text("실거주 집, 보증금, 차는 살면서 쓰는 자산이라 뺐어요. 빚은 집과 보증금으로 먼저 갚는다고 보고, 그걸 넘는 몫만 뺐어요.")
                         .font(.body)
                         .foregroundStyle(Theme.textSecond)
                         .fixedSize(horizontal: false, vertical: true)

@@ -229,7 +229,7 @@ struct TrendView: View {
 
     private func assetMap(_ s: NetWorthSnapshot) -> [String: AssetSlice] {
         var m: [String: AssetSlice] = [:]
-        for e in s.entries {
+        for e in s.entryList {
             let key = e.name.isEmpty ? e.assetClass.label : e.name
             m[key] = AssetSlice(amount: (m[key]?.amount ?? 0) + e.amount,
                                 isDebt: e.assetClass == .debt, assetClass: e.assetClass)

@@ -101,7 +101,7 @@ struct QuarterlyReport {
         // 가장 많이 움직인 자산 — 같은 자산(catalogKey 또는 이름)끼리 처음과 끝을 비교.
         func keyed(_ s: NetWorthSnapshot) -> [String: (String, Double)] {
             var d: [String: (String, Double)] = [:]
-            for e in s.entries {
+            for e in s.entryList {
                 let k = e.catalogKey?.uuidString ?? e.name
                 d[k] = (e.name, (d[k]?.1 ?? 0) + e.amount)
             }

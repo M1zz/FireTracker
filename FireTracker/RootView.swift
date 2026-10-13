@@ -1,6 +1,9 @@
 import SwiftUI
 import SwiftData
 import LocalAuthentication
+import CoreData
+import WidgetKit
+import LeeoKit
 
 struct RootView: View {
     @Environment(\.modelContext) private var context
@@ -8,6 +11,7 @@ struct RootView: View {
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
     @StateObject private var refresher = RefreshManager()
+    @EnvironmentObject private var pro: LeeoStore
     @AppStorage("amountNumbersOnly") private var amountNumbersOnly = false
     @AppStorage(DemoData.activeKey) private var demoActive = false
     @State private var selectedTab = 0
@@ -15,7 +19,9 @@ struct RootView: View {
     // 온보딩 대신 — 아무 데이터도 없는 첫 사용자거나, 데모를 보는 중일 때만
     // 최상단에 데모 토글 배너를 띄운다.
     private var showDemoBanner: Bool {
-        demoActive || (assets.isEmpty && snapshots.isEmpty)
+        // 동기화 중에 데모를 켜면 다른 기기의 실데이터까지 지워지므로 아예 띄우지 않는다.
+        guard !SyncManager.activeThisLaunch || demoActive else { return false }
+        return demoActive || (assets.isEmpty && snapshots.isEmpty)
     }
 
     // 자산 상태 지문 — 어느 탭에서든 자산이 추가·수정·삭제되거나 시세가 갱신되면
@@ -77,6 +83,8 @@ struct RootView: View {
             bootstrapSettings()
             // 익명 사용 스냅샷 — 지표를 먼저 채운 다음 보낸다(첫 실행에도 값이 실리도록).
             reportUsage()
+            publishWidget()
+            if SyncManager.activeThisLaunch { SyncManager.dedupe(context: context) }
         }
         // 자산에 변동이 생기면(어느 탭이든) 오늘 기록을 자동 갱신 — 수동 저장 불필요.
         .onChange(of: assetsFingerprint) { _, _ in
@@ -85,6 +93,15 @@ struct RootView: View {
                 assets: assets, settings: s, snapshots: snapshots, context: context
             )
             updateUsageMetrics()
+            publishWidget()
+        }
+        // 목표·나이를 바꾸거나 프로 권한이 바뀌어도 위젯을 새로 그린다.
+        .onChange(of: goalFingerprint) { _, _ in publishWidget() }
+        .onChange(of: pro.hasPro) { _, _ in publishWidget() }
+        // 다른 기기의 변경이 내려오면 같은 날 기록·설정이 둘이 될 수 있다 — 하나만 남긴다.
+        .onReceive(NotificationCenter.default.publisher(for: .NSPersistentStoreRemoteChange)) { _ in
+            guard SyncManager.activeThisLaunch else { return }
+            SyncManager.dedupe(context: context)
         }
         .environmentObject(refresher)
         // 앱 시작 시 — 마지막 갱신이 7일 이상 지났으면 시세·배당을 자동 갱신하고,
@@ -146,6 +163,47 @@ struct RootView: View {
         )
     }
 
+    private var goalFingerprint: Int {
+        var h = Hasher()
+        if let s = settingsList.first {
+            h.combine(s.targetAnnualExpense); h.combine(s.safeWithdrawalRate)
+            h.combine(s.expectedAnnualReturn); h.combine(s.currentAge)
+            h.combine(s.monthlyTakeHome); h.combine(s.plannedMonthlyExpense); h.combine(s.plannedNetSavings)
+        }
+        h.combine(amountNumbersOnly)
+        return h.finalize()
+    }
+
+    /// 위젯에 퇴사각 요약을 넘긴다 — 대시보드 퇴사각 카드와 같은 계산.
+    private func publishWidget() {
+        let s = settingsList.first ?? FireSettings()
+        let netWorth = assets.reduce(0) { $0 + $1.netValue }
+        let savings = s.plannedMonthlySavings != 0
+            ? s.plannedMonthlySavings
+            : FireEngine.averageMonthlySavings(snapshots: snapshots)
+        var summary = WidgetSummary()
+        summary.isPro = pro.gate.allows(ProFeature.widget.rawValue)
+        summary.hasGoal = s.fireNumber > 0
+        summary.progress = s.fireNumber > 0 ? netWorth / s.fireNumber : 0
+        summary.netWorthText = Fmt.wonKo(netWorth)
+        if let y = FireEngine.yearsToFire(currentNetWorth: netWorth, fireNumber: s.fireNumber,
+                                          monthlySavings: savings, annualReturn: s.expectedAnnualReturn),
+           y.isFinite {
+            summary.reached = y < 1.0 / 12.0
+            summary.yearsText = Fmt.years(y)
+            let date = Calendar.current.date(byAdding: .month, value: Int((y * 12).rounded()), to: Date()) ?? Date()
+            summary.quitYear = Calendar.current.component(.year, from: date)
+            summary.quitAge = s.currentAge > 0 ? s.currentAge + Int(y.rounded(.down)) : 0
+        } else if summary.hasGoal {
+            summary.yearsText = String(localized: "지금 속도로는 닿지 않아요")
+        }
+        let old = WidgetSummary.load()
+        var cmp = summary; cmp.updatedAt = old?.updatedAt ?? cmp.updatedAt
+        guard cmp != old else { return }
+        summary.save()
+        WidgetCenter.shared.reloadTimelines(ofKind: WidgetSummary.widgetKind)
+    }
+
     // 대시보드에 실어 보낼 이 앱만의 지표 — 개수와 on/off 뿐, 금액은 나가지 않는다.
     private func updateUsageMetrics() {
         let s = settingsList.first
@@ -153,7 +211,7 @@ struct RootView: View {
             assetCount: assets.count,
             debtCount: assets.filter(\.isDebt).count,
             autoPricedCount: assets.filter(\.autoPriced).count,
-            tradeCount: assets.reduce(0) { $0 + $1.trades.count },
+            tradeCount: assets.reduce(0) { $0 + $1.tradeList.count },
             snapshotCount: snapshots.count,
             hasGoal: (s?.monthsToRetire) != nil,
             hasPriceKey: !(s?.finnhubKey.isEmpty ?? true)

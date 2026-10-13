@@ -145,11 +145,11 @@ struct DashboardView: View {
     // 현재 자산(+) 합과 부채 합 — 총자산 막대(순자산 + 부채)에 쓰임.
     private var grossAssetsNow: Double {
         if hasCatalog { return assets.filter { !$0.isDebt }.reduce(0) { $0 + max(0, $1.netValue) } }
-        return latest?.entries.filter { $0.amount > 0 }.reduce(0) { $0 + $1.amount } ?? 0
+        return latest?.entryList.filter { $0.amount > 0 }.reduce(0) { $0 + $1.amount } ?? 0
     }
     private var debtTotalNow: Double {
         if hasCatalog { return abs(assets.filter { $0.isDebt }.reduce(0) { $0 + min(0, $1.netValue) }) }
-        return abs(latest?.entries.filter { $0.amount < 0 }.reduce(0) { $0 + $1.amount } ?? 0)
+        return abs(latest?.entryList.filter { $0.amount < 0 }.reduce(0) { $0 + $1.amount } ?? 0)
     }
 
     // Spendable (liquid) net worth — the figure that actually matters for FIRE.
@@ -241,7 +241,7 @@ struct DashboardView: View {
     private var lastRecordChange: (assets: Double, debt: Double)? {
         guard let last = changeBaseline else { return nil }
         // 자산별 키가 없는 옛 기록은 항목 귀속이 불가 → 순변화만.
-        guard last.entries.contains(where: { $0.catalogKey != nil }) else {
+        guard last.entryList.contains(where: { $0.catalogKey != nil }) else {
             return (assets: netWorth - last.netWorth, debt: 0)
         }
         let items = assetDeltas
@@ -521,10 +521,10 @@ struct DashboardView: View {
     private var assetDeltas: [AssetDelta] {
         guard let last = changeBaseline else { return [] }
         // 자산별 키가 없는 옛 기록은 항목별 귀속 불가 → 목록을 비운다.
-        guard last.entries.contains(where: { $0.catalogKey != nil }) else { return [] }
+        guard last.entryList.contains(where: { $0.catalogKey != nil }) else { return [] }
         var prior: [UUID: Double] = [:]
         var meta: [UUID: (name: String, isDebt: Bool)] = [:]
-        for e in last.entries {
+        for e in last.entryList {
             guard let k = e.catalogKey else { continue }
             prior[k, default: 0] += e.amount
             meta[k] = (e.name, e.assetClass == .debt)

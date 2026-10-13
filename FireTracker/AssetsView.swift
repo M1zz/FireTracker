@@ -858,7 +858,7 @@ struct AssetsView: View {
                         .lineLimit(1)
                 }
                 // 세부 종목 한 줄 요약 — 예) 삼성전자 1,000만 · 애플 2,000만
-                if !asset.details.isEmpty {
+                if !asset.detailList.isEmpty {
                     Text(asset.sortedDetails.map { "\($0.name) \(Fmt.krw($0.amount))" }
                         .joined(separator: " · "))
                         .font(.caption2)
@@ -1200,7 +1200,7 @@ struct AssetEditor: View {
     private var history: [(date: Date, amount: Double)] {
         guard let key = asset?.key else { return [] }
         return snapshots.compactMap { snap -> (Date, Double)? in
-            guard let entry = snap.entries.first(where: { $0.catalogKey == key }) else { return nil }
+            guard let entry = snap.entryList.first(where: { $0.catalogKey == key }) else { return nil }
             return (snap.date, entry.amount)
         }
         .sorted { $0.0 < $1.0 }
@@ -2341,7 +2341,7 @@ struct AssetEditor: View {
             drafts.append(DetailDraft(name: newDetailName.trimmingCharacters(in: .whitespaces),
                                       amount: newDetailAmount))
         }
-        for old in target.details { context.delete(old) }
+        for old in target.detailList { context.delete(old) }
         target.details = drafts.enumerated().compactMap { idx, d in
             let nm = d.name.trimmingCharacters(in: .whitespaces)
             let amt = Double(d.amount) ?? 0
@@ -2349,12 +2349,12 @@ struct AssetEditor: View {
             return AssetDetail(name: nm, amount: amt, sortOrder: idx)
         }
         // 매매 원장 동기화 — 세부 종목과 같은 방식으로 통째로 다시 쓴다.
-        for old in target.trades { context.delete(old) }
+        for old in target.tradeList { context.delete(old) }
         target.trades = supportsBuyMore ? tradeRows.map { r in
             AssetTrade(date: r.date, kind: r.kind, quantity: r.quantity,
                        unitPrice: r.unitPrice, amount: r.amount)
         } : []
-        if !target.trades.isEmpty { AppUsage.log(.tradeLogged) }
+        if !target.tradeList.isEmpty { AppUsage.log(.tradeLogged) }
         // 원장이 있으면 보유 수량·투자 원금은 원장을 재생한 값이 진실.
         if supportsBuyMore, !tradeRows.isEmpty {
             let l = TradeLedger.replay(tradeRows)

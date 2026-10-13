@@ -137,6 +137,8 @@ enum BackupManager {
         "sim.sav.ratePct", "sim.sav.compound", "sim.sav.goal",
         // 월급(실질임금) — 연도별 기록은 JSON 문자열 한 칸에 담긴다.
         "sim.wage.entries", "sim.wage.mode",
+        // 퇴사 그날 미리보기 — 프로필과 시나리오도 JSON 문자열 한 칸씩.
+        "future.profile", "future.scenarios",
     ]
     static let boolKeys: [String] = [
         "sim.life.seeded", "sim.life.scaleReturns", "sim.sav.taxed", "sim.time.seeded",
@@ -163,7 +165,7 @@ enum BackupManager {
         var stringDefaults: [String: String] = [:]
         var boolDefaults: [String: Bool] = [:]
         for (key, raw) in defaults.dictionaryRepresentation()
-        where key.hasPrefix("sim.") || appPreferenceKeys.contains(key) {
+        where key.hasPrefix("sim.") || key.hasPrefix("future.") || appPreferenceKeys.contains(key) {
             if boolSet.contains(key) {
                 if let n = raw as? NSNumber { boolDefaults[key] = n.boolValue }
             } else if let v = raw as? String {
@@ -433,7 +435,7 @@ enum BackupManager {
               details: a.sortedDetails.map {
                   .init(name: $0.name, amount: $0.amount, sortOrder: $0.sortOrder)
               },
-              trades: a.trades.sorted { $0.date < $1.date }.map {
+              trades: a.tradeList.sorted { $0.date < $1.date }.map {
                   .init(date: $0.date, kindRaw: $0.kindRaw, quantity: $0.quantity,
                         unitPrice: $0.unitPrice, amount: $0.amount, note: $0.note)
               })
@@ -449,7 +451,7 @@ enum BackupManager {
               monthlyExpense: s.monthlyExpense, monthlyNetSavings: s.monthlyNetSavings,
               monthlyPassiveIncome: s.monthlyPassiveIncome,
               liquidNetWorth: s.liquidNetWorth,
-              entries: s.entries.map { e in
+              entries: s.entryList.map { e in
                   .init(assetClassRaw: e.assetClassRaw, name: e.name, amount: e.amount,
                         catalogKey: e.catalogKey, symbol: e.symbol, quantity: e.quantity,
                         currency: e.currency, autoPriced: e.autoPriced,

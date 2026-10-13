@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B000001 /* FireTrackerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A000001 /* FireTrackerWidget.swift */; };
+		9B000002 /* WidgetBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000036 /* WidgetBridge.swift */; };
+		A1000036 /* WidgetBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000036 /* WidgetBridge.swift */; };
+		9B000003 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B1000032 /* Localizable.xcstrings */; };
+		9B000004 /* FireTrackerWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9A000000 /* FireTrackerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1565B7348B6849C756363468 /* FireTrackerSpec.swift */; };
 		A1000012 /* Usage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000012 /* Usage.swift */; };
 		A1000016 /* JourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000016 /* JourneyView.swift */; };
@@ -33,6 +38,7 @@
 		A1000033 /* FutureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000033 /* FutureEngine.swift */; };
 		A1000034 /* FuturePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000034 /* FuturePreviewView.swift */; };
 		A1000035 /* QuarterlyReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000035 /* QuarterlyReport.swift */; };
+		A1000037 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000037 /* SyncManager.swift */; };
 		A1000021 /* TimeValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* TimeValueView.swift */; };
 		A100000E /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000E /* RefreshManager.swift */; };
 		A100000F /* BackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000F /* BackupManager.swift */; };
@@ -41,7 +47,36 @@
 		EE2A5530FE505FB7D9D0AFE6 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2FA7A0D0A2BBD3B0B029E932 /* LeeoKit */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		9E000000 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = G0000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9D000000;
+			remoteInfo = FireTrackerWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C0000003 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				9B000004 /* FireTrackerWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		9A000000 /* FireTrackerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FireTrackerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A000001 /* FireTrackerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireTrackerWidget.swift; sourceTree = "<group>"; };
+		9A000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9A000003 /* FireTrackerWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FireTrackerWidget.entitlements; sourceTree = "<group>"; };
+		B1000036 /* WidgetBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetBridge.swift; sourceTree = "<group>"; };
 		1565B7348B6849C756363468 /* FireTrackerSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerSpec.swift; sourceTree = "<group>"; };
 		B0000000 /* FireTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FireTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1000001 /* FireTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireTrackerApp.swift; sourceTree = "<group>"; };
@@ -64,6 +99,7 @@
 		B1000033 /* FutureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureEngine.swift; sourceTree = "<group>"; };
 		B1000034 /* FuturePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuturePreviewView.swift; sourceTree = "<group>"; };
 		B1000035 /* QuarterlyReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuarterlyReport.swift; sourceTree = "<group>"; };
+		B1000037 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		B1000021 /* TimeValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeValueView.swift; sourceTree = "<group>"; };
 		B100000E /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		B100000F /* BackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManager.swift; sourceTree = "<group>"; };
@@ -77,6 +113,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9D000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -88,10 +131,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9C000000 /* FireTrackerWidget */ = {
+			isa = PBXGroup;
+			children = (
+				9A000001 /* FireTrackerWidget.swift */,
+				9A000002 /* Info.plist */,
+				9A000003 /* FireTrackerWidget.entitlements */,
+			);
+			path = FireTrackerWidget;
+			sourceTree = "<group>";
+		};
 		D0000000 = {
 			isa = PBXGroup;
 			children = (
 				D0000001 /* FireTracker */,
+				9C000000 /* FireTrackerWidget */,
 				D0000002 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -113,6 +167,8 @@
 				B100000D /* SimulatorView.swift */,
 				B1000020 /* CPIData.swift */,
 				B1000021 /* TimeValueView.swift */,
+				B1000037 /* SyncManager.swift */,
+				B1000036 /* WidgetBridge.swift */,
 				B1000035 /* QuarterlyReport.swift */,
 				B1000034 /* FuturePreviewView.swift */,
 				B1000033 /* FutureEngine.swift */,
@@ -138,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				B0000000 /* FireTracker.app */,
+				9A000000 /* FireTrackerWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -145,6 +202,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		9D000000 /* FireTrackerWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9F000000 /* Build configuration list for PBXNativeTarget "FireTrackerWidget" */;
+			buildPhases = (
+				9D000001 /* Sources */,
+				9D000002 /* Frameworks */,
+				9D000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FireTrackerWidget;
+			productName = FireTrackerWidget;
+			productReference = 9A000000 /* FireTrackerWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		E0000000 /* FireTracker */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F0000003 /* Build configuration list for PBXNativeTarget "FireTracker" */;
@@ -152,10 +226,12 @@
 				C0000000 /* Sources */,
 				C0000001 /* Frameworks */,
 				C0000002 /* Resources */,
+				C0000003 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				9E000001 /* PBXTargetDependency */,
 			);
 			name = FireTracker;
 			packageProductDependencies = (
@@ -178,6 +254,9 @@
 					E0000000 = {
 						CreatedOnToolsVersion = 15.3;
 					};
+					9D000000 = {
+						CreatedOnToolsVersion = 26.0;
+					};
 				};
 			};
 			buildConfigurationList = F0000000 /* Build configuration list for PBXProject "FireTracker" */;
@@ -198,11 +277,20 @@
 			projectRoot = "";
 			targets = (
 				E0000000 /* FireTracker */,
+				9D000000 /* FireTrackerWidget */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9D000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9B000003 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0000002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -215,6 +303,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9D000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9B000001 /* FireTrackerWidget.swift in Sources */,
+				9B000002 /* WidgetBridge.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0000000 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -233,6 +330,8 @@
 				A100000D /* SimulatorView.swift in Sources */,
 				A1000020 /* CPIData.swift in Sources */,
 				A1000021 /* TimeValueView.swift in Sources */,
+				A1000037 /* SyncManager.swift in Sources */,
+				A1000036 /* WidgetBridge.swift in Sources */,
 				A1000035 /* QuarterlyReport.swift in Sources */,
 				A1000034 /* FuturePreviewView.swift in Sources */,
 				A1000033 /* FutureEngine.swift in Sources */,
@@ -253,7 +352,69 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		9E000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9D000000 /* FireTrackerWidget */;
+			targetProxy = 9E000000 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		9F000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FireTrackerWidget/FireTrackerWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FireTrackerWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "퇴사각";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.devkoan.FireTracker.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		9F000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FireTrackerWidget/FireTrackerWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FireTrackerWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "퇴사각";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.devkoan.FireTracker.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		F0000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -371,6 +532,7 @@
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "자산 정보를 보호하기 위해 Face ID로 잠금을 해제합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -400,6 +562,7 @@
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "자산 정보를 보호하기 위해 Face ID로 잠금을 해제합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -417,6 +580,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9F000000 /* Build configuration list for PBXNativeTarget "FireTrackerWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9F000001 /* Debug */,
+				9F000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F0000000 /* Build configuration list for PBXProject "FireTracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -30,6 +30,9 @@
 		A1000030 /* ProAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000030 /* ProAccess.swift */; };
 		A1000031 /* ProPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000031 /* ProPaywallView.swift */; };
 		A1000032 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B1000032 /* Localizable.xcstrings */; };
+		A1000033 /* FutureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000033 /* FutureEngine.swift */; };
+		A1000034 /* FuturePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000034 /* FuturePreviewView.swift */; };
+		A1000035 /* QuarterlyReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000035 /* QuarterlyReport.swift */; };
 		A1000021 /* TimeValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* TimeValueView.swift */; };
 		A100000E /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000E /* RefreshManager.swift */; };
 		A100000F /* BackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000F /* BackupManager.swift */; };
@@ -58,6 +61,9 @@
 		B1000030 /* ProAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProAccess.swift; sourceTree = "<group>"; };
 		B1000031 /* ProPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProPaywallView.swift; sourceTree = "<group>"; };
 		B1000032 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		B1000033 /* FutureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureEngine.swift; sourceTree = "<group>"; };
+		B1000034 /* FuturePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuturePreviewView.swift; sourceTree = "<group>"; };
+		B1000035 /* QuarterlyReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuarterlyReport.swift; sourceTree = "<group>"; };
 		B1000021 /* TimeValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeValueView.swift; sourceTree = "<group>"; };
 		B100000E /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		B100000F /* BackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManager.swift; sourceTree = "<group>"; };
@@ -107,6 +113,9 @@
 				B100000D /* SimulatorView.swift */,
 				B1000020 /* CPIData.swift */,
 				B1000021 /* TimeValueView.swift */,
+				B1000035 /* QuarterlyReport.swift */,
+				B1000034 /* FuturePreviewView.swift */,
+				B1000033 /* FutureEngine.swift */,
 				B1000032 /* Localizable.xcstrings */,
 				B1000031 /* ProPaywallView.swift */,
 				B1000030 /* ProAccess.swift */,
@@ -224,6 +233,9 @@
 				A100000D /* SimulatorView.swift in Sources */,
 				A1000020 /* CPIData.swift in Sources */,
 				A1000021 /* TimeValueView.swift in Sources */,
+				A1000035 /* QuarterlyReport.swift in Sources */,
+				A1000034 /* FuturePreviewView.swift in Sources */,
+				A1000033 /* FutureEngine.swift in Sources */,
 				A1000031 /* ProPaywallView.swift in Sources */,
 				A1000030 /* ProAccess.swift in Sources */,
 				A100000E /* RefreshManager.swift in Sources */,

@@ -22,6 +22,10 @@ import LeeoKit
 
 /// 프로로 열리는 기능. rawValue 는 LeeoGatePolicy 의 기능 키다.
 enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
+    case futurePreview    = "future.preview"
+    case quarterlyReport  = "future.quarterlyReport"
+    case iCloudSync       = "sync.iCloud"
+    case widget           = "widget.home"
     case investForecast   = "calc.invest"
     case debtVsInvest     = "calc.debtVsInvest"
     case purchasingPower  = "calc.wage"
@@ -34,6 +38,10 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
 
     var leeoTitle: String {
         switch self {
+        case .futurePreview:    return String(localized: "퇴사 그날 미리보기")
+        case .quarterlyReport:  return String(localized: "분기 퇴사각 리포트")
+        case .iCloudSync:       return String(localized: "iCloud 동기화")
+        case .widget:           return String(localized: "홈 화면 위젯")
         case .investForecast:   return String(localized: "투자 예측")
         case .debtVsInvest:     return String(localized: "빚 갚기 vs 투자하기")
         case .purchasingPower:  return String(localized: "월급 구매력")
@@ -46,6 +54,14 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
 
     var leeoDetail: String {
         switch self {
+        case .futurePreview:
+            return String(localized: "퇴사하는 날의 나를 미리 봐요. 건강보험료·국민연금까지 넣은 진짜 생활비, 그 돈이 몇 살까지 버틸 확률, 세금이 가장 적은 인출 순서, 다른 선택을 했을 때의 미래까지.")
+        case .quarterlyReport:
+            return String(localized: "석 달마다 퇴사 날짜가 얼마나 당겨졌는지, 무엇이 움직였는지 정리해 알려줘요.")
+        case .iCloudSync:
+            return String(localized: "아이폰과 아이패드에서 같은 자산과 기록을 봐요.")
+        case .widget:
+            return String(localized: "홈 화면에서 퇴사까지 남은 시간을 바로 봐요.")
         case .investForecast:
             return String(localized: "지금 자산이 앞으로 어디까지 갈지 좋을 때와 나쁠 때의 범위로 보여줘요.")
         case .debtVsInvest:
@@ -65,6 +81,10 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
 
     var leeoIcon: String {
         switch self {
+        case .futurePreview:    return "sunrise.fill"
+        case .quarterlyReport:  return "doc.text.magnifyingglass"
+        case .iCloudSync:       return "icloud.fill"
+        case .widget:           return "square.grid.2x2.fill"
         case .investForecast:   return "chart.line.uptrend.xyaxis"
         case .debtVsInvest:     return "arrow.triangle.branch"
         case .purchasingPower:  return "cart"
@@ -175,6 +195,65 @@ struct ProLockedCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
+    }
+}
+
+// MARK: - 그날의 나 미리보기 진입점
+
+/// 대시보드·계산 탭에서 미리보기로 들어가는 줄. 프로가 아니면 페이월을 연다.
+struct FuturePreviewEntry: View {
+    @EnvironmentObject private var pro: LeeoStore
+    @State private var paywallFeature: ProFeature?
+    var compact = false
+
+    private var unlocked: Bool { pro.gate.allows(ProFeature.futurePreview.rawValue) }
+
+    var body: some View {
+        Group {
+            if unlocked {
+                NavigationLink { FuturePreviewView() } label: { label }
+            } else {
+                Button {
+                    AppUsage.log(.paywallShown)
+                    paywallFeature = .futurePreview
+                } label: { label }
+            }
+        }
+        .buttonStyle(.plain)
+        .proPaywall($paywallFeature)
+    }
+
+    private var label: some View {
+        HStack(spacing: 12) {
+            Image(systemName: unlocked ? "sunrise.fill" : "lock.fill")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(Theme.accent)
+                .frame(width: 44, height: 44)
+                .background(Theme.accentSoft)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("그날의 나 미리보기")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Text("건보료·연금·세금까지 넣은 퇴사 후의 삶")
+                    .font(.body)
+                    .foregroundStyle(Theme.textSecond)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 4)
+            Image(systemName: "chevron.right")
+                .font(.body)
+                .foregroundStyle(Theme.textSecond)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .modifier(EntryBackground(compact: compact))
+    }
+}
+
+private struct EntryBackground: ViewModifier {
+    let compact: Bool
+    func body(content: Content) -> some View {
+        if compact { content } else { content.cardStyle() }
     }
 }
 

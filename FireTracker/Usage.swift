@@ -44,6 +44,10 @@ enum AppUsage {
         case paywallShown = "paywall_shown"
         /// 퇴사각 프로를 샀다
         case proPurchased = "pro_purchased"
+        /// 퇴사 그날 미리보기를 열었다
+        case futurePreviewOpened = "future_preview_opened"
+        /// 분기 리포트를 열었다
+        case quarterlyReportOpened = "quarterly_report_opened"
     }
 
     private static var reporter: LeeoUsageReporter {

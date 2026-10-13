@@ -825,6 +825,9 @@ struct DashboardView: View {
                 Text("월 저축 \(Fmt.krw(plannedSavings))원 · 기대 수익률 \(Fmt.percent(settings.expectedAnnualReturn, fraction: 1)) 기준")
                     .font(.body)
                     .foregroundStyle(Theme.textSecond)
+                Divider()
+                // 언제 그만둘 수 있나(무료) 다음 질문 — 그날 가면 어떤 삶인가(프로).
+                FuturePreviewEntry(compact: true)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

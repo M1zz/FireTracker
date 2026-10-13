@@ -94,6 +94,8 @@ struct SimulatorView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
+                    // 계산기들이 모이는 곳 — 퇴사하는 날의 삶을 한 화면으로.
+                    FuturePreviewEntry()
                     // 모드가 6개라 세그먼트로는 '생애주기' 같은 라벨이 잘린다 → 가로 스크롤 칩.
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {

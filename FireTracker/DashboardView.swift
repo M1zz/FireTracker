@@ -327,6 +327,11 @@ struct DashboardView: View {
         return out
     }
 
+    // 좋은 신호는 위 카드(변화·패시브 인컴·퇴사각)에 이미 있으니, 신호등은 손볼 것만 나열한다.
+    private var attentionSignals: [FinancialSignal] {
+        signals.filter { $0.level == .caution || $0.level == .bad }
+    }
+
     private var overallSignal: SignalLevel {
         if signals.contains(where: { $0.level == .bad }) { return .bad }
         if signals.contains(where: { $0.level == .caution }) { return .caution }
@@ -353,15 +358,14 @@ struct DashboardView: View {
                         VStack(spacing: 20) {
                             // 앱 이름이 걸린 질문 — "언제 퇴사할 수 있나" — 의 답이 맨 위에 온다.
                             // 아래 카드는 전부 그 답을 움직이는 것들이다:
-                            // 변화(얼마나 다가왔나) → 패시브 인컴(얼마나 대신 벌어주나) →
-                            // 필요 자금 → 쓸 수 있는 돈 → 연말 예상 → 재정 신호등.
+                            // 변화(얼마나 다가왔나) → 패시브 인컴(얼마나 대신 벌어주나, 필요 자금 포함) →
+                            // 쓸 수 있는 돈 → 연말 예상 → 시장 공포 나침반 → 재정 신호등.
                             quitCard
                             welcomeCard
                             // 4단계 — 1년 넘게 만족점을 안 봤으면 다시 비춰보라고 묻는다.
                             TipView(reReflectTip)
                                 .tipBackground(Theme.surface)
                             cashFlowCard
-                            capitalNeededCard
                             liquidityCard
                             NavigationLink {
                                 ProjectionDetailView(startingAssets: projectionBase,
@@ -818,12 +822,6 @@ struct DashboardView: View {
                         progress: goalProgress,
                         detail: String(localized: "목표 \(Fmt.krw(fireNumber))원 중 \(Fmt.krw(goalRemaining))원 남음")
                             + goalChangeSuffix)
-                if settings.incomeGoalMonthly > 0, settings.fireGoalType != .assets {
-                    let cov = monthlyPassiveIncome / settings.incomeGoalMonthly
-                    goalBar(title: String(localized: "패시브 인컴이 생활비를 대신하는 정도"),
-                            progress: cov,
-                            detail: String(localized: "월 \(Fmt.krw(settings.incomeGoalMonthly))원 중 \(Fmt.percent(min(cov, 1), fraction: 0))"))
-                }
                 Text("월 저축 \(Fmt.krw(plannedSavings))원 · 기대 수익률 \(Fmt.percent(settings.expectedAnnualReturn, fraction: 1)) 기준")
                     .font(.body)
                     .foregroundStyle(Theme.textSecond)
@@ -917,25 +915,35 @@ struct DashboardView: View {
                 }
             }
 
-            VStack(spacing: 12) {
-                ForEach(signals) { sig in
-                    HStack(spacing: 12) {
-                        Image(systemName: sig.symbol)
-                            .font(.system(.subheadline))
-                            .foregroundStyle(sig.level.color)
-                            .frame(width: 24, height: 24)
-                            .background(sig.level.color.opacity(0.15))
-                            .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text(sig.title)
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.textPrimary)
-                            Text(sig.detail)
-                                .font(.caption2)
-                                .foregroundStyle(Theme.textSecond)
+            if attentionSignals.isEmpty {
+                Text(overallSignal == .neutral
+                     ? "자산·저축·패시브 인컴을 넣으면 여기서 점검해 드려요"
+                     : "저축·자산 추세·패시브 인컴·부채 모두 괜찮아요")
+                    .font(.body)
+                    .foregroundStyle(Theme.textSecond)
+            }
+
+            if !attentionSignals.isEmpty {
+                VStack(spacing: 12) {
+                    ForEach(attentionSignals) { sig in
+                        HStack(spacing: 12) {
+                            Image(systemName: sig.symbol)
+                                .font(.system(.subheadline))
+                                .foregroundStyle(sig.level.color)
+                                .frame(width: 24, height: 24)
+                                .background(sig.level.color.opacity(0.15))
+                                .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(sig.title)
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(Theme.textPrimary)
+                                Text(sig.detail)
+                                    .font(.body)
+                                    .foregroundStyle(Theme.textSecond)
+                            }
+                            Spacer(minLength: 8)
+                            Circle().fill(sig.level.color).frame(width: 9, height: 9)
                         }
-                        Spacer(minLength: 8)
-                        Circle().fill(sig.level.color).frame(width: 9, height: 9)
                     }
                 }
             }
@@ -956,7 +964,7 @@ struct DashboardView: View {
                         .foregroundStyle(Theme.textSecond)
                 }
                 Spacer()
-                InfoPopoverButton(text: "지금 받고 있는 패시브 인컴이에요(목표 아님) — 자산 탭에 등록한 월세·배당·이자·연금·스테이킹에서 자동으로 합산해요. 주 수입은 월÷4.345로 환산했고, 막대는 원하는 월 지출(연간 목표 지출÷12)을 얼마나 커버하는지 보여줘요. 목표 대비 달성률은 아래 ‘패시브 인컴 목표 달성률’에 있어요.")
+                InfoPopoverButton(text: "지금 받고 있는 패시브 인컴이에요(목표 아님) — 자산 탭에 등록한 월세·배당·이자·연금·스테이킹에서 자동으로 합산해요. 주 수입은 월÷4.345로 환산했고, 막대는 원하는 월 지출(연간 목표 지출÷12)을 얼마나 커버하는지 보여줘요. 필요 자금은 원하는 월 지출을 ‘지금 포트폴리오가 실제로 내는 수익률’로 나눈 값이라, 더 높은 배당·이자 전략을 쓰면 줄어들어요.")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -1000,12 +1008,32 @@ struct DashboardView: View {
                     .frame(height: 10)
                     if incomeShortfall > 0 {
                         Text("원하는 월 지출 \(Fmt.krw(targetMonthlyExpense))원의 \(Fmt.percent(incomeCoverage, fraction: 0)) 커버 · 월 \(Fmt.krw(incomeShortfall))원 부족")
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(Theme.textSecond)
                     } else {
                         Text("원하는 월 지출 \(Fmt.krw(targetMonthlyExpense))원을 모두 커버 · 월 \(Fmt.krw(incomeSurplus))원 여유 🎉")
-                            .font(.caption)
+                            .font(.body)
                             .foregroundStyle(Theme.positive)
+                    }
+                }
+
+                // 모자란 수입을 지금 수익률로 채우려면 자본이 얼마나 필요한가 — 같은 막대를
+                // 따로 카드로 반복하지 않고 여기서 한 줄로 답한다.
+                if strategyYield > 0, capitalGap > 0 {
+                    Divider()
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(alignment: .firstTextBaseline) {
+                            Text("채우는 데 필요한 자금")
+                                .font(.body)
+                                .foregroundStyle(Theme.textSecond)
+                            Spacer()
+                            Text("약 \(Fmt.krw(capitalNeeded))원")
+                                .font(.system(.body, design: .rounded).weight(.semibold))
+                                .foregroundStyle(Theme.accent)
+                        }
+                        Text("지금 수익률 연 \(Fmt.percent(strategyYield, fraction: 1)) 기준 · 약 \(Fmt.krw(capitalGap))원 더 필요")
+                            .font(.body)
+                            .foregroundStyle(Theme.textSecond)
                     }
                 }
             } else {
@@ -1031,76 +1059,6 @@ struct DashboardView: View {
                     Text("원하는 월 지출 \(Fmt.krw(targetMonthlyExpense))원 · 설정의 ‘연간 목표 지출’에서 변경")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .cardStyle()
-    }
-
-    // How much capital it takes to throw off the target monthly income, using
-    // the yield the user's *current* portfolio actually produces (not the 4%
-    // rule). Answers "내가 지금 전략대로면 목표 수입까지 자금이 얼마나 필요한가".
-    private var capitalNeededCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("목표 패시브 인컴에 필요한 자금")
-                        .font(.headline)
-                        .foregroundStyle(Theme.textPrimary)
-                    Text("지금 전략(실제 수익률) 기준")
-                        .font(.caption2)
-                        .foregroundStyle(Theme.textSecond)
-                }
-                Spacer()
-                InfoPopoverButton(text: "목표 패시브 인컴을 ‘지금 포트폴리오가 실제로 내는 수익률’로 나눠 필요한 자본을 계산해요. 같은 수익률을 유지한다고 가정한 값이라, 더 높은 배당·이자 전략을 쓰면 필요 자금은 줄어듭니다. 참고로 4% 룰 기준 필요 자금은 \(Fmt.krw(fireNumber))원이에요.")
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            if strategyYield > 0 {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("약 \(Fmt.krw(capitalNeeded))원")
-                        .font(.system(.largeTitle, design: .rounded, weight: .bold))
-                        .foregroundStyle(Theme.accent)
-                    Text("월 \(Fmt.krw(targetMonthlyIncome))원 패시브 인컴을 만들려면 · 현재 전략 수익률 연 \(Fmt.percent(strategyYield, fraction: 1))")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
-                }
-
-                // Progress of current income-producing capital toward the goal.
-                VStack(alignment: .leading, spacing: 6) {
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            Capsule().fill(Theme.hairline)
-                            Capsule()
-                                .fill(incomeCoverage >= 1 ? Theme.accent : Theme.positive)
-                                .frame(width: max(2, geo.size.width * min(incomeCoverage, 1)))
-                        }
-                    }
-                    .frame(height: 10)
-                    if capitalGap > 0 {
-                        Text("현재 투자 자본 \(Fmt.krw(strategyCapitalBase))원 · 약 \(Fmt.krw(capitalGap))원 더 필요")
-                            .font(.caption)
-                            .foregroundStyle(Theme.textSecond)
-                    } else {
-                        Text("이미 목표 패시브 인컴을 낼 만큼 자본이 충분해요 🎉")
-                            .font(.caption)
-                            .foregroundStyle(Theme.positive)
-                    }
-                }
-            } else {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("아직 현재 전략 수익률을 계산할 수 없어요")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.textPrimary)
-                    Text("배당·이자·월세 등 수입이 잡혀야 ‘내 전략의 수익률’이 계산돼요. 자산에 배당률을 넣거나 여정 탭 ▸ 내 목표에서 연간 배당을 입력해보세요.")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
-                    if fireNumber > 0 {
-                        Text("참고: 4% 룰 기준 필요 자금은 \(Fmt.krw(fireNumber))원이에요.")
-                            .font(.caption)
-                            .foregroundStyle(Theme.textSecond)
-                    }
                 }
             }
         }

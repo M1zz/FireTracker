@@ -40,6 +40,7 @@
 		A1000035 /* QuarterlyReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000035 /* QuarterlyReport.swift */; };
 		A1000037 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000037 /* SyncManager.swift */; };
 		A1000021 /* TimeValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* TimeValueView.swift */; };
+		A1000040 /* MarketMoodCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000040 /* MarketMoodCard.swift */; };
 		A100000E /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000E /* RefreshManager.swift */; };
 		A100000F /* BackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000F /* BackupManager.swift */; };
 		A1000010 /* ReflectionTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000010 /* ReflectionTips.swift */; };
@@ -101,6 +102,7 @@
 		B1000035 /* QuarterlyReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuarterlyReport.swift; sourceTree = "<group>"; };
 		B1000037 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		B1000021 /* TimeValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeValueView.swift; sourceTree = "<group>"; };
+		B1000040 /* MarketMoodCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketMoodCard.swift; sourceTree = "<group>"; };
 		B100000E /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		B100000F /* BackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManager.swift; sourceTree = "<group>"; };
 		B1000010 /* ReflectionTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflectionTips.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				B100000D /* SimulatorView.swift */,
 				B1000020 /* CPIData.swift */,
 				B1000021 /* TimeValueView.swift */,
+				B1000040 /* MarketMoodCard.swift */,
 				B1000037 /* SyncManager.swift */,
 				B1000036 /* WidgetBridge.swift */,
 				B1000035 /* QuarterlyReport.swift */,
@@ -330,6 +333,7 @@
 				A100000D /* SimulatorView.swift in Sources */,
 				A1000020 /* CPIData.swift in Sources */,
 				A1000021 /* TimeValueView.swift in Sources */,
+				A1000040 /* MarketMoodCard.swift in Sources */,
 				A1000037 /* SyncManager.swift in Sources */,
 				A1000036 /* WidgetBridge.swift in Sources */,
 				A1000035 /* QuarterlyReport.swift in Sources */,

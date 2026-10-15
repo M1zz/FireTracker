@@ -374,6 +374,8 @@ struct DashboardView: View {
                                 projectionCard
                             }
                             .buttonStyle(.plain)
+                            // 내 돈이 아니라 시장의 분위기 — 공포에 사고 탐욕에 팔 때 보는 나침반.
+                            MarketMoodCard()
                             // 재정 신호등은 맨 아래 — 답이 아니라 점검표라서.
                             signalCard
                         }

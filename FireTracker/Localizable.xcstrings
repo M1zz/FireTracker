@@ -513,6 +513,38 @@
         }
       }
     },
+    "S&P500 1년 고점 대비": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "S&P 500 vs 1-year high"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "S&P500 1년 고점 대비"
+          }
+        }
+      }
+    },
+    "VIX 1년 범위": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "VIX 1-year range"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "VIX 1년 범위"
+          }
+        }
+      }
+    },
     "iCloud 동기화": {
       "localizations": {
         "en": {
@@ -913,6 +945,22 @@
         }
       }
     },
+    "고점 근처": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Near high"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "고점 근처"
+          }
+        }
+      }
+    },
     "공시가격 중 과표 비율": {
       "localizations": {
         "en": {
@@ -925,6 +973,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "공시가격 중 과표 비율"
+          }
+        }
+      }
+    },
+    "공포": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fear"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "공포"
+          }
+        }
+      }
+    },
+    "공포 구간이에요. 미리 정해 둔 만큼만 나눠서 사는 구간이에요. 빚을 내서 사지는 마세요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fear zone. Buy in slices, only as much as you planned in advance. Don't borrow to buy."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "공포 구간이에요. 미리 정해 둔 만큼만 나눠서 사는 구간이에요. 빚을 내서 사지는 마세요."
           }
         }
       }
@@ -1133,6 +1213,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "그대로"
+          }
+        }
+      }
+    },
+    "극단적 공포": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Extreme fear"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "극단적 공포"
+          }
+        }
+      }
+    },
+    "극단적 공포예요. 역사적으로 좋은 매수 기회였지만 더 빠질 수도 있어요. 나눠서, 버틸 수 있는 만큼만.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Extreme fear. Historically a good time to buy, but it can fall further. Buy in slices, only what you can hold through."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "극단적 공포예요. 역사적으로 좋은 매수 기회였지만 더 빠질 수도 있어요. 나눠서, 버틸 수 있는 만큼만."
           }
         }
       }
@@ -1489,6 +1601,22 @@
         }
       }
     },
+    "다시 시도": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "다시 시도"
+          }
+        }
+      }
+    },
     "닫기": {
       "localizations": {
         "en": {
@@ -1693,6 +1821,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "매매 원장은 프로 기능이에요"
+          }
+        }
+      }
+    },
+    "모두가 편안할 때예요. 새로 크게 사기보다 비중이 너무 커진 자산이 없는지 볼 때예요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everyone feels comfortable. Rather than buying big, check whether any asset has grown too large in your mix."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "모두가 편안할 때예요. 새로 크게 사기보다 비중이 너무 커진 자산이 없는지 볼 때예요."
           }
         }
       }
@@ -1969,6 +2113,22 @@
         }
       }
     },
+    "바늘은 VIX(미국 S&P500 옵션 가격에 담긴 변동성 지수)예요. 평소 12~20이고, 30을 넘으면 공포, 40 이상은 2008년·2020년 3월 같은 패닉이에요. 아래 두 줄은 S&P500과 코스피가 최근 1년 고점에서 얼마나 내려왔는지예요.\n\n이 지표는 '지금 사람들이 무서워한다'만 알려줄 뿐 바닥은 알려주지 않아요. 공포 구간에서 얼마나 나눠 살지 미리 정해 두고, 그 규칙을 지킬 때 쓰세요. 투자 권유가 아니에요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The needle is the VIX, the volatility index priced into S&P 500 options. It usually sits between 12 and 20; above 30 is fear, and 40 or more is panic like 2008 or March 2020. The rows below show how far the S&P 500 and KOSPI are from their 1-year highs.\n\nIt only tells you that people are scared right now, not where the bottom is. Decide in advance how much you'll buy in slices during fear, and use this to stick to that rule. This is not investment advice."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "바늘은 VIX(미국 S&P500 옵션 가격에 담긴 변동성 지수)예요. 평소 12~20이고, 30을 넘으면 공포, 40 이상은 2008년·2020년 3월 같은 패닉이에요. 아래 두 줄은 S&P500과 코스피가 최근 1년 고점에서 얼마나 내려왔는지예요.\n\n이 지표는 '지금 사람들이 무서워한다'만 알려줄 뿐 바닥은 알려주지 않아요. 공포 구간에서 얼마나 나눠 살지 미리 정해 두고, 그 규칙을 지킬 때 쓰세요. 투자 권유가 아니에요."
+          }
+        }
+      }
+    },
     "버틸 확률": {
       "localizations": {
         "en": {
@@ -2061,6 +2221,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "분기가 시작되면 알려 주기"
+          }
+        }
+      }
+    },
+    "불안": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uneasy"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "불안"
+          }
+        }
+      }
+    },
+    "불안이 커지는 중이에요. 공포 구간에서 얼마나 더 살지 지금 정해 두세요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anxiety is rising. Decide now how much more you'll buy if fear sets in."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "불안이 커지는 중이에요. 공포 구간에서 얼마나 더 살지 지금 정해 두세요."
           }
         }
       }
@@ -2401,6 +2593,38 @@
         }
       }
     },
+    "시장 공포 나침반": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Market Fear Compass"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시장 공포 나침반"
+          }
+        }
+      }
+    },
+    "시장 데이터를 불러오지 못했어요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't load market data"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시장 데이터를 불러오지 못했어요"
+          }
+        }
+      }
+    },
     "시장 몫은 석 달 뒤면 뒤집힐 수 있지만, 내가 모은 돈은 남아요.": {
       "localizations": {
         "en": {
@@ -2413,6 +2637,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "시장 몫은 석 달 뒤면 뒤집힐 수 있지만, 내가 모은 돈은 남아요."
+          }
+        }
+      }
+    },
+    "시장 분위기를 읽는 중": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading the market mood"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시장 분위기를 읽는 중"
           }
         }
       }
@@ -3473,6 +3713,22 @@
         }
       }
     },
+    "지금 시장은 얼마나 무서워하나": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How scared the market is right now"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지금 시장은 얼마나 무서워하나"
+          }
+        }
+      }
+    },
     "지금 자산이 앞으로 어디까지 갈지 좋을 때와 나쁠 때의 범위로 보여줘요.": {
       "localizations": {
         "en": {
@@ -3741,6 +3997,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "켜면 가상 인물의 자산으로 앱을 둘러볼 수 있어요."
+          }
+        }
+      }
+    },
+    "코스피 1년 고점 대비": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "KOSPI vs 1-year high"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "코스피 1년 고점 대비"
+          }
+        }
+      }
+    },
+    "탐욕": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Greed"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "탐욕"
           }
         }
       }
@@ -4285,6 +4573,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "평생 내는 세금"
+          }
+        }
+      }
+    },
+    "평소 수준이에요. 하던 대로 꾸준히 모으면 돼요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Business as usual. Keep saving steadily as you have been."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "평소 수준이에요. 하던 대로 꾸준히 모으면 돼요."
+          }
+        }
+      }
+    },
+    "평온": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calm"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "평온"
           }
         }
       }

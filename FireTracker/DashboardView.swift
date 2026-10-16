@@ -107,6 +107,9 @@ struct DashboardView: View {
     @Query private var settingsList: [FireSettings]
 
     @State private var showingAddAsset = false
+    @State private var showingQuickStart = false
+    // 자주 안 보는 카드(필요 자금·지표·빚 vs 투자)는 접어 둔다. 펼친 상태는 기억.
+    @AppStorage("dashboard.showMore") private var showMore = false
     @State private var totalMode: AssetTotalMode = .gross
     // 변화 카드 우측 상단 토글: 켜면 총자산 변화량을 롤링 숫자로 강조.
     @State private var showTotalChange = false
@@ -216,7 +219,9 @@ struct DashboardView: View {
     private var monthsLeftInYear: Int { FireEngine.monthsLeftInYear(asOf: Date()) }
     // The projection starts from whichever total the toggle is showing, so the
     // year-end figure changes when you switch 총자산 ↔ 순자산.
-    private var projectionBase: Double { effectiveMode == .net ? netAssets : grossAssets }
+    // 대시보드엔 총자산/순자산 토글이 없다 — 연말 예상은 늘 빚을 뺀 순자산에서 출발한다.
+    // (예전엔 보이지 않는 토글 기본값 탓에 총자산 기준이라 빚만큼 부풀려 보였다.)
+    private var projectionBase: Double { netAssets }
     private var projectedYearEnd: Double {
         FireEngine.projectedYearEnd(currentNetWorth: projectionBase,
                                     monthlySavings: plannedSavings,
@@ -225,17 +230,12 @@ struct DashboardView: View {
     }
     private var yearEndLabel: String {
         let year = Calendar.current.component(.year, from: Date())
-        let basis = hasDebt ? (effectiveMode == .net ? " (순자산 기준)" : " (총자산 기준)") : ""
+        let basis = hasDebt ? " (순자산 기준)" : ""
         return "\(year)년 말 예상 자산\(basis)"
     }
-    private var yearsToFire: Double? {
-        FireEngine.yearsToFire(
-            currentNetWorth: netWorth,
-            fireNumber: fireNumber,
-            monthlySavings: avgSavings,
-            annualReturn: settings.expectedAnnualReturn
-        )
-    }
+    // 퇴사각 — 위젯·알림과 같은 계산. 월 저축은 '내 목표'의 계획값을 쓴다
+    // (기록의 수입·지출도 결국 그 계획값을 옮겨 적은 것이라 따로 평균 내면 0이 되곤 했다).
+    private var outlook: FireOutlook { FireOutlook(netWorth: netWorth, settings: settings) }
     private var delta: Double? {
         guard let base = changeBaseline else { return nil }
         return netWorth - base.netWorth
@@ -361,18 +361,19 @@ struct DashboardView: View {
                         VStack(spacing: 20) {
                             // 앱 이름이 걸린 질문의 답이 맨 위에 온다.
                             // (예전엔 열두 번째 카드라 스크롤 끝까지 가야 보였다.)
-                            goalProgressCard
+                            fireHeroCard
+                            // 목표를 안 정했으면 기본값(9억) 막대를 내 목표처럼 보이지 않는다.
+                            if settings.goalConfigured { goalProgressCard }
                             welcomeCard
                             // 4단계 — 1년 넘게 만족점을 안 봤으면 다시 비춰보라고 묻는다.
                             TipView(reReflectTip)
                                 .tipBackground(Theme.surface)
-                            liquidityCard
                             cashFlowCard
+                            liquidityCard
                             signalCard
-                            capitalNeededCard
                             NavigationLink {
                                 ProjectionDetailView(startingAssets: projectionBase,
-                                                     basisLabel: hasDebt ? (effectiveMode == .net ? "순자산" : "총자산") : nil,
+                                                     basisLabel: hasDebt ? "순자산" : nil,
                                                      monthlyTakeHome: settings.monthlyTakeHome,
                                                      plannedExpense: settings.plannedMonthlyExpense,
                                                      monthlySavings: plannedSavings,
@@ -381,14 +382,18 @@ struct DashboardView: View {
                                 projectionCard
                             }
                             .buttonStyle(.plain)
-                            metricsGrid
-                            NavigationLink {
-                                WhatIfView(defaultAmount: totalDebt,
-                                           defaultInvestRatePct: settings.expectedAnnualReturn * 100)
-                            } label: {
-                                whatIfCard
+                            showMoreButton
+                            if showMore {
+                                capitalNeededCard
+                                metricsGrid
+                                NavigationLink {
+                                    WhatIfView(defaultAmount: totalDebt,
+                                               defaultInvestRatePct: settings.expectedAnnualReturn * 100)
+                                } label: {
+                                    whatIfCard
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
                         }
                         .padding(20)
                     }
@@ -400,6 +405,9 @@ struct DashboardView: View {
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $showingAddAsset) {
                 AssetEditor(asset: nil, nextSortOrder: 0)
+            }
+            .sheet(isPresented: $showingQuickStart) {
+                QuickStartView()
             }
         }
     }
@@ -413,10 +421,10 @@ struct DashboardView: View {
                     Image(systemName: "flame.fill")
                         .font(.system(.largeTitle))
                         .foregroundStyle(Theme.accent)
-                    Text("FIRE 여정을 시작해볼까요?")
+                    Text("언제 회사를 그만둘 수 있을까요?")
                         .font(.title3.weight(.bold))
                         .foregroundStyle(Theme.textPrimary)
-                    Text("보유한 자산을 등록하면 목표까지의\n달성률과 예상 시점을 추적해드립니다.")
+                    Text("질문 네 개면 내 퇴사일이 나와요.\n자산은 그다음에 하나씩 적어도 돼요.")
                         .multilineTextAlignment(.center)
                         .font(.subheadline)
                         .foregroundStyle(Theme.textSecond)
@@ -425,23 +433,23 @@ struct DashboardView: View {
 
                 VStack(spacing: 14) {
                     stepRow(number: 1,
-                            title: "보유 자산 등록",
-                            detail: "주식·코인·부동산·전세·현금 등을 목록으로",
-                            symbol: "wonsign.circle.fill")
+                            title: "30초 만에 내 퇴사일 보기",
+                            detail: "생활비·나이·순자산·저축만 대략 넣으면 돼요",
+                            symbol: "flame.fill")
                     stepRow(number: 2,
-                            title: "FIRE 목표 설정",
-                            detail: "설정 탭에서 연 목표 지출·인출률 입력",
-                            symbol: "target")
+                            title: "자산을 하나씩 적기",
+                            detail: "주식·코인·부동산·전세·현금 — 시세는 자동으로",
+                            symbol: "wonsign.circle.fill")
                     stepRow(number: 3,
                             title: "자동으로 쌓이는 기록",
                             detail: "자산에 변동이 생기면 그날 기록이 자동 저장돼요",
                             symbol: "chart.xyaxis.line")
                 }
 
-                Button { showingAddAsset = true } label: {
+                Button { showingQuickStart = true } label: {
                     HStack {
-                        Image(systemName: "plus")
-                        Text("자산 등록하기")
+                        Image(systemName: "flame.fill")
+                        Text("내 퇴사일 계산하기")
                             .font(.subheadline.weight(.semibold))
                     }
                     .frame(maxWidth: .infinity)
@@ -451,6 +459,12 @@ struct DashboardView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
                 .padding(.top, 4)
+
+                Button { showingAddAsset = true } label: {
+                    Text("바로 자산부터 적을래요")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.textSecond)
+                }
             }
             .padding(20)
         }
@@ -775,6 +789,129 @@ struct DashboardView: View {
         }
     }
 
+    // 퇴사각 — 앱 이름이 걸린 질문("언제 그만둘 수 있나")의 답. 대시보드 맨 위.
+    // 목표를 아직 안 정했으면 기본값(월 300만 원)으로 계산한 날짜를 내 것처럼 보이지 않고,
+    // 30초 시작으로 데려간다.
+    @ViewBuilder
+    private var fireHeroCard: some View {
+        if !settings.goalConfigured {
+            Button { showingQuickStart = true } label: {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("퇴사각")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.accent)
+                    Text("언제 그만둘 수 있을까요?")
+                        .font(.title2.weight(.bold))
+                        .foregroundStyle(Theme.textPrimary)
+                    Text("아직 내 목표가 없어요. 은퇴 후 생활비와 매달 모으는 돈만 알려 주면 바로 계산해 드려요.")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.textSecond)
+                        .multilineTextAlignment(.leading)
+                    HStack {
+                        Image(systemName: "flame.fill")
+                        Text("30초 만에 내 퇴사일 보기")
+                            .font(.subheadline.weight(.semibold))
+                        Spacer()
+                        Image(systemName: "arrow.right")
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 13)
+                    .background(Theme.accent)
+                    .foregroundStyle(Color.black)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .cardStyle()
+            }
+            .buttonStyle(.plain)
+        } else {
+            NavigationLink { GoalSettingsView() } label: { fireHeroContent }
+                .buttonStyle(.plain)
+        }
+    }
+
+    private var fireHeroContent: some View {
+        let o = outlook
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("퇴사각")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+                Spacer()
+                HStack(spacing: 2) {
+                    Text("내 목표")
+                    Image(systemName: "chevron.right")
+                }
+                .font(.caption)
+                .foregroundStyle(Theme.accent)
+            }
+            if let date = o.date {
+                Text(o.years ?? 0 < 1.0 / 12.0 ? "지금 그만둬도 돼요" : QuickStartView.monthText(date))
+                    .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                    .foregroundStyle(Theme.textPrimary)
+                    .contentTransition(.numericText())
+                Text(o.ageAtFire.map { "지금 속도면 \(Fmt.years(o.years)) 뒤 · \($0)세" }
+                     ?? "지금 속도면 \(Fmt.years(o.years)) 뒤")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+                if let gap = retireGapText(o) {
+                    Text(gap)
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
+            } else {
+                Text("아직 닿지 않아요")
+                    .font(.system(.title, design: .rounded, weight: .bold))
+                    .foregroundStyle(Theme.textPrimary)
+                Text("지금 모으는 속도로는 80년 안에 목표에 닿지 않아요. 월 저축을 늘리거나 생활비 목표를 줄여 보세요.")
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Theme.hairline)
+                    Capsule().fill(o.progress >= 1 ? Theme.positive : Theme.accent)
+                        .frame(width: max(2, geo.size.width * min(o.progress, 1)))
+                }
+            }
+            .frame(height: 8)
+            Text("목표 \(Fmt.krw(o.fireNumber))원의 \(Fmt.percent(min(o.progress, 1), fraction: 0)) · 월 저축 \(Fmt.krw(o.monthlySavings))원 · 연 \(Fmt.percent(o.annualReturn, fraction: 0)) 가정")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+            if o.monthlySavings <= 0 {
+                Label("월 저축을 넣으면 훨씬 정확해져요", systemImage: "exclamationmark.circle")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardStyle()
+    }
+
+    private func retireGapText(_ o: FireOutlook) -> String? {
+        let target = settings.targetRetireAge
+        guard target > 0, let at = o.ageAtFire else { return nil }
+        if at < target { return "목표 \(target)세보다 \(target - at)년 빨라요" }
+        if at > target { return "목표 \(target)세보다 \(at - target)년 늦어요" }
+        return "목표 \(target)세에 딱 맞아요"
+    }
+
+    private var showMoreButton: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.25)) { showMore.toggle() }
+        } label: {
+            HStack {
+                Text(showMore ? "접기" : "더 보기 · 필요 자금 · 지표 · 빚 갚기 vs 투자")
+                    .font(.subheadline)
+                Spacer()
+                Image(systemName: showMore ? "chevron.up" : "chevron.down")
+            }
+            .foregroundStyle(Theme.textSecond)
+            .padding(.horizontal, 4)
+        }
+        .buttonStyle(.plain)
+    }
+
     // FIRE 목표 달성률 — 설정한 기준(자산/패시브 인컴/둘 다)에 따라 보여줌.
     private var goalProgressCard: some View {
         let gt = settings.fireGoalType
@@ -796,7 +933,7 @@ struct DashboardView: View {
                 let cov = settings.incomeGoalMonthly > 0 ? monthlyPassiveIncome / settings.incomeGoalMonthly : 0
                 goalBar(title: "패시브 인컴 목표 달성률",
                         progress: cov,
-                        detail: "원하는 월 지출 \(Fmt.krw(settings.incomeGoalMonthly))원의 \(Fmt.percent(min(cov, 1), fraction: 0)) 커버")
+                        detail: "목표 월 패시브 인컴 \(Fmt.krw(settings.incomeGoalMonthly))원의 \(Fmt.percent(min(cov, 1), fraction: 0)) 커버")
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -865,7 +1002,7 @@ struct DashboardView: View {
                         .foregroundStyle(Theme.textSecond)
                 }
                 Spacer()
-                InfoPopoverButton(text: "지금 받고 있는 패시브 인컴이에요(목표 아님) — 자산 탭에 등록한 월세·배당·이자·연금·스테이킹에서 자동으로 합산해요. 주 수입은 월÷4.345로 환산했고, 막대는 원하는 월 지출(연간 목표 지출÷12)을 얼마나 커버하는지 보여줘요. 목표 대비 달성률은 아래 ‘패시브 인컴 목표 달성률’에 있어요.")
+                InfoPopoverButton(text: "지금 받고 있는 패시브 인컴이에요(목표 아님) — 자산 탭에 등록한 월세·배당·이자·연금·스테이킹에서 자동으로 합산해요. 주 수입은 월÷4.345로 환산했고, 막대는 은퇴 후 월 생활비를 얼마나 커버하는지 보여줘요. 목표 대비 달성률은 아래 ‘패시브 인컴 목표 달성률’에 있어요.")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -908,11 +1045,11 @@ struct DashboardView: View {
                     }
                     .frame(height: 10)
                     if incomeShortfall > 0 {
-                        Text("원하는 월 지출 \(Fmt.krw(targetMonthlyExpense))원의 \(Fmt.percent(incomeCoverage, fraction: 0)) 커버 · 월 \(Fmt.krw(incomeShortfall))원 부족")
+                        Text("은퇴 후 월 생활비 \(Fmt.krw(targetMonthlyExpense))원의 \(Fmt.percent(incomeCoverage, fraction: 0)) 커버 · 월 \(Fmt.krw(incomeShortfall))원 부족")
                             .font(.caption)
                             .foregroundStyle(Theme.textSecond)
                     } else {
-                        Text("원하는 월 지출 \(Fmt.krw(targetMonthlyExpense))원을 모두 커버 · 월 \(Fmt.krw(incomeSurplus))원 여유 🎉")
+                        Text("은퇴 후 월 생활비 \(Fmt.krw(targetMonthlyExpense))원을 모두 커버 · 월 \(Fmt.krw(incomeSurplus))원 여유 🎉")
                             .font(.caption)
                             .foregroundStyle(Theme.positive)
                     }
@@ -934,12 +1071,17 @@ struct DashboardView: View {
                     Text("아직 수입이 잡히는 자산이 없어요")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.textPrimary)
-                    Text("자산 탭에서 월세·배당·이자 등을 입력하거나, 설정에서 ‘연간 배당수익’을 대략 넣으면 여기에 월·주 수입이 표시됩니다.")
+                    Text("자산 탭에서 주식의 배당률, 부동산의 월세, 예금의 이자율을 넣으면 여기에 월·주 수입이 표시됩니다.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
-                    Text("원하는 월 지출 \(Fmt.krw(targetMonthlyExpense))원 · 설정의 ‘연간 목표 지출’에서 변경")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
+                    Button {
+                        AppRouter.shared.selectedTab = AppRouter.Tab.assets
+                    } label: {
+                        Label("자산 탭으로", systemImage: "arrow.right.circle")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.accent)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -962,7 +1104,7 @@ struct DashboardView: View {
                         .foregroundStyle(Theme.textSecond)
                 }
                 Spacer()
-                InfoPopoverButton(text: "목표 패시브 인컴을 ‘지금 포트폴리오가 실제로 내는 수익률’로 나눠 필요한 자본을 계산해요. 같은 수익률을 유지한다고 가정한 값이라, 더 높은 배당·이자 전략을 쓰면 필요 자금은 줄어듭니다. 참고로 4% 룰 기준 필요 자금은 \(Fmt.krw(fireNumber))원이에요.")
+                InfoPopoverButton(text: "목표 패시브 인컴을 ‘지금 포트폴리오가 실제로 내는 수익률’로 나눠 필요한 자본을 계산해요. 같은 수익률을 유지한다고 가정한 값이라, 더 높은 배당·이자 전략을 쓰면 필요 자금은 줄어듭니다. 참고로 내 목표(한 해 생활비 ÷ 인출률) 기준 필요 자금은 \(Fmt.krw(fireNumber))원이에요.")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -1002,11 +1144,11 @@ struct DashboardView: View {
                     Text("아직 현재 전략 수익률을 계산할 수 없어요")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.textPrimary)
-                    Text("배당·이자·월세 등 수입이 잡혀야 ‘내 전략의 수익률’이 계산돼요. 자산에 배당률을 넣거나 설정에서 연간 배당을 입력해보세요.")
+                    Text("배당·이자·월세 등 수입이 잡혀야 ‘내 전략의 수익률’이 계산돼요. 자산 탭에서 배당률·월세·이자율을 넣어 보세요.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                     if fireNumber > 0 {
-                        Text("참고: 4% 룰 기준 필요 자금은 \(Fmt.krw(fireNumber))원이에요.")
+                        Text("참고: 내 목표 기준 필요 자금은 \(Fmt.krw(fireNumber))원이에요.")
                             .font(.caption)
                             .foregroundStyle(Theme.textSecond)
                     }
@@ -1020,25 +1162,25 @@ struct DashboardView: View {
     private var metricsGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
             MetricCard(
-                title: "예상 달성 시점",
-                value: Fmt.years(yearsToFire),
-                symbol: "calendar",
+                title: "FIRE 목표 금액",
+                value: "\(Fmt.krw(fireNumber))원",
+                symbol: "target",
                 tint: Theme.accent
             )
             MetricCard(
-                title: "월 평균 저축",
-                value: "\(Fmt.krw(avgSavings))원",
+                title: "월 저축 (계획)",
+                value: "\(Fmt.krw(plannedSavings))원",
                 symbol: "arrow.up.forward",
                 tint: Theme.positive
             )
             MetricCard(
-                title: "전월 대비",
+                title: "지난주 대비",
                 value: delta != nil ? "\(delta! >= 0 ? "+" : "")\(Fmt.krw(delta!))원" : "—",
                 symbol: delta ?? 0 >= 0 ? "chart.line.uptrend.xyaxis" : "chart.line.downtrend.xyaxis",
                 tint: (delta ?? 0) >= 0 ? Theme.rise : Theme.fall
             )
             MetricCard(
-                title: "최근 저축률",
+                title: "저축률 (계획)",
                 value: Fmt.percent(latest?.savingsRate ?? 0, fraction: 0),
                 symbol: "percent",
                 tint: Theme.accent
@@ -1073,7 +1215,7 @@ struct DashboardView: View {
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
             } else {
-                Text("설정에서 세후 월급·월 지출을 입력하면 예정된 수입으로 올해 말 자산을 예측합니다.")
+                Text("여정 탭 ‘내 목표’에 월 저축을 넣으면 예정된 수입으로 올해 말 자산을 예측합니다.")
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
             }

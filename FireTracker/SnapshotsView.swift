@@ -7,6 +7,8 @@ struct SnapshotsView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \NetWorthSnapshot.date, order: .reverse) private var snapshots: [NetWorthSnapshot]
     @State private var editing: NetWorthSnapshot?
+    // 스와이프로 지우기 전에 한 번 묻는다 — 지운 기록은 되돌릴 수 없다.
+    @State private var pendingDelete: IndexSet?
 
     var body: some View {
         NavigationStack {
@@ -19,7 +21,7 @@ struct SnapshotsView: View {
                             Button { editing = s } label: { row(s) }
                                 .listRowBackground(Theme.surface)
                         }
-                        .onDelete(perform: delete)
+                        .onDelete { pendingDelete = $0 }
                     }
                     .scrollContentBackground(.hidden)
                     .scrollIndicators(.hidden)
@@ -29,6 +31,18 @@ struct SnapshotsView: View {
             .navigationTitle("기록")
             .sheet(item: $editing) { s in
                 SnapshotDetail(snapshot: s)
+            }
+            .confirmationDialog("이 기록을 지울까요?",
+                                isPresented: Binding(get: { pendingDelete != nil },
+                                                     set: { if !$0 { pendingDelete = nil } }),
+                                titleVisibility: .visible) {
+                Button("기록 삭제", role: .destructive) {
+                    if let offsets = pendingDelete { delete(at: offsets) }
+                    pendingDelete = nil
+                }
+                Button("취소", role: .cancel) { pendingDelete = nil }
+            } message: {
+                Text("자산 목록은 그대로고, 여정 탭 그래프에서 이 시점이 빠집니다. 되돌릴 수 없어요.")
             }
         }
     }
@@ -72,7 +86,7 @@ struct SnapshotsView: View {
 
     private func delete(at offsets: IndexSet) {
         for i in offsets { context.delete(snapshots[i]) }
-        try? context.save()
+        context.saveReporting("기록")
     }
 }
 
@@ -89,6 +103,7 @@ struct SnapshotDetail: View {
     @State private var expense: String = ""
     @State private var passiveIncome: String = ""
     @State private var note: String = ""
+    @State private var confirmingDelete = false
 
     var body: some View {
         NavigationStack {
@@ -117,7 +132,7 @@ struct SnapshotDetail: View {
                 } header: {
                     Text("패시브 인컴 (원)")
                 } footer: {
-                    Text("이 기록 시점의 월 배당·이자·월세 합계예요. 대시보드 ‘기간별 목표(패시브 인컴)’ 차트의 점이 이 값입니다. 잘못 기록됐다면 고쳐서 저장하세요.")
+                    Text("이 기록 시점의 월 배당·이자·월세 합계예요. 여정 탭 ‘패시브 인컴’ 차트의 점이 이 값입니다. 잘못 기록됐다면 고쳐서 저장하세요.")
                         .font(.caption)
                 }
                 Section("저장된 자산 내역") {
@@ -151,9 +166,16 @@ struct SnapshotDetail: View {
                 }
                 // 잘못 들어간 기록을 바로 지울 수 있게 — 목록 스와이프 말고도.
                 Section {
-                    Button("이 기록 삭제", role: .destructive) { deleteSnapshot() }
+                    Button("이 기록 삭제", role: .destructive) { confirmingDelete = true }
+                        .confirmationDialog("이 기록을 지울까요?", isPresented: $confirmingDelete,
+                                            titleVisibility: .visible) {
+                            Button("기록 삭제", role: .destructive) { deleteSnapshot() }
+                            Button("취소", role: .cancel) {}
+                        } message: {
+                            Text("되돌릴 수 없어요.")
+                        }
                 } footer: {
-                    Text("이 기록만 지워지고 자산 목록에는 영향이 없어요. 추이·기간별 목표 그래프에서도 빠집니다.")
+                    Text("이 기록만 지워지고 자산 목록에는 영향이 없어요. 여정 탭 그래프에서도 빠집니다.")
                         .font(.caption)
                 }
             }
@@ -183,14 +205,14 @@ struct SnapshotDetail: View {
         snapshot.monthlyExpense = Double(expense) ?? 0
         snapshot.monthlyPassiveIncome = Double(passiveIncome) ?? 0
         snapshot.note = note
-        try? context.save()
+        context.saveReporting("기록")
         AppUsage.log(.snapshotSaved)
         dismiss()
     }
 
     private func deleteSnapshot() {
         context.delete(snapshot)
-        try? context.save()
+        context.saveReporting("기록")
         dismiss()
     }
 }

@@ -7,12 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0AD91CF5213402C3FF4D8D9E /* FireSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */; };
+		555219EE5C66ADE4C6892A72 /* FireSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */; };
 		66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1565B7348B6849C756363468 /* FireTrackerSpec.swift */; };
-		A1000012 /* Usage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000012 /* Usage.swift */; };
-		A1000016 /* JourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000016 /* JourneyView.swift */; };
-		A1000015 /* GoalSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000015 /* GoalSettingsView.swift */; };
-		A1000014 /* SavedCalcsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000014 /* SavedCalcsView.swift */; };
-		A1000013 /* SavedCalc.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000013 /* SavedCalc.swift */; };
+		70D4108E965ED61702D4DF1E /* FireTrackerWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A1000001 /* FireTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* FireTrackerApp.swift */; };
 		A1000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000002 /* Models.swift */; };
 		A1000003 /* FireEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000003 /* FireEngine.swift */; };
@@ -26,18 +24,55 @@
 		A100000B /* PriceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000B /* PriceService.swift */; };
 		A100000C /* AssetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000C /* AssetsView.swift */; };
 		A100000D /* SimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000D /* SimulatorView.swift */; };
-		A1000020 /* CPIData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000020 /* CPIData.swift */; };
-		A1000021 /* TimeValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* TimeValueView.swift */; };
 		A100000E /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000E /* RefreshManager.swift */; };
 		A100000F /* BackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000F /* BackupManager.swift */; };
 		A1000010 /* ReflectionTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000010 /* ReflectionTips.swift */; };
 		A1000011 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000011 /* DemoData.swift */; };
+		A1000012 /* Usage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000012 /* Usage.swift */; };
+		A1000013 /* SavedCalc.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000013 /* SavedCalc.swift */; };
+		A1000014 /* SavedCalcsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000014 /* SavedCalcsView.swift */; };
+		A1000015 /* GoalSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000015 /* GoalSettingsView.swift */; };
+		A1000016 /* JourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000016 /* JourneyView.swift */; };
+		A1000020 /* CPIData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000020 /* CPIData.swift */; };
+		A1000021 /* TimeValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* TimeValueView.swift */; };
+		B80435CC7F315916A1F7D98D /* QuickStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6903DE5951883DA07B7400 /* QuickStartView.swift */; };
+		E462C9CD9739025E4BA75C3C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B092EFA29A5C377CBE44FBED /* Foundation.framework */; };
 		EE2A5530FE505FB7D9D0AFE6 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2FA7A0D0A2BBD3B0B029E932 /* LeeoKit */; };
+		F3808CA53E41CA8046B99C85 /* FireTrackerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE0290DA1AF556C4A919F /* FireTrackerWidget.swift */; };
+		FC4D1E8C3D32AC434F856C74 /* AppSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F01026AA4EAE9DE99CC7ED /* AppSupport.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		164D4FB312A6180730E6A738 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = G0000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2BC779ADBB91E37D1EE4802F;
+			remoteInfo = FireTrackerWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		745A80A74122699BD986B5B8 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				70D4108E965ED61702D4DF1E /* FireTrackerWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		07F01026AA4EAE9DE99CC7ED /* AppSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppSupport.swift; sourceTree = "<group>"; };
 		1565B7348B6849C756363468 /* FireTrackerSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerSpec.swift; sourceTree = "<group>"; };
+		54AFE0290DA1AF556C4A919F /* FireTrackerWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerWidget.swift; sourceTree = "<group>"; };
+		665BD2C273815DDB4FFF7F44 /* FireTrackerWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = FireTrackerWidget.entitlements; sourceTree = "<group>"; };
 		B0000000 /* FireTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FireTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B092EFA29A5C377CBE44FBED /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B1000001 /* FireTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireTrackerApp.swift; sourceTree = "<group>"; };
 		B1000002 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		B1000003 /* FireEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireEngine.swift; sourceTree = "<group>"; };
@@ -51,20 +86,32 @@
 		B100000B /* PriceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceService.swift; sourceTree = "<group>"; };
 		B100000C /* AssetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsView.swift; sourceTree = "<group>"; };
 		B100000D /* SimulatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorView.swift; sourceTree = "<group>"; };
-		B1000020 /* CPIData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPIData.swift; sourceTree = "<group>"; };
-		B1000021 /* TimeValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeValueView.swift; sourceTree = "<group>"; };
 		B100000E /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		B100000F /* BackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManager.swift; sourceTree = "<group>"; };
 		B1000010 /* ReflectionTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflectionTips.swift; sourceTree = "<group>"; };
 		B1000011 /* DemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoData.swift; sourceTree = "<group>"; };
 		B1000012 /* Usage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Usage.swift; sourceTree = "<group>"; };
-		B1000016 /* JourneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyView.swift; sourceTree = "<group>"; };
-		B1000015 /* GoalSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalSettingsView.swift; sourceTree = "<group>"; };
-		B1000014 /* SavedCalcsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedCalcsView.swift; sourceTree = "<group>"; };
 		B1000013 /* SavedCalc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedCalc.swift; sourceTree = "<group>"; };
+		B1000014 /* SavedCalcsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedCalcsView.swift; sourceTree = "<group>"; };
+		B1000015 /* GoalSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalSettingsView.swift; sourceTree = "<group>"; };
+		B1000016 /* JourneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyView.swift; sourceTree = "<group>"; };
+		B1000020 /* CPIData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPIData.swift; sourceTree = "<group>"; };
+		B1000021 /* TimeValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeValueView.swift; sourceTree = "<group>"; };
+		BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FireTrackerWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE7662F98AA42C069C0106DF /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF6903DE5951883DA07B7400 /* QuickStartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuickStartView.swift; sourceTree = "<group>"; };
+		D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireSummary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		054674536C71E61B89E7FDB4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E462C9CD9739025E4BA75C3C /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -76,11 +123,40 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		34698877C418841916F45B12 /* FireTrackerWidget */ = {
+			isa = PBXGroup;
+			children = (
+				54AFE0290DA1AF556C4A919F /* FireTrackerWidget.swift */,
+				CE7662F98AA42C069C0106DF /* Info.plist */,
+				665BD2C273815DDB4FFF7F44 /* FireTrackerWidget.entitlements */,
+			);
+			name = FireTrackerWidget;
+			path = FireTrackerWidget;
+			sourceTree = "<group>";
+		};
+		55C87C17CE82F5E9D7FE1639 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				B092EFA29A5C377CBE44FBED /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		895D925BF794659329B311F7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				55C87C17CE82F5E9D7FE1639 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D0000000 = {
 			isa = PBXGroup;
 			children = (
 				D0000001 /* FireTracker */,
 				D0000002 /* Products */,
+				895D925BF794659329B311F7 /* Frameworks */,
+				34698877C418841916F45B12 /* FireTrackerWidget */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,6 +188,9 @@
 				B1000015 /* GoalSettingsView.swift */,
 				B1000014 /* SavedCalcsView.swift */,
 				B1000013 /* SavedCalc.swift */,
+				07F01026AA4EAE9DE99CC7ED /* AppSupport.swift */,
+				D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */,
+				CF6903DE5951883DA07B7400 /* QuickStartView.swift */,
 			);
 			path = FireTracker;
 			sourceTree = "<group>";
@@ -120,6 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				B0000000 /* FireTracker.app */,
+				BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -127,6 +207,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2BC779ADBB91E37D1EE4802F /* FireTrackerWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 87035A5979FFB03199EBECC7 /* Build configuration list for PBXNativeTarget "FireTrackerWidgetExtension" */;
+			buildPhases = (
+				8E5DA70C0BDBFC005201C130 /* Sources */,
+				054674536C71E61B89E7FDB4 /* Frameworks */,
+				A4B2713B75D0EB6EED639AD8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FireTrackerWidgetExtension;
+			productName = FireTrackerWidgetExtension;
+			productReference = BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		E0000000 /* FireTracker */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F0000003 /* Build configuration list for PBXNativeTarget "FireTracker" */;
@@ -134,10 +231,12 @@
 				C0000000 /* Sources */,
 				C0000001 /* Frameworks */,
 				C0000002 /* Resources */,
+				745A80A74122699BD986B5B8 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1681EEF9D1B02A051025C069 /* PBXTargetDependency */,
 			);
 			name = FireTracker;
 			packageProductDependencies = (
@@ -180,11 +279,19 @@
 			projectRoot = "";
 			targets = (
 				E0000000 /* FireTracker */,
+				2BC779ADBB91E37D1EE4802F /* FireTrackerWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A4B2713B75D0EB6EED639AD8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0000002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -196,6 +303,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		8E5DA70C0BDBFC005201C130 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3808CA53E41CA8046B99C85 /* FireTrackerWidget.swift in Sources */,
+				555219EE5C66ADE4C6892A72 /* FireSummary.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0000000 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -224,12 +340,83 @@
 				A1000015 /* GoalSettingsView.swift in Sources */,
 				A1000014 /* SavedCalcsView.swift in Sources */,
 				A1000013 /* SavedCalc.swift in Sources */,
+				FC4D1E8C3D32AC434F856C74 /* AppSupport.swift in Sources */,
+				0AD91CF5213402C3FF4D8D9E /* FireSummary.swift in Sources */,
+				B80435CC7F315916A1F7D98D /* QuickStartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		1681EEF9D1B02A051025C069 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FireTrackerWidgetExtension;
+			target = 2BC779ADBB91E37D1EE4802F /* FireTrackerWidgetExtension */;
+			targetProxy = 164D4FB312A6180730E6A738 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		0E4A14CA57C36DE22B5C2BD3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = FireTrackerWidget/FireTrackerWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 7;
+				DEVELOPMENT_TEAM = QGAQ3AY3R3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FireTrackerWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "퇴사각";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.devkoan.FireTracker.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		42EE9D9085B14BB117775FBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = FireTrackerWidget/FireTrackerWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 7;
+				DEVELOPMENT_TEAM = QGAQ3AY3R3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FireTrackerWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "퇴사각";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.devkoan.FireTracker.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
 		F0000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -335,15 +522,15 @@
 		F0000004 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = FireTracker/FireTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "퇴사각";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "자산 정보를 보호하기 위해 Face ID로 잠금을 해제합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -364,15 +551,15 @@
 		F0000005 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = FireTracker/FireTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "퇴사각";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "자산 정보를 보호하기 위해 Face ID로 잠금을 해제합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -393,6 +580,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		87035A5979FFB03199EBECC7 /* Build configuration list for PBXNativeTarget "FireTrackerWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0E4A14CA57C36DE22B5C2BD3 /* Release */,
+				42EE9D9085B14BB117775FBA /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F0000000 /* Build configuration list for PBXProject "FireTracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

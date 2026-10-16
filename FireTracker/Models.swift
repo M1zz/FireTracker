@@ -712,7 +712,7 @@ final class FireSettings {
         plannedNetSavings != 0 ? plannedNetSavings : monthlyTakeHome - plannedMonthlyExpense
     }
 
-    // 목표 연간 패시브 인컴(배당·월세·이자 등). 0이면 '월간 목표 지출'에서 도출.
+    // 목표 연간 패시브 인컴(배당·월세·이자 등). 0이면 '은퇴 후 월 생활비'에서 도출.
     // 현재 받는 패시브 인컴이 아니라 '목표'다 — 현재값은 보유 자산에서 계산한다.
     var manualAnnualDividend: Double = 0
 

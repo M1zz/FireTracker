@@ -148,8 +148,10 @@ enum BackupManager {
 
     // MARK: 백업 만들기
 
+    /// - Parameter includeKeys: API 키를 담을지. 기기 안에만 남는 자동 백업·데모 보관은 담고,
+    ///   공유 시트로 밖에 내보내는 파일은 담지 않는다(메신저·메일로 키가 퍼지지 않게).
     @MainActor
-    static func makeBackup(context: ModelContext) throws -> BackupData {
+    static func makeBackup(context: ModelContext, includeKeys: Bool = true) throws -> BackupData {
         let settings = try context.fetch(FetchDescriptor<FireSettings>()).first
         let assets = try context.fetch(FetchDescriptor<Asset>())
         let snapshots = try context.fetch(FetchDescriptor<NetWorthSnapshot>())
@@ -174,7 +176,7 @@ enum BackupManager {
         return BackupData(
             createdAt: Date(),
             appVersion: appVersionString,
-            settings: settings.map(settingsDTO),
+            settings: settings.map { settingsDTO($0, includeKeys: includeKeys) },
             assets: assets.map(assetDTO),
             snapshots: snapshots.map(snapshotDTO),
             calcs: calcs.map(calcDTO),
@@ -200,6 +202,11 @@ enum BackupManager {
 
     @MainActor
     static func restore(from backup: BackupData, context: ModelContext) throws {
+        // 내보낸 백업 파일엔 API 키가 없다 — 그럴 땐 이 기기에 넣어 둔 키를 지키려고 먼저 읽어 둔다.
+        let currentKeys = try context.fetch(FetchDescriptor<FireSettings>()).first
+            .map { (finnhub: $0.finnhubKey, kisKey: $0.kisAppKey,
+                    kisSecret: $0.kisAppSecret, dataGo: $0.dataGoKey) }
+
         // 1) 기존 데이터 전부 삭제. 부모를 지우면 자식(세부 종목·자산 항목)은 cascade.
         try context.delete(model: AssetDetail.self)
         try context.delete(model: AssetTrade.self)
@@ -223,10 +230,10 @@ enum BackupManager {
             settings.fireGoalTypeRaw = s.fireGoalTypeRaw
             settings.currentAge = s.currentAge
             settings.targetRetireAge = s.targetRetireAge
-            settings.finnhubKey = s.finnhubKey
-            settings.kisAppKey = s.kisAppKey
-            settings.kisAppSecret = s.kisAppSecret
-            settings.dataGoKey = s.dataGoKey
+            settings.finnhubKey = s.finnhubKey.isEmpty ? (currentKeys?.finnhub ?? "") : s.finnhubKey
+            settings.kisAppKey = s.kisAppKey.isEmpty ? (currentKeys?.kisKey ?? "") : s.kisAppKey
+            settings.kisAppSecret = s.kisAppSecret.isEmpty ? (currentKeys?.kisSecret ?? "") : s.kisAppSecret
+            settings.dataGoKey = s.dataGoKey.isEmpty ? (currentKeys?.dataGo ?? "") : s.dataGoKey
             context.insert(settings)
         }
 
@@ -376,7 +383,28 @@ enum BackupManager {
     static func restore(fromFileAt url: URL, context: ModelContext) throws {
         let data = try Data(contentsOf: url)
         let backup = try decode(data)
+        // 복원은 되돌릴 수 없다 — 덮어쓰기 직전 상태를 따로 남겨, 잘못 고른 파일이어도
+        // '자동 백업에서 복원'으로 바로 돌아올 수 있게 한다. 이 안전망을 못 만들면 복원하지 않는다.
+        try saveSafetyBackup(context: context)
         try restore(from: backup, context: context)
+    }
+
+    @MainActor
+    private static func saveSafetyBackup(context: ModelContext) throws {
+        let backup = try makeBackup(context: context)
+        guard !backup.assets.isEmpty || !backup.snapshots.isEmpty else { return }
+        let fm = FileManager.default
+        try fm.createDirectory(at: backupDirectory, withIntermediateDirectories: true)
+        let name = "\(safetyPrefix)\(fileTimestamp(backup.createdAt)).json"
+        try encode(backup).write(to: backupDirectory.appendingPathComponent(name), options: .atomic)
+        pruneOldBackups()
+    }
+
+    static let safetyPrefix = "before-restore-"
+
+    /// 목록에 보일 사람 말 이름.
+    static func kindLabel(_ file: BackupFile) -> String {
+        file.url.lastPathComponent.hasPrefix(safetyPrefix) ? "복원 직전 상태" : "앱을 켤 때 자동 저장"
     }
 
     private static func pruneOldBackups() {
@@ -392,9 +420,9 @@ enum BackupManager {
     // 공유 시트로 내보낼 임시 파일 URL. 파일명에 날짜를 넣어 알아보기 쉽게.
     @MainActor
     static func exportFileURL(context: ModelContext) throws -> URL {
-        let backup = try makeBackup(context: context)
+        let backup = try makeBackup(context: context, includeKeys: false)
         let data = try encode(backup)
-        let name = "FireTracker-백업-\(fileTimestamp(backup.createdAt)).json"
+        let name = "퇴사각-백업-\(fileTimestamp(backup.createdAt)).json"
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(name)
         try data.write(to: url, options: .atomic)
         return url
@@ -402,7 +430,7 @@ enum BackupManager {
 
     // MARK: - DTO 변환 헬퍼
 
-    private static func settingsDTO(_ s: FireSettings) -> BackupData.SettingsDTO {
+    private static func settingsDTO(_ s: FireSettings, includeKeys: Bool) -> BackupData.SettingsDTO {
         .init(targetAnnualExpense: s.targetAnnualExpense,
               safeWithdrawalRate: s.safeWithdrawalRate,
               expectedAnnualReturn: s.expectedAnnualReturn,
@@ -414,10 +442,10 @@ enum BackupManager {
               fireGoalTypeRaw: s.fireGoalTypeRaw,
               currentAge: s.currentAge,
               targetRetireAge: s.targetRetireAge,
-              finnhubKey: s.finnhubKey,
-              kisAppKey: s.kisAppKey,
-              kisAppSecret: s.kisAppSecret,
-              dataGoKey: s.dataGoKey)
+              finnhubKey: includeKeys ? s.finnhubKey : "",
+              kisAppKey: includeKeys ? s.kisAppKey : "",
+              kisAppSecret: includeKeys ? s.kisAppSecret : "",
+              dataGoKey: includeKeys ? s.dataGoKey : "")
     }
 
     private static func assetDTO(_ a: Asset) -> BackupData.AssetDTO {

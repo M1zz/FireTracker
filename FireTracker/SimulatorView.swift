@@ -471,7 +471,7 @@ private struct LifecycleSimSection: View {
             : "은퇴하기엔 아직 부족한 전략이에요"
         let reason: String
         if let dep = result.depletionAge {
-            reason = "은퇴 후 \(dep)세에 자산이 바닥나요. 희망 월수령액을 줄이거나, 은퇴를 늦추거나, 수익률·저축을 높여보세요."
+            reason = "은퇴 후 \(dep)세에 자산이 바닥나요. 은퇴 후 월 생활비를 줄이거나, 은퇴를 늦추거나, 수익률·저축을 높여보세요."
         } else if comfy {
             reason = "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원을 써도 \(a.end)세에 \(Fmt.krw(result.end))원이 남아요."
         } else {
@@ -614,7 +614,7 @@ private struct LifecycleSimSection: View {
                 }
 
                 if result.depletionAge == nil, result.end > 0 {
-                    Text("\(a.end)세까지 자산이 버팁니다. 희망 월수령액을 올려 여유를 확인해보세요.")
+                    Text("\(a.end)세까지 자산이 버팁니다. 은퇴 후 월 생활비를 올려 여유를 확인해보세요.")
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
                 } else if let dep = result.depletionAge {
@@ -634,7 +634,7 @@ private struct LifecycleSimSection: View {
                 Text("목표")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
-                simInputRow("희망 월수령액", text: $retireMonthly, suffix: "원", money: true)
+                simInputRow("은퇴 후 월 생활비", text: $retireMonthly, suffix: "원", money: true)
                     // 2단계 — 버킷: 이 돈으로 무엇을 누리고 싶은가(빼기 다음 더하기).
                     .popoverTip(bucketListTip)
                 simMoneyChips($retireMonthly, steps: [("+10만", 100_000), ("+100만", 1_000_000), ("−10만", -100_000)])
@@ -651,7 +651,7 @@ private struct LifecycleSimSection: View {
                 simInputRow("세전 연봉", text: $grossSalary, suffix: "원", money: true)
                 simMoneyChips($grossSalary, steps: [("+100만", 1_000_000), ("+1,000만", 10_000_000), ("−100만", -1_000_000)])
                 simInputRow("연봉 인상률", text: $raisePct, suffix: "%", decimal: true)
-                simInputRow("월 생활비", text: $monthlyLiving, suffix: "원", money: true)
+                simInputRow("지금 월 생활비", text: $monthlyLiving, suffix: "원", money: true)
                     // 1단계 — 거울: 허영을 덜어낸 '진짜 나의 만족점'은 얼마인가.
                     .popoverTip(vanityMirrorTip)
                 simInputRow("월 패시브 인컴(배당·월세)", text: $passiveMonthly, suffix: "원", money: true)
@@ -753,7 +753,7 @@ private struct LifecycleSimSection: View {
             Button { showReflectConfirm = true } label: {
                 HStack(spacing: 8) {
                     Image(systemName: reflected ? "checkmark.circle.fill" : "target")
-                    Text(reflected ? "목표·설정에 반영됨" : "이 값을 목표·설정에 반영")
+                    Text(reflected ? "내 목표에 반영됨" : "이 값을 내 목표에 반영")
                         .font(.subheadline.weight(.semibold))
                     Spacer()
                     if !reflected { Image(systemName: "arrow.right") }
@@ -766,15 +766,15 @@ private struct LifecycleSimSection: View {
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
             .buttonStyle(.plain)
-            .confirmationDialog("현재 목표·설정을 이 계산값으로 덮어쓸까요?",
+            .confirmationDialog("내 목표를 이 계산값으로 덮어쓸까요?",
                                 isPresented: $showReflectConfirm, titleVisibility: .visible) {
                 Button("반영하기") { reflectToSettings() }
                 Button("취소", role: .cancel) {}
             } message: {
-                Text("나이·은퇴 나이·연 수익률, 은퇴 후 월 지출(희망 월수령액), 월 생활비, 세후 월급이 설정 탭과 대시보드 목표에 저장됩니다. (현재 패시브 인컴은 보유 자산에서 자동 계산되므로 바꾸지 않아요.)")
+                Text("나이·은퇴 나이·연 수익률, 은퇴 후 월 생활비, 지금 월 생활비, 세후 월급이 여정 탭의 ‘내 목표’에 저장되고 대시보드 퇴사각에 바로 반영됩니다. (현재 패시브 인컴은 보유 자산에서 자동 계산되므로 바꾸지 않아요.)")
             }
             if reflected {
-                Text("설정 탭과 대시보드 목표(FIRE 목표·은퇴 시점)에 반영됐어요.")
+                Text("여정 탭 ‘내 목표’와 대시보드 퇴사각에 반영됐어요.")
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
             }
@@ -792,9 +792,15 @@ private struct LifecycleSimSection: View {
         if let v = Double(retireMonthly), v > 0 { settings.targetAnnualExpense = v * 12 }
         if let v = Double(monthlyLiving), v > 0 { settings.plannedMonthlyExpense = v }
         if let g = Double(grossSalary), g > 0 { settings.monthlyTakeHome = (netAnnual(g) / 12).rounded() }
+        // 직접 넣은 월 저축이 월급−생활비보다 우선하므로, 그대로 두면 방금 반영한
+        // 월급·생활비가 예측에 안 쓰인다. 둘 다 있으면 월 저축도 같이 맞춘다.
+        if settings.monthlyTakeHome > 0, settings.plannedMonthlyExpense > 0 {
+            settings.plannedNetSavings = settings.monthlyTakeHome - settings.plannedMonthlyExpense
+        }
+        FireSettings.markGoalConfigured()
         // 월 패시브 인컴은 계산용 입력(자산에서 미리 채운 값)이라 반영하지 않는다.
         // 현재 패시브 인컴은 실제 보유 자산(주식 배당 등)에서만 나와야 한다.
-        try? context.save()
+        guard context.saveReporting("목표") else { return }
         reflected = true
         // 만족점을 다시 확정한 순간 — 4단계 재점검 타이머를 리셋하고 닻 질문은 닫는다.
         ReflectionState.markReviewed()
@@ -980,9 +986,13 @@ private struct MortgageSimSection: View {
                 .cardStyle()
 
                 // 이 대출을 자산 목록에 부채로 추가 — 따로 입력할 필요 없이.
+                // 같은 대출이 이미 자산에 있으면 '추가됨'으로 — 화면을 나갔다 와도 두 번 넣지 않게.
+                let debtAdded = added || assets.contains {
+                    $0.assetClass == .debt && $0.name == loanKind.assetName && $0.amount == p
+                }
                 simActionButton(
-                    title: added ? "부채로 추가됨" : "이 대출을 자산에 부채로 추가",
-                    done: added,
+                    title: debtAdded ? "부채로 추가됨" : "이 대출을 자산에 부채로 추가",
+                    done: debtAdded,
                     confirmTitle: "이 대출을 부채로 추가할까요?",
                     confirmMessage: "남은 대출 잔액 \(Fmt.krw(p))원과 연 이자율 \(ratePct)%가 자산 탭에 ‘부채’로 등록됩니다.",
                     isPresented: $showAddConfirm,
@@ -1040,8 +1050,7 @@ private struct MortgageSimSection: View {
                           annualYieldPct: Double(ratePct) ?? 0,
                           sortOrder: assets.count)
         context.insert(asset)
-        try? context.save()
-        added = true
+        added = context.saveReporting("자산")
     }
 
     // x축을 '년' 단위 라벨로.
@@ -1280,9 +1289,13 @@ private struct SavingsSimSection: View {
 
             // 예금·파킹은 지금 넣어둔 원금이 곧 현재 자산 → 현금·예금으로 바로 추가.
             if kind != .installment, (Double(principal) ?? 0) > 0 {
+                let cashName = kind == .deposit ? "정기예금" : "파킹통장"
+                let cashAdded = added || assets.contains {
+                    $0.assetClass == .cash && $0.name == cashName && $0.amount == (Double(principal) ?? 0)
+                }
                 simActionButton(
-                    title: added ? "현금·예금에 추가됨" : "이 \(kind == .deposit ? "예금" : "잔액")을 자산에 추가",
-                    done: added,
+                    title: cashAdded ? "현금·예금에 추가됨" : "이 \(kind == .deposit ? "예금" : "잔액")을 자산에 추가",
+                    done: cashAdded,
                     confirmTitle: "자산에 추가할까요?",
                     confirmMessage: "\(kind == .deposit ? "원금" : "잔액") \(Fmt.krw(Double(principal) ?? 0))원이 ‘현금·예금’으로 등록되고, 연 \(ratePct)% 이자가 패시브 인컴에 반영됩니다.",
                     isPresented: $showAddConfirm,
@@ -1306,8 +1319,7 @@ private struct SavingsSimSection: View {
                           annualYieldPct: Double(ratePct) ?? 0,
                           sortOrder: assets.count)
         context.insert(asset)
-        try? context.save()
-        added = true
+        added = context.saveReporting("자산")
     }
 
     // 월별 누적 잔액 곡선 + 목표선. 목표 대비 달성도도 함께.
@@ -1751,7 +1763,7 @@ private struct InvestForecastSection: View {
                     }
                 }
             }
-            Text("‘기록 기반’은 추이 기록으로 수익률을 보정한 종류예요. 기록에는 저축 입금도 섞여 있어 실제 수익률보다 높게 잡힐 수 있고, 그래서 종류별 일반값과 반반 섞어 계산합니다.")
+            Text("‘기록 기반’은 여정 탭에 쌓인 기록으로 수익률을 보정한 종류예요. 기록에는 저축 입금도 섞여 있어 실제 수익률보다 높게 잡힐 수 있고, 그래서 종류별 일반값과 반반 섞어 계산합니다.")
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
         }

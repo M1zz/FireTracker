@@ -81,7 +81,7 @@ struct GoalSettingsView: View {
 
     private var goalSection: some View {
         Section {
-            goalMoneyRow(title: "월간 목표 지출", placeholder: "3,000,000",
+            goalMoneyRow(title: "은퇴 후 월 생활비", placeholder: "3,000,000",
                          text: monthlyExpenseBinding)
 
             goalSliderRow(title: "안전 인출률", value: $swr,
@@ -123,7 +123,7 @@ struct GoalSettingsView: View {
         } header: {
             Text("FIRE 목표")
         } footer: {
-            Text("월간 목표 지출은 은퇴 후 한 달 생활비예요. 목표 금액 = 연간 지출(월×12) ÷ 안전 인출률. 나이를 넣으면 여정 탭에 기간별 목표가 표시돼요.")
+            Text("은퇴 후 월 생활비는 일을 그만둔 뒤 매달 쓰고 싶은 돈이에요.\n안전 인출률은 모은 돈에서 해마다 꺼내 써도 원금이 오래 버티는 비율이에요. 흔히 4%를 써요(‘4% 룰’ — 30년 동안 버틴다는 미국 연구에서 나온 값). 낮출수록 안전하지만 목표 금액이 커져요.\n목표 금액 = 한 해 생활비(월×12) ÷ 안전 인출률. 나이를 넣으면 여정 탭에 기간별 목표가 표시돼요.")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
         }
@@ -183,7 +183,7 @@ struct GoalSettingsView: View {
         } header: {
             Text("패시브 인컴 목표")
         } footer: {
-            Text("은퇴 후 받고 싶은 ‘목표’ 패시브 인컴(배당·월세·이자 등)이에요. 여정 탭 ‘패시브 인컴 목표 달성률’의 기준이 됩니다. 비워두면 ‘월간 목표 지출’에서 자동으로 계산해요. 지금 실제로 받는 패시브 인컴은 자산 탭에 등록한 배당주·월세 부동산 등에서 자동 합산됩니다.")
+            Text("은퇴 후 받고 싶은 ‘목표’ 패시브 인컴(배당·월세·이자 등)이에요. 여정 탭 ‘패시브 인컴 목표 달성률’의 기준이 됩니다. 비워두면 ‘은퇴 후 월 생활비’로 자동으로 맞춰요. 지금 실제로 받는 패시브 인컴은 자산 탭에 등록한 배당주·월세 부동산 등에서 자동 합산됩니다.")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
         }
@@ -211,6 +211,8 @@ struct GoalSettingsView: View {
 
     private func persist() {
         guard !isLoading else { return }
+        // 사용자가 목표를 직접 만졌다 — 이제 대시보드는 기본값이 아니라 이 값을 내 목표로 보여 준다.
+        FireSettings.markGoalConfigured()
         let target: FireSettings
         if let existing = settingsList.first {
             target = existing
@@ -228,7 +230,7 @@ struct GoalSettingsView: View {
         target.fireGoalType = goalType
         target.currentAge = Int(currentAge) ?? 0
         target.targetRetireAge = Int(retireAge) ?? 0
-        try? context.save()
+        context.saveReporting("목표")
     }
 }
 

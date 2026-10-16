@@ -15,11 +15,12 @@ struct SettingsView: View {
 
     // 금액 표기 모드 — 끄면 억/만 단위(기본), 켜면 숫자(콤마)만.
     @AppStorage("amountNumbersOnly") private var amountNumbersOnly = false
+    @AppStorage(MonthlyReminder.enabledKey) private var reminderOn = false
 
 
-    // Live-pricing API credentials (Finnhub은 앱 내장 키 사용 — 입력칸 없음)
-    @State private var kisAppKey: String = ""
-    @State private var kisAppSecret: String = ""
+    // 자동 시세 API 키 — 부동산(공공데이터포털)만 사용자가 넣는다.
+    // 국내 주식은 키 없이 Yahoo, 미국 주식은 앱 내장 Finnhub 키로 불러온다.
+    // (예전 한국투자증권 칸은 실제로 쓰이지 않아 없앴다. 모델 필드는 마이그레이션 없이 남겨 둔다.)
     @State private var dataGoKey: String = ""
 
     // 데이터 백업 · 복원
@@ -48,6 +49,7 @@ struct SettingsView: View {
         Form {
             displaySection
             securitySection
+            reminderSection
             apiSection
             backupSection
             demoSection
@@ -72,8 +74,6 @@ struct SettingsView: View {
         .scrollIndicators(.hidden)
         .keyboardDismissable()
         .onAppear(perform: load)
-        .onChange(of: kisAppKey) { persist() }
-        .onChange(of: kisAppSecret) { persist() }
         .onChange(of: dataGoKey) { persist() }
         .modifier(BackupRestoreModifiers(
             showShareSheet: $showShareSheet,
@@ -144,22 +144,62 @@ struct SettingsView: View {
         }
     }
 
+    // 매달 1일 아침 알림 — 켤 때 권한을 묻는다. 거절하면 토글은 다시 꺼진다.
+    private var reminderSection: some View {
+        Section {
+            Toggle(isOn: Binding(
+                get: { reminderOn },
+                set: { on in
+                    if on {
+                        Task {
+                            let summary = FireSummary.load()
+                                ?? FireSummary(progress: 0, goalConfigured: false, locked: lockEnabled, updatedAt: Date())
+                            reminderOn = await MonthlyReminder.enable(summary: summary)
+                            if !reminderOn {
+                                show(message: "알림 권한이 꺼져 있어요. 설정 앱 ▸ 알림 ▸ 퇴사각에서 켤 수 있어요.")
+                            }
+                        }
+                    } else {
+                        MonthlyReminder.disable()
+                        reminderOn = false
+                    }
+                }
+            )) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("매달 퇴사각 알림")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.textPrimary)
+                    Text("매달 1일 오전 9시")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.textSecond)
+                }
+            }
+            .tint(Theme.accent)
+        } header: {
+            Text("알림")
+        } footer: {
+            Text("지금 속도면 언제 그만둘 수 있는지 한 달에 한 번 알려 드려요. 앱 잠금을 켜 두면 알림에도 숫자를 보여 주지 않아요.")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+        }
+    }
+
     @ViewBuilder
     private var apiSection: some View {
         Section {
-            apiField(title: "한국투자증권 App Key (국내주식)",
-                     hint: "KIS Developers에서 발급",
-                     text: $kisAppKey)
-            apiField(title: "한국투자증권 App Secret",
-                     hint: "App Key와 함께 발급되는 시크릿",
-                     text: $kisAppSecret)
-            apiField(title: "공공데이터포털 서비스키 (부동산)",
-                     hint: "국토부 아파트 실거래가 · Decoding 키 사용",
+            apiField(title: "공공데이터포털 서비스키",
+                     hint: "‘일반 인증키(Decoding)’를 붙여 넣기",
                      text: $dataGoKey)
+            // 정확한 데이터셋 주소는 바뀔 수 있어 검색 결과로 보낸다.
+            Link(destination: URL(string: "https://www.data.go.kr/tcs/dss/selectDataSetList.do?keyword=%EC%95%84%ED%8C%8C%ED%8A%B8%20%EB%A7%A4%EB%A7%A4%20%EC%8B%A4%EA%B1%B0%EB%9E%98%EA%B0%80")!) {
+                Label("공공데이터포털에서 ‘아파트 매매 실거래가’ 신청하기", systemImage: "arrow.up.right.square")
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.accent)
+            }
         } header: {
-            Text("자동 시세 API 키")
+            Text("아파트 시세 자동 (선택)")
         } footer: {
-            Text("미국 주식(Finnhub)·암호화폐(업비트)·환율은 키 없이 자동으로 불러옵니다. 위 키는 국내 주식·부동산에서 ‘시세 자동’을 켰을 때만 사용됩니다.")
+            Text("국내·미국 주식, 암호화폐, 환율은 아무것도 넣지 않아도 시세를 자동으로 불러와요. 이 키는 아파트 시세를 자동으로 받고 싶을 때만 필요해요(국토교통부 실거래가, 무료).")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
         }
@@ -196,7 +236,7 @@ struct SettingsView: View {
         } header: {
             Text("데이터 백업 · 복원")
         } footer: {
-            Text("‘내보내기’로 만든 백업 파일을 파일 앱·iCloud Drive에 저장하거나 메일로 보내두면 기기를 바꿔도 그대로 복원할 수 있어요. 앱은 켜질 때마다 자동으로 최근 \(BackupManager.maxAutoBackups)개의 백업을 기기에 보관합니다.")
+            Text("‘내보내기’로 만든 백업 파일엔 API 키가 들어가지 않아요(공유해도 안전하게). 이 백업 파일을 파일 앱·iCloud Drive에 저장하거나 메일로 보내두면 기기를 바꿔도 그대로 복원할 수 있어요. 앱은 켜질 때마다 자동으로 최근 \(BackupManager.maxAutoBackups)개의 백업을 기기에 보관합니다.")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
         }
@@ -213,7 +253,7 @@ struct SettingsView: View {
             }
             .tint(Theme.accent)
         } header: {
-            Text("테스트")
+            Text("둘러보기")
         } footer: {
             Text(demoActive
                  ? "끄면 원래 내 데이터로 그대로 돌아갑니다. 데모에서 바꾼 내용은 저장되지 않아요."
@@ -338,8 +378,6 @@ struct SettingsView: View {
         defer { DispatchQueue.main.async { isLoading = false } }
         // @Query는 복원 직후 갱신이 한 박자 늦을 수 있어, 스토어에서 직접 최신값을 읽는다.
         let settings = (try? context.fetch(FetchDescriptor<FireSettings>()))?.first ?? settingsList.first ?? FireSettings()
-        kisAppKey = settings.kisAppKey
-        kisAppSecret = settings.kisAppSecret
         dataGoKey = settings.dataGoKey
     }
 
@@ -354,10 +392,8 @@ struct SettingsView: View {
             target = FireSettings()
             context.insert(target)
         }
-        target.kisAppKey = kisAppKey
-        target.kisAppSecret = kisAppSecret
         target.dataGoKey = dataGoKey
-        try? context.save()
+        context.saveReporting("API 키")
     }
 }
 
@@ -410,7 +446,7 @@ private struct BackupRestoreModifiers: ViewModifier {
                 Button("복원하기", role: .destructive, action: onRestore)
                 Button("취소", role: .cancel, action: onCancelRestore)
             } message: {
-                Text("지금 입력된 모든 자산·기록·설정이 백업 시점으로 교체됩니다. 이 작업은 되돌릴 수 없어요.")
+                Text("지금 입력된 모든 자산·기록·설정이 백업 시점으로 교체됩니다. 지금 상태는 ‘자동 백업 ▸ 복원 직전 상태’로 남겨 두니, 잘못 골랐다면 거기서 되돌릴 수 있어요.")
             }
             .alert("백업 · 복원", isPresented: $showResultAlert) {
                 Button("확인", role: .cancel) {}
@@ -458,7 +494,7 @@ private struct AutoBackupListView: View {
                                     Text(dateFormatter.string(from: file.createdAt))
                                         .font(.subheadline)
                                         .foregroundStyle(Theme.textPrimary)
-                                    Text(file.url.lastPathComponent)
+                                    Text(BackupManager.kindLabel(file))
                                         .font(.caption2)
                                         .foregroundStyle(Theme.textSecond)
                                 }
@@ -469,7 +505,7 @@ private struct AutoBackupListView: View {
                         }
                     }
                 } footer: {
-                    Text("가장 최근 백업이 맨 위예요. 복원하면 현재 데이터가 그 시점으로 교체됩니다.")
+                    Text("가장 최근 백업이 맨 위예요. 복원하면 현재 데이터가 그 시점으로 교체되고, 바로 전 상태는 ‘복원 직전 상태’로 이 목록에 남습니다.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 }

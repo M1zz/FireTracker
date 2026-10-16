@@ -26,7 +26,7 @@ struct VanityMirrorTip: Tip {
 
     var title: Text { Text("이 돈, 정말 당신을 위한 건가요?") }
     var message: Text? {
-        Text("월 생활비에서 ‘남들이 사니까 산 것’을 한번 빼보세요. 진짜 나를 만족시키는 금액은 생각보다 적을지도 몰라요.")
+        Text("지금 월 생활비에서 ‘남들이 사니까 산 것’을 한번 빼보세요. 진짜 나를 만족시키는 금액은 생각보다 적을지도 몰라요.")
     }
     var image: Image? { Image(systemName: "eye.trianglebadge.exclamationmark") }
 

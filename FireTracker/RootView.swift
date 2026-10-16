@@ -10,7 +10,10 @@ struct RootView: View {
     @StateObject private var refresher = RefreshManager()
     @AppStorage("amountNumbersOnly") private var amountNumbersOnly = false
     @AppStorage(DemoData.activeKey) private var demoActive = false
-    @State private var selectedTab = 0
+    @AppStorage("appLockEnabled") private var lockEnabled = false
+    // 시트·카드에서도 탭을 옮길 수 있게 공용 라우터에 둔다.
+    @Bindable private var router = AppRouter.shared
+    @Bindable private var alerts = AppAlerts.shared
 
     // 온보딩 대신 — 아무 데이터도 없는 첫 사용자거나, 데모를 보는 중일 때만
     // 최상단에 데모 토글 배너를 띄운다.
@@ -40,7 +43,7 @@ struct RootView: View {
         AppLockGate {
             VStack(spacing: 0) {
             if showDemoBanner { demoBanner }
-            TabView(selection: $selectedTab) {
+            TabView(selection: $router.selectedTab) {
             DashboardView()
                 .tabItem { Label("대시보드", systemImage: "flame.fill") }
                 .tag(0)
@@ -67,7 +70,7 @@ struct RootView: View {
         // sizes that would break the dense card layouts).
         .dynamicTypeSize(.xLarge ... .accessibility1)
         // Dismiss the keyboard when switching tabs (e.g. leaving 설정 mid-edit).
-        .onChange(of: selectedTab) { _, _ in
+        .onChange(of: router.selectedTab) { _, _ in
             UIApplication.shared.sendAction(
                 #selector(UIResponder.resignFirstResponder),
                 to: nil, from: nil, for: nil
@@ -77,6 +80,7 @@ struct RootView: View {
             bootstrapSettings()
             // 익명 사용 스냅샷 — 지표를 먼저 채운 다음 보낸다(첫 실행에도 값이 실리도록).
             reportUsage()
+            publishSummary()
         }
         // 자산에 변동이 생기면(어느 탭이든) 오늘 기록을 자동 갱신 — 수동 저장 불필요.
         .onChange(of: assetsFingerprint) { _, _ in
@@ -85,6 +89,17 @@ struct RootView: View {
                 assets: assets, settings: s, snapshots: snapshots, context: context
             )
             updateUsageMetrics()
+            publishSummary()
+        }
+        // 목표가 바뀌어도 위젯·알림 문구를 새 숫자로.
+        .onChange(of: settingsFingerprint) { _, _ in publishSummary() }
+        .onChange(of: lockEnabled) { _, _ in publishSummary() }
+        .alert("저장하지 못했어요",
+               isPresented: Binding(get: { alerts.message != nil },
+                                    set: { if !$0 { alerts.message = nil } })) {
+            Button("확인", role: .cancel) { alerts.message = nil }
+        } message: {
+            Text(alerts.message ?? "")
         }
         .environmentObject(refresher)
         // 앱 시작 시 — 마지막 갱신이 7일 이상 지났으면 시세·배당을 자동 갱신하고,
@@ -113,7 +128,7 @@ struct RootView: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
                 Text(demoActive
-                     ? "끄면 원래 내 데이터로 그대로 돌아가요."
+                     ? "데모 중에 넣은 내용은 끄면 사라져요. 끄면 내 데이터로 돌아가요."
                      : "켜면 가상 인물의 자산으로 앱을 둘러볼 수 있어요.")
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
@@ -146,6 +161,31 @@ struct RootView: View {
         )
     }
 
+    // 목표 입력이 바뀌면 값이 바뀐다 — 위젯·알림 갱신 신호.
+    private var settingsFingerprint: Int {
+        guard let s = settingsList.first else { return 0 }
+        var h = Hasher()
+        h.combine(s.targetAnnualExpense)
+        h.combine(s.safeWithdrawalRate)
+        h.combine(s.expectedAnnualReturn)
+        h.combine(s.plannedMonthlySavings)
+        h.combine(s.currentAge)
+        return h.finalize()
+    }
+
+    // 퇴사각 요약을 위젯에 넘기고, 매달 알림 문구도 새 숫자로 다시 건다.
+    // 데모를 보는 중엔 남의 숫자라 내보내지 않는다.
+    private func publishSummary() {
+        guard !demoActive, let s = settingsList.first else { return }
+        let net = assets.isEmpty
+            ? (snapshots.last?.netWorth ?? 0)
+            : assets.reduce(0) { $0 + $1.netValue }
+        let summary = FireOutlook(netWorth: net, settings: s)
+            .summary(goalConfigured: s.goalConfigured, locked: lockEnabled)
+        FireSummary.publish(summary)
+        MonthlyReminder.reschedule(summary: summary)
+    }
+
     // 대시보드에 실어 보낼 이 앱만의 지표 — 개수와 on/off 뿐, 금액은 나가지 않는다.
     private func updateUsageMetrics() {
         let s = settingsList.first
@@ -156,9 +196,7 @@ struct RootView: View {
             tradeCount: assets.reduce(0) { $0 + $1.trades.count },
             snapshotCount: snapshots.count,
             hasGoal: (s?.monthsToRetire) != nil,
-            hasPriceKey: !(s?.finnhubKey.isEmpty ?? true)
-                || !(s?.kisAppKey.isEmpty ?? true)
-                || !(s?.dataGoKey.isEmpty ?? true)
+            hasPriceKey: !(s?.dataGoKey.isEmpty ?? true)
         )
     }
 

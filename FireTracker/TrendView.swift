@@ -124,17 +124,18 @@ struct TrendView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button { showingHistory = true } label: {
-                        Image(systemName: "clock.arrow.circlepath")
+                        // 아이콘만 있으면 무엇인지 몰라 안 누른다 — 글자를 함께.
+                        Label("기록", systemImage: "clock.arrow.circlepath")
+                            .labelStyle(.titleAndIcon)
                     }
-                    .accessibilityLabel("기록")
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
                         GoalSettingsView()
                     } label: {
-                        Image(systemName: "target")
+                        Label("내 목표", systemImage: "target")
+                            .labelStyle(.titleAndIcon)
                     }
-                    .accessibilityLabel("내 목표")
                 }
             }
             .sheet(isPresented: $showingHistory) { SnapshotsView() }
@@ -152,6 +153,18 @@ struct TrendView: View {
                 .multilineTextAlignment(.center)
                 .font(.subheadline)
                 .foregroundStyle(Theme.textSecond)
+            Button {
+                AppRouter.shared.selectedTab = AppRouter.Tab.assets
+            } label: {
+                Text("자산 탭으로")
+                    .font(.subheadline.weight(.semibold))
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 10)
+                    .background(Theme.accent)
+                    .foregroundStyle(Color.black)
+                    .clipShape(Capsule())
+            }
+            .padding(.top, 6)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 60)
@@ -714,7 +727,7 @@ struct TrendView: View {
                         .foregroundStyle(Theme.accent.opacity(0.7))
                         .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 4]))
                         .annotation(position: .top, alignment: .leading) {
-                            Text("목표 월 지출")
+                            Text("은퇴 후 월 생활비")
                                 .font(.caption2)
                                 .foregroundStyle(Theme.accent)
                         }
@@ -726,7 +739,7 @@ struct TrendView: View {
 
             if let last = sorted.last, monthlyTargetExpense > 0 {
                 let coverage = last.monthlyPassiveIncome / monthlyTargetExpense
-                Text("현재 패시브 인컴이 목표 월 지출의 \(Fmt.percent(coverage, fraction: 0))를 커버합니다.")
+                Text("현재 패시브 인컴이 은퇴 후 월 생활비의 \(Fmt.percent(coverage, fraction: 0))를 커버합니다.")
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
             }
@@ -749,9 +762,16 @@ struct TrendView: View {
 
     private var savingsChart: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("월별 저축률")
-                .font(.headline)
-                .foregroundStyle(Theme.textPrimary)
+            // 기록의 수입·지출은 '내 목표'에 적은 계획값을 옮겨 적은 것이다.
+            // 실제로 모은 돈처럼 보이지 않게 이름과 설명으로 분명히 한다.
+            VStack(alignment: .leading, spacing: 2) {
+                Text("저축률 (계획)")
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Text("각 기록 시점에 ‘내 목표’에 적어 둔 월급·지출로 계산했어요. 실제와 다르면 기록을 눌러 수입·지출을 고쳐 주세요.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            }
             Chart(sorted) { s in
                 BarMark(
                     x: .value("기간", s.date, unit: period.component),
@@ -762,7 +782,14 @@ struct TrendView: View {
                 )
                 .cornerRadius(4)
             }
-            .chartYAxis(.hidden)
+            .chartYAxis {
+                AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) { v in
+                    AxisGridLine().foregroundStyle(Theme.hairline)
+                    AxisValueLabel {
+                        if let r = v.as(Double.self) { Text(Fmt.percent(r, fraction: 0)) }
+                    }
+                }
+            }
             .frame(height: 240)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

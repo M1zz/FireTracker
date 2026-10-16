@@ -95,7 +95,7 @@ struct CalcSaveRow: View {
             inputs: CalcSnapshot.capture(kind)
         )
         context.insert(entry)
-        try? context.save()
+        guard context.saveReporting("계산") else { return }
         AppUsage.log(.calcSaved)
         withAnimation { justSaved = true }
         // 잠깐만 확인 표시를 두고 원래 문구로 돌아간다.
@@ -117,6 +117,7 @@ struct SavedCalcsView: View {
 
     @State private var filter: CalcKind?
     @State private var restoring: SavedCalc?
+    @State private var pendingDelete: IndexSet?
 
     private var shown: [SavedCalc] {
         guard let filter else { return saved }
@@ -146,7 +147,7 @@ struct SavedCalcsView: View {
                             Button { restoring = calc } label: { row(calc) }
                                 .listRowBackground(Theme.surface)
                         }
-                        .onDelete(perform: delete)
+                        .onDelete { pendingDelete = $0 }
                     } footer: {
                         Text("탭하면 그때 넣었던 조건을 계산기로 되돌려요. 지금 계산기에 있는 값은 덮어써집니다.")
                             .font(.caption)
@@ -158,6 +159,18 @@ struct SavedCalcsView: View {
             }
         }
         .background(Theme.bg.ignoresSafeArea())
+        .confirmationDialog("저장한 계산을 지울까요?",
+                            isPresented: Binding(get: { pendingDelete != nil },
+                                                 set: { if !$0 { pendingDelete = nil } }),
+                            titleVisibility: .visible) {
+            Button("삭제", role: .destructive) {
+                if let offsets = pendingDelete { delete(at: offsets) }
+                pendingDelete = nil
+            }
+            Button("취소", role: .cancel) { pendingDelete = nil }
+        } message: {
+            Text("되돌릴 수 없어요.")
+        }
         .navigationTitle("저장한 계산")
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog("이 계산을 불러올까요?",
@@ -271,7 +284,7 @@ struct SavedCalcsView: View {
         for index in offsets {
             context.delete(shown[index])
         }
-        try? context.save()
+        context.saveReporting("삭제")
     }
 }
 

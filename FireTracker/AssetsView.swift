@@ -24,6 +24,8 @@ struct AssetsView: View {
     @Query private var snapshots: [NetWorthSnapshot]
     @EnvironmentObject private var refresher: RefreshManager
     @State private var editing: Asset?
+    // 스와이프로 지우기 전에 한 번 묻는다 — 지운 자산은 되돌릴 수 없다.
+    @State private var pendingDelete: [Asset] = []
     @State private var showingNew = false
     @State private var showingImport = false
     @State private var showingBreakdown = false
@@ -165,6 +167,19 @@ struct AssetsView: View {
                             lockedClass: newLockedClass,
                             classTotal: newLockedClass ? newClassTotal : nil)
             }
+            .confirmationDialog(
+                pendingDelete.count == 1
+                    ? "‘\(pendingDelete[0].name.isEmpty ? pendingDelete[0].displayClassLabel : pendingDelete[0].name)’을(를) 지울까요?"
+                    : "자산 \(pendingDelete.count)개를 지울까요?",
+                isPresented: Binding(get: { !pendingDelete.isEmpty },
+                                     set: { if !$0 { pendingDelete = [] } }),
+                titleVisibility: .visible
+            ) {
+                Button("자산 삭제", role: .destructive) { deletePending() }
+                Button("취소", role: .cancel) { pendingDelete = [] }
+            } message: {
+                Text("매매 내역도 함께 지워져요. 지난 기록은 남습니다. 되돌릴 수 없어요.")
+            }
             .sheet(item: $editing) { asset in
                 AssetEditor(asset: asset, nextSortOrder: assets.count)
             }
@@ -210,7 +225,7 @@ struct AssetsView: View {
                             Button { editing = asset } label: { row(asset) }
                                 .listRowBackground(Theme.surface)
                         }
-                        .onDelete { delete(in: group, at: $0) }
+                        .onDelete { offsets in pendingDelete = offsets.map { group.assets[$0] } }
                         Button {
                             startNewAsset(group.assetClass, customLabel: group.customLabel,
                                           lock: true, classTotal: group.subtotal)
@@ -902,9 +917,10 @@ struct AssetsView: View {
         .background(Theme.bg)
     }
 
-    private func delete(in group: AssetGroup, at offsets: IndexSet) {
-        for i in offsets { context.delete(group.assets[i]) }
-        try? context.save()
+    private func deletePending() {
+        for a in pendingDelete { context.delete(a) }
+        pendingDelete = []
+        context.saveReporting("삭제")
     }
 
     // Open the editor for a brand-new holding, pre-set to a category so the
@@ -1083,6 +1099,8 @@ struct AssetEditor: View {
 
     let asset: Asset?
     let nextSortOrder: Int
+    @AppStorage(DemoData.activeKey) private var demoActive = false
+    @State private var confirmingDelete = false
     // 그룹의 '종목 추가'로 열렸을 때 — 종류를 고정하고 세부 정보만 입력받는다.
     let lockedClass: Bool
     // 고정된 종류의 현재 합계(그룹 소계) — 컨텍스트로 보여줌.
@@ -1195,6 +1213,15 @@ struct AssetEditor: View {
     var body: some View {
         NavigationStack {
             Form {
+                // 데모를 보는 중엔 여기 넣은 게 데모와 함께 사라진다 — 넣기 전에 알린다.
+                if demoActive {
+                    Section {
+                        Label("지금은 데모 데이터를 보는 중이에요. 여기서 추가·수정한 내용은 데모를 끄면 사라져요. 내 자산은 맨 위 배너에서 데모를 끈 뒤 넣어 주세요.",
+                              systemImage: "exclamationmark.triangle.fill")
+                            .font(.footnote)
+                            .foregroundStyle(Theme.negative)
+                    }
+                }
                 // 주식·코인·부동산은 티커·종목코드를 가장 먼저 입력 — 입력하면 이름이
                 // 자동으로 채워지고 시세 자동도 켜진다. (그 외 종류는 아무것도 안 보임)
                 tickerSection
@@ -1380,7 +1407,14 @@ struct AssetEditor: View {
 
                 if asset != nil {
                     Section {
-                        Button("이 자산 삭제", role: .destructive) { deleteAsset() }
+                        Button("이 자산 삭제", role: .destructive) { confirmingDelete = true }
+                            .confirmationDialog("이 자산을 지울까요?", isPresented: $confirmingDelete,
+                                                titleVisibility: .visible) {
+                                Button("자산 삭제", role: .destructive) { deleteAsset() }
+                                Button("취소", role: .cancel) {}
+                            } message: {
+                                Text("매매 내역도 함께 지워져요. 지난 기록은 남습니다. 되돌릴 수 없어요.")
+                            }
                     }
                 }
             }
@@ -2328,7 +2362,7 @@ struct AssetEditor: View {
             target.quantity = l.quantity
             target.costBasis = l.costBasis
         }
-        try? context.save()
+        context.saveReporting("자산")
         return target
     }
 
@@ -2339,7 +2373,7 @@ struct AssetEditor: View {
 
     private func deleteAsset() {
         if let asset { context.delete(asset) }
-        try? context.save()
+        context.saveReporting("자산")
         dismiss()
     }
 }
@@ -2730,7 +2764,7 @@ struct ScreenshotImportView: View {
             context.insert(asset)
             order += 1
         }
-        try? context.save()
+        context.saveReporting("자산")
         dismiss()
     }
 }

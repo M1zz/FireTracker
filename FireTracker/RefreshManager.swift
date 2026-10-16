@@ -45,6 +45,7 @@ final class RefreshManager: ObservableObject {
         defer { isRefreshing = false }
 
         var pricedCount = 0
+        var failedCount = 0
         var dividendCount = 0
         for asset in targets {
             let symbol = asset.symbol.trimmingCharacters(in: .whitespaces)
@@ -68,6 +69,8 @@ final class RefreshManager: ObservableObject {
                     asset.unitPriceKRW = result.unit
                     asset.lastPriced = Date()
                     pricedCount += 1
+                } else {
+                    failedCount += 1
                 }
             }
 
@@ -89,12 +92,17 @@ final class RefreshManager: ObservableObject {
                 }
             }
         }
-        try? context.save()
+        context.saveReporting("시세")
 
+        // 하나도 못 불러왔는데 '최신 상태'라고 하면 안 된다 — 실패를 그대로 말한다.
         var parts: [String] = []
         if pricedCount > 0 { parts.append("시세 \(pricedCount)건") }
         if dividendCount > 0 { parts.append("배당 \(dividendCount)건") }
-        stamp(message: parts.isEmpty ? "최신 상태입니다" : parts.joined(separator: " · ") + " 갱신됨")
+        var message = parts.isEmpty ? "" : parts.joined(separator: " · ") + " 갱신됨"
+        if failedCount > 0 {
+            message += (message.isEmpty ? "" : " · ") + "\(failedCount)건은 시세를 못 불러왔어요"
+        }
+        stamp(message: message.isEmpty ? "최신 상태입니다" : message)
     }
 
     // 주 1회 자동 스냅샷 — 이번 주 기록(수동·자동 무관)이 아직 없으면 현재
@@ -119,7 +127,7 @@ final class RefreshManager: ObservableObject {
         )
         context.insert(snap)
         appendEntries(to: snap, assets: assets)
-        try? context.save()
+        context.saveReporting("기록")
     }
 
     // 자산이 바뀔 때마다 호출(추가·수정·삭제·시세 갱신) — 오늘 기록을 현재
@@ -156,7 +164,7 @@ final class RefreshManager: ObservableObject {
             context.insert(snap)
             appendEntries(to: snap, assets: assets)
         }
-        try? context.save()
+        context.saveReporting("기록")
     }
 
     private func passiveTotal(_ assets: [Asset], _ settings: FireSettings) -> Double {

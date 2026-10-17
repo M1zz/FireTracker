@@ -55,6 +55,7 @@ struct SettingsView: View {
             demoSection
             Section {
                 LeeoSupportSection<FireTrackerSpec>()
+                NavigationLink(LeeoRoadmapText.entry) { RoadmapScreen() }
                 if isMasterMode {
                     NavigationLink {
                         LeeoUsageStatsView<FireTrackerSpec>()

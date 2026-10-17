@@ -10,6 +10,7 @@
 		0AD91CF5213402C3FF4D8D9E /* FireSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */; };
 		555219EE5C66ADE4C6892A72 /* FireSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */; };
 		66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1565B7348B6849C756363468 /* FireTrackerSpec.swift */; };
+		22C5E01C005F45C18E285102 /* FireTrackerRoadmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93817F759D0640138E251F93 /* FireTrackerRoadmap.swift */; };
 		70D4108E965ED61702D4DF1E /* FireTrackerWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A1000001 /* FireTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* FireTrackerApp.swift */; };
 		A1000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000002 /* Models.swift */; };
@@ -69,6 +70,7 @@
 /* Begin PBXFileReference section */
 		07F01026AA4EAE9DE99CC7ED /* AppSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppSupport.swift; sourceTree = "<group>"; };
 		1565B7348B6849C756363468 /* FireTrackerSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerSpec.swift; sourceTree = "<group>"; };
+		93817F759D0640138E251F93 /* FireTrackerRoadmap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerRoadmap.swift; sourceTree = "<group>"; };
 		54AFE0290DA1AF556C4A919F /* FireTrackerWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerWidget.swift; sourceTree = "<group>"; };
 		665BD2C273815DDB4FFF7F44 /* FireTrackerWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = FireTrackerWidget.entitlements; sourceTree = "<group>"; };
 		B0000000 /* FireTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FireTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -183,6 +185,7 @@
 				B1000011 /* DemoData.swift */,
 				B100000A /* Assets.xcassets */,
 				1565B7348B6849C756363468 /* FireTrackerSpec.swift */,
+				93817F759D0640138E251F93 /* FireTrackerRoadmap.swift */,
 				B1000012 /* Usage.swift */,
 				B1000016 /* JourneyView.swift */,
 				B1000015 /* GoalSettingsView.swift */,
@@ -335,6 +338,7 @@
 				A1000010 /* ReflectionTips.swift in Sources */,
 				A1000011 /* DemoData.swift in Sources */,
 				66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */,
+				22C5E01C005F45C18E285102 /* FireTrackerRoadmap.swift in Sources */,
 				A1000012 /* Usage.swift in Sources */,
 				A1000016 /* JourneyView.swift in Sources */,
 				A1000015 /* GoalSettingsView.swift in Sources */,
@@ -615,7 +619,7 @@
 			repositoryURL = "https://github.com/M1zz/LeeoKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.16.2;
+				minimumVersion = 3.20.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

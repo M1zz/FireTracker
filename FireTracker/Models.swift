@@ -356,6 +356,18 @@ final class Asset {
     // Whether this holding's value is actually spendable.
     var liquidityRaw: String = Liquidity.liquid.rawValue
 
+    // --- 매도 원칙 (SellWatch 가 지켜본다) ---
+    // 살 때 정한 '이 값이면 판다' 1주(개)당 가격, 원. 0 = 안 정함.
+    var sellTargetPrice: Double = 0
+    // 고점에서 이만큼(%) 빠지면 팔라고 알린다. 0 = 끔.
+    var trailingStopPct: Double = 10
+    // 갖고 있는 동안 본 가장 높은 1주(개) 값, 원. 0 = 아직 못 봄.
+    var peakUnitPrice: Double = 0
+    // 하락 알림을 보낸 고점 — 같은 고점으로 두 번 알리지 않는다(새 고점이 나오면 다시 켜짐).
+    var stopAlertedPeak: Double = 0
+    // 목표가 알림을 보낸 목표가 — 목표가를 바꾸면 다시 켜진다.
+    var targetAlertedFor: Double = 0
+
     var sortOrder: Int
     var createdAt: Date
 

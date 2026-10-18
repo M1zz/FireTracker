@@ -68,6 +68,8 @@ final class RefreshManager: ObservableObject {
                     asset.amount = result.amount.rounded()
                     asset.unitPriceKRW = result.unit
                     asset.lastPriced = Date()
+                    // 매도 원칙 — 고점을 기억하고, 닿았으면 알린다.
+                    SellWatch.evaluate(asset)
                     pricedCount += 1
                 } else {
                     failedCount += 1

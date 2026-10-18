@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import TipKit
 import LeeoKit
+import UserNotifications
 
 @main
 struct FireTrackerApp: App {
@@ -12,6 +13,8 @@ struct FireTrackerApp: App {
         // DEBUG 프리플라이트. 사용현황 스냅샷만 여기서 끄고 앱이 직접 보낸다(AppUsage):
         // 이 앱만의 지표(자산 수·기록 수 등)를 함께 실어야 해서다.
         LeeoKit.bootstrap(FireTrackerSpec.self, usageReporting: false)
+        // 앱을 보는 중에 매도 알림이 와도 배너로 보이게.
+        UNUserNotificationCenter.current().delegate = ForegroundNotificationPresenter.shared
     }
 
     var sharedModelContainer: ModelContainer = {
@@ -66,7 +69,18 @@ struct FireTrackerApp: App {
         // 활성으로 잡히지 않는다 — lastActiveAt 이 곧 활성 사용자 기준이기 때문.
         // 전송량은 LeeoKit이 12시간 쓰로틀로 막아 주므로 여기선 부담 없이 부른다.
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { AppUsage.reportSnapshot() }
+            if phase == .active {
+                AppUsage.reportSnapshot()
+                // 돌아올 때마다(15분 쓰로틀) 매도 원칙을 건 종목의 시세를 확인한다.
+                Task { await SellWatch.checkPrices(container: sharedModelContainer) }
+            }
+            // 쉬는 동안에도 확인하도록 다음 백그라운드 갱신을 부탁해 둔다.
+            if phase == .background { SellWatch.scheduleBackgroundCheck() }
+        }
+        // iOS 가 깨워 주면 시세를 확인하고, 다음 번을 다시 부탁한다.
+        .backgroundTask(.appRefresh(SellWatch.taskID)) {
+            await SellWatch.checkPrices(container: sharedModelContainer, force: true)
+            SellWatch.scheduleBackgroundCheck()
         }
     }
 }

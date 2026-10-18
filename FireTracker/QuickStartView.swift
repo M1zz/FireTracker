@@ -200,7 +200,7 @@ struct QuickStartView: View {
                         .padding(.top, 2)
                 }
             }
-            .padding(20)
+            .padding(.horizontal, Theme.gutter).padding(.vertical, 16)
         }
         .scrollIndicators(.hidden)
     }

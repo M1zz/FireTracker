@@ -156,7 +156,7 @@ struct AssetsView: View {
                             Label("직접 추가", systemImage: "square.and.pencil")
                         }
                         Button { showingImport = true } label: {
-                            Label("스크린샷으로 추가", systemImage: "text.viewfinder")
+                            Label("캡처로 가져오기·맞추기", systemImage: "text.viewfinder")
                         }
                     } label: { Image(systemName: "plus") }
                 }
@@ -836,6 +836,10 @@ struct AssetsView: View {
                         Image(systemName: "antenna.radiowaves.left.and.right")
                             .foregroundStyle(Theme.accent)
                     }
+                    // 매도 원칙에 닿았거나 가까우면 목록에서도 바로 보이게.
+                    if let st = SellWatch.status(asset), st.signal != .holding {
+                        SellSignalChip(signal: st.signal)
+                    }
                     if asset.effectiveMonthlyIncome > 0 {
                         Text("월 \(Fmt.wonKo(asset.effectiveMonthlyIncome))")
                             .foregroundStyle(Theme.positive)
@@ -1160,6 +1164,9 @@ struct AssetEditor: View {
     @State private var tradeAmountText = ""
     // 수정 중인 거래 — 비어 있으면 새 거래를 추가하는 중.
     @State private var editingTradeID: UUID?
+    // 매도 원칙 — 목표 매도가(1주·개당, 원)와 고점 대비 하락 알림(%).
+    @State private var sellTarget = ""
+    @State private var stopPct: Double = 10
 
     // Seed all editor state directly from the asset so that opening the editor
     // does not mutate `assetClass` (which would trigger onChange and clobber the
@@ -1192,6 +1199,8 @@ struct AssetEditor: View {
         _costBasis = State(initialValue: asset.map { $0.costBasis > 0 ? String(Int($0.costBasis)) : "" } ?? "")
         _realEstateUse = State(initialValue: asset?.realEstateUse ?? .residence)
         _liquidity = State(initialValue: asset?.liquidity ?? Liquidity.suggested(for: cls))
+        _sellTarget = State(initialValue: asset.map { $0.sellTargetPrice > 0 ? String(Int($0.sellTargetPrice)) : "" } ?? "")
+        _stopPct = State(initialValue: asset?.trailingStopPct ?? 10)
         _detailDrafts = State(initialValue: (asset?.sortedDetails ?? []).map {
             DetailDraft(name: $0.name, amount: $0.amount > 0 ? String(Int($0.amount)) : "")
         })
@@ -1364,6 +1373,11 @@ struct AssetEditor: View {
                 // 한 줄씩 남기면 보유 수량·투자 원금·평단이 거기서 계산된다.
                 if asset != nil && supportsBuyMore {
                     tradeSection
+                }
+
+                // 살 때 정하는 매도 원칙 — 목표가·고점 대비 하락. 닿으면 팔라고 알린다.
+                if SellWatch.supports(assetClass) {
+                    sellRuleSection
                 }
 
                 // 간단 입력(새 자산 기본): 여기까지만 — 종류·이름·금액이면 끝.
@@ -1614,6 +1628,55 @@ struct AssetEditor: View {
             Text(hasTrades
                  ? "투자 원금과 보유 수량은 아래 ‘매매 내역’에서 자동으로 계산돼요. 평가액은 시세나 위 ‘평가액’ 칸을 따르고, 둘의 차이가 평가 손익입니다."
                  : "투자 원금(산 가격)은 그대로 두고, 평가액은 시세에 따라 바뀝니다. 둘의 차이가 평가 손익이에요. 평가액은 위 ‘평가액’ 칸 또는 시세 자동으로 갱신돼요.")
+                .font(.caption)
+        }
+    }
+
+    // --- 매도 원칙 ---
+    private var avgBuyPrice: Double {
+        if hasTrades { return ledger.avgPrice }
+        let q = Double(quantity) ?? 0
+        let cb = Double(costBasis) ?? 0
+        return q > 0 && cb > 0 ? cb / q : 0
+    }
+
+    private var sellRuleSection: some View {
+        Section {
+            TextField("이 가격이 되면 판다 (1\(buyUnitLabel)당, 원)", text: $sellTarget.commaGrouped)
+                .keyboardType(.numberPad)
+            if let t = Double(sellTarget), t > 0 {
+                let avg = avgBuyPrice
+                let cur = unitPriceKRW
+                Text([avg > 0 ? "평단보다 \(t >= avg ? "+" : "−")\(Fmt.percent(abs(t / avg - 1), fraction: 1))" : nil,
+                      cur > 0 ? "지금 \(Fmt.krw(cur))원" : nil]
+                        .compactMap { $0 }.joined(separator: " · "))
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            Picker("고점에서 빠지면 팔기", selection: $stopPct) {
+                ForEach(SellWatch.stopChoices, id: \.self) { p in
+                    Text(p == 0 ? "알리지 않음" : "\(Fmt.trimNumber(p))% 빠지면").tag(p)
+                }
+            }
+            if let a = asset, a.peakUnitPrice > 0, stopPct > 0 {
+                HStack {
+                    Text("지금까지 고점")
+                    Spacer()
+                    Text("\(Fmt.krw(a.peakUnitPrice))원 · \(Fmt.krw(a.peakUnitPrice * (1 - stopPct / 100)))원 아래면 알림")
+                        .font(.system(.footnote, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.textSecond)
+                }
+            }
+            if !auto {
+                Label("시세 자동을 켜야 알림이 와요. 위에서 종목코드·티커를 넣어 주세요.",
+                      systemImage: "exclamationmark.circle")
+                    .font(.footnote)
+                    .foregroundStyle(Theme.accent)
+            }
+        } header: {
+            Text("매도 원칙")
+        } footer: {
+            Text("오를 땐 알리지 않아요. 고점에서 정한 만큼 빠지거나 목표가에 닿으면 ‘지금 팔 때’라고 알려 드려요. 앱을 열 때와, 앱이 쉬는 동안 iOS가 허락할 때(보통 몇 시간 간격) 시세를 확인해요 — 실시간 감시는 아니에요.")
                 .font(.caption)
         }
     }
@@ -2298,6 +2361,8 @@ struct AssetEditor: View {
 
     @discardableResult
     private func persist() -> Asset {
+        // 저장 전에 갖고 있었나 — 다 팔았다가 다시 산 경우 고점을 새로 잡으려고.
+        let heldBefore = (asset?.quantity ?? 0) > 0
         let target: Asset
         if let asset {
             target = asset
@@ -2325,6 +2390,8 @@ struct AssetEditor: View {
         target.costBasis = Double(costBasis) ?? 0
         target.realEstateUse = realEstateUse
         target.liquidity = liquidity
+        target.sellTargetPrice = SellWatch.supports(assetClass) ? (Double(sellTarget) ?? 0) : 0
+        target.trailingStopPct = stopPct
         // For real estate, drop values that don't apply to the chosen use type
         // so a switched-away deposit/rent doesn't linger.
         if assetClass == .realEstate {
@@ -2362,7 +2429,16 @@ struct AssetEditor: View {
             target.quantity = l.quantity
             target.costBasis = l.costBasis
         }
+        // 다 팔았다가 다시 샀으면 예전 고점은 버리고 새로 잡는다.
+        if !heldBefore && target.quantity > 0 {
+            target.peakUnitPrice = 0
+            target.stopAlertedPeak = 0
+        }
         context.saveReporting("자산")
+        // 원칙을 걸었으면 알림 권한을 묻는다(이미 정했으면 조용히 지나감).
+        if SellWatch.isWatched(target) {
+            Task { await SellWatch.requestPermission() }
+        }
         return target
     }
 
@@ -2513,18 +2589,41 @@ struct ParsedHolding: Identifiable {
     let id = UUID()
     var name: String
     var amountText: String   // raw digits, shown comma-grouped
+    // 손익(원)과 수익률(%) — 화면에 있으면 투자 원금(평가액 − 손익)을 채운다.
+    var gain: Double? = nil
+    var gainPct: Double? = nil
+    // 이름이 '…'로 잘렸다 — 기존 종목과는 앞부분으로 맞추고, 새로 넣을 땐 고쳐 달라고 한다.
+    var truncated = false
+    // 평가액이 가려져 손익·수익률로 거꾸로 계산했다.
+    var estimated = false
     var include: Bool = true
+
+    var amount: Double { Double(amountText) ?? 0 }
 }
 
-// On-device OCR of a brokerage holdings screenshot → candidate (종목명, 평가액)
-// rows. Uses Vision (no network, nothing leaves the device). Heuristic parsing,
-// so the UI always lets the user correct/deselect before anything is saved.
+// On-device OCR of a holdings screenshot → candidate rows. Uses Vision (no
+// network, nothing leaves the device). Heuristic parsing, so the UI always lets
+// the user correct/deselect before anything is saved.
+//
+// 두 가지 배치를 읽는다.
+//  · 두 줄 배치(뱅크샐러드·토스 등) — 왼쪽 종목명, 오른쪽 위 평가액 "23,157,790원",
+//    그 아래 손익 "▲ 2,363,961원(11.36%)". 화살표는 OCR이 엉뚱한 글자로 읽으므로
+//    손익의 부호는 괄호 속 수익률에서 가져온다.
+//  · 한 줄 배치 — 종목명과 금액이 한 줄에. 두 줄 배치로 하나도 못 읽었을 때만.
 enum HoldingsOCR {
+    private typealias Token = (text: String, box: CGRect)
+
     private static let numberRegex = try! NSRegularExpression(pattern: #"[0-9][0-9,]*(?:\.[0-9]+)?"#)
+    private static let valueRegex = try! NSRegularExpression(pattern: #"^\s*([0-9][0-9,]*)\s*원\s*$"#)
+    private static let changeRegex = try! NSRegularExpression(
+        pattern: #"([0-9][0-9,]*)\s*원\s*\(\s*([+\-−]?[0-9]+(?:\.[0-9]+)?)\s*%\s*\)"#)
+    // 종목명 자리에 걸리는 화면 글자들.
+    private static let notNames: Set<String> = ["자산", "조회", "목표", "홈", "가계부", "건강보험",
+                                                "금융쇼핑", "투자", "주식", "전체", "국내", "해외"]
 
     static func rows(from image: UIImage) -> [ParsedHolding] {
         guard let cg = image.cgImage else { return [] }
-        var tokens: [(text: String, box: CGRect)] = []
+        var tokens: [Token] = []
         let request = VNRecognizeTextRequest { req, _ in
             for o in (req.results as? [VNRecognizedTextObservation]) ?? [] {
                 if let s = o.topCandidates(1).first?.string { tokens.append((s, o.boundingBox)) }
@@ -2532,18 +2631,102 @@ enum HoldingsOCR {
         }
         request.recognitionLevel = .accurate
         request.usesLanguageCorrection = false
-        request.recognitionLanguages = ["ko-Hangul", "en-US"]
+        request.recognitionLanguages = ["ko-KR", "en-US"]
         let handler = VNImageRequestHandler(cgImage: cg, options: [:])
         try? handler.perform([request])
-        return parse(tokens)
+        let paired = parsePaired(tokens)
+        return paired.isEmpty ? parseSingleLine(tokens) : paired
+    }
+
+    /// 여러 장에서 읽은 줄을 합친다. 스크롤 캡처가 겹치면 같은 종목이 두 번 나오므로
+    /// 이름과 평가액이 같은 줄은 하나만 남긴다.
+    static func merge(_ batches: [[ParsedHolding]]) -> [ParsedHolding] {
+        var out: [ParsedHolding] = []
+        for row in batches.joined() {
+            let dup = out.contains {
+                normalized($0.name) == normalized(row.name) && abs($0.amount - row.amount) < 1
+            }
+            if !dup { out.append(row) }
+        }
+        return out
+    }
+
+    /// 이름 비교용 — 띄어쓰기·말줄임·대소문자를 지운다.
+    static func normalized(_ s: String) -> String {
+        s.lowercased().filter { !$0.isWhitespace && $0 != "." && $0 != "…" }
+    }
+
+    private static func match(_ re: NSRegularExpression, _ s: String) -> [String]? {
+        let ns = s as NSString
+        guard let m = re.firstMatch(in: s, range: NSRange(location: 0, length: ns.length)) else { return nil }
+        return (1..<m.numberOfRanges).map { ns.substring(with: m.range(at: $0)) }
+    }
+
+    private static func number(_ s: String) -> Double? {
+        Double(s.replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "−", with: "-"))
+    }
+
+    // boundingBox origin is bottom-left, so a larger midY is higher up.
+    private static func parsePaired(_ tokens: [Token]) -> [ParsedHolding] {
+        let values = tokens.filter { $0.box.midX > 0.5 && match(valueRegex, $0.text) != nil }
+        let changes = tokens.filter { match(changeRegex, $0.text) != nil }
+        let names = tokens.filter { t in
+            t.box.minX < 0.45 && t.box.midX < 0.55
+                && t.text.rangeOfCharacter(from: .letters) != nil
+                && match(valueRegex, t.text) == nil && match(changeRegex, t.text) == nil
+                && !notNames.contains(t.text.trimmingCharacters(in: .whitespaces))
+                && t.text.range(of: #"^\d{1,2}:\d{2}"#, options: .regularExpression) == nil
+        }
+        var out: [ParsedHolding] = []
+        for v in values.sorted(by: { $0.box.midY > $1.box.midY }) {
+            let lineH = v.box.height
+            // 평가액 바로 아래 줄의 손익.
+            let change = changes
+                .filter { $0.box.midY < v.box.midY && v.box.midY - $0.box.midY < lineH * 2 }
+                .max { $0.box.midY < $1.box.midY }
+            let rowMid = change.map { (v.box.midY + $0.box.midY) / 2 } ?? v.box.midY
+            guard let name = names
+                .filter({ abs($0.box.midY - rowMid) < lineH * 1.6 })
+                .min(by: { abs($0.box.midY - rowMid) < abs($1.box.midY - rowMid) })
+            else { continue }
+
+            var value = match(valueRegex, v.text).flatMap { number($0[0]) } ?? 0
+            var gain: Double?
+            var pct: Double?
+            var estimated = false
+            if let c = change, let g = match(changeRegex, c.text),
+               let amt = number(g[0]), let p = number(g[1]) {
+                pct = p
+                gain = p < 0 ? -amt : amt
+                // 버튼에 가려 평가액 앞자리가 잘리면 손익·수익률과 맞지 않는다 — 거꾸로 계산한다.
+                if p != 0, p > -100 {
+                    let cost = amt / abs(p / 100)
+                    let implied = cost + (gain ?? 0)
+                    if implied > 0, value == 0 || abs(implied - value) / implied > 0.05 {
+                        value = implied.rounded()
+                        estimated = true
+                    }
+                }
+            }
+            guard value > 0 else { continue }
+            let raw = name.text.trimmingCharacters(in: .whitespaces)
+            // 말줄임이 OCR에서 빠지기도 한다 — 이름 칸 끝까지 찬 이름도 잘린 것으로 본다.
+            // 가려져 평가액을 계산한 줄은 이름도 가려졌을 수 있다.
+            let truncated = raw.hasSuffix("…") || raw.hasSuffix("...") || raw.hasSuffix("..")
+                || name.box.maxX >= 0.47 || estimated
+            let clean = raw.trimmingCharacters(in: CharacterSet(charactersIn: ".… "))
+            out.append(ParsedHolding(name: clean, amountText: String(Int(value)),
+                                     gain: gain, gainPct: pct,
+                                     truncated: truncated, estimated: estimated))
+        }
+        return out
     }
 
     // Group tokens that sit on the same visual line, then parse each line.
-    private static func parse(_ tokens: [(text: String, box: CGRect)]) -> [ParsedHolding] {
+    private static func parseSingleLine(_ tokens: [Token]) -> [ParsedHolding] {
         guard !tokens.isEmpty else { return [] }
-        // boundingBox origin is bottom-left, so a larger midY is higher up.
         let sorted = tokens.sorted { $0.box.midY > $1.box.midY }
-        var lines: [[(text: String, box: CGRect)]] = []
+        var lines: [[Token]] = []
         let rowGap: CGFloat = 0.015
         for t in sorted {
             if let ref = lines.last?.first, abs(ref.box.midY - t.box.midY) < rowGap {
@@ -2582,27 +2765,93 @@ enum HoldingsOCR {
     }
 }
 
-// Pick a holdings screenshot → OCR → review/correct → bulk-add as 주식.
+// 캡처를 여러 장 고르면 읽어서 — 이미 있는 종목은 평가액·원금을 갱신하고,
+// 없는 종목만 새로 넣는다. 캡처에 안 보인 기존 종목은 '판 종목'으로 고를 수 있다.
 struct ScreenshotImportView: View {
     let startingSortOrder: Int
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
+    @Query(sort: \Asset.sortOrder) private var assets: [Asset]
+    @Query private var settingsList: [FireSettings]
 
-    @State private var pickerItem: PhotosPickerItem?
+    // 줄마다 이름으로 찾은 종목코드 후보와 고른 것. chosen 이 nil 이면 코드 없이(수동 평가액) 넣는다.
+    struct SymbolLookup {
+        var candidates: [PriceService.SymbolCandidate] = []
+        var chosen: PriceService.SymbolCandidate?
+        var ambiguous = false
+        var loading = true
+    }
+    @State private var lookups: [UUID: SymbolLookup] = [:]
+    // 적용 중 — 코드를 붙인 종목의 시세를 받아 수량을 맞춘다. (n/전체)
+    @State private var applyProgress: (done: Int, total: Int)?
+
+    @State private var pickerItems: [PhotosPickerItem] = []
     @State private var rows: [ParsedHolding] = []
     @State private var processing = false
     @State private var didProcess = false
     @State private var loadError: String?
+    @State private var imageCount = 0
+    // 캡처에 없던 기존 종목 중 '팔았다'고 고른 것.
+    @State private var soldKeys: Set<UUID> = []
 
-    private var selectedCount: Int {
-        rows.filter { $0.include && (Double($0.amountText) ?? 0) > 0 }.count
+    // 맞춰 볼 기존 종목 — 주식·펀드·코인.
+    private var holdings: [Asset] {
+        assets.filter { $0.assetClass == .stocks || $0.assetClass == .fund || $0.assetClass == .crypto }
+    }
+
+    /// 줄마다 맞는 기존 종목. 이름 앞부분이 같고(잘린 이름 대비), 같은 이름이 여럿이면
+    /// 평가액이 가장 가까운 것. 한 종목은 한 줄에만 붙는다.
+    private var matches: [UUID: Asset] {
+        var out: [UUID: Asset] = [:]
+        var used: Set<UUID> = []
+        for row in rows where row.include {
+            let stem = HoldingsOCR.normalized(row.name)
+            guard stem.count >= 2 else { continue }
+            let pick = holdings
+                .filter { a in
+                    let n = HoldingsOCR.normalized(a.name)
+                    return !used.contains(a.key) && !n.isEmpty && (n.hasPrefix(stem) || stem.hasPrefix(n))
+                }
+                .min { abs($0.amount - row.amount) < abs($1.amount - row.amount) }
+            if let pick {
+                out[row.id] = pick
+                used.insert(pick.key)
+            }
+        }
+        return out
+    }
+
+    private var missing: [Asset] {
+        let matched = Set(matches.values.map(\.key))
+        return holdings.filter { !matched.contains($0.key) }
+    }
+
+    private var selected: [ParsedHolding] { rows.filter { $0.include && $0.amount > 0 } }
+
+    private var applyLabel: String {
+        let m = matches
+        let upd = selected.filter { m[$0.id] != nil }.count
+        let add = selected.count - upd
+        var parts: [String] = []
+        if upd > 0 { parts.append("갱신 \(upd)") }
+        if add > 0 { parts.append("추가 \(add)") }
+        if !soldKeys.isEmpty { parts.append("정리 \(soldKeys.count)") }
+        return parts.isEmpty ? "적용" : parts.joined(separator: " · ")
     }
 
     var body: some View {
         NavigationStack {
             Group {
-                if processing {
+                if let p = applyProgress {
+                    VStack(spacing: 14) {
+                        ProgressView(value: Double(p.done), total: Double(max(p.total, 1))).tint(Theme.accent)
+                        Text("시세를 확인해 수량을 맞추는 중… \(p.done)/\(p.total)")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                    .padding(40)
+                } else if processing {
                     VStack(spacing: 14) {
                         ProgressView().tint(Theme.accent)
                         Text("이미지에서 종목을 읽는 중…")
@@ -2617,21 +2866,36 @@ struct ScreenshotImportView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Theme.bg.ignoresSafeArea())
-            .navigationTitle("스크린샷으로 추가")
+            .navigationTitle("캡처로 가져오기")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
                 if didProcess, !rows.isEmpty {
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("\(selectedCount)개 추가") { importSelected() }
-                            .disabled(selectedCount == 0)
+                        Button(applyLabel) { Task { await apply() } }
+                            .disabled((selected.isEmpty && soldKeys.isEmpty) || applyProgress != nil)
                     }
                 }
             }
         }
-        .onChange(of: pickerItem) { _, item in
-            guard let item else { return }
-            Task { await process(item) }
+        .onChange(of: pickerItems) { _, items in
+            guard !items.isEmpty else { return }
+            Task { await process(items) }
+        }
+    }
+
+    private var picker: some View {
+        PhotosPicker(selection: $pickerItems, maxSelectionCount: 10, matching: .screenshots) {
+            HStack {
+                Image(systemName: "photo.on.rectangle")
+                Text(didProcess ? "캡처 더 고르기" : "캡처 고르기 (여러 장)")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 15)
+            .background(Theme.accent)
+            .foregroundStyle(Color.black)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
     }
 
@@ -2641,26 +2905,15 @@ struct ScreenshotImportView: View {
                 .font(.system(.largeTitle))
                 .foregroundStyle(Theme.accent)
             VStack(spacing: 8) {
-                Text("보유 종목 스크린샷을 불러오세요")
+                Text("보유 종목 캡처를 고르세요")
                     .font(.title3.weight(.bold))
                     .foregroundStyle(Theme.textPrimary)
-                Text("증권사 앱의 ‘보유 종목’ 화면을 캡처해서 고르면, 종목명과 평가액을 읽어 한 번에 등록합니다. 이미지는 기기에서만 처리되고 전송되지 않아요.")
+                Text("뱅크샐러드·증권사 앱의 자산 목록을 스크롤하며 여러 장 캡처해 한 번에 고르면, 종목명·평가액·손익을 읽어 맞춥니다. 이미 있는 종목은 갱신하고 없는 것만 더해요. 이미지는 기기에서만 처리되고, 종목코드를 찾을 때 종목 이름만 네이버 증권에 물어봐요.")
                     .multilineTextAlignment(.center)
                     .font(.subheadline)
                     .foregroundStyle(Theme.textSecond)
             }
-            PhotosPicker(selection: $pickerItem, matching: .images) {
-                HStack {
-                    Image(systemName: "photo.on.rectangle")
-                    Text("스크린샷 선택")
-                        .font(.subheadline.weight(.semibold))
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 15)
-                .background(Theme.accent)
-                .foregroundStyle(Color.black)
-                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-            }
+            picker
             if let loadError {
                 Text(loadError)
                     .font(.caption)
@@ -2680,52 +2933,58 @@ struct ScreenshotImportView: View {
                 Text("종목을 읽지 못했어요")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
-                Text("‘보유 종목’ 목록이 잘 보이는 스크린샷으로 다시 시도해보세요.")
+                Text("종목명과 금액이 잘 보이는 캡처로 다시 시도해 보세요.")
                     .multilineTextAlignment(.center)
                     .font(.subheadline)
                     .foregroundStyle(Theme.textSecond)
-                PhotosPicker("다른 스크린샷 선택", selection: $pickerItem, matching: .images)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                picker
             }
             .padding(28)
         } else {
+            let m = matches
             List {
                 Section {
                     ForEach($rows) { $row in
-                        HStack(spacing: 10) {
-                            Button { row.include.toggle() } label: {
-                                Image(systemName: row.include ? "checkmark.circle.fill" : "circle")
-                                    .font(.system(.title2))
-                                    .foregroundStyle(row.include ? Theme.accent : Theme.textSecond)
-                            }
-                            .buttonStyle(.plain)
-                            VStack(spacing: 6) {
-                                TextField("종목명", text: $row.name)
-                                    .font(.subheadline.weight(.semibold))
-                                HStack(spacing: 6) {
-                                    TextField("평가액", text: $row.amountText.commaGrouped)
-                                        .keyboardType(.numberPad)
-                                        .font(.system(.subheadline, design: .rounded))
-                                    Text("원").foregroundStyle(Theme.textSecond)
-                                }
-                                MoneyReadout(amount: row.amountText)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                            .opacity(row.include ? 1 : 0.4)
-                        }
-                        .listRowBackground(Theme.surface)
+                        rowView($row, match: m[row.id])
+                            .listRowBackground(Theme.surface)
                     }
                 } header: {
-                    Text("읽은 종목 \(selectedCount)/\(rows.count) 선택 · 잘못된 건 끄거나 고치세요")
+                    Text("캡처 \(imageCount)장에서 \(rows.count)개 읽음 · 잘못된 건 끄거나 고치세요")
                 } footer: {
-                    Text("모두 ‘주식’으로 등록됩니다. 평가액은 수동값이며, 나중에 편집에서 종목코드를 넣으면 시세 자동을, 배당률 프리셋으로 배당을 채울 수 있어요.")
+                    Text("갱신은 평가액과 투자 원금(평가액 − 손익)을 바꿔요. 종목코드를 찾은 종목은 시세를 받아 수량을 평가액에 맞추고, 시세 자동과 매도 알림(고점 대비 10%)이 켜져요. 코드를 못 찾으면 평가액만 수동값으로 들어가요.")
                         .font(.caption)
                 }
 
+                if !missing.isEmpty {
+                    Section {
+                        ForEach(missing) { a in
+                            Button {
+                                if soldKeys.contains(a.key) { soldKeys.remove(a.key) } else { soldKeys.insert(a.key) }
+                            } label: {
+                                HStack {
+                                    Image(systemName: soldKeys.contains(a.key) ? "checkmark.circle.fill" : "circle")
+                                        .foregroundStyle(soldKeys.contains(a.key) ? Theme.negative : Theme.textSecond)
+                                    Text(a.name).foregroundStyle(Theme.textPrimary)
+                                    Spacer()
+                                    Text("\(Fmt.krw(a.amount))원")
+                                        .font(.system(.footnote, design: .rounded))
+                                        .foregroundStyle(Theme.textSecond)
+                                }
+                            }
+                            .listRowBackground(Theme.surface)
+                        }
+                    } header: {
+                        Text("캡처에 없는 기존 종목 \(missing.count)개")
+                    } footer: {
+                        Text("판 종목만 골라 주세요 — 고른 것은 자산에서 지워요. 캡처를 덜 찍어서 빠진 거라면 그대로 두면 됩니다.")
+                            .font(.caption)
+                    }
+                }
+
                 Section {
-                    PhotosPicker("다른 스크린샷 선택", selection: $pickerItem, matching: .images)
-                        .listRowBackground(Theme.surface)
+                    picker
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
                 }
             }
             .scrollContentBackground(.hidden)
@@ -2733,38 +2992,239 @@ struct ScreenshotImportView: View {
         }
     }
 
-    private func process(_ item: PhotosPickerItem) async {
+    private func rowView(_ row: Binding<ParsedHolding>, match: Asset?) -> some View {
+        let r = row.wrappedValue
+        return HStack(alignment: .top, spacing: 10) {
+            Button { row.wrappedValue.include.toggle() } label: {
+                Image(systemName: r.include ? "checkmark.circle.fill" : "circle")
+                    .font(.system(.title2))
+                    .foregroundStyle(r.include ? Theme.accent : Theme.textSecond)
+            }
+            .buttonStyle(.plain)
+            VStack(alignment: .leading, spacing: 6) {
+                TextField("종목명", text: row.name)
+                    .font(.subheadline.weight(.semibold))
+                    .submitLabel(.search)
+                    .onSubmit { Task { await lookup([row.wrappedValue], force: true) } }
+                HStack(spacing: 6) {
+                    TextField("평가액", text: row.amountText.commaGrouped)
+                        .keyboardType(.numberPad)
+                        .font(.system(.subheadline, design: .rounded))
+                    Text("원").foregroundStyle(Theme.textSecond)
+                }
+                if let g = r.gain, let p = r.gainPct {
+                    Text("손익 \(g >= 0 ? "+" : "−")\(Fmt.krw(abs(g)))원 (\(Fmt.trimNumber(p))%)")
+                        .font(.caption)
+                        .foregroundStyle(g >= 0 ? Theme.positive : Theme.negative)
+                }
+                // 무엇을 할지 — 기존 종목 갱신인지, 새 종목인지.
+                if let match {
+                    Text("‘\(match.name)’ 갱신 · \(Fmt.krw(match.amount)) → \(Fmt.krw(r.amount))원")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                } else {
+                    Text("새 종목으로 추가")
+                        .font(.caption)
+                        .foregroundStyle(Theme.accent)
+                }
+                if needsSymbol(r, match: match) { symbolLine(r) }
+                if r.estimated {
+                    Label("평가액이 가려져 손익·수익률로 계산했어요. 확인해 주세요.", systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundStyle(Theme.accent)
+                }
+                if r.truncated && match == nil && lookups[r.id]?.chosen == nil {
+                    Label("이름이 잘렸어요. 전체 이름으로 고쳐 주세요.", systemImage: "pencil")
+                        .font(.caption)
+                        .foregroundStyle(Theme.accent)
+                }
+            }
+            .opacity(r.include ? 1 : 0.4)
+        }
+    }
+
+    private func process(_ items: [PhotosPickerItem]) async {
         processing = true
         loadError = nil
-        defer { processing = false }
-        guard let data = try? await item.loadTransferable(type: Data.self),
-              let image = UIImage(data: data) else {
+        defer {
+            processing = false
+            pickerItems = []
+        }
+        var images: [UIImage] = []
+        for item in items {
+            if let data = try? await item.loadTransferable(type: Data.self), let img = UIImage(data: data) {
+                images.append(img)
+            }
+        }
+        guard !images.isEmpty else {
             loadError = "이미지를 불러오지 못했습니다."
             return
         }
-        let parsed = await Task.detached(priority: .userInitiated) {
-            HoldingsOCR.rows(from: image)
+        let batches = await Task.detached(priority: .userInitiated) {
+            images.map { HoldingsOCR.rows(from: $0) }
         }.value
-        rows = parsed
+        // 이미 읽어 둔 줄 뒤에 이어 붙인다 — 캡처를 나눠 골라도 된다.
+        rows = HoldingsOCR.merge([rows] + batches)
+        imageCount += images.count
         didProcess = true
+        await lookup(rows)
     }
 
-    private func importSelected() {
+    // 코드가 필요한 줄 — 새 종목이거나, 맞춘 기존 종목에 코드가 아직 없을 때.
+    private func needsSymbol(_ r: ParsedHolding, match: Asset?) -> Bool {
+        guard let match else { return true }
+        return match.symbol.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    /// 이름으로 종목코드를 찾는다(한꺼번에). 이미 찾은 줄은 건너뛴다(force 면 다시).
+    private func lookup(_ targets: [ParsedHolding], force: Bool = false) async {
+        let m = matches
+        let todo = targets.filter { needsSymbol($0, match: m[$0.id]) && (force || lookups[$0.id] == nil) }
+        for r in todo { lookups[r.id] = SymbolLookup() }
+        await withTaskGroup(of: (UUID, SymbolLookup).self) { group in
+            for r in todo {
+                let name = r.name
+                let value = r.amount
+                let truncated = r.truncated
+                group.addTask {
+                    let cands = await PriceService.searchSymbols(name)
+                    var best = PriceService.bestSymbol(for: name, in: cands, truncated: truncated)
+                    if best.ambiguous, let byShares = await Self.pickByWholeShares(name: name, value: value, in: cands) {
+                        best = (byShares, false)
+                    }
+                    return (r.id, SymbolLookup(candidates: Array(cands.prefix(8)), chosen: best.pick,
+                                               ambiguous: best.ambiguous, loading: false))
+                }
+            }
+            for await (id, result) in group { lookups[id] = result }
+        }
+    }
+
+    /// 잘린 이름으로 국내 후보가 여럿일 때 — 국내 주식은 1주 단위로 사므로, 평가액 ÷ 지금 가격이
+    /// 딱 떨어지는 후보가 하나뿐이면 그게 내 종목이다. 캡처가 오늘 것일수록 잘 맞는다.
+    private static func pickByWholeShares(name: String, value: Double,
+                                          in cands: [PriceService.SymbolCandidate]) async -> PriceService.SymbolCandidate? {
+        let q = HoldingsOCR.normalized(name)
+        let pool = cands.filter { !$0.isUS && HoldingsOCR.normalized($0.name).hasPrefix(q) }.prefix(6)
+        guard pool.count > 1, value > 0 else { return nil }
+        var hits: [PriceService.SymbolCandidate] = []
+        for c in pool {
+            guard let price = await PriceService.naverKRPrice(code: c.code), price > 0 else { continue }
+            let shares = value / price
+            // 소수부가 0.01주 안쪽이어야 '딱 떨어진다'. 캡처 뒤 값이 움직였으면 아무것도 안 맞고 사람이 고른다.
+            if shares >= 1, abs(shares - shares.rounded()) < 0.01 { hits.append(c) }
+        }
+        return hits.count == 1 ? hits[0] : nil
+    }
+
+    @ViewBuilder
+    private func symbolLine(_ r: ParsedHolding) -> some View {
+        if let l = lookups[r.id] {
+            if l.loading {
+                Text("종목코드 찾는 중…")
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            } else if l.candidates.isEmpty {
+                Label("종목코드를 못 찾았어요. 이름을 고치고 ‘검색’을 눌러 보세요.", systemImage: "magnifyingglass")
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            } else {
+                Menu {
+                    ForEach(l.candidates) { c in
+                        Button("\(c.name) · \(c.code) (\(c.market))") {
+                            lookups[r.id]?.chosen = c
+                            lookups[r.id]?.ambiguous = false
+                        }
+                    }
+                    Button("코드 없이 넣기 (수동 평가액)", role: .destructive) {
+                        lookups[r.id]?.chosen = nil
+                        lookups[r.id]?.ambiguous = false
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: l.chosen == nil ? "minus.circle" : "checkmark.seal.fill")
+                        Text(l.chosen.map { "\($0.code) · \($0.name)" } ?? "코드 없이 넣기")
+                            .lineLimit(1)
+                        Image(systemName: "chevron.up.chevron.down").font(.caption2)
+                    }
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(l.chosen == nil ? Theme.textSecond : Theme.positive)
+                }
+                if l.ambiguous {
+                    Label("비슷한 종목이 \(l.candidates.count)개예요. 맞는지 눌러서 확인해 주세요.",
+                          systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundStyle(Theme.accent)
+                }
+            }
+        }
+    }
+
+    private static let etfBrands = ["TIGER", "KODEX", "SOL", "ACE", "RISE", "KBSTAR", "ARIRANG",
+                                    "HANARO", "PLUS", "KOSEF", "TIMEFOLIO", "WON", "1Q"]
+
+    private func apply() async {
+        let m = matches
+        let settings = settingsList.first ?? FireSettings()
         var order = startingSortOrder
-        for row in rows where row.include {
-            let amount = Double(row.amountText) ?? 0
-            guard amount > 0 else { continue }
-            let name = row.name.trimmingCharacters(in: .whitespaces)
-            let asset = Asset(name: name,
-                              assetClass: .stocks,
-                              amount: amount,
-                              incomeKind: .dividend,
-                              liquidity: .liquid,
-                              sortOrder: order)
-            context.insert(asset)
-            order += 1
+        let work = selected
+        applyProgress = (0, work.count)
+        for row in work {
+            let value = row.amount
+            let cost = row.gain.map { value - $0 }
+            let pick = needsSymbol(row, match: m[row.id]) ? lookups[row.id]?.chosen : nil
+            let target: Asset
+            if let a = m[row.id] {
+                target = a
+            } else {
+                let name = pick?.name ?? row.name.trimmingCharacters(in: .whitespaces)
+                let upper = name.uppercased()
+                let isETF = Self.etfBrands.contains { upper.hasPrefix($0 + " ") }
+                target = Asset(name: name, assetClass: isETF ? .fund : .stocks,
+                               incomeKind: .dividend, liquidity: .liquid, sortOrder: order)
+                context.insert(target)
+                order += 1
+            }
+            target.amount = value
+            // 매매 원장이 있으면 원금·수량은 원장이 진실 — 건드리지 않는다.
+            let ledgerOwned = !target.trades.isEmpty
+            if !ledgerOwned, let cost, cost > 0 { target.costBasis = cost.rounded() }
+
+            // 새로 찾은 코드를 붙이고 시세를 켠다.
+            if let pick {
+                target.symbol = pick.code
+                target.currency = pick.currency
+            }
+            // 코드가 있으면 지금 시세로 수량을 평가액에 맞춘다 — 그래야 다음 시세 갱신이
+            // 평가액을 엉뚱하게 덮어쓰지 않고, 매도 알림도 1주 가격을 안다.
+            if !target.symbol.trimmingCharacters(in: .whitespaces).isEmpty,
+               pick != nil || target.autoPriced,
+               let unit = try? await PriceService.autoValue(
+                   assetClass: target.assetClass, symbol: target.symbol, name: target.name,
+                   quantity: 1, currency: target.currency, date: Date(),
+                   finnhubKey: settings.finnhubKey, kisAppKey: settings.kisAppKey,
+                   kisAppSecret: settings.kisAppSecret, dataGoKey: settings.dataGoKey).unit,
+               unit > 0 {
+                target.autoPriced = true
+                target.unitPriceKRW = unit
+                target.lastPriced = Date()
+                if !ledgerOwned {
+                    let q = value / unit
+                    // 국내 주식은 1주 단위, 미국 주식·코인은 소수점 매수가 있어 넷째 자리까지.
+                    target.quantity = target.currency == "KRW" && target.assetClass != .crypto
+                        ? max(1, q.rounded()) : (q * 10_000).rounded() / 10_000
+                }
+                SellWatch.evaluate(target)
+            }
+            applyProgress = ((applyProgress?.done ?? 0) + 1, work.count)
+        }
+        for a in holdings where soldKeys.contains(a.key) {
+            context.delete(a)
         }
         context.saveReporting("자산")
+        if order > startingSortOrder { AppUsage.log(.assetAdded) }
+        applyProgress = nil
+        if assets.contains(where: SellWatch.isWatched) { await SellWatch.requestPermission() }
         dismiss()
     }
 }
@@ -2877,6 +3337,166 @@ struct NetWorthBreakdownView: View {
             Text("\(sign)\(Fmt.krw(value))원")
                 .font(.system(.subheadline, design: .rounded).weight(.bold))
                 .foregroundStyle(tint)
+        }
+    }
+}
+
+// MARK: - 매도 원칙 한눈에
+
+// 상태 칩 — 팔 때(빨강) · 목표가(초록) · 준비/근처(주황) · 지켜보는 중(회색).
+struct SellSignalChip: View {
+    let signal: SellWatch.Signal
+    var body: some View {
+        Text(signal.label)
+            .font(.caption2.weight(.bold))
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .foregroundStyle(tint)
+            .background(tint.opacity(0.14), in: Capsule())
+    }
+    private var tint: Color {
+        switch signal {
+        case .stopHit: return Theme.negative
+        case .targetHit: return Theme.positive
+        case .nearStop, .nearTarget: return .orange
+        case .holding: return Theme.textSecond
+        }
+    }
+}
+
+// 고점에서 얼마나 빠졌는지를 기준선까지의 막대로 — 끝에 닿으면 팔 때.
+struct DrawdownBar: View {
+    let drawdown: Double     // 0.06
+    let limit: Double        // 0.10
+    var body: some View {
+        let p = limit > 0 ? min(drawdown / limit, 1) : 0
+        let tint: Color = p >= 1 ? Theme.negative : (p >= 0.7 ? .orange : Theme.textSecond.opacity(0.6))
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Theme.textSecond.opacity(0.15))
+                Capsule().fill(tint)
+                    .frame(width: max(geo.size.height, geo.size.width * p))
+                    .opacity(p > 0 ? 1 : 0)
+            }
+        }
+        .frame(height: 6)
+    }
+}
+
+// 매도 원칙을 정한 종목 한 줄 — 대시보드 카드와 전체 목록이 같이 쓴다.
+struct SellSignalRow: View {
+    let asset: Asset
+    let status: SellWatch.Status
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
+                Text(asset.name)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                    .lineLimit(1)
+                SellSignalChip(signal: status.signal)
+                Spacer(minLength: 4)
+                Text("\(Fmt.krw(status.price))원")
+                    .font(.system(.caption, design: .rounded).weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                    .monospacedDigit()
+            }
+            if status.floor != nil {
+                DrawdownBar(drawdown: status.drawdown, limit: asset.trailingStopPct / 100)
+            }
+            Text(detail)
+                .font(.caption2)
+                .foregroundStyle(Theme.textSecond)
+                .lineLimit(2)
+        }
+    }
+
+    private var detail: String {
+        var parts: [String] = []
+        if let floor = status.floor {
+            let dd = Fmt.trimNumber((status.drawdown * 1000).rounded() / 10)
+            switch status.signal {
+            case .stopHit:
+                parts.append("고점 \(Fmt.krw(status.peak))원에서 \(dd)% 빠져 기준(−\(Fmt.trimNumber(asset.trailingStopPct))%)을 넘었어요. 정한 대로 파세요")
+            default:
+                let room = Fmt.trimNumber(((status.roomToFloor ?? 0) * 1000).rounded() / 10)
+                parts.append("고점 대비 −\(dd)% · \(room)% 더 빠지면 팔 때(\(Fmt.krw(floor))원)")
+            }
+        }
+        if let target = status.target {
+            if status.signal == .targetHit {
+                parts.append("살 때 정한 목표가 \(Fmt.krw(target))원에 닿았어요")
+            } else {
+                let up = Fmt.trimNumber(((status.toTarget ?? 0) * 1000).rounded() / 10)
+                parts.append("목표가 \(Fmt.krw(target))원까지 +\(up)%")
+            }
+        }
+        return parts.joined(separator: " · ")
+    }
+}
+
+// 매도 원칙 전체 — 급한 순서로. 누르면 그 종목의 원칙을 고친다.
+struct SellSignalsView: View {
+    @Query(sort: \Asset.sortOrder) private var assets: [Asset]
+    @State private var editing: Asset?
+
+    private var watched: [(Asset, SellWatch.Status)] {
+        assets.compactMap { a in SellWatch.status(a).map { (a, $0) } }
+            .sorted { l, r in
+                l.1.signal != r.1.signal ? l.1.signal < r.1.signal
+                    : (l.1.roomToFloor ?? 1) < (r.1.roomToFloor ?? 1)
+            }
+    }
+    private var unwatchable: [Asset] { assets.filter(SellWatch.isUnwatchable) }
+
+    var body: some View {
+        List {
+            Section {
+                ForEach(watched, id: \.0.key) { a, st in
+                    Button { editing = a } label: { SellSignalRow(asset: a, status: st) }
+                        .buttonStyle(.plain)
+                        .listRowBackground(Theme.surface)
+                }
+            } header: {
+                Text("지켜보는 종목 \(watched.count)개")
+            } footer: {
+                Text("앱을 열 때와 가끔 백그라운드에서 시세를 확인해요. 실시간은 아니니 알림을 받으면 증권사 앱에서 지금 가격을 다시 보고 파세요. 오를 땐 알리지 않고 고점만 따라 올라가요.")
+            }
+            if !unwatchable.isEmpty {
+                Section {
+                    ForEach(unwatchable, id: \.key) { a in
+                        Button { editing = a } label: {
+                            HStack {
+                                Text(a.name).foregroundStyle(Theme.textPrimary)
+                                Spacer()
+                                Text(a.symbol.isEmpty ? "종목 코드 없음" : "자동 시세 꺼짐")
+                                    .font(.caption)
+                                    .foregroundStyle(Theme.textSecond)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .listRowBackground(Theme.surface)
+                    }
+                } header: {
+                    Text("시세를 몰라 지켜보지 못하는 종목")
+                } footer: {
+                    Text("종목 코드를 넣고 자동 시세를 켜면 원칙대로 알려 드려요.")
+                }
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(Theme.bg.ignoresSafeArea())
+        .navigationTitle("매도 원칙")
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $editing) { a in
+            AssetEditor(asset: a, nextSortOrder: assets.count)
+        }
+        .overlay {
+            if watched.isEmpty && unwatchable.isEmpty {
+                ContentUnavailableView("지켜보는 종목이 없어요",
+                                       systemImage: "bell.slash",
+                                       description: Text("주식·펀드·코인을 열어 ‘팔 원칙’을 정하면 여기에 모여요."))
+            }
         }
     }
 }

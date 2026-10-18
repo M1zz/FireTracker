@@ -108,8 +108,65 @@ enum PriceService {
 
     // MARK: - 국내 주식 (Yahoo Finance, 키 불필요) → (KRW 단가, 종목명)
     // 6자리 코드에 .KS(코스피)·.KQ(코스닥)를 차례로 붙여 조회한다. KRW로 바로 옴.
+    /// 국내 종목코드 — 2023년부터 새 ETF 등은 '0167A0' 처럼 영문이 섞인 6자리다.
+    static func krCode(_ s: String) -> String {
+        s.uppercased().filter { $0.isASCII && ($0.isNumber || $0.isLetter) }
+    }
+
+    // MARK: - 이름으로 종목 찾기 (네이버 증권 자동완성, 키 불필요)
+
+    /// 종목명으로 찾은 후보. 국내(KRW)·미국(USD)만 — 앱이 시세를 받을 수 있는 시장.
+    struct SymbolCandidate: Hashable, Identifiable {
+        let code: String       // 국내 6자리 · 미국 티커
+        let name: String       // 네이버의 한글 이름 — 잘린 이름을 이걸로 채운다
+        let market: String     // KOSPI · KOSDAQ · NYSE · NASDAQ …
+        let isUS: Bool
+        var id: String { (isUS ? "US:" : "KR:") + code }
+        var currency: String { isUS ? "USD" : "KRW" }
+    }
+
+    static func searchSymbols(_ query: String) async -> [SymbolCandidate] {
+        let q = query.trimmingCharacters(in: .whitespaces)
+        guard q.count >= 2 || q.allSatisfy(\.isASCII),
+              var comps = URLComponents(string: "https://ac.stock.naver.com/ac") else { return [] }
+        comps.queryItems = [URLQueryItem(name: "q", value: q), URLQueryItem(name: "target", value: "stock")]
+        guard let url = comps.url,
+              let obj = try? await json(url, headers: ["User-Agent": "Mozilla/5.0"]) as? [String: Any],
+              let items = obj["items"] as? [[String: Any]] else { return [] }
+        return items.compactMap { it in
+            guard let code = it["code"] as? String, let name = it["name"] as? String,
+                  let nation = it["nationCode"] as? String, nation == "KOR" || nation == "USA" else { return nil }
+            return SymbolCandidate(code: code, name: name,
+                                   market: (it["typeCode"] as? String) ?? "", isUS: nation == "USA")
+        }
+    }
+
+    /// 후보 중 고를 것 — 이름이 똑같으면 그것, 아니면 이름이 그렇게 시작하는 것.
+    /// 시작하는 후보가 여럿이면 첫째를 고르되 '애매함'으로 알린다(잘린 이름일 때 흔함).
+    /// 잘린 이름(truncated)이면 '똑같은 이름·티커'를 믿지 않는다 — 'SOL'(잘린 ETF 이름)이
+    /// 미국 티커 SOL 에 붙는 일을 막는다.
+    static func bestSymbol(for query: String, in cands: [SymbolCandidate],
+                           truncated: Bool = false) -> (pick: SymbolCandidate?, ambiguous: Bool) {
+        func norm(_ s: String) -> String { s.lowercased().filter { !$0.isWhitespace && $0 != "." && $0 != "…" } }
+        let q = norm(query)
+        guard !q.isEmpty else { return (nil, false) }
+        if !truncated, let exact = cands.first(where: { norm($0.name) == q || norm($0.code) == q }) { return (exact, false) }
+        let prefixed = cands.filter { norm($0.name).hasPrefix(q) }
+        if prefixed.count == 1 { return (prefixed[0], false) }
+        if let first = prefixed.first { return (first, true) }
+        return (cands.first, cands.first != nil)
+    }
+
+    /// 국내 종목 현재가 — 네이버. 여러 후보를 한꺼번에 볼 때 쓴다(Yahoo 는 몰아서 부르면 막힌다).
+    static func naverKRPrice(code: String) async -> Double? {
+        guard let url = URL(string: "https://m.stock.naver.com/api/stock/\(krCode(code))/basic"),
+              let obj = try? await json(url, headers: ["User-Agent": "Mozilla/5.0"]) as? [String: Any],
+              let text = obj["closePrice"] as? String else { return nil }
+        return Double(text.replacingOccurrences(of: ",", with: ""))
+    }
+
     static func yahooKRStock(code: String) async throws -> (price: Double, name: String) {
-        let iscd = code.filter { $0.isNumber }
+        let iscd = krCode(code)
         guard iscd.count == 6 else { throw PriceError.message("종목코드 6자리를 입력하세요 (예: 005930)") }
         for suffix in [".KS", ".KQ"] {
             guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/\(iscd)\(suffix)?interval=1d&range=1d") else { continue }
@@ -174,7 +231,7 @@ enum PriceService {
             let d = try await yahooAnnualDividend(yahooSymbol: sym.uppercased())
             return d > 0 ? d * (try await usdToKrw()) : 0
         } else {
-            let code = sym.filter { $0.isNumber }
+            let code = krCode(sym)
             for suffix in [".KS", ".KQ"] {
                 if let d = try? await yahooAnnualDividend(yahooSymbol: code + suffix), d > 0 { return d }
             }
@@ -212,7 +269,7 @@ enum PriceService {
     // MARK: - 국내 주식 (한국투자증권 KIS, 키 필요) → KRW per share
     static func krStockUnitKRW(code: String, appKey: String, appSecret: String) async throws -> Double {
         guard !appKey.isEmpty, !appSecret.isEmpty else { throw PriceError.missingKey("한국투자증권(국내주식)") }
-        let iscd = code.filter { $0.isNumber }
+        let iscd = krCode(code)
         guard iscd.count == 6 else { throw PriceError.message("종목코드 6자리를 입력하세요 (예: 005930)") }
 
         let token = try await KISTokenStore.shared.token(appKey: appKey, appSecret: appSecret)

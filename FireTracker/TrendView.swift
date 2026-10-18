@@ -116,7 +116,7 @@ struct TrendView: View {
                         }
                     }
                 }
-                .padding(20)
+                .padding(.horizontal, Theme.gutter).padding(.vertical, 16)
             }
             .scrollIndicators(.hidden)
             .background(Theme.bg.ignoresSafeArea())

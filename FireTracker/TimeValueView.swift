@@ -40,6 +40,9 @@ struct TimeSimSection: View {
 
     @State private var buys: [TimeBuy] = []
     @State private var loaded = false
+    @State private var showInfo = false
+    @State private var showBuys = false
+    @State private var leverID = ""
 
     // MARK: 모델
 
@@ -171,24 +174,84 @@ struct TimeSimSection: View {
 
     // MARK: 본문
 
+    // 결과 중심 한 화면 — r vs g 곡선이 화면을 채우고, 값은 아래 패널에서 바꾼다.
+    // 시급 세 가지·1시간의 값·결론 같은 설명은 [해석·저장], 시간 사는 지출 목록은 따로 띄운다.
     var body: some View {
-        VStack(spacing: 20) {
-            wageCard
-            densityCard
-            assetWageCard
-            crossoverCard
-            oneHourCard
-            conclusionCard
+        VStack(alignment: .leading, spacing: 10) {
+            SimResultHeader(title: shortHeadline,
+                            icon: g0 > annualReturn ? "arrow.up.forward" : "leaf.fill",
+                            tint: g0 > annualReturn ? Theme.accent : Theme.positive) { showInfo = true }
 
-            CalcSaveRow(
-                kind: .time,
-                headline: "한계 시급 \(tvWon(marginalWage)) · 하루 밀도 ×\(String(format: "%.2f", density))",
-                detail: "회계적 시급 \(tvWon(accountingWage)) · FIRE 시급 \(tvWon(fireWage)) · 주 \(Int(hoursPerWeek))시간"
-                    + (boughtHours > 0 ? " · 순증 \(tvHours(netGain))" : "")
-            )
+            HStack(alignment: .top, spacing: 10) {
+                tvStat("한계 시급", tvWon(marginalWage), sub: "추가 1시간의 값", tint: Theme.accent)
+                tvStat("FIRE 시급", tvWon(fireWage), sub: "자산이 버는 시급", tint: Theme.positive)
+            }
+
+            crossoverChart
+                .frame(minHeight: 140, maxHeight: .infinity)
+            crossoverLegend
+
+            SimLeverPanel(levers: levers, selection: $leverID) {
+                SimPanelButton(title: "시간 사는 지출", icon: "cart") { showBuys = true }
+            } footer: {
+                Text("지금 1시간을 팔면 \(horizon)년 뒤 \(tvHours(usableBoughtBack))으로 돌아와요"
+                     + (boughtHours > 0 ? " · 하루 순증 \(netGain >= 0 ? "+" : "−")\(tvHours(abs(netGain)))" : ""))
+                    .font(.caption2)
+                    .foregroundStyle(usableBoughtBack < 1 ? Theme.negative : Theme.textSecond)
+            }
+        }
+        .simResultCard()
+        .sheet(isPresented: $showInfo) {
+            SimSheet(title: "해석·저장") {
+                wageCard
+                crossoverCard
+                oneHourCard
+                assetWageCard
+                conclusionCard
+                CalcSaveRow(
+                    kind: .time,
+                    headline: "한계 시급 \(tvWon(marginalWage)) · 하루 밀도 ×\(String(format: "%.2f", density))",
+                    detail: "회계적 시급 \(tvWon(accountingWage)) · FIRE 시급 \(tvWon(fireWage)) · 주 \(Int(hoursPerWeek))시간"
+                        + (boughtHours > 0 ? " · 순증 \(tvHours(netGain))" : "")
+                )
+                simDisclaimer
+            }
+        }
+        .sheet(isPresented: $showBuys) {
+            SimSheet(title: "하루의 밀도") { densityCard }
         }
         .onAppear(perform: load)
         .onChange(of: buys) { _, _ in save() }
+    }
+
+    private var shortHeadline: String {
+        if g0 > annualReturn {
+            if let x = crossoverYear, x <= 40 {
+                return "지금은 시급에 투자할 때 · 전환점 \(String(format: "%.0f", x))년 뒤"
+            }
+            return "지금은 시급에 투자할 때"
+        }
+        return "저장이 유리한 구간 — 전환점을 지났어요"
+    }
+
+    // 조작 패널 — 예전 카드마다 흩어져 있던 입력칸을 한곳에.
+    private var levers: [SimLever] {
+        let income = Binding<Double>(get: { monthlyIncome },
+                                     set: { netMonthly = String(Int($0.rounded())) })
+        let marginal = Binding<Double>(get: { marginalWage },
+                                       set: { marginalText = String(Int($0.rounded())) })
+        return [
+            SimLever(id: "세후 월소득", value: income, range: SimLever.fit(0...20_000_000, income.wrappedValue),
+                     step: 100_000, text: "월 \(tvWon(monthlyIncome))", unit: 10_000, unitLabel: "만원"),
+            .count("주 투입시간", $weeklyHours, 10...100, prefix: "주 ", suffix: "시간"),
+            SimLever(id: "한계 시급", value: marginal, range: SimLever.fit(0...300_000, marginal.wrappedValue),
+                     step: 1_000, text: tvWon(marginalWage), unitLabel: "원"),
+            .percent("자산수익률 r", $returnPct, 0...15, step: 0.5),
+            .percent("시급성장률 g", $growthPct, 0...30, step: 0.5),
+            .percent("성장 둔화", $decayPct, 0...30, step: 1, prefix: "", suffix: "%/년"),
+            .count("몇 년 뒤", $horizonText, 1...50, suffix: "년 뒤"),
+            .percent("체력 할인", $lifePct, 0...5, step: 0.1, prefix: "", suffix: "%/년"),
+        ]
     }
 
     // MARK: 1 — 시급 세 가지
@@ -222,28 +285,16 @@ struct TimeSimSection: View {
                 .foregroundStyle(Theme.textSecond)
                 .fixedSize(horizontal: false, vertical: true)
 
-            VStack(spacing: 10) {
-                tvRow("세후 월소득", $netMonthly, suffix: "원", money: true,
-                      placeholder: latestWageRecord.map { Fmt.won($0.monthly) } ?? "0")
+            VStack(alignment: .leading, spacing: 6) {
                 Text(incomeSourceNote)
-                    .font(.caption2)
                     .foregroundStyle(latestWageRecord != nil && tvNum(netMonthly) <= 0
                                      ? Theme.accent : Theme.textSecond)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .fixedSize(horizontal: false, vertical: true)
-                tvRow("주 실제 투입시간", $weeklyHours, suffix: "시간", decimal: true)
-                Text("근무만이 아니라 출퇴근·준비·업무 생각까지 넣어야 정직한 시급이 나와요.")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.textSecond)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                tvRow("한계 시급", $marginalText, suffix: "원", money: true,
-                      placeholder: Fmt.won(accountingWage))
-                Text("지금 1시간을 더 넣으면 실제로 얼마가 더 들어오나요? 비워 두면 회계적 시급을 그대로 써요.")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.textSecond)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                tvRow("자산 기대수익률", $returnPct, suffix: "%", decimal: true)
+                Text("주 투입시간엔 근무만이 아니라 출퇴근·준비·업무 생각까지 넣어야 정직한 시급이 나와요.")
+                Text("한계 시급은 지금 1시간을 더 넣으면 실제로 더 들어오는 돈이에요. 따로 정하지 않으면 회계적 시급을 그대로 써요.")
             }
+            .font(.caption2)
+            .foregroundStyle(Theme.textSecond)
+            .fixedSize(horizontal: false, vertical: true)
 
             Divider().overlay(Theme.hairline)
 
@@ -577,18 +628,10 @@ struct TimeSimSection: View {
                 .foregroundStyle(Theme.textSecond)
                 .fixedSize(horizontal: false, vertical: true)
 
-            VStack(spacing: 10) {
-                tvRow("자산수익률 r", $returnPct, suffix: "%", decimal: true)
-                tvRow("시급성장률 g (지금)", $growthPct, suffix: "%", decimal: true)
-                tvRow("성장 둔화", $decayPct, suffix: "%/년", decimal: true)
-            }
             Text("성장 둔화는 시급이 오르는 속도가 해마다 얼마씩 꺾이는지예요. 8%면 올해 9%였던 성장률이 내년엔 8.3%가 돼요.")
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
                 .fixedSize(horizontal: false, vertical: true)
-
-            crossoverChart
-            crossoverLegend
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(crossoverHeadline)
@@ -652,7 +695,6 @@ struct TimeSimSection: View {
                 }
             }
         }
-        .frame(height: 180)
     }
 
     // 범례는 차트 위에 얹지 않고 아래 한 줄로 — 곡선·주석과 겹치지 않게.
@@ -696,10 +738,6 @@ struct TimeSimSection: View {
                 .foregroundStyle(Theme.textSecond)
                 .fixedSize(horizontal: false, vertical: true)
 
-            VStack(spacing: 10) {
-                tvRow("몇 년 뒤로 볼까요", $horizonText, suffix: "년", decimal: false)
-                tvRow("체력·생존 할인", $lifePct, suffix: "%/년", decimal: true)
-            }
             Text("나이가 들수록 같은 1시간을 실제로 쓸 수 있는 몫이 줄어요. 그만큼 미래 시간을 깎아서 봐요.")
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)

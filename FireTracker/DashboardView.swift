@@ -111,9 +111,6 @@ struct DashboardView: View {
     // 자주 안 보는 카드(필요 자금·지표·빚 vs 투자)는 접어 둔다. 펼친 상태는 기억.
     @AppStorage("dashboard.showMore") private var showMore = false
     @State private var totalMode: AssetTotalMode = .gross
-    // 변화 카드 우측 상단 토글: 켜면 총자산 변화량을 롤링 숫자로 강조.
-    @State private var showTotalChange = false
-    @State private var animatedTotalChange: Double = 0
     // 0→1로 올라가며 막대가 0선에서 자라나게 하는 진행도.
     @State private var barAnim: Double = 0
     private let milestoneSetupTip = MilestoneSetupTip()
@@ -358,32 +355,43 @@ struct DashboardView: View {
                     onboarding
                 } else {
                     ScrollView {
-                        VStack(spacing: 20) {
-                            // 앱 이름이 걸린 질문의 답이 맨 위에 온다.
-                            // (예전엔 열두 번째 카드라 스크롤 끝까지 가야 보였다.)
+                        // 첫 화면은 한 질문("언제 그만둘 수 있나")을 위에서 아래로 푼다:
+                        // 답 → 이번 주에 어떻게 바뀌었나 → 어떻게 앞당기나 → 내 돈의 상태.
+                        // 그 밖의 지표는 '자세히 보기' 안에 둔다.
+                        VStack(alignment: .leading, spacing: 20) {
                             fireHeroCard
-                            // 목표를 안 정했으면 기본값(9억) 막대를 내 목표처럼 보이지 않는다.
-                            if settings.goalConfigured { goalProgressCard }
-                            welcomeCard
                             // 4단계 — 1년 넘게 만족점을 안 봤으면 다시 비춰보라고 묻는다.
                             TipView(reReflectTip)
                                 .tipBackground(Theme.surface)
-                            cashFlowCard
-                            liquidityCard
-                            signalCard
-                            NavigationLink {
-                                ProjectionDetailView(startingAssets: projectionBase,
-                                                     basisLabel: hasDebt ? "순자산" : nil,
-                                                     monthlyTakeHome: settings.monthlyTakeHome,
-                                                     plannedExpense: settings.plannedMonthlyExpense,
-                                                     monthlySavings: plannedSavings,
-                                                     monthlyPassiveIncome: monthlyPassiveIncome)
-                            } label: {
-                                projectionCard
+
+                            if !sellWatched.isEmpty || !sellUnwatchable.isEmpty {
+                                section("매도 원칙", "정해 둔 대로 팔 때가 됐나") { sellCard }
                             }
-                            .buttonStyle(.plain)
+                            section("이번 주", "지난 기록과 비교해 무엇이 달라졌나") {
+                                welcomeCard
+                            }
+                            if showLevers { leverCard }
+                            section("내 돈의 상태", "자산이 벌어 오는 돈과 바로 쓸 수 있는 돈") {
+                                cashFlowCard
+                                liquidityCard
+                            }
+
                             showMoreButton
                             if showMore {
+                                signalCard
+                                // 목표를 안 정했으면 기본값(9억) 막대를 내 목표처럼 보이지 않는다.
+                                if settings.goalConfigured { goalProgressCard }
+                                NavigationLink {
+                                    ProjectionDetailView(startingAssets: projectionBase,
+                                                         basisLabel: hasDebt ? "순자산" : nil,
+                                                         monthlyTakeHome: settings.monthlyTakeHome,
+                                                         plannedExpense: settings.plannedMonthlyExpense,
+                                                         monthlySavings: plannedSavings,
+                                                         monthlyPassiveIncome: monthlyPassiveIncome)
+                                } label: {
+                                    projectionCard
+                                }
+                                .buttonStyle(.plain)
                                 capitalNeededCard
                                 metricsGrid
                                 NavigationLink {
@@ -395,7 +403,7 @@ struct DashboardView: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(20)
+                        .padding(.horizontal, Theme.gutter).padding(.vertical, 16)
                     }
                     .scrollIndicators(.hidden)
                 }
@@ -466,7 +474,7 @@ struct DashboardView: View {
                         .foregroundStyle(Theme.textSecond)
                 }
             }
-            .padding(20)
+            .padding(.horizontal, Theme.gutter).padding(.vertical, 16)
         }
         .scrollIndicators(.hidden)
     }
@@ -602,9 +610,8 @@ struct DashboardView: View {
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
                         Spacer()
-                        Text(signedKRW(it.displayDelta) + "원")
-                            .font(.system(.caption, design: .rounded).weight(.semibold))
-                            .foregroundStyle(deltaColor(it))
+                        DeltaChip(text: Fmt.krw(abs(it.displayDelta)) + "원",
+                                  up: it.displayDelta > 0, tint: deltaColor(it))
                     }
                 }
                 if items.count > 6 {
@@ -617,37 +624,25 @@ struct DashboardView: View {
         }
     }
 
-    // 우측 상단 토글: OFF = 자산·부채 두 막대, ON = 순자산 한 막대.
-    // 차트를 통째로 갈아끼우지 않고 같은 막대가 변한 값만큼 늘어나고 줄어든다 —
-    // 토글 ON이면 자산 막대가 순자산 길이로 변하고 부채 막대는 그 끝점으로
-    // 수렴(폭 0)해, 둘이 합쳐져 순자산이 되는 과정이 그대로 보인다.
+    // 자산·부채 증감 두 막대. 순자산 변화는 카드 머리의 해석 줄이 말한다.
     private var netWorthChangeChart: some View {
         let c = lastRecordChange
         let assetsBar = AssetChangeBar(label: "자산", value: c?.assets ?? 0,  positiveIsGood: true)
         let debtBar   = AssetChangeBar(label: "부채",   value: -(c?.debt ?? 0), positiveIsGood: true)
-        let totalBar  = AssetChangeBar(label: "순자산", value: lastNetChange ?? 0, positiveIsGood: true)
         // 부채가 자산과 같은 부호면 자산 끝에서 이어 그려 겹치지 않게 한다.
-        let debtStart = assetsBar.value * debtBar.value > 0 ? assetsBar.value : 0
-        let aEnd   = showTotalChange ? totalBar.value : assetsBar.value
-        // 토글 ON: 부채 막대는 가운데 0선으로 모여들며 사라진다.
-        let dStart = showTotalChange ? 0 : debtStart
-        let dEnd   = showTotalChange ? 0 : debtStart + debtBar.value
-        // 두 모드를 오가도 축이 튀지 않도록 공통 도메인.
-        let bound = max([assetsBar.value, debtStart + debtBar.value, totalBar.value]
-            .map { abs($0) }.max() ?? 0, 1) * 1.2
+        let dStart = assetsBar.value * debtBar.value > 0 ? assetsBar.value : 0
+        let dEnd   = dStart + debtBar.value
+        let bound = max([assetsBar.value, dEnd].map { abs($0) }.max() ?? 0, 1) * 1.2
         return VStack(alignment: .leading, spacing: 10) {
-            if !showTotalChange {
-                HStack(spacing: 14) {
-                    changeLegendItem(debtBar)
-                    changeLegendItem(assetsBar)
-                    Spacer()
-                }
-                .transition(.opacity)
+            HStack(spacing: 14) {
+                changeLegendItem(assetsBar)
+                changeLegendItem(debtBar)
+                Spacer()
             }
             Chart {
-                BarMark(xStart: .value("시작", 0.0), xEnd: .value("변화", aEnd * barAnim),
+                BarMark(xStart: .value("시작", 0.0), xEnd: .value("변화", assetsBar.value * barAnim),
                         y: .value("항목", "변화"), height: .ratio(0.5))
-                    .foregroundStyle(changeBarColor(showTotalChange ? totalBar : assetsBar))
+                    .foregroundStyle(changeBarColor(assetsBar))
                     .cornerRadius(4)
                 BarMark(xStart: .value("시작", dStart * barAnim), xEnd: .value("변화", dEnd * barAnim),
                         y: .value("항목", "변화"), height: .ratio(0.5))
@@ -658,7 +653,6 @@ struct DashboardView: View {
             .chartYAxis(.hidden)
             .chartXAxis { AxisMarks { _ in AxisGridLine().foregroundStyle(Theme.hairline) } }
             .frame(height: 80)
-            .animation(.smooth(duration: 0.55), value: showTotalChange)
         }
     }
 
@@ -710,49 +704,20 @@ struct DashboardView: View {
 
     private var welcomeCard: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // 카드 타이틀 + 우측 상단 '순자산 변화' 토글.
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("지난주 대비 변화")
-                        .font(.headline)
-                        .foregroundStyle(Theme.textPrimary)
-                    if let last = changeBaseline {
-                        Text(recordDateText(last.date) + " 기록 대비")
-                            .font(.caption2)
-                            .foregroundStyle(Theme.textSecond)
-                    }
-                }
-                Spacer()
-                if changeBaseline != nil {
-                    HStack(spacing: 6) {
-                        Text("순자산 변화")
-                            .font(.caption2)
-                            .foregroundStyle(Theme.textSecond)
-                        Toggle("", isOn: $showTotalChange.animation(.smooth(duration: 0.55)))
-                            .labelsHidden()
-                            .tint(Theme.accent)
-                    }
-                }
-            }
-
-            // 토글 ON: 순자산 변화량을 자산·부채 라벨과 같은 크기로(롤링 애니메이션 유지).
-            if showTotalChange, changeBaseline != nil {
+            // 숫자보다 뜻을 먼저 — 이번 변화가 퇴사일을 얼마나 움직였는지 한 줄로.
+            if let last = changeBaseline {
                 let net = lastNetChange ?? 0
-                HStack(spacing: 4) {
-                    Text("순자산")
-                        .font(.caption2)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(changeHeadline)
+                        .font(.title2.weight(.bold))
+                        .foregroundStyle(net < 0 ? Theme.negative : (net > 0 ? Theme.positive : Theme.textPrimary))
+                    Text("순자산 \(signedKRW(net))원 · \(recordDateText(last.date)) 기록 대비")
+                        .font(.caption)
                         .foregroundStyle(Theme.textSecond)
-                    Text(signedKRW(animatedTotalChange))
-                        .font(.system(.caption2, design: .rounded).weight(.semibold))
-                        .foregroundStyle(net < 0 ? Theme.negative : (net > 0 ? Theme.positive : Theme.textSecond))
-                        .contentTransition(.numericText())
-                        .monospacedDigit()
-                    Spacer()
                 }
-                .transition(.opacity)
             }
 
-            // 지난주 대비 변화만 — 순자산·부채·총자산 증감을 가로 막대로.
+            // 자산·부채 증감을 가로 막대로, 그 아래 항목별 목록.
             if changeBaseline != nil {
                 netWorthChangeChart
                 changeBreakdownList
@@ -769,15 +734,6 @@ struct DashboardView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear { animateChangeBars() }
-        .onChange(of: showTotalChange) { _, on in
-            // 막대는 0에서 다시 그리지 않는다 — 길이가 변한 값만큼 늘고 줄며 모핑.
-            if on {
-                animatedTotalChange = 0
-                withAnimation(.easeOut(duration: 0.8)) { animatedTotalChange = lastNetChange ?? 0 }
-            } else {
-                animatedTotalChange = 0
-            }
-        }
         .cardStyle()
     }
 
@@ -825,8 +781,11 @@ struct DashboardView: View {
             }
             .buttonStyle(.plain)
         } else {
-            NavigationLink { GoalSettingsView() } label: { fireHeroContent }
-                .buttonStyle(.plain)
+            VStack(spacing: 10) {
+                NavigationLink { GoalSettingsView() } label: { fireHeroContent }
+                    .buttonStyle(.plain)
+                fireStatTiles
+            }
         }
     }
 
@@ -867,17 +826,6 @@ struct DashboardView: View {
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
             }
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule().fill(Theme.hairline)
-                    Capsule().fill(o.progress >= 1 ? Theme.positive : Theme.accent)
-                        .frame(width: max(2, geo.size.width * min(o.progress, 1)))
-                }
-            }
-            .frame(height: 8)
-            Text("목표 \(Fmt.krw(o.fireNumber))원의 \(Fmt.percent(min(o.progress, 1), fraction: 0)) · 월 저축 \(Fmt.krw(o.monthlySavings))원 · 연 \(Fmt.percent(o.annualReturn, fraction: 0)) 가정")
-                .font(.caption)
-                .foregroundStyle(Theme.textSecond)
             if o.monthlySavings <= 0 {
                 Label("월 저축을 넣으면 훨씬 정확해져요", systemImage: "exclamationmark.circle")
                     .font(.caption.weight(.semibold))
@@ -888,6 +836,44 @@ struct DashboardView: View {
         .cardStyle()
     }
 
+    // 답 카드 아래 숫자 타일 두 장 — 왼쪽은 남은 금액, 오른쪽은 달성률과 칸 게이지.
+    private var fireStatTiles: some View {
+        let o = outlook
+        return HStack(spacing: 10) {
+            VStack(spacing: 2) {
+                Text(o.progress >= 1 ? "0원" : "\(Fmt.krw(max(0, o.fireNumber - o.netWorth)))원")
+                    .font(.system(.title3, design: .rounded, weight: .bold))
+                    .foregroundStyle(Theme.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                Text("남은 금액")
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 10)
+            .frame(width: 128)
+            .tileStyle()
+
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(Fmt.percent(min(o.progress, 1), fraction: 0))
+                        .font(.system(.title3, design: .rounded, weight: .bold))
+                        .foregroundStyle(Theme.textPrimary)
+                    Spacer(minLength: 4)
+                    Text("목표 달성")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                }
+                GoalBar(progress: o.progress)
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity)
+            .tileStyle()
+        }
+    }
+
     private func retireGapText(_ o: FireOutlook) -> String? {
         let target = settings.targetRetireAge
         guard target > 0, let at = o.ageAtFire else { return nil }
@@ -896,12 +882,200 @@ struct DashboardView: View {
         return "목표 \(target)세에 딱 맞아요"
     }
 
+    // --- 매도 원칙 ---
+    // 고점에서 빠지면 팔기 · 목표가에 팔기. 알림만으론 놓치기 쉬워 첫 화면에도 띄운다.
+    private var sellWatched: [(Asset, SellWatch.Status)] {
+        assets.compactMap { a in SellWatch.status(a).map { (a, $0) } }
+            .sorted { l, r in
+                l.1.signal != r.1.signal ? l.1.signal < r.1.signal
+                    : (l.1.roomToFloor ?? 1) < (r.1.roomToFloor ?? 1)
+            }
+    }
+    private var sellUnwatchable: [Asset] { assets.filter(SellWatch.isUnwatchable) }
+
+    private var sellCard: some View {
+        let list = sellWatched
+        let alerts = list.filter { $0.1.signal != .holding }
+        return NavigationLink { SellSignalsView() } label: {
+            VStack(alignment: .leading, spacing: 12) {
+                if alerts.isEmpty {
+                    HStack(spacing: 10) {
+                        Image(systemName: "checkmark.shield.fill")
+                            .font(.title3)
+                            .foregroundStyle(Theme.positive)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(list.isEmpty ? "지켜볼 수 있는 종목이 없어요" : "\(list.count)개 종목 모두 원칙 안쪽이에요")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.textPrimary)
+                            Text(list.isEmpty ? "종목 코드와 자동 시세를 켜면 알려 드려요"
+                                 : "지금은 팔 이유가 없어요. 닿으면 알림으로 알려 드려요")
+                                .font(.caption)
+                                .foregroundStyle(Theme.textSecond)
+                        }
+                    }
+                    // 그래도 기준선에 가장 가까운 종목 하나는 보여 준다.
+                    if let first = list.first {
+                        SellSignalRow(asset: first.0, status: first.1)
+                    }
+                } else {
+                    ForEach(alerts.prefix(3), id: \.0.key) { a, st in
+                        SellSignalRow(asset: a, status: st)
+                    }
+                    if alerts.count > 3 {
+                        Text("외 \(alerts.count - 3)개")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                }
+                HStack {
+                    if !sellUnwatchable.isEmpty {
+                        Text("시세를 몰라 못 보는 종목 \(sellUnwatchable.count)개")
+                            .font(.caption2)
+                            .foregroundStyle(.orange)
+                    }
+                    Spacer()
+                    Text("전체 보기")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.textSecond)
+                    Image(systemName: "chevron.right")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.textSecond)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .cardStyle()
+        }
+        .buttonStyle(.plain)
+    }
+
+    // 첫 화면의 묶음 머리 — 이 묶음이 무엇에 답하는지 한 줄로 밝힌다.
+    private func section<Content: View>(_ title: String, _ purpose: String,
+                                        @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                Text(purpose)
+                    .font(.caption)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            .padding(.horizontal, 8)
+            .padding(.top, 6)
+            content()
+        }
+    }
+
+    // --- 이번 주 변화의 뜻 ---
+    // 이번 순자산 변화가 퇴사일을 며칠 움직였나. 지금 자산이 한 달에 불어나는 속도
+    // (월 저축 + 기대 수익)로 나눠 '며칠치 전진인가'로 옮긴다 — 근사치라 '약'을 붙인다.
+    private var fireShiftDays: Int? {
+        guard settings.goalConfigured, let net = lastNetChange, net != 0 else { return nil }
+        let o = outlook
+        guard o.progress < 1 else { return nil }
+        let monthlyGrowth = o.monthlySavings + max(0, o.netWorth) * o.annualReturn / 12
+        guard monthlyGrowth > 0 else { return nil }
+        return Int((net / monthlyGrowth * 30.4).rounded())
+    }
+
+    private var changeHeadline: String {
+        let net = lastNetChange ?? 0
+        if let d = fireShiftDays, d != 0 {
+            return "퇴사일이 약 \(durationText(days: abs(d))) \(d > 0 ? "당겨졌어요" : "밀렸어요")"
+        }
+        if net > 0 { return "자산이 늘었어요" }
+        if net < 0 { return "자산이 줄었어요" }
+        return "지난 기록과 같아요"
+    }
+
+    private func durationText(days: Int) -> String {
+        if days >= 365 { return Fmt.years(Double(days) / 365) }
+        if days >= 60 { return "\(days / 30)개월" }
+        return "\(days)일"
+    }
+
+    // --- 앞당기려면: 두 가지 손잡이 ---
+    // 목표를 정했고 아직 닿지 않았을 때만 — 이미 닿았거나 기본값이면 의미가 없다.
+    private var showLevers: Bool { settings.goalConfigured && outlook.progress < 1 }
+    private static let leverStep: Double = 100_000
+
+    // 월 저축이나 은퇴 후 생활비를 바꿨을 때의 퇴사까지 남은 기간(년).
+    private func yearsIf(savingsDelta: Double = 0, expenseDelta: Double = 0) -> Double? {
+        let swr = settings.safeWithdrawalRate
+        guard swr > 0 else { return nil }
+        let goal = max(0, settings.targetAnnualExpense + expenseDelta * 12) / swr
+        return FireEngine.yearsToFire(currentNetWorth: netWorth, fireNumber: goal,
+                                      monthlySavings: settings.plannedMonthlySavings + savingsDelta,
+                                      annualReturn: settings.expectedAnnualReturn)
+    }
+
+    private func leverEffect(_ changed: Double?) -> String {
+        guard let changed else { return "아직 정해지지 않아요" }
+        guard let now = outlook.years else { return "\(Fmt.years(changed)) 뒤로 생겨요" }
+        let months = Int(((now - changed) * 12).rounded())
+        if months <= 0 { return "1개월 안쪽으로 빨라져요" }
+        return "\(Fmt.years(Double(months) / 12)) 빨라져요"
+    }
+
+    private var leverCard: some View {
+        let step = Self.leverStep
+        return NavigationLink { GoalSettingsView() } label: {
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("퇴사일을 앞당기려면")
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(Theme.textPrimary)
+                    Text("하나만 골라 바꿔 보고, 다음 기록에서 확인하세요.")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.textSecond)
+                }
+                leverRow(symbol: "tray.and.arrow.down",
+                         title: "매달 \(Fmt.krw(step))원 더 모으기",
+                         effect: leverEffect(yearsIf(savingsDelta: step)))
+                Divider().overlay(Theme.hairline).padding(.leading, 40)
+                leverRow(symbol: "cart",
+                         title: "은퇴 후 생활비 월 \(Fmt.krw(step))원 줄이기",
+                         effect: leverEffect(yearsIf(expenseDelta: -step)))
+                Divider().overlay(Theme.hairline)
+                HStack(spacing: 2) {
+                    Text("월 저축 \(Fmt.krw(outlook.monthlySavings))원 · 연 수익 \(Fmt.percent(outlook.annualReturn, fraction: 0)) 가정")
+                        .foregroundStyle(Theme.textSecond)
+                    Spacer()
+                    Text("내 목표 고치기")
+                    Image(systemName: "chevron.right")
+                }
+                .font(.caption)
+                .foregroundStyle(Theme.positive)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .cardStyle()
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func leverRow(symbol: String, title: String, effect: String) -> some View {
+        HStack(alignment: .top, spacing: 14) {
+            Image(systemName: symbol)
+                .font(.system(size: 19, weight: .medium))
+                .foregroundStyle(Theme.positive)
+                .frame(width: 26)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                Text("퇴사일이 " + effect)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.textSecond)
+            }
+        }
+    }
+
     private var showMoreButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.25)) { showMore.toggle() }
         } label: {
             HStack {
-                Text(showMore ? "접기" : "더 보기 · 필요 자금 · 지표 · 빚 갚기 vs 투자")
+                Text(showMore ? "접기" : "자세히 보기 · 신호등 · 연말 예상 · 빚 갚기 vs 투자")
                     .font(.subheadline)
                 Spacer()
                 Image(systemName: showMore ? "chevron.up" : "chevron.down")
@@ -1334,6 +1508,46 @@ struct DashboardView: View {
     }
 }
 
+// 목표까지 얼마나 왔는지 — 굵은 막대 하나로 채운다.
+struct GoalBar: View {
+    let progress: Double
+    var body: some View {
+        let p = min(max(progress, 0), 1)
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Theme.textSecond.opacity(0.18))
+                Capsule()
+                    .fill(Theme.positive)
+                    .frame(width: max(geo.size.height, geo.size.width * p))
+                    .opacity(p > 0 ? 1 : 0)
+            }
+        }
+        .frame(height: 10)
+        .accessibilityElement()
+        .accessibilityLabel("목표 달성 \(Int(p * 100))퍼센트")
+    }
+}
+
+// 증감 금액 칩 — 화살표 + 금액을 옅은 색 바탕 캡슐에.
+struct DeltaChip: View {
+    let text: String
+    let up: Bool
+    let tint: Color
+    var body: some View {
+        HStack(spacing: 3) {
+            Image(systemName: up ? "arrow.up" : "arrow.down")
+                .font(.system(size: 10, weight: .bold))
+            Text(text)
+                .font(.system(.caption, design: .rounded).weight(.semibold))
+                .monospacedDigit()
+        }
+        .foregroundStyle(tint)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(tint.opacity(0.12), in: Capsule())
+    }
+}
+
 struct MetricCard: View {
     let title: String
     let value: String
@@ -1530,7 +1744,7 @@ struct WhatIfView: View {
                         .cardStyle()
                 }
             }
-            .padding(20)
+            .padding(.horizontal, Theme.gutter).padding(.vertical, 16)
         }
         .scrollIndicators(.hidden)
         .background(Theme.bg.ignoresSafeArea())

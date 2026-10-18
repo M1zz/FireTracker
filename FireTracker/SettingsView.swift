@@ -39,6 +39,15 @@ struct SettingsView: View {
     /// 켜져 있을 때만 사용 통계 진입점이 보인다. 키 이름은 LeeoKit 과 같아야 한다.
     @AppStorage("dev.masterMode") private var isMasterMode = false
 
+    // 퇴사각 프로
+    @EnvironmentObject private var pro: LeeoStore
+    @State private var showPaywall = false
+    /// 개발자 모드 전용 — 권한 강제("unlock"/"lock"), 빈 값이면 정상 판정.
+    @AppStorage(ProAccess.overrideKey) private var proOverride = ""
+    @AppStorage(SyncManager.enabledKey) private var syncEnabled = false
+    @State private var syncStatus = ""
+    @State private var syncPaywall: ProFeature?
+
     var body: some View {
         NavigationStack {
             settingsForm
@@ -47,6 +56,8 @@ struct SettingsView: View {
 
     private var settingsForm: some View {
         Form {
+            proSection
+            syncSection
             displaySection
             securitySection
             reminderSection
@@ -97,6 +108,121 @@ struct SettingsView: View {
             onRestore: { performRestore() },
             onCancelRestore: { pendingRestoreURL = nil }
         ))
+    }
+
+    // MARK: - iCloud 동기화
+
+    private var syncSection: some View {
+        Section {
+            Toggle(isOn: Binding(
+                get: { syncEnabled },
+                set: { on in
+                    if on && !pro.gate.allows(ProFeature.iCloudSync.rawValue) {
+                        AppUsage.log(.paywallShown)
+                        syncPaywall = .iCloudSync
+                        return
+                    }
+                    syncEnabled = on
+                }
+            )) {
+                HStack(spacing: 6) {
+                    Label("iCloud 동기화", systemImage: "icloud.fill")
+                        .font(.body)
+                    if !pro.gate.allows(ProFeature.iCloudSync.rawValue) {
+                        Image(systemName: "lock.fill")
+                            .font(.body)
+                            .foregroundStyle(Theme.accent)
+                    }
+                }
+            }
+            .tint(Theme.accent)
+            .disabled(demoActive)
+            if syncEnabled != SyncManager.activeThisLaunch {
+                Text(syncEnabled
+                     ? "앱을 완전히 닫았다가 다시 열면 동기화가 시작돼요."
+                     : "앱을 완전히 닫았다가 다시 열면 이 기기에만 저장돼요.")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+            } else if SyncManager.activeThisLaunch {
+                Text(syncStatus)
+                    .font(.body)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            if syncEnabled, !SyncManager.activeThisLaunch,
+               UserDefaults.standard.string(forKey: SyncManager.lastErrorKey) != nil {
+                Text("지난번에 iCloud에 연결하지 못해 이 기기 저장소로 열었어요. iCloud 로그인을 확인해 주세요.")
+                    .font(.body)
+                    .foregroundStyle(Theme.negative)
+            }
+        } header: {
+            Text("동기화")
+        } footer: {
+            Text("같은 Apple 계정의 아이폰·아이패드에서 자산과 기록을 함께 봐요. 처음 켤 때는 데이터가 있는 기기에서 먼저 켜고, 다른 기기는 비어 있는 상태에서 켜야 자산이 두 벌로 생기지 않아요.")
+                .font(.body)
+        }
+        .task { syncStatus = await SyncManager.accountStatusText() }
+        .proPaywall($syncPaywall)
+    }
+
+    // MARK: - 퇴사각 프로
+
+    private var proSection: some View {
+        Section {
+            if pro.hasPro {
+                Label(pro.isGrandfathered
+                      ? LocalizedStringKey("퇴사각 프로 · 먼저 써 주신 분께 드리는 혜택")
+                      : LocalizedStringKey("퇴사각 프로를 쓰고 있어요"),
+                      systemImage: "checkmark.seal.fill")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Theme.positive)
+            } else {
+                Button { showPaywall = true } label: {
+                    HStack {
+                        Label("퇴사각 프로", systemImage: "flame.fill")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Theme.textPrimary)
+                        Spacer()
+                        Text("알아보기")
+                            .font(.body)
+                            .foregroundStyle(Theme.accent)
+                    }
+                }
+                Button {
+                    Task {
+                        await pro.restore()
+                        show(message: pro.hasPro
+                             ? String(localized: "구매를 복원했어요.")
+                             : String(localized: "복원할 구매가 없어요."))
+                    }
+                } label: {
+                    Text("구매 복원")
+                        .font(.body)
+                        .foregroundStyle(Theme.accent)
+                }
+                .disabled(pro.isRestoring)
+            }
+            if isMasterMode {
+                Picker("권한 강제 (개발자)", selection: $proOverride) {
+                    Text("정상").tag("")
+                    Text("해제").tag("unlock")
+                    Text("잠금").tag("lock")
+                }
+                .font(.body)
+                .onChange(of: proOverride) { _, _ in pro.objectWillChange.send() }
+            }
+        } header: {
+            Text("퇴사각 프로")
+        } footer: {
+            if !pro.hasPro {
+                Text("한 번 결제로 평생 쓰는 상품이에요. 자산 기록과 퇴사 계산의 핵심 기능은 계속 무료예요.")
+                    .font(.body)
+                    .foregroundStyle(Theme.textSecond)
+            }
+        }
+        .sheet(isPresented: $showPaywall) {
+            ProPaywallView(lead: nil)
+                .environmentObject(pro)
+        }
     }
 
     @ViewBuilder
@@ -253,6 +379,13 @@ struct SettingsView: View {
                 Label("데모 데이터", systemImage: "sparkles")
             }
             .tint(Theme.accent)
+            // 데모는 실데이터를 지웠다 되돌리는 방식이라 동기화 중엔 다른 기기까지 지워진다.
+            .disabled(SyncManager.activeThisLaunch && !demoActive)
+            if SyncManager.activeThisLaunch && !demoActive {
+                Text("iCloud 동기화 중에는 데모 데이터를 켤 수 없어요.")
+                    .font(.body)
+                    .foregroundStyle(Theme.textSecond)
+            }
         } header: {
             Text("둘러보기")
         } footer: {

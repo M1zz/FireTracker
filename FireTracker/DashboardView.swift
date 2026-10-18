@@ -145,11 +145,11 @@ struct DashboardView: View {
     // 현재 자산(+) 합과 부채 합 — 총자산 막대(순자산 + 부채)에 쓰임.
     private var grossAssetsNow: Double {
         if hasCatalog { return assets.filter { !$0.isDebt }.reduce(0) { $0 + max(0, $1.netValue) } }
-        return latest?.entries.filter { $0.amount > 0 }.reduce(0) { $0 + $1.amount } ?? 0
+        return latest?.entryList.filter { $0.amount > 0 }.reduce(0) { $0 + $1.amount } ?? 0
     }
     private var debtTotalNow: Double {
         if hasCatalog { return abs(assets.filter { $0.isDebt }.reduce(0) { $0 + min(0, $1.netValue) }) }
-        return abs(latest?.entries.filter { $0.amount < 0 }.reduce(0) { $0 + $1.amount } ?? 0)
+        return abs(latest?.entryList.filter { $0.amount < 0 }.reduce(0) { $0 + $1.amount } ?? 0)
     }
 
     // Spendable (liquid) net worth — the figure that actually matters for FIRE.
@@ -246,7 +246,7 @@ struct DashboardView: View {
     private var lastRecordChange: (assets: Double, debt: Double)? {
         guard let last = changeBaseline else { return nil }
         // 자산별 키가 없는 옛 기록은 항목 귀속이 불가 → 순변화만.
-        guard last.entries.contains(where: { $0.catalogKey != nil }) else {
+        guard last.entryList.contains(where: { $0.catalogKey != nil }) else {
             return (assets: netWorth - last.netWorth, debt: 0)
         }
         let items = assetDeltas
@@ -364,6 +364,9 @@ struct DashboardView: View {
                             TipView(reReflectTip)
                                 .tipBackground(Theme.surface)
 
+                            // 언제 그만둘 수 있나(무료) 다음 질문 — 그날 가면 어떤 삶인가(프로).
+                            FuturePreviewEntry(compact: true)
+                                .cardStyle()
                             if !sellWatched.isEmpty || !sellUnwatchable.isEmpty {
                                 section("매도 원칙", "정해 둔 대로 팔 때가 됐나") { sellCard }
                             }
@@ -379,6 +382,8 @@ struct DashboardView: View {
                             showMoreButton
                             if showMore {
                                 signalCard
+                                // 내 돈이 아니라 시장의 분위기 — 공포에 사고 탐욕에 팔 때 보는 나침반.
+                                MarketMoodCard()
                                 // 목표를 안 정했으면 기본값(9억) 막대를 내 목표처럼 보이지 않는다.
                                 if settings.goalConfigured { goalProgressCard }
                                 NavigationLink {
@@ -556,10 +561,10 @@ struct DashboardView: View {
     private var assetDeltas: [AssetDelta] {
         guard let last = changeBaseline else { return [] }
         // 자산별 키가 없는 옛 기록은 항목별 귀속 불가 → 목록을 비운다.
-        guard last.entries.contains(where: { $0.catalogKey != nil }) else { return [] }
+        guard last.entryList.contains(where: { $0.catalogKey != nil }) else { return [] }
         var prior: [UUID: Double] = [:]
         var meta: [UUID: (name: String, isDebt: Bool)] = [:]
-        for e in last.entries {
+        for e in last.entryList {
             guard let k = e.catalogKey else { continue }
             prior[k, default: 0] += e.amount
             meta[k] = (e.name, e.assetClass == .debt)
@@ -1075,7 +1080,7 @@ struct DashboardView: View {
             withAnimation(.easeInOut(duration: 0.25)) { showMore.toggle() }
         } label: {
             HStack {
-                Text(showMore ? "접기" : "자세히 보기 · 신호등 · 연말 예상 · 빚 갚기 vs 투자")
+                Text(showMore ? "접기" : "자세히 보기 · 신호등 · 시장 분위기 · 연말 예상")
                     .font(.subheadline)
                 Spacer()
                 Image(systemName: showMore ? "chevron.up" : "chevron.down")
@@ -1689,15 +1694,18 @@ struct ProjectionDetailView: View {
 struct WhatIfView: View {
     let defaultAmount: Double
     let defaultInvestRatePct: Double
+    /// 계산 탭 안에 들어갈 때 — 자체 스크롤·배경·제목 없이 카드들만.
+    var embedded = false
 
     @State private var amountText: String
     @State private var debtRatePct: Double   // 부채 연이자율 (%)
     @State private var investRatePct: Double // 투자 연수익률 (%)
     @State private var years: Double = 5
 
-    init(defaultAmount: Double, defaultInvestRatePct: Double) {
+    init(defaultAmount: Double, defaultInvestRatePct: Double, embedded: Bool = false) {
         self.defaultAmount = defaultAmount
         self.defaultInvestRatePct = defaultInvestRatePct
+        self.embedded = embedded
         _amountText = State(initialValue: defaultAmount > 0 ? String(Int(defaultAmount)) : "")
         _debtRatePct = State(initialValue: 5)
         _investRatePct = State(initialValue: defaultInvestRatePct > 0 ? defaultInvestRatePct : 7)
@@ -1716,7 +1724,22 @@ struct WhatIfView: View {
     private var yearsInt: Int { Int(years) }
 
     var body: some View {
-        ScrollView {
+        if embedded {
+            content
+        } else {
+            ScrollView {
+                content
+                    .padding(.horizontal, Theme.gutter).padding(.vertical, 16)
+            }
+            .scrollIndicators(.hidden)
+            .background(Theme.bg.ignoresSafeArea())
+            .navigationTitle("만약에")
+            .navigationBarTitleDisplayMode(.inline)
+            .keyboardDismissable()
+        }
+    }
+
+    private var content: some View {
             VStack(spacing: 20) {
                 inputCard
                 if amount > 0 {
@@ -1744,13 +1767,6 @@ struct WhatIfView: View {
                         .cardStyle()
                 }
             }
-            .padding(.horizontal, Theme.gutter).padding(.vertical, 16)
-        }
-        .scrollIndicators(.hidden)
-        .background(Theme.bg.ignoresSafeArea())
-        .navigationTitle("만약에")
-        .navigationBarTitleDisplayMode(.inline)
-        .keyboardDismissable()
     }
 
     private var inputCard: some View {

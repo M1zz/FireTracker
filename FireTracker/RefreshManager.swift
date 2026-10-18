@@ -152,7 +152,7 @@ final class RefreshManager: ObservableObject {
                 snap.monthlyExpense = settings.plannedMonthlyExpense
                 snap.monthlyNetSavings = settings.plannedNetSavings
             }
-            for e in snap.entries { context.delete(e) }
+            for e in snap.entryList { context.delete(e) }
             snap.entries = []
             appendEntries(to: snap, assets: assets)
         } else {
@@ -188,7 +188,7 @@ final class RefreshManager: ObservableObject {
                 lastPriced: asset.lastPriced
             )
             entry.snapshot = snap
-            snap.entries.append(entry)
+            snap.entries = snap.entryList + [entry]
         }
     }
 

@@ -73,6 +73,8 @@ struct TrendView: View {
                 VStack(spacing: 20) {
                     // 1) 남은 길 — 목표까지 얼마나 왔고 얼마를 더 모아야 하나.
                     JourneyGoalsSection()
+                    // 석 달 단위로 돌아보기 — 퇴사 날짜가 실제로 움직였나.
+                    QuarterlyReportEntry()
 
                     // 2) 무엇을 보고 있는지 먼저 고르고, 그 다음 차트.
                     //    (예전엔 세그먼트가 차트 아래에 있어서 뭘 보는지 모른 채 스크롤했다.)
@@ -240,7 +242,7 @@ struct TrendView: View {
 
     private func assetMap(_ s: NetWorthSnapshot) -> [String: AssetSlice] {
         var m: [String: AssetSlice] = [:]
-        for e in s.entries {
+        for e in s.entryList {
             let key = e.name.isEmpty ? e.assetClass.label : e.name
             m[key] = AssetSlice(amount: (m[key]?.amount ?? 0) + e.amount,
                                 isDebt: e.assetClass == .debt, assetClass: e.assetClass)

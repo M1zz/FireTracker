@@ -167,7 +167,7 @@ enum DemoData {
                                        unitPriceKRW: a.unitPriceKRW, lastPriced: a.lastPriced)
                 context.insert(entry)
                 entry.snapshot = snap
-                snap.entries.append(entry)
+                snap.entries = snap.entryList + [entry]
             }
             snap.monthlyPassiveIncome = passive
             snap.liquidNetWorth = liquid

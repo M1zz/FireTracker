@@ -42,6 +42,13 @@
 		EE2A5530FE505FB7D9D0AFE6 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2FA7A0D0A2BBD3B0B029E932 /* LeeoKit */; };
 		F3808CA53E41CA8046B99C85 /* FireTrackerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE0290DA1AF556C4A919F /* FireTrackerWidget.swift */; };
 		FC4D1E8C3D32AC434F856C74 /* AppSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F01026AA4EAE9DE99CC7ED /* AppSupport.swift */; };
+		A1000030 /* ProAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000030 /* ProAccess.swift */; };
+		A1000031 /* ProPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000031 /* ProPaywallView.swift */; };
+		A1000033 /* FutureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000033 /* FutureEngine.swift */; };
+		A1000034 /* FuturePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000034 /* FuturePreviewView.swift */; };
+		A1000035 /* QuarterlyReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000035 /* QuarterlyReport.swift */; };
+		A1000037 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000037 /* SyncManager.swift */; };
+		A1000040 /* MarketMoodCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000040 /* MarketMoodCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +112,13 @@
 		CE7662F98AA42C069C0106DF /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF6903DE5951883DA07B7400 /* QuickStartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuickStartView.swift; sourceTree = "<group>"; };
 		D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireSummary.swift; sourceTree = "<group>"; };
+		B1000030 /* ProAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProAccess.swift; sourceTree = "<group>"; };
+		B1000031 /* ProPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProPaywallView.swift; sourceTree = "<group>"; };
+		B1000033 /* FutureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureEngine.swift; sourceTree = "<group>"; };
+		B1000034 /* FuturePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuturePreviewView.swift; sourceTree = "<group>"; };
+		B1000035 /* QuarterlyReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuarterlyReport.swift; sourceTree = "<group>"; };
+		B1000037 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
+		B1000040 /* MarketMoodCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketMoodCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +193,13 @@
 				B100000B /* PriceService.swift */,
 				B100000C /* AssetsView.swift */,
 				B100000D /* SimulatorView.swift */,
+				B1000030 /* ProAccess.swift */,
+				B1000031 /* ProPaywallView.swift */,
+				B1000033 /* FutureEngine.swift */,
+				B1000034 /* FuturePreviewView.swift */,
+				B1000035 /* QuarterlyReport.swift */,
+				B1000037 /* SyncManager.swift */,
+				B1000040 /* MarketMoodCard.swift */,
 				B1000020 /* CPIData.swift */,
 				B1000021 /* TimeValueView.swift */,
 				B100000E /* RefreshManager.swift */,
@@ -335,6 +356,13 @@
 				A100000B /* PriceService.swift in Sources */,
 				A100000C /* AssetsView.swift in Sources */,
 				A100000D /* SimulatorView.swift in Sources */,
+				A1000030 /* ProAccess.swift in Sources */,
+				A1000031 /* ProPaywallView.swift in Sources */,
+				A1000033 /* FutureEngine.swift in Sources */,
+				A1000034 /* FuturePreviewView.swift in Sources */,
+				A1000035 /* QuarterlyReport.swift in Sources */,
+				A1000037 /* SyncManager.swift in Sources */,
+				A1000040 /* MarketMoodCard.swift in Sources */,
 				A1000020 /* CPIData.swift in Sources */,
 				A1000021 /* TimeValueView.swift in Sources */,
 				A100000E /* RefreshManager.swift in Sources */,

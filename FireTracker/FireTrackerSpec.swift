@@ -13,8 +13,14 @@ enum FireTrackerSpec: LeeoAppSpec {
         supportURL: URL(string: "https://m1zz.github.io/FireTracker/")!
     )
 
-    /// 수익모델 — 전 기능 무료. 페이월도, 잠긴 기능도 없다.
-    static let monetization = LeeoMonetization.free
+    /// 수익모델 — 부분 유료(퇴사각 프로, 1회 구매·평생).
+    /// "언제 퇴사할 수 있나"에 답하는 기능은 전부 무료이고, 무엇을 잠그는지는 ProFeature 가 정한다.
+    static let monetization = LeeoMonetization.freemium(
+        LeeoPurchaseConfig(
+            productIDs: ["com.devkoan.FireTracker.pro"],
+            gate: ProFeature.gatePolicy
+        )
+    )
 
     /// 분석 싱크 — LeeoKit 이 스스로 남기는 이벤트(만족도·리뷰 프롬프트 등)를
     /// 앱이 쓰는 사용 통계와 **같은 스트림**으로 흘려보낸다. 외부 분석 SDK는 없다.

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import LeeoKit
 
 // MARK: - 계산기 아래에 붙는 저장 줄
 
@@ -21,9 +22,16 @@ struct CalcSaveRow: View {
     @Environment(\.modelContext) private var context
     @Query private var saved: [SavedCalc]
 
+    @EnvironmentObject private var pro: LeeoStore
     @State private var naming = false
     @State private var name = ""
     @State private var justSaved = false
+    @State private var paywallFeature: ProFeature?
+
+    /// 무료 저장 한도에 대한 판정 — 저장한 계산 전체 개수 기준.
+    private var saveDecision: LeeoGateDecision {
+        pro.gate.evaluate(ProFeature.unlimitedSaves.rawValue, current: saved.count)
+    }
 
     private var mine: [SavedCalc] {
         saved.filter { $0.kindRaw == kind.rawValue }
@@ -48,8 +56,13 @@ struct CalcSaveRow: View {
                 }
                 Spacer(minLength: 8)
                 Button {
-                    name = defaultName
-                    naming = true
+                    if saveDecision.isAllowed {
+                        name = defaultName
+                        naming = true
+                    } else {
+                        AppUsage.log(.paywallShown)
+                        paywallFeature = .unlimitedSaves
+                    }
                 } label: {
                     Text("저장")
                         .font(.subheadline.weight(.semibold))
@@ -65,12 +78,21 @@ struct CalcSaveRow: View {
 
             if !mine.isEmpty {
                 Text("이 계산으로 저장해 둔 것 \(mine.count)개")
-                    .font(.caption2)
+                    .font(.body)
                     .foregroundStyle(Theme.textSecond)
+            }
+            if let left = pro.gate.remaining(ProFeature.unlimitedSaves.rawValue, current: saved.count) {
+                Label(left > 0
+                      ? LocalizedStringKey("무료로 \(left)개 더 저장할 수 있어요")
+                      : LocalizedStringKey("무료 저장 \(ProFeature.freeSaveLimit)개를 다 썼어요. 프로는 제한 없이 저장해요."),
+                      systemImage: left > 0 ? "bookmark" : "lock.fill")
+                    .font(.body)
+                    .foregroundStyle(left > 0 ? Theme.textSecond : Theme.accent)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
+        .proPaywall($paywallFeature)
         .alert("계산에 이름 붙이기", isPresented: $naming) {
             TextField("이름", text: $name)
             Button("저장", action: save)

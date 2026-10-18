@@ -53,7 +53,7 @@ struct SnapshotsView: View {
                 Text(Fmt.date(s.date))
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
-                Text("저축률 \(Fmt.percent(s.savingsRate, fraction: 0)) · 자산 \(s.entries.count)개"
+                Text("저축률 \(Fmt.percent(s.savingsRate, fraction: 0)) · 자산 \(s.entryList.count)개"
                      + (s.note.isEmpty ? "" : " · \(s.note)"))
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
@@ -136,7 +136,7 @@ struct SnapshotDetail: View {
                         .font(.caption)
                 }
                 Section("저장된 자산 내역") {
-                    ForEach(snapshot.entries.sorted { $0.amount > $1.amount }) { entry in
+                    ForEach(snapshot.entryList.sorted { $0.amount > $1.amount }) { entry in
                         HStack(spacing: 10) {
                             Circle()
                                 .fill(Color(hexCode: entry.assetClass.colorHex))
@@ -155,7 +155,7 @@ struct SnapshotDetail: View {
                                 .foregroundStyle(Theme.textSecond)
                         }
                     }
-                    if snapshot.entries.isEmpty {
+                    if snapshot.entryList.isEmpty {
                         Text("저장된 자산이 없습니다.")
                             .font(.caption)
                             .foregroundStyle(Theme.textSecond)

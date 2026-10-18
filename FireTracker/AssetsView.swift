@@ -4,6 +4,7 @@ import Charts
 import TipKit
 import PhotosUI
 import Vision
+import LeeoKit
 
 // Occasional nudge to capture assets the user may have forgotten.
 struct OtherAssetsTip: Tip {
@@ -23,6 +24,8 @@ struct AssetsView: View {
     @Query private var settingsList: [FireSettings]
     @Query private var snapshots: [NetWorthSnapshot]
     @EnvironmentObject private var refresher: RefreshManager
+    @EnvironmentObject private var pro: LeeoStore
+    @State private var paywallFeature: ProFeature?
     @State private var editing: Asset?
     // 스와이프로 지우기 전에 한 번 묻는다 — 지운 자산은 되돌릴 수 없다.
     @State private var pendingDelete: [Asset] = []
@@ -155,8 +158,17 @@ struct AssetsView: View {
                         Button { startNewAsset() } label: {
                             Label("직접 추가", systemImage: "square.and.pencil")
                         }
-                        Button { showingImport = true } label: {
-                            Label("캡처로 가져오기·맞추기", systemImage: "text.viewfinder")
+                        Button {
+                            if pro.gate.allows(ProFeature.screenshotImport.rawValue) {
+                                showingImport = true
+                            } else {
+                                AppUsage.log(.paywallShown)
+                                paywallFeature = .screenshotImport
+                            }
+                        } label: {
+                            Label("캡처로 가져오기·맞추기",
+                                  systemImage: pro.gate.allows(ProFeature.screenshotImport.rawValue)
+                                      ? "text.viewfinder" : "lock.fill")
                         }
                     } label: { Image(systemName: "plus") }
                 }
@@ -203,6 +215,7 @@ struct AssetsView: View {
                 ScreenshotImportView(startingSortOrder: assets.count)
             }
             .sheet(isPresented: $showingBreakdown) { NetWorthBreakdownView() }
+            .proPaywall($paywallFeature)
         }
     }
 
@@ -864,7 +877,7 @@ struct AssetsView: View {
                         .lineLimit(1)
                 }
                 // 세부 종목 한 줄 요약 — 예) 삼성전자 1,000만 · 애플 2,000만
-                if !asset.details.isEmpty {
+                if !asset.detailList.isEmpty {
                     Text(asset.sortedDetails.map { "\($0.name) \(Fmt.krw($0.amount))" }
                         .joined(separator: " · "))
                         .font(.caption2)
@@ -1100,6 +1113,8 @@ struct AssetEditor: View {
     @Query private var settingsList: [FireSettings]
     @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
     @Query(sort: \Asset.sortOrder) private var allAssets: [Asset]
+    @EnvironmentObject private var pro: LeeoStore
+    @State private var paywallFeature: ProFeature?
 
     let asset: Asset?
     let nextSortOrder: Int
@@ -1212,7 +1227,7 @@ struct AssetEditor: View {
     private var history: [(date: Date, amount: Double)] {
         guard let key = asset?.key else { return [] }
         return snapshots.compactMap { snap -> (Date, Double)? in
-            guard let entry = snap.entries.first(where: { $0.catalogKey == key }) else { return nil }
+            guard let entry = snap.entryList.first(where: { $0.catalogKey == key }) else { return nil }
             return (snap.date, entry.amount)
         }
         .sorted { $0.0 < $1.0 }
@@ -1439,6 +1454,7 @@ struct AssetEditor: View {
             .scrollIndicators(.hidden)
             .keyboardDismissable()
             .task { await autofillDividendIfNeeded() }
+            .proPaywall($paywallFeature)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) { Button("저장") { save() } }
@@ -1742,7 +1758,23 @@ struct AssetEditor: View {
                     }
             }
 
-            if showTradeForm {
+            if !pro.gate.allows(ProFeature.tradeLedger.rawValue) {
+                // 무료 — 이미 적힌 거래는 보고 지울 수 있지만, 새 거래는 프로에서.
+                Button {
+                    AppUsage.log(.paywallShown)
+                    paywallFeature = .tradeLedger
+                } label: {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Label("매매 원장은 프로 기능이에요", systemImage: "lock.fill")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Theme.accent)
+                        Text(ProFeature.tradeLedger.leeoDetail)
+                            .font(.body)
+                            .foregroundStyle(Theme.textSecond)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            } else if showTradeForm {
                 tradeForm
             } else {
                 Button {
@@ -1756,7 +1788,8 @@ struct AssetEditor: View {
             }
 
             // 원장을 처음 쓰기 시작할 때 — 이미 들고 있던 몫을 한 줄로 옮겨 담는다.
-            if !hasTrades, openingQuantity > 0 || openingCost > 0 {
+            if pro.gate.allows(ProFeature.tradeLedger.rawValue),
+               !hasTrades, openingQuantity > 0 || openingCost > 0 {
                 Button {
                     seedOpeningTrade()
                 } label: {
@@ -2409,7 +2442,7 @@ struct AssetEditor: View {
             drafts.append(DetailDraft(name: newDetailName.trimmingCharacters(in: .whitespaces),
                                       amount: newDetailAmount))
         }
-        for old in target.details { context.delete(old) }
+        for old in target.detailList { context.delete(old) }
         target.details = drafts.enumerated().compactMap { idx, d in
             let nm = d.name.trimmingCharacters(in: .whitespaces)
             let amt = Double(d.amount) ?? 0
@@ -2417,12 +2450,12 @@ struct AssetEditor: View {
             return AssetDetail(name: nm, amount: amt, sortOrder: idx)
         }
         // 매매 원장 동기화 — 세부 종목과 같은 방식으로 통째로 다시 쓴다.
-        for old in target.trades { context.delete(old) }
+        for old in target.tradeList { context.delete(old) }
         target.trades = supportsBuyMore ? tradeRows.map { r in
             AssetTrade(date: r.date, kind: r.kind, quantity: r.quantity,
                        unitPrice: r.unitPrice, amount: r.amount)
         } : []
-        if !target.trades.isEmpty { AppUsage.log(.tradeLogged) }
+        if !target.tradeList.isEmpty { AppUsage.log(.tradeLogged) }
         // 원장이 있으면 보유 수량·투자 원금은 원장을 재생한 값이 진실.
         if supportsBuyMore, !tradeRows.isEmpty {
             let l = TradeLedger.replay(tradeRows)
@@ -3187,7 +3220,7 @@ struct ScreenshotImportView: View {
             }
             target.amount = value
             // 매매 원장이 있으면 원금·수량은 원장이 진실 — 건드리지 않는다.
-            let ledgerOwned = !target.trades.isEmpty
+            let ledgerOwned = target.hasTrades
             if !ledgerOwned, let cost, cost > 0 { target.costBasis = cost.rounded() }
 
             // 새로 찾은 코드를 붙이고 시세를 켠다.

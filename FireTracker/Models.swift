@@ -134,12 +134,12 @@ enum AssetClass: String, Codable, CaseIterable, Identifiable {
 // itemized asset entries so per-class breakdowns survive over time.
 @Model
 final class NetWorthSnapshot {
-    var date: Date
-    var note: String
+    var date: Date = Date.now
+    var note: String = ""
     // Total monthly income recorded for this period (for savings-rate calc).
-    var monthlyIncome: Double
+    var monthlyIncome: Double = 0
     // Total monthly expense recorded for this period.
-    var monthlyExpense: Double
+    var monthlyExpense: Double = 0
     // Net monthly savings (수입 − 지출) entered directly, for when the user
     // doesn't want to split income/expense. Used when both of those are 0.
     var monthlyNetSavings: Double = 0
@@ -150,8 +150,9 @@ final class NetWorthSnapshot {
     // could actually use, excluding locked assets (실거주 부동산·전세보증금 등).
     var liquidNetWorth: Double = 0
 
+    // CloudKit 동기화는 관계가 optional 이어야 한다. 읽을 땐 `items` 로 비옵셔널하게 쓴다.
     @Relationship(deleteRule: .cascade, inverse: \AssetEntry.snapshot)
-    var entries: [AssetEntry]
+    var entries: [AssetEntry]? = []
 
     init(date: Date = .now,
          note: String = "",
@@ -171,9 +172,12 @@ final class NetWorthSnapshot {
         self.entries = entries
     }
 
+    /// 관계를 비옵셔널로 읽는 길 — CloudKit 때문에 저장 속성은 optional 이다.
+    var entryList: [AssetEntry] { entries ?? [] }
+
     // Sum of all asset entries for this snapshot.
     var netWorth: Double {
-        entries.reduce(0) { $0 + $1.amount }
+        entryList.reduce(0) { $0 + $1.amount }
     }
 
     // Savings rate for the period: (income - expense) / income.
@@ -191,7 +195,7 @@ final class NetWorthSnapshot {
 
     // Net worth grouped by asset class.
     func total(for assetClass: AssetClass) -> Double {
-        entries.filter { $0.assetClass == assetClass }
+        entryList.filter { $0.assetClass == assetClass }
             .reduce(0) { $0 + $1.amount }
     }
 }
@@ -317,20 +321,20 @@ enum RealEstateUse: String, Codable, CaseIterable, Identifiable {
 final class Asset {
     // Stable identity used to stitch this holding's value across snapshots.
     var key: UUID = UUID()
-    var name: String
-    var assetClassRaw: String
+    var name: String = ""
+    var assetClassRaw: String = AssetClass.cash.rawValue
     // User-typed category name, used when assetClass == .custom (직접 입력).
     var customLabel: String = ""
 
     // Current scale of the holding.
-    var amount: Double          // current value in KRW (source of truth)
-    var quantity: Double        // shares / coins (for auto-priced holdings)
+    var amount: Double = 0      // current value in KRW (source of truth)
+    var quantity: Double = 0    // shares / coins (for auto-priced holdings)
 
     // Auto-pricing configuration.
-    var symbol: String          // coin code / ticker / 종목코드 / 법정동코드
-    var currency: String        // "KRW" | "USD"
-    var autoPriced: Bool
-    var unitPriceKRW: Double
+    var symbol: String = ""     // coin code / ticker / 종목코드 / 법정동코드
+    var currency: String = "KRW" // "KRW" | "USD"
+    var autoPriced: Bool = false
+    var unitPriceKRW: Double = 0
     var lastPriced: Date?
 
     // --- Cash flow / yield this asset produces ---
@@ -368,18 +372,18 @@ final class Asset {
     // 목표가 알림을 보낸 목표가 — 목표가를 바꾸면 다시 켜진다.
     var targetAlertedFor: Double = 0
 
-    var sortOrder: Int
-    var createdAt: Date
+    var sortOrder: Int = 0
+    var createdAt: Date = Date.now
 
     // 세부 종목 — 카테고리 금액(예: 주식 3,000만원)을 종목별로 쪼개 할당한 내역.
     // 평가액(amount)이 진실의 원천이고, 세부 종목은 그 안의 구성을 보여준다.
     @Relationship(deleteRule: .cascade, inverse: \AssetDetail.asset)
-    var details: [AssetDetail] = []
+    var details: [AssetDetail]? = []
 
     // 매매 원장 — 언제 몇 주를 얼마에 사고팔았는지. 기록이 하나라도 있으면
     // 보유 수량(quantity)과 투자 원금(costBasis)은 이 원장을 재생해서 채운다.
     @Relationship(deleteRule: .cascade, inverse: \AssetTrade.asset)
-    var trades: [AssetTrade] = []
+    var trades: [AssetTrade]? = []
 
     init(name: String = "",
          assetClass: AssetClass = .stocks,
@@ -501,18 +505,21 @@ final class Asset {
     var gainRate: Double { hasCostBasis ? (amount - costBasis) / costBasis : 0 }
 
     // --- 세부 종목 할당 ---
-    var sortedDetails: [AssetDetail] { details.sorted { $0.sortOrder < $1.sortOrder } }
+    /// 관계를 비옵셔널로 읽는 길 — CloudKit 때문에 저장 속성은 optional 이다.
+    var detailList: [AssetDetail] { details ?? [] }
+    var tradeList: [AssetTrade] { trades ?? [] }
+    var sortedDetails: [AssetDetail] { detailList.sorted { $0.sortOrder < $1.sortOrder } }
     // 종목에 할당된 금액 합과, 평가액에서 아직 할당하지 않은 잔액.
-    var allocatedAmount: Double { details.reduce(0) { $0 + $1.amount } }
+    var allocatedAmount: Double { detailList.reduce(0) { $0 + $1.amount } }
     var unallocatedAmount: Double { amount - allocatedAmount }
 
     // --- 매매 원장 ---
     // 최근 거래가 위로 오게 — 화면 목록용.
-    var recentTrades: [AssetTrade] { trades.sorted { $0.date > $1.date } }
-    var hasTrades: Bool { !trades.isEmpty }
+    var recentTrades: [AssetTrade] { tradeList.sorted { $0.date > $1.date } }
+    var hasTrades: Bool { !tradeList.isEmpty }
     // 원장을 재생한 결과(보유 수량·투자 원금·평단·실현손익).
     var ledger: TradeLedger {
-        TradeLedger.replay(trades.map(TradeRow.init))
+        TradeLedger.replay(tradeList.map(TradeRow.init))
     }
     // 평단 — 원장이 없으면 저장된 수량·원금으로 계산한다.
     var averagePrice: Double {
@@ -618,9 +625,9 @@ struct TradeLedger {
 // 삼성전자 1,000만 · 애플 2,000만.
 @Model
 final class AssetDetail {
-    var name: String
-    var amount: Double
-    var sortOrder: Int
+    var name: String = ""
+    var amount: Double = 0
+    var sortOrder: Int = 0
     var asset: Asset?
 
     init(name: String = "", amount: Double = 0, sortOrder: Int = 0) {
@@ -633,9 +640,9 @@ final class AssetDetail {
 // One asset line item inside a snapshot.
 @Model
 final class AssetEntry {
-    var assetClassRaw: String
-    var name: String
-    var amount: Double
+    var assetClassRaw: String = AssetClass.cash.rawValue
+    var name: String = ""
+    var amount: Double = 0
     // Links back to the catalog Asset (Asset.key) for per-asset time series.
     var catalogKey: UUID?
 
@@ -702,13 +709,13 @@ enum FireGoalType: String, Codable, CaseIterable, Identifiable {
 @Model
 final class FireSettings {
     // Target annual expense in retirement (KRW).
-    var targetAnnualExpense: Double
+    var targetAnnualExpense: Double = 36_000_000
     // Safe withdrawal rate, e.g. 0.04 = 4% rule.
-    var safeWithdrawalRate: Double
+    var safeWithdrawalRate: Double = 0.04
     // Expected real annual return on invested assets.
-    var expectedAnnualReturn: Double
+    var expectedAnnualReturn: Double = 0.05
     // Currency display unit divisor: 10_000 means amounts shown in 만원.
-    var displayUnit: Double
+    var displayUnit: Double = 10_000
 
     // --- Projection (올해 말 예측) ---
     // After-tax monthly take-home (세후 월급).

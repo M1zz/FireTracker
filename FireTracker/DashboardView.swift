@@ -367,7 +367,7 @@ struct DashboardView: View {
                             // 언제 그만둘 수 있나(무료) 다음 질문 — 그날 가면 어떤 삶인가(프로).
                             FuturePreviewEntry(compact: true)
                                 .cardStyle()
-                            if !sellWatched.isEmpty || !sellUnwatchable.isEmpty {
+                            if SellWatchCard.hasContent(assets) {
                                 section("매도 원칙", "정해 둔 대로 팔 때가 됐나") { sellCard }
                             }
                             section("이번 주", "지난 기록과 비교해 무엇이 달라졌나") {
@@ -889,69 +889,7 @@ struct DashboardView: View {
 
     // --- 매도 원칙 ---
     // 고점에서 빠지면 팔기 · 목표가에 팔기. 알림만으론 놓치기 쉬워 첫 화면에도 띄운다.
-    private var sellWatched: [(Asset, SellWatch.Status)] {
-        assets.compactMap { a in SellWatch.status(a).map { (a, $0) } }
-            .sorted { l, r in
-                l.1.signal != r.1.signal ? l.1.signal < r.1.signal
-                    : (l.1.roomToFloor ?? 1) < (r.1.roomToFloor ?? 1)
-            }
-    }
-    private var sellUnwatchable: [Asset] { assets.filter(SellWatch.isUnwatchable) }
-
-    private var sellCard: some View {
-        let list = sellWatched
-        let alerts = list.filter { $0.1.signal != .holding }
-        return NavigationLink { SellSignalsView() } label: {
-            VStack(alignment: .leading, spacing: 12) {
-                if alerts.isEmpty {
-                    HStack(spacing: 10) {
-                        Image(systemName: "checkmark.shield.fill")
-                            .font(.title3)
-                            .foregroundStyle(Theme.positive)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(list.isEmpty ? "지켜볼 수 있는 종목이 없어요" : "\(list.count)개 종목 모두 원칙 안쪽이에요")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.textPrimary)
-                            Text(list.isEmpty ? "종목 코드와 자동 시세를 켜면 알려 드려요"
-                                 : "지금은 팔 이유가 없어요. 닿으면 알림으로 알려 드려요")
-                                .font(.caption)
-                                .foregroundStyle(Theme.textSecond)
-                        }
-                    }
-                    // 그래도 기준선에 가장 가까운 종목 하나는 보여 준다.
-                    if let first = list.first {
-                        SellSignalRow(asset: first.0, status: first.1)
-                    }
-                } else {
-                    ForEach(alerts.prefix(3), id: \.0.key) { a, st in
-                        SellSignalRow(asset: a, status: st)
-                    }
-                    if alerts.count > 3 {
-                        Text("외 \(alerts.count - 3)개")
-                            .font(.caption)
-                            .foregroundStyle(Theme.textSecond)
-                    }
-                }
-                HStack {
-                    if !sellUnwatchable.isEmpty {
-                        Text("시세를 몰라 못 보는 종목 \(sellUnwatchable.count)개")
-                            .font(.caption2)
-                            .foregroundStyle(.orange)
-                    }
-                    Spacer()
-                    Text("전체 보기")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.textSecond)
-                    Image(systemName: "chevron.right")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.textSecond)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .cardStyle()
-        }
-        .buttonStyle(.plain)
-    }
+    private var sellCard: some View { SellWatchCard() }
 
     // 첫 화면의 묶음 머리 — 이 묶음이 무엇에 답하는지 한 줄로 밝힌다.
     private func section<Content: View>(_ title: String, _ purpose: String,

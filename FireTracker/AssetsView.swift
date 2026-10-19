@@ -230,6 +230,14 @@ struct AssetsView: View {
                         .listRowBackground(Color.clear)
                 }
             }
+            // 1.5) 매도 원칙 — 지금 눈여겨볼 종목이 있는지 한 줄로.
+            if SellWatchCard.hasContent(assets) {
+                Section {
+                    SellWatchCard()
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                }
+            }
             // 2) 내 자산 — 종류(카테고리)별로 묶어, 접고 펼치며 종목을 관리.
             ForEach(assetGroups) { group in
                 Section {
@@ -3531,5 +3539,110 @@ struct SellSignalsView: View {
                                        description: Text("주식·펀드·코인을 열어 ‘팔 원칙’을 정하면 여기에 모여요."))
             }
         }
+    }
+}
+
+// 매도 원칙 요약 카드 — 대시보드와 자산 탭이 같이 쓴다.
+// 눈여겨볼 종목이 있으면 그 종목을, 없으면 "지금은 없어요" 를 한 줄로 먼저 말한다.
+struct SellWatchCard: View {
+    @Query(sort: \Asset.sortOrder) private var assets: [Asset]
+
+    private var watched: [(Asset, SellWatch.Status)] {
+        assets.compactMap { a in SellWatch.status(a).map { (a, $0) } }
+            .sorted { l, r in
+                l.1.signal != r.1.signal ? l.1.signal < r.1.signal
+                    : (l.1.roomToFloor ?? 1) < (r.1.roomToFloor ?? 1)
+            }
+    }
+    private var unwatchable: [Asset] { assets.filter(SellWatch.isUnwatchable) }
+    /// 원칙을 걸 수 있는데 아직 안 건 종목(주식·펀드·코인).
+    private var unruled: Int {
+        assets.filter { SellWatch.supports($0.assetClass) && $0.amount > 0
+            && $0.trailingStopPct <= 0 && $0.sellTargetPrice <= 0 }.count
+    }
+
+    /// 보여 줄 게 있을 때만 카드를 띄운다.
+    static func hasContent(_ assets: [Asset]) -> Bool {
+        assets.contains { SellWatch.supports($0.assetClass) && $0.amount > 0 }
+    }
+
+    var body: some View {
+        let list = watched
+        let alerts = list.filter { $0.1.signal != .holding }
+        NavigationLink { SellSignalsView() } label: {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 10) {
+                    Image(systemName: alerts.isEmpty ? "checkmark.shield.fill" : "exclamationmark.triangle.fill")
+                        .font(.title3)
+                        .foregroundStyle(alerts.isEmpty ? Theme.positive : .orange)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(headline(list: list, alerts: alerts))
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.textPrimary)
+                        Text(subline(list: list, alerts: alerts))
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                if alerts.isEmpty {
+                    // 그래도 기준선에 가장 가까운 종목 하나는 보여 준다.
+                    if let first = list.first {
+                        SellSignalRow(asset: first.0, status: first.1)
+                    }
+                } else {
+                    ForEach(alerts.prefix(3), id: \.0.key) { a, st in
+                        SellSignalRow(asset: a, status: st)
+                    }
+                    if alerts.count > 3 {
+                        Text("외 \(alerts.count - 3)개")
+                            .font(.caption)
+                            .foregroundStyle(Theme.textSecond)
+                    }
+                }
+                HStack {
+                    if !unwatchable.isEmpty {
+                        Text("시세를 몰라 못 보는 종목 \(unwatchable.count)개")
+                            .font(.caption2)
+                            .foregroundStyle(.orange)
+                    }
+                    Spacer()
+                    Text("전체 보기")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.textSecond)
+                    Image(systemName: "chevron.right")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.textSecond)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .cardStyle()
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func headline(list: [(Asset, SellWatch.Status)], alerts: [(Asset, SellWatch.Status)]) -> String {
+        if let top = alerts.first {
+            return alerts.count == 1
+                ? String(localized: "\(top.0.name), 눈여겨봐 주세요")
+                : String(localized: "\(alerts.count)개 종목을 눈여겨봐 주세요")
+        }
+        if list.isEmpty { return String(localized: "아직 매도 원칙을 정한 종목이 없어요") }
+        return String(localized: "지금은 매도를 눈여겨볼 종목이 없어요")
+    }
+
+    private func subline(list: [(Asset, SellWatch.Status)], alerts: [(Asset, SellWatch.Status)]) -> String {
+        if !alerts.isEmpty {
+            return alerts.contains { $0.1.signal == .stopHit || $0.1.signal == .targetHit }
+                ? String(localized: "정해 둔 가격에 닿았어요. 원칙대로 할 때예요")
+                : String(localized: "정해 둔 가격에 가까워지고 있어요")
+        }
+        if list.isEmpty {
+            return String(localized: "종목을 눌러 고점 대비 하락이나 목표가를 정하면 팔 때를 알려 드려요")
+        }
+        if unruled > 0 {
+            return String(localized: "\(list.count)개 모두 원칙 안쪽이에요 · 원칙 없는 종목 \(unruled)개")
+        }
+        return String(localized: "\(list.count)개 모두 원칙 안쪽이에요. 닿으면 알림으로 알려 드려요")
     }
 }

@@ -116,6 +116,11 @@ enum ProAccess {
     /// 1.2.0(빌드 7)까지 위젯·캡처 가져오기·계산기를 무료로 냈으므로 7.
     static let lastFreeBuild = 7
 
+    /// 앱 자체가 유료(구매형)라 지금은 페이월을 걸지 않는다 — 모든 프로 기능이 열린다.
+    /// 부분 유료화로 바꿀 때 true 로 켜면 잠금·페이월·설정의 '퇴사각 프로' 칸이 돌아온다.
+    /// (그때 첫 출시 빌드는 lastFreeBuild 보다 커야 기존 구매자가 그대로 쓴다.)
+    static let paywallEnabled = false
+
     /// 개발자 모드에서 권한을 강제하는 키. "unlock" / "lock" / 없음(정상 판정).
     static let overrideKey = "dev.proOverride"
 
@@ -131,7 +136,7 @@ enum ProAccess {
         switch UserDefaults.standard.string(forKey: overrideKey) {
         case "unlock": return true
         case "lock":   return false
-        default:       return nil
+        default:       return paywallEnabled ? nil : true
         }
     }
 

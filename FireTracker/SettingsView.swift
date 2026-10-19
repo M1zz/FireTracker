@@ -56,7 +56,10 @@ struct SettingsView: View {
 
     private var settingsForm: some View {
         Form {
-            proSection
+            // 지금은 구매형 앱이라 '퇴사각 프로' 칸을 숨긴다. 개발자 모드에선 시험용으로 보인다.
+            if ProAccess.paywallEnabled || isMasterMode {
+                proSection
+            }
             syncSection
             displaySection
             securitySection

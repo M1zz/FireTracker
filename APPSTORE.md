@@ -765,7 +765,7 @@ Nghỉ hưu sớm, tài sản ròng
 
 ### 키워드
 
-nghỉhưu,tựdotàichính,tiếtkiệm,thunhập,cổtức,tàisản,danhmục,khoảnvay,đầutư,lãikép,ngânsách
+hưu,tiết,kiệm,thu,nhập,cổ,tức,tài,sản,đầu,tư,nợ,vay,lãi,kép,tiền,quỹ,thuế,lương
 
 ### 프로모션 텍스트
 

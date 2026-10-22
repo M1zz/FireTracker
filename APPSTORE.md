@@ -854,3 +854,60 @@ Projděte všechny obrazovky na majetku smyšlené osoby; po vypnutí se vaše d
 Záznamy zůstávají v tomto zařízení a nepotřebujete účet. Všechna data můžete zálohovat do souboru a obnovit.
 
 Výpočty v aplikaci jsou orientační výsledky podle vašich údajů a nejsou investičním poradenstvím.
+
+## da
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: FIRE-beregner
+
+### 부제
+
+Tidlig pension og formue
+
+### 키워드
+
+pension,økonomisk,frihed,opsparing,formue,passiv,indkomst,udbytte,investering,gæld,lån,budget
+
+### 프로모션 텍스트
+
+Registrér aktiver, indtægter og udgifter hver måned og se straks din FIRE-fremdrift og forventede dato. Din stopdato – med tal, ikke mavefornemmelse.
+
+### 설명
+
+Hvor lang tid er der til, du kan sige dit job op? Find ud af det med tal, ikke mavefornemmelse.
+Toesagak er en pensionsberegner: ud fra de aktiver, du registrerer, viser den din fremdrift mod økonomisk frihed (FIRE) og den forventede dato, hvor du når målet.
+
+Oversigt
+Målfremdrift og fremdrift for passiv indkomst står øverst. Se med det samme, hvad der har ændret sig siden sidste uge, og hvor mange penge du kan bruge nu, og hvor mange der er bundet.
+
+Alle dine aktiver ét sted
+Ejendom, aktier, fonde og ETF'er, pensioner, kontanter og indskud, depositummer, kryptovaluta og lån, samlet efter type med aktivfordeling og gældsandel. Kurser på aktier og krypto kan hentes, så værdierne opdateres automatisk.
+
+Rejse
+Se mål pr. periode og dine tidligere registreringer i ét diagram og hvor meget, du skal spare op pr. dag, uge eller måned for at nå målet. Når dine aktiver ændrer sig, gemmes ugens registrering automatisk.
+
+Seks beregnere
+Formueudvikling gennem livet, lånebetaling, indskud og opsparing, investering, lønnens købekraft og en beregner, der omsætter penge til timer. Navngiv og gem de betingelser, du har regnet på, og indlæs dem igen, når du vil justere videre.
+
+Du bestemmer målet
+Indtast dit ønskede månedlige forbrug, den sikre udtrækningsrate og det forventede afkast, så beregnes dit FIRE-mål automatisk.
+
+Prøv først med demodata
+Gennemgå alle skærme med en fiktiv persons aktiver, og slår du det fra, er dine egne data tilbage som før.
+
+Dine registreringer ligger på denne enhed, og du behøver ingen konto. Du kan sikkerhedskopiere og gendanne alle data som en fil.
+
+Beregningerne i denne app er vejledende resultater baseret på det, du indtaster, og er ikke investeringsrådgivning.

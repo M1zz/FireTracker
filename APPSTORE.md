@@ -1025,3 +1025,60 @@ Käy läpi kaikki näkymät kuvitteellisen henkilön varoilla; kun kytket demon 
 Merkintäsi pysyvät tällä laitteella, eikä tiliä tarvita. Voit varmuuskopioida kaikki tiedot tiedostoon ja palauttaa ne.
 
 Apin laskelmat ovat syöttämiisi tietoihin perustuvia suuntaa-antavia tuloksia, eivätkä ne ole sijoitusneuvontaa.
+
+## id
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: Kalkulator FIRE
+
+### 부제
+
+Pensiun dini & kekayaan
+
+### 키워드
+
+pensiun,kebebasan,finansial,tabungan,kekayaan,pasif,penghasilan,dividen,investasi,utang,cicilan
+
+### 프로모션 텍스트
+
+Catat aset, pemasukan, dan pengeluaran tiap bulan, lalu lihat langsung progres FIRE dan perkiraan tanggalnya. Tanggal berhenti kerja, pakai angka, bukan firasat.
+
+### 설명
+
+Berapa lama lagi sampai Anda bisa berhenti bekerja? Cari tahu dengan angka, bukan firasat.
+Toesagak adalah kalkulator pensiun: dari aset yang Anda catat, app ini menampilkan progres menuju kebebasan finansial (FIRE) dan perkiraan kapan tercapai.
+
+Dasbor
+Progres target dan progres pendapatan pasif ada di bagian atas. Lihat sekilas apa yang berubah sejak minggu lalu, berapa uang yang bisa dipakai sekarang, dan berapa yang terikat.
+
+Semua aset di satu tempat
+Properti, saham, reksa dana dan ETF, pensiun, tunai dan deposito, uang jaminan, kripto, hingga pinjaman, dikelompokkan menurut jenis lengkap dengan komposisi aset dan rasio utang. Harga saham dan kripto dapat diambil agar nilainya diperbarui otomatis.
+
+Perjalanan
+Lihat target per periode dan catatan sebelumnya dalam satu grafik, serta berapa yang harus ditabung per hari, minggu, atau bulan untuk mencapai target. Saat aset berubah, catatan minggu itu tersimpan otomatis.
+
+Enam kalkulator
+Tren aset sepanjang hidup, pelunasan pinjaman, deposito dan tabungan, investasi, daya beli gaji, dan kalkulator yang mengubah uang menjadi jam. Beri nama dan simpan kondisi yang sudah dihitung, lalu muat kembali kapan saja untuk terus disesuaikan.
+
+Target Anda yang tentukan
+Masukkan pengeluaran bulanan yang diinginkan, laju penarikan aman, dan imbal hasil yang diharapkan, dan target FIRE dihitung otomatis.
+
+Coba dulu dengan data demo
+Jelajahi semua layar dengan aset tokoh fiktif; saat dinonaktifkan, data Anda kembali seperti semula.
+
+Catatan Anda tersimpan di perangkat ini dan tidak perlu akun. Anda bisa mencadangkan dan memulihkan semua data sebagai file.
+
+Perhitungan di app ini adalah hasil acuan berdasarkan masukan Anda dan bukan saran investasi.

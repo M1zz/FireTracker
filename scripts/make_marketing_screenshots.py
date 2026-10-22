@@ -17,15 +17,15 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 W, H = 1242, 2688   # 이 계정의 아이폰 제출 규격
 
 # 앱 언어 → App Store 로케일
-STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja"}
+STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans"}
 
 # 파일 · 배치 · 언어별 (헤드라인, 보조 문장)
 # 원본은 데모 데이터(설정 ▸ 데모)로 찍고, 맨 위 '데모 데이터로 보는 중' 띠를 잘라 냈다(1320x2702).
 SHOTS = [
-    ("01-dashboard.png", "hero-bleed",  {"ko": ("퇴사까지 남은 거리,<br>숫자로 확인하세요", "목표 달성률과 지난주 대비 변화를 한눈에"), "en": ("See how far you are<br>from quitting, in numbers", "Goal progress and weekly change at a glance"), "en-GB": ("See how far you are<br>from quitting, in numbers", "Goal progress and weekly change at a glance"), "ja": ("退職までの距離を、<br>数字で確かめよう", "目標達成率と先週からの変化がひと目で")}),
-    ("02-assets.png",    "left-text",   {"ko": ("흩어진 자산을<br>한 곳에", "부동산, 주식, 연금, 대출까지 모아 봐요"), "en": ("All your assets<br>in one place", "Property, stocks, pensions and loans together"), "en-GB": ("All your assets<br>in one place", "Property, stocks, pensions and loans together"), "ja": ("散らばった資産を<br>1か所に", "不動産、株式、年金、ローンまでまとめて確認")}),
-    ("03-journey.png",   "text-bottom", {"ko": ("목표까지 가는 길이<br>그려져요", "기간별 목표와 필요한 저축을 알려줘요"), "en": ("See the road<br>to your goal", "Goals by period and the savings you need"), "en-GB": ("See the road<br>to your goal", "Goals by period and the savings you need"), "ja": ("目標までの道のりが<br>見えてきます", "期間別の目標と必要な貯蓄がわかります")}),
-    ("04-loan.png",      "dark",        {"ko": ("대출, 저축, 은퇴까지<br>계산해 봐요", "계산한 결과는 저장해 두고 다시 불러와요"), "en": ("From loans to savings<br>to retirement", "Save results and pick them up later"), "en-GB": ("From loans to savings<br>to retirement", "Save results and pick them up later"), "ja": ("ローンも貯蓄も<br>退職後も計算", "計算結果は保存して、いつでも呼び出せます")}),
+    ("01-dashboard.png", "hero-bleed",  {"ko": ("퇴사까지 남은 거리,<br>숫자로 확인하세요", "목표 달성률과 지난주 대비 변화를 한눈에"), "en": ("See how far you are<br>from quitting, in numbers", "Goal progress and weekly change at a glance"), "en-GB": ("See how far you are<br>from quitting, in numbers", "Goal progress and weekly change at a glance"), "ja": ("退職までの距離を、<br>数字で確かめよう", "目標達成率と先週からの変化がひと目で"), "zh-Hans": ("距离辞职还有多远，<br>用数字确认", "目标达成率与周变化一目了然")}),
+    ("02-assets.png",    "left-text",   {"ko": ("흩어진 자산을<br>한 곳에", "부동산, 주식, 연금, 대출까지 모아 봐요"), "en": ("All your assets<br>in one place", "Property, stocks, pensions and loans together"), "en-GB": ("All your assets<br>in one place", "Property, stocks, pensions and loans together"), "ja": ("散らばった資産を<br>1か所に", "不動産、株式、年金、ローンまでまとめて確認"), "zh-Hans": ("把分散的资产<br>放在一处", "房产、股票、养老金、贷款一并查看")}),
+    ("03-journey.png",   "text-bottom", {"ko": ("목표까지 가는 길이<br>그려져요", "기간별 목표와 필요한 저축을 알려줘요"), "en": ("See the road<br>to your goal", "Goals by period and the savings you need"), "en-GB": ("See the road<br>to your goal", "Goals by period and the savings you need"), "ja": ("目標までの道のりが<br>見えてきます", "期間別の目標と必要な貯蓄がわかります"), "zh-Hans": ("通往目标的路，<br>清晰可见", "告诉你分期目标和所需储蓄")}),
+    ("04-loan.png",      "dark",        {"ko": ("대출, 저축, 은퇴까지<br>계산해 봐요", "계산한 결과는 저장해 두고 다시 불러와요"), "en": ("From loans to savings<br>to retirement", "Save results and pick them up later"), "en-GB": ("From loans to savings<br>to retirement", "Save results and pick them up later"), "ja": ("ローンも貯蓄も<br>退職後も計算", "計算結果は保存して、いつでも呼び出せます"), "zh-Hans": ("贷款、储蓄、退休，<br>都能计算", "计算结果可保存，随时再次调出")}),
 ]
 
 # 색은 헤더·검색 결과 그림(make_creative_assets.py)과 맞춘다.

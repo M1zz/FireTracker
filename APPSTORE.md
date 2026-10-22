@@ -1196,3 +1196,60 @@ Bekijk alle schermen met de bezittingen van een fictief persoon; zet je het uit,
 Je registraties blijven op dit toestel en je hebt geen account nodig. Je kunt alle gegevens als bestand back-uppen en herstellen.
 
 De berekeningen in deze app zijn richtinggevende resultaten op basis van je invoer en geen beleggingsadvies.
+
+## pl
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: kalkulator FIRE
+
+### 부제
+
+Wcześniejsza emerytura
+
+### 키워드
+
+emerytura,niezależność,finansowa,oszczędności,majątek,pasywny,dochód,dywidendy,inwestycje,dług
+
+### 프로모션 텍스트
+
+Zapisuj co miesiąc aktywa, przychody i wydatki i od razu zobacz postęp FIRE oraz szacowaną datę. Data odejścia – na liczbach, nie na oko.
+
+### 설명
+
+Ile jeszcze zostało, zanim będziesz mógł rzucić pracę? Sprawdź to na liczbach, a nie na oko.
+Toesagak to kalkulator emerytalny: na podstawie zapisanych aktywów pokazuje postęp ku niezależności finansowej (FIRE) i szacowaną datę jej osiągnięcia.
+
+Pulpit
+Postęp celu i postęp dochodu pasywnego są na samej górze. Zobacz jednym spojrzeniem, co zmieniło się od zeszłego tygodnia oraz ile pieniędzy możesz teraz użyć, a ile jest zablokowane.
+
+Wszystkie aktywa w jednym miejscu
+Nieruchomości, akcje, fundusze i ETF-y, emerytury, gotówka i lokaty, kaucje, kryptowaluty i kredyty, pogrupowane według rodzaju, ze strukturą majątku i wskaźnikiem zadłużenia. Ceny akcji i kryptowalut można pobierać, aby wartości aktualizowały się automatycznie.
+
+Droga
+Cele według okresów i dotychczasowe zapisy na jednym wykresie oraz informacja, ile odkładać dziennie, tygodniowo lub miesięcznie, aby osiągnąć cel. Gdy aktywa się zmieniają, zapis z danego tygodnia zapisuje się automatycznie.
+
+Sześć kalkulatorów
+Przebieg majątku w cyklu życia, spłata kredytu, lokaty i oszczędzanie, inwestowanie, siła nabywcza pensji oraz kalkulator zamieniający pieniądze na godziny. Nazwij i zapisz obliczone warunki, a potem wczytuj je ponownie, kiedy zechcesz, i dopracowuj.
+
+Cel ustalasz ty
+Wpisz pożądane miesięczne wydatki, bezpieczną stopę wypłat i oczekiwany zwrot, a cel FIRE zostanie obliczony automatycznie.
+
+Najpierw wypróbuj na danych demonstracyjnych
+Przejrzyj wszystkie ekrany na aktywach fikcyjnej osoby; po wyłączeniu twoje dane wracają bez zmian.
+
+Zapisy zostają na tym urządzeniu i nie potrzeba konta. Wszystkie dane możesz zapisać w pliku kopii zapasowej i przywrócić.
+
+Obliczenia w aplikacji są poglądowymi wynikami opartymi na wpisanych danych i nie stanowią porady inwestycyjnej.

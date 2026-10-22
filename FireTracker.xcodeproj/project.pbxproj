@@ -296,6 +296,7 @@
 				en,
 				Base,
 				ko,
+				pl,
 				nl,
 				nb,
 				id,

@@ -296,6 +296,7 @@
 				en,
 				Base,
 				ko,
+				el,
 				da,
 				cs,
 				vi,

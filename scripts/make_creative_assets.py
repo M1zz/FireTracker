@@ -21,7 +21,7 @@ OUT = ROOT / "docs" / "screenshots" / "creative"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 # 앱 언어 코드 → App Store Connect 로케일. 퇴사각은 지금 한국어 페이지 하나뿐이다.
-STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant", "es": "es", "de": "de", "fr": "fr", "it": "it", "pt-BR": "pt-BR", "ru": "ru", "th": "th", "vi": "vi", "cs": "cs", "da": "da"}
+STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant", "es": "es", "de": "de", "fr": "fr", "it": "it", "pt-BR": "pt-BR", "ru": "ru", "th": "th", "vi": "vi", "cs": "cs", "da": "da", "el": "el"}
 
 # (가로, 세로, 안전 영역 left, top, right, bottom)
 SPEC = {
@@ -48,6 +48,7 @@ SEARCH = {
     "vi": ("Máy tính nghỉ hưu", "Ngày nghỉ việc của bạn<br>còn bao xa?", "Ghi tài sản để thấy còn bao nhiêu đến mục tiêu"),
     "cs": ("Důchodová kalkulačka", "Jak daleko je<br>váš odchod?", "Zapište majetek a uvidíte, kolik chybí k cíli"),
     "da": ("Pensionsberegner", "Hvor langt er der<br>til dit stop?", "Registrér aktiver og se, hvad der mangler til målet"),
+    "el": ("Υπολογιστής σύνταξης", "Πόσο μακριά είναι<br>η αποχώρησή σας;", "Καταγράψτε τα περιουσιακά σας και δείτε τι λείπει για τον στόχο"),
 }
 
 # 헤더 — 한 가지 약속: 회사를 그만둬도 되는 날까지의 거리를 보여 준다.
@@ -68,6 +69,7 @@ HEADER = {
     "vi": ("Máy tính FIRE", "Khoảng cách đến ngày nghỉ việc,<br>xem bằng con số"),
     "cs": ("Kalkulačka FIRE", "Vzdálenost k odchodu<br>změřte čísly"),
     "da": ("FIRE-beregner", "Mål afstanden til dit stop<br>med tal"),
+    "el": ("Υπολογιστής FIRE", "Μετρήστε με αριθμούς<br>την απόσταση ως την αποχώρηση"),
 }
 
 # 바탕 · 글자색은 앱 화면(Theme.swift)과 같다: 따뜻한 크림 바탕, 금색 강조 하나("quiet money").

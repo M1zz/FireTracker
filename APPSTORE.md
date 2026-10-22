@@ -512,3 +512,60 @@ Parcourez tous les écrans avec les actifs d’une personne fictive ; désactive
 Vos enregistrements restent sur cet appareil et aucun compte n’est nécessaire. Vous pouvez sauvegarder et restaurer toutes vos données dans un fichier.
 
 Les calculs de cette app sont des résultats indicatifs fondés sur vos saisies et ne constituent pas un conseil en investissement.
+
+## it
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: Calcolo FIRE
+
+### 부제
+
+Pensione anticipata e risparmi
+
+### 키워드
+
+pensione,indipendenza,finanziaria,patrimonio,risparmio,rendita,passiva,dividendi,investimenti,debiti
+
+### 프로모션 텍스트
+
+Registra ogni mese patrimonio, entrate e spese e vedi subito i progressi FIRE e la data stimata. La tua data di uscita, con i numeri e non a occhio.
+
+### 설명
+
+Quanto manca al giorno in cui potrai lasciare il lavoro? Scoprilo con i numeri, non a occhio.
+Toesagak è un calcolatore per la pensione: dal patrimonio che registri mostra l’avanzamento verso l’indipendenza finanziaria (FIRE) e la data stimata per raggiungerla.
+
+Dashboard
+Avanzamento dell’obiettivo e del reddito passivo in alto. Vedi a colpo d’occhio cosa è cambiato dalla settimana scorsa e quanto denaro puoi usare ora e quanto è vincolato.
+
+Tutto il patrimonio in un posto
+Immobili, azioni, fondi ed ETF, pensioni, contanti e depositi, cauzioni, criptovalute e prestiti, raggruppati per tipo, con composizione del patrimonio e rapporto di indebitamento. I prezzi di azioni e cripto si possono scaricare per aggiornare i valori in automatico.
+
+Percorso
+Gli obiettivi per periodo e le registrazioni passate in un solo grafico, con quanto mettere da parte al giorno, a settimana o al mese per arrivare all’obiettivo. Quando il patrimonio cambia, la registrazione della settimana si salva da sola.
+
+Sei calcolatori
+Andamento del patrimonio nel ciclo di vita, rimborso dei prestiti, depositi e risparmio, investimento, potere d’acquisto dello stipendio e un calcolatore che trasforma i soldi in ore. Dai un nome alle condizioni calcolate, salvale e ricaricale quando vuoi per continuare a modificarle.
+
+L’obiettivo lo decidi tu
+Inserisci la spesa mensile desiderata, il tasso di prelievo sicuro e il rendimento atteso e l’obiettivo FIRE si calcola da solo.
+
+Prova prima con i dati demo
+Esplora tutte le schermate con il patrimonio di una persona fittizia; disattivando, tornano i tuoi dati così come sono.
+
+Le registrazioni restano su questo dispositivo e non serve alcun account. Puoi fare il backup di tutti i dati in un file e ripristinarlo.
+
+I calcoli di questa app sono risultati indicativi basati sui dati inseriti e non costituiscono consulenza di investimento.

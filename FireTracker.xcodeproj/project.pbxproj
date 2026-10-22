@@ -296,6 +296,7 @@
 				en,
 				Base,
 				ko,
+				it,
 				fr,
 				de,
 				es,

@@ -21,7 +21,7 @@ OUT = ROOT / "docs" / "screenshots" / "creative"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 # 앱 언어 코드 → App Store Connect 로케일. 퇴사각은 지금 한국어 페이지 하나뿐이다.
-STORE = {"ko": "ko"}
+STORE = {"ko": "ko", "en": "en"}
 
 # (가로, 세로, 안전 영역 left, top, right, bottom)
 SPEC = {
@@ -33,11 +33,13 @@ SPEC = {
 # 눈썹글은 검색어(키워드: 은퇴, 파이어족, 노후계산)다.
 SEARCH = {
     "ko": ("은퇴 계산기", "내 은퇴,<br>얼마나 남았을까", "자산을 적으면 목표까지 남은 돈이 보여요"),
+    "en": ("FIRE calculator", "How far is<br>your exit?", "Log your assets to see what's left to your goal"),
 }
 
 # 헤더 — 한 가지 약속: 회사를 그만둬도 되는 날까지의 거리를 보여 준다.
 HEADER = {
     "ko": ("파이어족 계산기", "퇴사까지 남은 거리,<br>숫자로 확인하세요"),
+    "en": ("FIRE calculator", "See how far you are<br>from quitting, in numbers"),
 }
 
 # 바탕 · 글자색은 앱 화면(Theme.swift)과 같다: 따뜻한 크림 바탕, 금색 강조 하나("quiet money").

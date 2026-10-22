@@ -56,3 +56,60 @@ https://m1zz.github.io/FireTracker/
 기록은 이 기기에 저장되며 계정이 필요 없습니다. 모든 데이터를 파일로 백업하고 복원할 수 있습니다.
 
 이 앱의 계산은 입력값을 바탕으로 한 참고용 결과이며 투자 권유가 아닙니다.
+
+## en
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: Retire Early
+
+### 부제
+
+FIRE Calculator & Net Worth
+
+### 키워드
+
+retirement,independence,savings,passive,income,portfolio,withdrawal,nestegg,dividends,assets,wealth
+
+### 프로모션 텍스트
+
+Log your assets, income and spending each month and see your FIRE progress and projected date right away. Your target is set with the 4% rule, and net worth and savings rate build into charts. Know your quit date by the numbers, not a hunch.
+
+### 설명
+
+How long until you can quit your job? Know it by the numbers, not a hunch.
+Toesagak is a retirement calculator that turns your recorded assets into your progress toward financial independence (FIRE) and a projected date to reach it.
+
+Dashboard
+Goal progress and passive income progress sit at the top. See what changed since last week and how much of your money is spendable versus locked up, at a glance.
+
+All your assets in one place
+Property, stocks, funds and ETFs, pensions, cash and deposits, rental deposits, crypto and loans, grouped by type, with your asset mix and debt ratio. Stock and crypto prices can be fetched to keep values up to date.
+
+Journey
+See goals by period and your past records on a single chart, along with how much to save per day, week or month to reach your goal. When your assets change, that week's record is saved automatically.
+
+Six calculators
+Lifecycle asset curve, loan repayment, savings and deposits, investing, the buying power of your salary, and a calculator that turns money into hours. Name and save the settings you used, then reload them any time to keep adjusting.
+
+Your goal, your rules
+Enter your monthly spending, safe withdrawal rate and expected return, and your FIRE target is calculated automatically.
+
+Try it with demo data
+Explore every screen with a fictional person's assets. Turn it off and your own data comes right back.
+
+Your records stay on this device and no account is needed. You can back up and restore all your data as a file.
+
+Calculations in this app are reference results based on your inputs and are not investment advice.

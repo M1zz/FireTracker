@@ -569,3 +569,60 @@ Esplora tutte le schermate con il patrimonio di una persona fittizia; disattivan
 Le registrazioni restano su questo dispositivo e non serve alcun account. Puoi fare il backup di tutti i dati in un file e ripristinarlo.
 
 I calcoli di questa app sono risultati indicativi basati sui dati inseriti e non costituiscono consulenza di investimento.
+
+## pt-BR
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: Calculadora FIRE
+
+### 부제
+
+Aposentadoria e patrimônio
+
+### 키워드
+
+aposentadoria,independência,financeira,patrimônio,poupança,renda,passiva,dividendos,investimentos
+
+### 프로모션 텍스트
+
+Registre todo mês seus ativos, receitas e gastos e veja na hora o progresso FIRE e a data estimada. Sua data de saída, com números e não no chute.
+
+### 설명
+
+Quanto falta para você poder largar o emprego? Descubra com números, não no chute.
+O Toesagak é uma calculadora de aposentadoria: com os ativos que você registra, ele mostra o progresso rumo à independência financeira (FIRE) e a data estimada para chegar lá.
+
+Painel
+O progresso da meta e o da renda passiva ficam no topo. Veja de relance o que mudou desde a semana passada e quanto dinheiro você pode usar agora e quanto está preso.
+
+Todos os ativos em um só lugar
+Imóveis, ações, fundos e ETFs, previdência, dinheiro e depósitos, cauções, criptomoedas e empréstimos, agrupados por tipo, com a composição do patrimônio e o índice de endividamento. Os preços de ações e cripto podem ser buscados para atualizar os valores automaticamente.
+
+Jornada
+Veja num só gráfico as metas por período e seus registros anteriores, e quanto poupar por dia, semana ou mês para chegar à meta. Quando seus ativos mudam, o registro da semana é salvo automaticamente.
+
+Seis calculadoras
+Evolução do patrimônio ao longo da vida, pagamento de empréstimos, depósitos e poupança, investimento, poder de compra do salário e uma calculadora que transforma dinheiro em horas. Dê nome às condições calculadas, salve e recarregue quando quiser para continuar ajustando.
+
+Você define a sua meta
+Informe o gasto mensal desejado, a taxa de retirada segura e o retorno esperado, e a meta FIRE é calculada automaticamente.
+
+Experimente primeiro com dados de demonstração
+Explore todas as telas com os ativos de uma pessoa fictícia; ao desativar, seus dados voltam como estavam.
+
+Seus registros ficam neste aparelho e não é preciso conta. Você pode fazer backup de todos os dados em um arquivo e restaurar.
+
+Os cálculos deste app são resultados de referência baseados no que você informa e não são recomendação de investimento.

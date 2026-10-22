@@ -1139,3 +1139,60 @@ Gå gjennom alle skjermene med eiendelene til en fiktiv person, og slår du det 
 Registreringene dine ligger på denne enheten, og du trenger ingen konto. Du kan sikkerhetskopiere og gjenopprette alle data som en fil.
 
 Beregningene i denne appen er veiledende resultater basert på det du skriver inn, og er ikke investeringsrådgivning.
+
+## nl
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: FIRE-calculator
+
+### 부제
+
+Vroeg pensioen en vermogen
+
+### 키워드
+
+pensioen,financiële,vrijheid,sparen,vermogen,passief,inkomen,dividend,beleggen,schuld,lening,budget
+
+### 프로모션 텍스트
+
+Noteer elke maand je bezittingen, inkomsten en uitgaven en zie meteen je FIRE-voortgang en verwachte datum. Je stopdatum: met cijfers, niet op gevoel.
+
+### 설명
+
+Hoe lang duurt het nog voor je je baan kunt opzeggen? Ontdek het met cijfers, niet op gevoel.
+Toesagak is een pensioenrekenmachine: uit de bezittingen die je noteert toont hij je voortgang richting financiële onafhankelijkheid (FIRE) en de verwachte datum waarop je er bent.
+
+Overzicht
+De voortgang van je doel en van je passieve inkomen staan bovenaan. Zie in één oogopslag wat er sinds vorige week veranderde en hoeveel geld je nu kunt gebruiken en hoeveel er vastzit.
+
+Al je bezittingen op één plek
+Vastgoed, aandelen, fondsen en ETF’s, pensioenen, contant geld en deposito’s, borgsommen, crypto en leningen, per soort gegroepeerd, met je vermogensverdeling en schuldquote. Koersen van aandelen en crypto kunnen worden opgehaald zodat waarden automatisch bijwerken.
+
+Reis
+Bekijk doelen per periode en je eerdere registraties in één grafiek, plus hoeveel je per dag, week of maand moet sparen om je doel te halen. Wijzigen je bezittingen, dan wordt de registratie van die week automatisch bewaard.
+
+Zes rekenmachines
+Vermogensverloop over de levenscyclus, aflossing van leningen, deposito’s en sparen, beleggen, koopkracht van je salaris en een rekenmachine die geld omzet in uren. Geef de voorwaarden die je berekende een naam, bewaar ze en laad ze op elk moment weer om verder te finetunen.
+
+Je doel bepaal je zelf
+Voer je gewenste maandelijkse uitgaven, het veilige opnamepercentage en het verwachte rendement in, en je FIRE-doel wordt automatisch berekend.
+
+Probeer eerst met demogegevens
+Bekijk alle schermen met de bezittingen van een fictief persoon; zet je het uit, dan zijn je eigen gegevens weer precies zoals ze waren.
+
+Je registraties blijven op dit toestel en je hebt geen account nodig. Je kunt alle gegevens als bestand back-uppen en herstellen.
+
+De berekeningen in deze app zijn richtinggevende resultaten op basis van je invoer en geen beleggingsadvies.

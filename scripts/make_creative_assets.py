@@ -21,7 +21,7 @@ OUT = ROOT / "docs" / "screenshots" / "creative"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 # 앱 언어 코드 → App Store Connect 로케일. 퇴사각은 지금 한국어 페이지 하나뿐이다.
-STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant", "es": "es", "de": "de", "fr": "fr", "it": "it", "pt-BR": "pt-BR", "ru": "ru", "th": "th", "vi": "vi", "cs": "cs", "da": "da", "el": "el", "fi": "fi", "id": "id", "nb": "nb"}
+STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant", "es": "es", "de": "de", "fr": "fr", "it": "it", "pt-BR": "pt-BR", "ru": "ru", "th": "th", "vi": "vi", "cs": "cs", "da": "da", "el": "el", "fi": "fi", "id": "id", "nb": "nb", "nl": "nl"}
 
 # (가로, 세로, 안전 영역 left, top, right, bottom)
 SPEC = {
@@ -52,6 +52,7 @@ SEARCH = {
     "fi": ("Eläkelaskuri", "Kuinka kaukana<br>lopetuksesi on?", "Kirjaa varasi ja näe, paljonko tavoitteeseen on matkaa"),
     "id": ("Kalkulator pensiun", "Seberapa jauh<br>tanggal berhenti Anda?", "Catat aset dan lihat sisa menuju target"),
     "nb": ("Pensjonskalkulator", "Hvor langt er det<br>til du kan slutte?", "Registrer eiendeler og se hva som mangler til målet"),
+    "nl": ("Pensioenrekenmachine", "Hoe ver is<br>jouw stopdatum?", "Noteer bezittingen en zie wat er tot je doel ontbreekt"),
 }
 
 # 헤더 — 한 가지 약속: 회사를 그만둬도 되는 날까지의 거리를 보여 준다.
@@ -76,6 +77,7 @@ HEADER = {
     "fi": ("FIRE-laskuri", "Mittaa lopetukseen<br>jäävä matka luvuilla"),
     "id": ("Kalkulator FIRE", "Ukur jarak menuju<br>tanggal berhenti dengan angka"),
     "nb": ("FIRE-kalkulator", "Mål avstanden til sluttdatoen<br>med tall"),
+    "nl": ("FIRE-calculator", "Meet met cijfers<br>hoe ver je stopdatum is"),
 }
 
 # 바탕 · 글자색은 앱 화면(Theme.swift)과 같다: 따뜻한 크림 바탕, 금색 강조 하나("quiet money").

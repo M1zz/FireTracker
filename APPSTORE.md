@@ -398,3 +398,60 @@ Recorre todas las pantallas con los activos de una persona ficticia y, al desact
 Tus registros se guardan en este dispositivo y no hace falta cuenta. Puedes hacer una copia de todos tus datos en un archivo y restaurarla.
 
 Los cálculos de esta app son resultados orientativos basados en lo que introduces y no constituyen asesoramiento de inversión.
+
+## de
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: FIRE-Rechner
+
+### 부제
+
+Frühruhestand & Vermögen
+
+### 키워드
+
+Ruhestand,Rente,Finanzfreiheit,Nettovermögen,Sparquote,Dividenden,Kredit,Geldanlage,Depot,Zinseszins
+
+### 프로모션 텍스트
+
+Trag jeden Monat Vermögen, Einnahmen und Ausgaben ein und sieh sofort deinen FIRE-Fortschritt und dein Zieldatum. Dein Ausstieg: mit Zahlen statt Bauchgefühl.
+
+### 설명
+
+Wie lange noch, bis du kündigen kannst? Finde es mit Zahlen heraus, nicht mit Bauchgefühl.
+Toesagak ist ein Ruhestandsrechner: Er zeigt dir anhand deines erfassten Vermögens den Fortschritt zu deinem Ziel der finanziellen Unabhängigkeit (FIRE) und den voraussichtlichen Zeitpunkt.
+
+Dashboard
+Zielfortschritt und Fortschritt beim passiven Einkommen stehen ganz oben. Auf einen Blick siehst du, was sich seit letzter Woche verändert hat und wie viel Geld du jetzt nutzen kannst und wie viel gebunden ist.
+
+Alles Vermögen an einem Ort
+Immobilien, Aktien, Fonds und ETFs, Renten, Bargeld und Guthaben, Kautionen, Kryptowährungen und Kredite – nach Art gebündelt, mit Vermögensstruktur und Schuldenquote. Kurse von Aktien und Krypto lassen sich abrufen, damit sich Werte automatisch aktualisieren.
+
+Weg
+Ziele nach Zeitraum und bisherige Einträge in einem Diagramm, dazu wie viel du pro Tag, Woche oder Monat sparen musst, um dein Ziel zu erreichen. Ändert sich dein Vermögen, wird der Eintrag der Woche automatisch gespeichert.
+
+Sechs Rechner
+Vermögensverlauf über das Leben, Kredittilgung, Einlagen und Sparpläne, Geldanlage, Kaufkraft deines Gehalts und ein Rechner, der Geld in Stunden umrechnet. Benenne und speichere deine Berechnungen und lade sie jederzeit wieder, um weiterzuprobieren.
+
+Dein Ziel bestimmst du
+Gib deine gewünschten Monatsausgaben, die sichere Entnahmerate und die erwartete Rendite ein, und dein FIRE-Zielbetrag wird automatisch berechnet.
+
+Erst mit Demodaten ausprobieren
+Sieh dir alle Bildschirme mit dem Vermögen einer fiktiven Person an. Schaltest du es aus, sind deine eigenen Daten wieder da.
+
+Deine Einträge bleiben auf diesem Gerät, ein Konto ist nicht nötig. Alle Daten lassen sich als Datei sichern und wiederherstellen.
+
+Die Berechnungen dieser App sind Orientierungswerte auf Basis deiner Eingaben und keine Anlageberatung.

@@ -341,3 +341,60 @@ Toesagak是一款退休計算器：記錄資產後，會顯示距離財務自由
 記錄儲存在此裝置上，無需帳號。所有資料都可以備份成檔案並還原。
 
 本App的計算是基於輸入值的參考結果，不構成投資建議。
+
+## es
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: Calculadora FIRE
+
+### 부제
+
+Libertad financiera y ahorro
+
+### 키워드
+
+jubilación,retiro,independencia,patrimonio,ingresos,pasivos,dividendos,inversión,deudas,cartera
+
+### 프로모션 텍스트
+
+Registra tus activos, ingresos y gastos cada mes y ve al instante tu progreso FIRE y la fecha estimada. Tu fecha de salida, con números y no a ojo.
+
+### 설명
+
+¿Cuánto falta para poder dejar tu trabajo? Compruébalo con números, no a ojo.
+Toesagak es una calculadora de jubilación que, con tus activos registrados, te muestra tu progreso hacia la libertad financiera (FIRE) y la fecha estimada para lograrla.
+
+Panel
+El progreso del objetivo y el de ingresos pasivos están arriba. Ve de un vistazo qué cambió desde la semana pasada y cuánto dinero puedes usar ahora y cuánto está inmovilizado.
+
+Todos tus activos en un solo lugar
+Inmuebles, acciones, fondos y ETF, pensiones, efectivo y depósitos, fianzas, criptomonedas y préstamos, agrupados por tipo, con la composición de tu patrimonio y tu ratio de deuda. Puedes obtener los precios de acciones y criptomonedas para actualizar automáticamente su valor.
+
+Trayecto
+Consulta en un solo gráfico los objetivos por periodo y tus registros anteriores, y cuánto debes ahorrar al día, a la semana o al mes para llegar a tu objetivo. Cuando tus activos cambian, el registro de esa semana se guarda automáticamente.
+
+Seis calculadoras
+Evolución del patrimonio a lo largo de la vida, amortización de préstamos, depósitos y ahorro, inversión, poder adquisitivo del sueldo y una calculadora que convierte dinero en horas. Pon nombre a las condiciones que calculaste, guárdalas y vuelve a cargarlas cuando quieras para seguir ajustándolas.
+
+Tu objetivo lo fijas tú
+Introduce el gasto mensual deseado, la tasa de retirada segura y la rentabilidad esperada, y el objetivo FIRE se calcula automáticamente.
+
+Pruébalo primero con datos de demostración
+Recorre todas las pantallas con los activos de una persona ficticia y, al desactivarlo, vuelves a tus datos tal cual.
+
+Tus registros se guardan en este dispositivo y no hace falta cuenta. Puedes hacer una copia de todos tus datos en un archivo y restaurarla.
+
+Los cálculos de esta app son resultados orientativos basados en lo que introduces y no constituyen asesoramiento de inversión.

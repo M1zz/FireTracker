@@ -455,3 +455,60 @@ Sieh dir alle Bildschirme mit dem Vermögen einer fiktiven Person an. Schaltest 
 Deine Einträge bleiben auf diesem Gerät, ein Konto ist nicht nötig. Alle Daten lassen sich als Datei sichern und wiederherstellen.
 
 Die Berechnungen dieser App sind Orientierungswerte auf Basis deiner Eingaben und keine Anlageberatung.
+
+## fr
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak : calculateur FIRE
+
+### 부제
+
+Retraite anticipée, patrimoine
+
+### 키워드
+
+retraite,indépendance,épargne,passif,revenus,dividendes,investissement,dette,prêt,budget,intérêts
+
+### 프로모션 텍스트
+
+Notez chaque mois vos actifs, revenus et dépenses : votre avancement FIRE et la date estimée s’affichent aussitôt. Votre date de départ, en chiffres plutôt qu’au pif.
+
+### 설명
+
+Combien de temps avant de pouvoir quitter votre travail ? Vérifiez-le en chiffres, pas au pif.
+Toesagak est un calculateur de retraite : à partir de vos actifs enregistrés, il affiche votre avancement vers l’indépendance financière (FIRE) et la date estimée pour l’atteindre.
+
+Tableau de bord
+L’avancement de l’objectif et celui du revenu passif sont tout en haut. Voyez d’un coup d’œil ce qui a changé depuis la semaine dernière, et combien d’argent est utilisable maintenant ou immobilisé.
+
+Tous vos actifs au même endroit
+Immobilier, actions, fonds et ETF, retraites, liquidités et dépôts, cautions, cryptomonnaies et prêts, regroupés par type, avec la composition de votre patrimoine et votre taux d’endettement. Les cours des actions et des cryptos peuvent être récupérés pour mettre les valeurs à jour automatiquement.
+
+Parcours
+Voyez sur un seul graphique les objectifs par période et vos enregistrements passés, ainsi que ce qu’il faut épargner par jour, semaine ou mois pour atteindre votre objectif. Quand vos actifs changent, l’enregistrement de la semaine est créé automatiquement.
+
+Six calculateurs
+Évolution du patrimoine sur la vie, remboursement de prêt, dépôts et épargne, investissement, pouvoir d’achat du salaire, et un calculateur qui convertit l’argent en heures. Nommez et enregistrez vos conditions, puis rechargez-les à tout moment pour continuer à les ajuster.
+
+Votre objectif, vos règles
+Saisissez la dépense mensuelle souhaitée, le taux de retrait sûr et le rendement attendu : l’objectif FIRE est calculé automatiquement.
+
+Essayez d’abord avec des données de démo
+Parcourez tous les écrans avec les actifs d’une personne fictive ; désactivez, et vous retrouvez vos données telles quelles.
+
+Vos enregistrements restent sur cet appareil et aucun compte n’est nécessaire. Vous pouvez sauvegarder et restaurer toutes vos données dans un fichier.
+
+Les calculs de cette app sont des résultats indicatifs fondés sur vos saisies et ne constituent pas un conseil en investissement.

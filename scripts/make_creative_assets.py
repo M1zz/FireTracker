@@ -21,7 +21,7 @@ OUT = ROOT / "docs" / "screenshots" / "creative"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 # 앱 언어 코드 → App Store Connect 로케일. 퇴사각은 지금 한국어 페이지 하나뿐이다.
-STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant", "es": "es", "de": "de"}
+STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant", "es": "es", "de": "de", "fr": "fr"}
 
 # (가로, 세로, 안전 영역 left, top, right, bottom)
 SPEC = {
@@ -40,6 +40,7 @@ SEARCH = {
     "zh-Hant": ("退休計算器", "我的退休，<br>還有多遠？", "記錄資產，就能看到距目標還差多少"),
     "es": ("Calculadora de retiro", "¿Cuánto falta para<br>tu salida?", "Registra tus activos y ve lo que falta para tu objetivo"),
     "de": ("Ruhestandsrechner", "Wie weit ist dein<br>Ausstieg entfernt?", "Trag dein Vermögen ein und sieh, was bis zum Ziel fehlt"),
+    "fr": ("Calculateur de retraite", "Où en est<br>votre départ ?", "Notez vos actifs et voyez ce qu’il reste jusqu’à l’objectif"),
 }
 
 # 헤더 — 한 가지 약속: 회사를 그만둬도 되는 날까지의 거리를 보여 준다.
@@ -52,6 +53,7 @@ HEADER = {
     "zh-Hant": ("FIRE計算機", "距離離職還有多遠，<br>用數字確認"),
     "es": ("Calculadora FIRE", "Mide con números<br>cuánto falta para dejarlo"),
     "de": ("FIRE-Rechner", "Wie weit ist dein Ausstieg?<br>Prüf es mit Zahlen"),
+    "fr": ("Calculateur FIRE", "Mesurez en chiffres<br>la distance jusqu’au départ"),
 }
 
 # 바탕 · 글자색은 앱 화면(Theme.swift)과 같다: 따뜻한 크림 바탕, 금색 강조 하나("quiet money").

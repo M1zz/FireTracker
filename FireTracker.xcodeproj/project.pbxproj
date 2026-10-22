@@ -296,6 +296,7 @@
 				en,
 				Base,
 				ko,
+				"zh-Hant",
 				"zh-Hans",
 				ja,
 				"en-GB",

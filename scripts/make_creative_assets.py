@@ -21,7 +21,7 @@ OUT = ROOT / "docs" / "screenshots" / "creative"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 # 앱 언어 코드 → App Store Connect 로케일. 퇴사각은 지금 한국어 페이지 하나뿐이다.
-STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans"}
+STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant"}
 
 # (가로, 세로, 안전 영역 left, top, right, bottom)
 SPEC = {
@@ -37,6 +37,7 @@ SEARCH = {
     "en-GB": ("FIRE calculator", "How far is<br>your exit?", "Log your assets to see what's left to your goal"),
     "ja": ("退職計算アプリ", "自分の退職まで、<br>あとどのくらい？", "資産を入力すると目標までの残りがわかります"),
     "zh-Hans": ("退休计算器", "我的退休，<br>还有多远？", "记录资产，就能看到距目标还差多少"),
+    "zh-Hant": ("退休計算器", "我的退休，<br>還有多遠？", "記錄資產，就能看到距目標還差多少"),
 }
 
 # 헤더 — 한 가지 약속: 회사를 그만둬도 되는 날까지의 거리를 보여 준다.
@@ -46,6 +47,7 @@ HEADER = {
     "en-GB": ("FIRE calculator", "See how far you are<br>from quitting, in numbers"),
     "ja": ("FIRE計算機", "退職までの距離を、<br>数字で確かめよう"),
     "zh-Hans": ("FIRE计算器", "距离辞职还有多远，<br>用数字确认"),
+    "zh-Hant": ("FIRE計算機", "距離離職還有多遠，<br>用數字確認"),
 }
 
 # 바탕 · 글자색은 앱 화면(Theme.swift)과 같다: 따뜻한 크림 바탕, 금색 강조 하나("quiet money").

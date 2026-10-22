@@ -1310,3 +1310,60 @@ Gå igenom alla skärmar med en fiktiv persons tillgångar; slår du av det är 
 Dina registreringar ligger kvar på den här enheten och inget konto behövs. Du kan säkerhetskopiera och återställa alla data som en fil.
 
 Beräkningarna i appen är vägledande resultat baserade på det du anger och är inte investeringsrådgivning.
+
+## tr
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: FIRE Hesaplayıcı
+
+### 부제
+
+Erken emeklilik ve varlık
+
+### 키워드
+
+emeklilik,finansal,özgürlük,birikim,varlık,pasif,gelir,temettü,yatırım,borç,kredi,bütçe,portföy
+
+### 프로모션 텍스트
+
+Her ay varlık, gelir ve giderlerinizi kaydedin; FIRE ilerlemenizi ve tahmini tarihi hemen görün. Bırakma tarihiniz: hisle değil, rakamla.
+
+### 설명
+
+İşi bırakmaya ne kadar kaldı? Hisle değil, rakamla öğrenin.
+Toesagak bir emeklilik hesaplayıcısıdır: kaydettiğiniz varlıklardan finansal bağımsızlık (FIRE) hedefine ilerlemenizi ve ona ulaşacağınız tahmini zamanı gösterir.
+
+Pano
+Hedef ilerlemesi ve pasif gelir ilerlemesi en üstte. Geçen haftadan beri ne değiştiğini, şu an ne kadar paranın kullanılabilir, ne kadarının bağlı olduğunu tek bakışta görün.
+
+Dağınık varlıklar tek yerde
+Gayrimenkul, hisse, fon ve ETF, emeklilik, nakit ve mevduat, depozito, kripto ve krediler türe göre gruplanır; varlık dağılımı ve borç oranı ile birlikte. Hisse ve kripto fiyatları çekilerek değerler otomatik güncellenebilir.
+
+Yolculuk
+Döneme göre hedefleri ve geçmiş kayıtlarınızı tek grafikte, ayrıca hedefe ulaşmak için günde, haftada veya ayda ne kadar biriktirmeniz gerektiğini görün. Varlıklarınız değiştiğinde o haftanın kaydı otomatik saklanır.
+
+Altı hesaplayıcı
+Yaşam boyu varlık seyri, kredi ödemesi, mevduat ve birikim, yatırım, maaşın satın alma gücü ve parayı saate çeviren bir hesaplayıcı. Hesapladığınız koşullara ad verip kaydedin, istediğiniz zaman yükleyip ayarlamaya devam edin.
+
+Hedefi siz belirlersiniz
+İstediğiniz aylık harcamayı, güvenli çekim oranını ve beklenen getiriyi girin; FIRE hedef tutarı otomatik hesaplanır.
+
+Önce demo verileriyle deneyin
+Tüm ekranları kurgusal bir kişinin varlıklarıyla gezin; kapatınca kendi verileriniz olduğu gibi geri gelir.
+
+Kayıtlarınız bu cihazda kalır ve hesap gerekmez. Tüm verileri dosya olarak yedekleyip geri yükleyebilirsiniz.
+
+Uygulamadaki hesaplar girdilerinize dayalı yol gösterici sonuçlardır ve yatırım tavsiyesi değildir.

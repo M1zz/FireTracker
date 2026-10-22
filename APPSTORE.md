@@ -740,3 +740,60 @@ Toesagak เป็นเครื่องคิดเลขเกษียณ �
 บันทึกเก็บอยู่ในเครื่องนี้ ไม่ต้องมีบัญชี สำรองและกู้คืนข้อมูลทั้งหมดเป็นไฟล์ได้
 
 การคำนวณในแอปนี้เป็นผลลัพธ์เพื่อการอ้างอิงจากข้อมูลที่คุณกรอก ไม่ใช่คำแนะนำการลงทุน
+
+## vi
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: Máy tính FIRE
+
+### 부제
+
+Nghỉ hưu sớm, tài sản ròng
+
+### 키워드
+
+nghỉhưu,tựdotàichính,tiếtkiệm,thunhập,cổtức,tàisản,danhmục,khoảnvay,đầutư,lãikép,ngânsách
+
+### 프로모션 텍스트
+
+Ghi tài sản, thu nhập và chi tiêu mỗi tháng để thấy ngay tiến độ FIRE và thời điểm dự kiến. Ngày nghỉ việc, xem bằng con số chứ không phải cảm tính.
+
+### 설명
+
+Còn bao lâu nữa bạn có thể nghỉ việc? Hãy xem bằng con số, không phải cảm tính.
+Toesagak là máy tính nghỉ hưu: khi bạn ghi tài sản, ứng dụng cho biết tiến độ đến mục tiêu tự do tài chính (FIRE) và thời điểm dự kiến đạt được.
+
+Bảng điều khiển
+Tiến độ mục tiêu và tiến độ thu nhập thụ động nằm trên cùng. Thấy ngay điều gì đã thay đổi so với tuần trước, bao nhiêu tiền dùng được lúc này và bao nhiêu đang bị khóa.
+
+Gom tài sản rải rác về một nơi
+Bất động sản, cổ phiếu, quỹ và ETF, hưu trí, tiền mặt và tiền gửi, tiền đặt cọc, tiền mã hóa và cả khoản vay, nhóm theo loại, kèm cơ cấu tài sản và tỷ lệ nợ. Giá cổ phiếu và tiền mã hóa có thể được lấy về để tự động cập nhật giá trị.
+
+Hành trình
+Xem mục tiêu theo kỳ và các bản ghi trước đó trên một biểu đồ, cùng số tiền cần tiết kiệm mỗi ngày, tuần, tháng để đạt mục tiêu. Khi tài sản thay đổi, bản ghi của tuần đó tự được lưu.
+
+Sáu máy tính
+Diễn biến tài sản theo vòng đời, trả nợ vay, tiền gửi và tiết kiệm, đầu tư, sức mua của lương và máy tính đổi tiền thành giờ. Đặt tên và lưu các điều kiện đã tính, rồi tải lại bất cứ lúc nào để chỉnh tiếp.
+
+Mục tiêu do bạn đặt
+Nhập chi tiêu hằng tháng mong muốn, tỷ lệ rút an toàn và lợi suất kỳ vọng, mục tiêu FIRE sẽ được tính tự động.
+
+Xem thử bằng dữ liệu mẫu
+Xem mọi màn hình với tài sản của một nhân vật giả định; tắt đi là dữ liệu của bạn trở lại nguyên vẹn.
+
+Bản ghi lưu trên thiết bị này và không cần tài khoản. Bạn có thể sao lưu và khôi phục toàn bộ dữ liệu bằng một tệp.
+
+Các phép tính trong ứng dụng là kết quả tham khảo dựa trên dữ liệu bạn nhập, không phải lời khuyên đầu tư.

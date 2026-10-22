@@ -968,3 +968,60 @@ Toesagak: Υπολογιστής FIRE
 Οι καταγραφές μένουν σε αυτή τη συσκευή και δεν χρειάζεται λογαριασμός. Μπορείτε να κάνετε αντίγραφο ασφαλείας όλων των δεδομένων σε αρχείο και να τα επαναφέρετε.
 
 Οι υπολογισμοί της εφαρμογής είναι ενδεικτικά αποτελέσματα με βάση όσα εισαγάγετε και δεν αποτελούν επενδυτική συμβουλή.
+
+## fi
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: FIRE-laskuri
+
+### 부제
+
+Varhainen eläke ja varallisuus
+
+### 키워드
+
+eläke,taloudellinen,riippumattomuus,säästäminen,varallisuus,passiivinen,tulo,osingot,sijoittaminen
+
+### 프로모션 텍스트
+
+Kirjaa kuukausittain varat, tulot ja menot ja näe heti FIRE-etenemisesi ja arvioitu päivämäärä. Lopetuspäiväsi luvuilla, ei fiiliksellä.
+
+### 설명
+
+Kuinka kauan on aikaa, kunnes voit sanoa työsi irti? Selvitä se luvuilla, ei fiiliksellä.
+Toesagak on eläkelaskuri: kirjaamistasi varoista se näyttää etenemisesi kohti taloudellista riippumattomuutta (FIRE) ja arvion siitä, milloin tavoite täyttyy.
+
+Yleiskatsaus
+Tavoitteen ja passiivisen tulon eteneminen ovat ylimpänä. Näet yhdellä silmäyksellä, mikä on muuttunut viime viikosta ja kuinka paljon rahaa voit käyttää nyt ja kuinka paljon on sidottuna.
+
+Kaikki varat yhdessä paikassa
+Kiinteistöt, osakkeet, rahastot ja ETF:t, eläkkeet, käteinen ja talletukset, vakuudet, kryptovaluutat ja lainat tyypeittäin, varallisuusjakauman ja velkaantumisasteen kera. Osakkeiden ja kryptojen hinnat voi hakea, jotta arvot päivittyvät automaattisesti.
+
+Matka
+Jaksokohtaiset tavoitteet ja aiemmat merkinnät yhdessä kaaviossa sekä se, kuinka paljon sinun tulee säästää päivässä, viikossa tai kuukaudessa tavoitteeseen pääsemiseksi. Kun varasi muuttuvat, viikon merkintä tallentuu automaattisesti.
+
+Kuusi laskuria
+Varallisuuden kehitys elämänkaaren yli, lainanmaksu, talletukset ja säästäminen, sijoittaminen, palkan ostovoima sekä laskuri, joka muuntaa rahan tunneiksi. Nimeä ja tallenna laskemasi ehdot ja lataa ne uudelleen milloin tahansa jatkaaksesi säätämistä.
+
+Tavoitteen päätät itse
+Syötä haluamasi kuukausimenot, turvallinen nostoaste ja odotettu tuotto, niin FIRE-tavoite lasketaan automaattisesti.
+
+Kokeile ensin demotiedoilla
+Käy läpi kaikki näkymät kuvitteellisen henkilön varoilla; kun kytket demon pois, omat tietosi palaavat ennalleen.
+
+Merkintäsi pysyvät tällä laitteella, eikä tiliä tarvita. Voit varmuuskopioida kaikki tiedot tiedostoon ja palauttaa ne.
+
+Apin laskelmat ovat syöttämiisi tietoihin perustuvia suuntaa-antavia tuloksia, eivätkä ne ole sijoitusneuvontaa.

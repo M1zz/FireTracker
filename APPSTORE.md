@@ -1253,3 +1253,60 @@ Przejrzyj wszystkie ekrany na aktywach fikcyjnej osoby; po wyłączeniu twoje da
 Zapisy zostają na tym urządzeniu i nie potrzeba konta. Wszystkie dane możesz zapisać w pliku kopii zapasowej i przywrócić.
 
 Obliczenia w aplikacji są poglądowymi wynikami opartymi na wpisanych danych i nie stanowią porady inwestycyjnej.
+
+## sv
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: FIRE-kalkylator
+
+### 부제
+
+Tidig pension och förmögenhet
+
+### 키워드
+
+pension,ekonomisk,frihet,sparande,förmögenhet,passiv,inkomst,utdelning,investering,skuld,lån,budget
+
+### 프로모션 텍스트
+
+Registrera tillgångar, inkomster och utgifter varje månad och se direkt din FIRE-framgång och beräknade datum. Ditt slutdatum – med siffror, inte magkänsla.
+
+### 설명
+
+Hur lång tid är det kvar tills du kan säga upp dig? Ta reda på det med siffror, inte magkänsla.
+Toesagak är en pensionskalkylator: utifrån de tillgångar du registrerar visar den din framgång mot ekonomiskt oberoende (FIRE) och beräknat datum för när du når målet.
+
+Översikt
+Målframsteg och framsteg för passiv inkomst ligger överst. Se med en blick vad som ändrats sedan förra veckan och hur mycket pengar du kan använda nu och hur mycket som är bundet.
+
+Alla tillgångar på ett ställe
+Fastigheter, aktier, fonder och ETF:er, pensioner, kontanter och insättningar, depositioner, krypto och lån, samlade efter typ med tillgångsfördelning och skuldkvot. Kurser på aktier och krypto kan hämtas så att värdena uppdateras automatiskt.
+
+Resa
+Se mål per period och tidigare registreringar i ett enda diagram, och hur mycket du behöver spara per dag, vecka eller månad för att nå målet. När dina tillgångar ändras sparas veckans registrering automatiskt.
+
+Sex räknare
+Förmögenhetsutveckling genom livet, lånebetalning, insättningar och sparande, investering, lönens köpkraft och en räknare som gör om pengar till timmar. Namnge och spara villkoren du räknat på och läs in dem igen när du vill justera vidare.
+
+Målet bestämmer du
+Ange önskade månatliga utgifter, säker uttagstakt och förväntad avkastning, så räknas FIRE-målet ut automatiskt.
+
+Prova först med demodata
+Gå igenom alla skärmar med en fiktiv persons tillgångar; slår du av det är dina egna data tillbaka som förut.
+
+Dina registreringar ligger kvar på den här enheten och inget konto behövs. Du kan säkerhetskopiera och återställa alla data som en fil.
+
+Beräkningarna i appen är vägledande resultat baserade på det du anger och är inte investeringsrådgivning.

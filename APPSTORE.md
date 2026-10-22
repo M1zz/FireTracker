@@ -797,3 +797,60 @@ Xem mọi màn hình với tài sản của một nhân vật giả định; t�
 Bản ghi lưu trên thiết bị này và không cần tài khoản. Bạn có thể sao lưu và khôi phục toàn bộ dữ liệu bằng một tệp.
 
 Các phép tính trong ứng dụng là kết quả tham khảo dựa trên dữ liệu bạn nhập, không phải lời khuyên đầu tư.
+
+## cs
+
+### 지원 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 개인정보처리방침 URL
+
+https://m1zz.github.io/FireTracker/privacy.html
+
+### 마케팅 URL
+
+https://m1zz.github.io/FireTracker/
+
+### 이름
+
+Toesagak: kalkulačka FIRE
+
+### 부제
+
+Předčasný důchod a majetek
+
+### 키워드
+
+důchod,finanční,nezávislost,úspory,majetek,pasivní,příjem,dividendy,investice,dluh,úvěr,rozpočet
+
+### 프로모션 텍스트
+
+Zapisujte každý měsíc majetek, příjmy a výdaje a hned uvidíte pokrok k FIRE i odhad data. Datum odchodu – podle čísel, ne od oka.
+
+### 설명
+
+Za jak dlouho můžete skončit v práci? Zjistěte to podle čísel, ne od oka.
+Toesagak je důchodová kalkulačka: z majetku, který zapíšete, ukáže pokrok k finanční nezávislosti (FIRE) i odhad, kdy ji dosáhnete.
+
+Přehled
+Plnění cíle a plnění pasivního příjmu jsou úplně nahoře. Na první pohled vidíte, co se změnilo od minulého týdne, kolik peněz můžete teď použít a kolik je vázáno.
+
+Veškerý majetek na jednom místě
+Nemovitosti, akcie, fondy a ETF, důchody, hotovost a vklady, kauce, kryptoměny i úvěry podle druhů, se skladbou majetku a mírou zadlužení. Ceny akcií a kryptoměn lze stahovat a hodnoty se aktualizují samy.
+
+Cesta
+Cíle podle období a dosavadní záznamy na jednom grafu a také kolik odložit za den, týden nebo měsíc, abyste cíle dosáhli. Když se majetek změní, záznam daného týdne se uloží sám.
+
+Šest kalkulaček
+Vývoj majetku během života, splácení úvěru, vklady a spoření, investice, kupní síla mzdy a kalkulačka, která přepočítá peníze na hodiny. Zadané podmínky pojmenujte, uložte a kdykoli znovu načtěte a upravujte dál.
+
+Cíl si určujete sami
+Zadejte požadované měsíční výdaje, bezpečnou míru čerpání a očekávaný výnos a cíl FIRE se spočítá automaticky.
+
+Nejdřív si vyzkoušejte na ukázkových datech
+Projděte všechny obrazovky na majetku smyšlené osoby; po vypnutí se vaše data vrátí beze změny.
+
+Záznamy zůstávají v tomto zařízení a nepotřebujete účet. Všechna data můžete zálohovat do souboru a obnovit.
+
+Výpočty v aplikaci jsou orientační výsledky podle vašich údajů a nejsou investičním poradenstvím.

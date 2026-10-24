@@ -71,21 +71,21 @@ struct QuickStartView: View {
             }
 
             Section {
-                moneyField("은퇴 후 한 달 생활비", hint: "3,000,000", text: $monthlyLiving)
+                moneyField(String(localized: "은퇴 후 한 달 생활비"), hint: "3,000,000", text: $monthlyLiving)
             } footer: {
                 Text("일을 그만둔 뒤 매달 쓰고 싶은 돈이에요. 지금 생활비를 떠올리면 쉬워요.")
             }
 
             Section {
-                ageField("지금 나이", text: $age)
-                ageField("그만두고 싶은 나이 (선택)", text: $retireAge)
+                ageField(String(localized: "지금 나이"), text: $age)
+                ageField(String(localized: "그만두고 싶은 나이 (선택)"), text: $retireAge)
             }
 
             Section {
                 if asksNetWorth {
-                    moneyField("지금 순자산 (대략)", hint: "50,000,000", text: $netWorth)
+                    moneyField(String(localized: "지금 순자산 (대략)"), hint: "50,000,000", text: $netWorth)
                 }
-                moneyField("매달 모으는 돈", hint: "1,500,000", text: $monthlySaving)
+                moneyField(String(localized: "매달 모으는 돈"), hint: "1,500,000", text: $monthlySaving)
             } footer: {
                 Text(asksNetWorth
                      ? "순자산은 예금·주식·집 같은 자산에서 빚을 뺀 금액이에요. 매달 모으는 돈은 월급에서 생활비를 쓰고 남는 돈이에요."
@@ -150,9 +150,9 @@ struct QuickStartView: View {
                 .padding(.top, 12)
 
                 VStack(alignment: .leading, spacing: 10) {
-                    row("목표 금액", "\(Fmt.krw(o.fireNumber))원")
-                    row("지금 순자산", "\(Fmt.krw(o.netWorth))원")
-                    row("매달 모으는 돈", "\(Fmt.krw(o.monthlySavings))원")
+                    row(String(localized: "목표 금액"), String(localized: "\(Fmt.krw(o.fireNumber))원"))
+                    row(String(localized: "지금 순자산"), String(localized: "\(Fmt.krw(o.netWorth))원"))
+                    row(String(localized: "매달 모으는 돈"), String(localized: "\(Fmt.krw(o.monthlySavings))원"))
                     Text("목표 금액은 한 해 생활비를 \(Fmt.percent(settingsList.first?.safeWithdrawalRate ?? 0.04, fraction: 1))로 나눈 값이에요(해마다 이만큼 꺼내 써도 원금이 오래 버티는 수준). 모은 돈은 연 \(Fmt.percent(o.annualReturn, fraction: 0))로 불어난다고 가정했어요. 여정 탭 ‘내 목표’에서 바꿀 수 있어요.")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
@@ -217,15 +217,14 @@ struct QuickStartView: View {
 
     private func retireGapText(_ o: FireOutlook) -> String? {
         guard let target = Int(retireAge), target > 0, let at = o.ageAtFire else { return nil }
-        if at < target { return "원하던 \(target)세보다 \(target - at)년 빨라요" }
-        if at > target { return "원하던 \(target)세보다 \(at - target)년 늦어요" }
-        return "원하던 \(target)세에 딱 맞아요"
+        if at < target { return String(localized: "원하던 \(target)세보다 \(target - at)년 빨라요") }
+        if at > target { return String(localized: "원하던 \(target)세보다 \(at - target)년 늦어요") }
+        return String(localized: "원하던 \(target)세에 딱 맞아요")
     }
 
     static func monthText(_ date: Date) -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "yyyy년 M월"
+        f.setLocalizedDateFormatFromTemplate("yyyyMMMM")
         return f.string(from: date)
     }
 
@@ -258,12 +257,12 @@ struct QuickStartView: View {
         // 종류별로 나눠 적으면 이 줄을 지우면 된다(이름이 그렇게 말한다).
         var catalogNet = assets.reduce(0) { $0 + $1.netValue }
         if asksNetWorth, let nw = Double(netWorth), nw > 0 {
-            context.insert(Asset(name: "대략적인 순자산 (나눠 적으면 지우세요)",
+            context.insert(Asset(name: String(localized: "대략적인 순자산 (나눠 적으면 지우세요)"),
                                  assetClass: .other, amount: nw))
             catalogNet = nw
             AppUsage.log(.assetAdded)
         }
-        guard context.saveReporting("목표") else { return }
+        guard context.saveReporting(String(localized: "목표")) else { return }
         FireSettings.markGoalConfigured()
 
         withAnimation { result = FireOutlook(netWorth: catalogNet, settings: settings) }

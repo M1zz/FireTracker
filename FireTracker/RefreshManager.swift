@@ -41,7 +41,7 @@ final class RefreshManager: ObservableObject {
         guard !targets.isEmpty else { return }
 
         isRefreshing = true
-        statusMessage = "시세·배당 불러오는 중…"
+        statusMessage = String(localized: "시세·배당 불러오는 중…")
         defer { isRefreshing = false }
 
         var pricedCount = 0
@@ -94,17 +94,17 @@ final class RefreshManager: ObservableObject {
                 }
             }
         }
-        context.saveReporting("시세")
+        context.saveReporting(String(localized: "시세"))
 
         // 하나도 못 불러왔는데 '최신 상태'라고 하면 안 된다 — 실패를 그대로 말한다.
         var parts: [String] = []
-        if pricedCount > 0 { parts.append("시세 \(pricedCount)건") }
-        if dividendCount > 0 { parts.append("배당 \(dividendCount)건") }
-        var message = parts.isEmpty ? "" : parts.joined(separator: " · ") + " 갱신됨"
+        if pricedCount > 0 { parts.append(String(localized: "시세 \(pricedCount)건")) }
+        if dividendCount > 0 { parts.append(String(localized: "배당 \(dividendCount)건")) }
+        var message = parts.isEmpty ? "" : parts.joined(separator: " · ") + String(localized: " 갱신됨")
         if failedCount > 0 {
-            message += (message.isEmpty ? "" : " · ") + "\(failedCount)건은 시세를 못 불러왔어요"
+            message += (message.isEmpty ? "" : " · ") + String(localized: "\(failedCount)건은 시세를 못 불러왔어요")
         }
-        stamp(message: message.isEmpty ? "최신 상태입니다" : message)
+        stamp(message: message.isEmpty ? String(localized: "최신 상태입니다") : message)
     }
 
     // 주 1회 자동 스냅샷 — 이번 주 기록(수동·자동 무관)이 아직 없으면 현재
@@ -129,7 +129,7 @@ final class RefreshManager: ObservableObject {
         )
         context.insert(snap)
         appendEntries(to: snap, assets: assets)
-        context.saveReporting("기록")
+        context.saveReporting(String(localized: "기록"))
     }
 
     // 자산이 바뀔 때마다 호출(추가·수정·삭제·시세 갱신) — 오늘 기록을 현재
@@ -166,7 +166,7 @@ final class RefreshManager: ObservableObject {
             context.insert(snap)
             appendEntries(to: snap, assets: assets)
         }
-        context.saveReporting("기록")
+        context.saveReporting(String(localized: "기록"))
     }
 
     private func passiveTotal(_ assets: [Asset], _ settings: FireSettings) -> Double {
@@ -204,10 +204,10 @@ final class RefreshManager: ObservableObject {
         guard let last = lastRefresh else { return nil }
         let secs = Int(Date().timeIntervalSince(last))
         switch secs {
-        case ..<60:      return "방금 전"
-        case ..<3600:    return "\(secs / 60)분 전"
-        case ..<86_400:  return "\(secs / 3600)시간 전"
-        default:         return "\(secs / 86_400)일 전"
+        case ..<60:      return String(localized: "방금 전")
+        case ..<3600:    return String(localized: "\(secs / 60)분 전")
+        case ..<86_400:  return String(localized: "\(secs / 3600)시간 전")
+        default:         return String(localized: "\(secs / 86_400)일 전")
         }
     }
 }

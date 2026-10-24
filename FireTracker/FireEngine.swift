@@ -122,12 +122,21 @@ enum Fmt {
     // 앱 시작·설정 변경 시 RootView가 설정값으로 동기화한다.
     static var numbersOnly = false
 
+    // 한국어로 볼 때만 억/만 단위를 쓴다. 다른 언어는 그 나라 말의 큰 수 표기(1.2M · 5.2億 · 1,2 Mio.)로.
+    static var isKorean: Bool {
+        (Bundle.main.preferredLocalizations.first ?? "ko").hasPrefix("ko")
+    }
+
     // Formats a KRW amount into 억/만원 readable Korean string.
     static func krw(_ value: Double) -> String {
         // Int(NaN/Inf) traps — never let a bad number crash the money formatter.
         guard value.isFinite else { return "0" }
         // 숫자만 모드 — 콤마 구분 정수로.
         if numbersOnly { return won(value) }
+        guard isKorean else {
+            if abs(value) < 10_000 { return Int(value.rounded()).formatted() }
+            return value.formatted(.number.notation(.compactName).precision(.significantDigits(1...4)))
+        }
         let eok = 100_000_000.0
         let man = 10_000.0
         let sign = value < 0 ? "-" : ""
@@ -157,12 +166,12 @@ enum Fmt {
 
     // 금액 + '원'. 표기 모드를 따른다(억/만 또는 숫자). 예) "3,600만원" 또는 "36,000,000원".
     static func wonKo(_ value: Double) -> String {
-        "\(krw(value))원"
+        String(localized: "\(krw(value))원")
     }
 
     // 금액 + '원'. wonKo와 동일하게 표기 모드를 따른다.
     static func krwBoth(_ value: Double) -> String {
-        "\(krw(value))원"
+        String(localized: "\(krw(value))원")
     }
 
     static func percent(_ value: Double, fraction: Int = 1) -> String {
@@ -175,12 +184,12 @@ enum Fmt {
 
     static func years(_ value: Double?) -> String {
         guard let value, value.isFinite else { return "—" }
-        if value < 1.0 / 12.0 { return "달성!" }
+        if value < 1.0 / 12.0 { return String(localized: "달성!") }
         let whole = Int(value)
         let months = Int((value - Double(whole)) * 12)
-        if whole == 0 { return "\(months)개월" }
-        if months == 0 { return "\(whole)년" }
-        return "\(whole)년 \(months)개월"
+        if whole == 0 { return String(localized: "\(months)개월") }
+        if months == 0 { return String(localized: "\(whole)년") }
+        return String(localized: "\(whole)년 \(months)개월")
     }
 
     // Renders a quantity without trailing ".0" (e.g. 3.0 → "3", 0.25 → "0.25").
@@ -192,8 +201,7 @@ enum Fmt {
 
     static func date(_ date: Date) -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "yyyy.MM"
+        f.setLocalizedDateFormatFromTemplate("yyyyMM")
         return f.string(from: date)
     }
 }

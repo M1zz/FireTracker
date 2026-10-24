@@ -27,23 +27,23 @@ enum AssetClass: String, Codable, CaseIterable, Identifiable {
     // Korean UI label.
     var label: String {
         switch self {
-        case .cash:       return "현금·예금"
-        case .stocks:     return "주식"
-        case .fund:       return "펀드·ETF"
-        case .bond:       return "채권"
-        case .crypto:     return "암호화폐"
-        case .pension:    return "연금"
-        case .insurance:  return "보험"
-        case .realEstate: return "부동산"
-        case .jeonse:     return "전세보증금"
-        case .deposit:    return "보증금"
-        case .vehicle:    return "자동차"
-        case .valuables:  return "귀금속·미술품"
-        case .receivable: return "받을 돈"
-        case .ip:         return "지식재산권"
-        case .other:      return "기타"
-        case .custom:     return "직접 입력"
-        case .debt:       return "부채"
+        case .cash:       return String(localized: "현금·예금")
+        case .stocks:     return String(localized: "주식")
+        case .fund:       return String(localized: "펀드·ETF")
+        case .bond:       return String(localized: "채권")
+        case .crypto:     return String(localized: "암호화폐")
+        case .pension:    return String(localized: "연금")
+        case .insurance:  return String(localized: "보험")
+        case .realEstate: return String(localized: "부동산")
+        case .jeonse:     return String(localized: "전세보증금")
+        case .deposit:    return String(localized: "보증금")
+        case .vehicle:    return String(localized: "자동차")
+        case .valuables:  return String(localized: "귀금속·미술품")
+        case .receivable: return String(localized: "받을 돈")
+        case .ip:         return String(localized: "지식재산권")
+        case .other:      return String(localized: "기타")
+        case .custom:     return String(localized: "직접 입력")
+        case .debt:       return String(localized: "부채")
         }
     }
 
@@ -214,13 +214,13 @@ enum IncomeKind: String, Codable, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .none:     return "없음"
-        case .rent:     return "월세(임대료)"
-        case .dividend: return "배당"
-        case .interest: return "이자"
-        case .pension:  return "연금 수령"
-        case .staking:  return "스테이킹"
-        case .other:    return "기타 소득"
+        case .none:     return String(localized: "없음")
+        case .rent:     return String(localized: "월세(임대료)")
+        case .dividend: return String(localized: "배당")
+        case .interest: return String(localized: "이자")
+        case .pension:  return String(localized: "연금 수령")
+        case .staking:  return String(localized: "스테이킹")
+        case .other:    return String(localized: "기타 소득")
         }
     }
 
@@ -239,11 +239,11 @@ enum IncomeKind: String, Codable, CaseIterable, Identifiable {
     // Research-based typical annual yield, shown as guidance text (2025 기준).
     var yieldHint: String {
         switch self {
-        case .rent:     return "서울 아파트 ~2.4%, 오피스텔 ~5%"
-        case .dividend: return "코스피 ~2%, S&P500 ~1.5%, 고배당 ETF ~4.5%"
-        case .interest: return "예금 ~3%"
-        case .staking:  return "ETH 스테이킹 ~3~4%"
-        case .pension:  return "운용수익률 ~3~5%"
+        case .rent:     return String(localized: "서울 아파트 ~2.4%, 오피스텔 ~5%")
+        case .dividend: return String(localized: "코스피 ~2%, S&P500 ~1.5%, 고배당 ETF ~4.5%")
+        case .interest: return String(localized: "예금 ~3%")
+        case .staking:  return String(localized: "ETH 스테이킹 ~3~4%")
+        case .pension:  return String(localized: "운용수익률 ~3~5%")
         default:        return ""
         }
     }
@@ -259,15 +259,15 @@ enum Liquidity: String, Codable, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .liquid: return "유동 (쓸 수 있음)"
-        case .locked: return "묶임 (당장 못 씀)"
+        case .liquid: return String(localized: "유동 (쓸 수 있음)")
+        case .locked: return String(localized: "묶임 (당장 못 씀)")
         }
     }
 
     var shortLabel: String {
         switch self {
-        case .liquid: return "유동"
-        case .locked: return "묶임"
+        case .liquid: return String(localized: "유동")
+        case .locked: return String(localized: "묶임")
         }
     }
 
@@ -294,10 +294,10 @@ enum RealEstateUse: String, Codable, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .residence:  return "실거주"
-        case .jeonse:     return "전세 줌"
-        case .wolse:      return "월세 줌"
-        case .semiJeonse: return "반전세"
+        case .residence:  return String(localized: "실거주")
+        case .jeonse:     return String(localized: "전세 줌")
+        case .wolse:      return String(localized: "월세 줌")
+        case .semiJeonse: return String(localized: "반전세")
         }
     }
 
@@ -533,7 +533,7 @@ enum TradeKind: String, Codable, CaseIterable, Identifiable {
     case buy
     case sell
     var id: String { rawValue }
-    var label: String { self == .buy ? "매수" : "매도" }
+    var label: String { self == .buy ? String(localized: "매수") : String(localized: "매도") }
 }
 
 // 한 번의 매매 — 언제, 몇 주를, 주당 얼마에, 총 얼마어치.
@@ -698,9 +698,9 @@ enum FireGoalType: String, Codable, CaseIterable, Identifiable {
     var id: String { rawValue }
     var label: String {
         switch self {
-        case .assets: return "자산"
-        case .income: return "패시브 인컴"
-        case .both:   return "둘 다"
+        case .assets: return String(localized: "자산")
+        case .income: return String(localized: "패시브 인컴")
+        case .both:   return String(localized: "둘 다")
         }
     }
 }

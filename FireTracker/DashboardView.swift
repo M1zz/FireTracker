@@ -227,8 +227,8 @@ struct DashboardView: View {
     }
     private var yearEndLabel: String {
         let year = Calendar.current.component(.year, from: Date())
-        let basis = hasDebt ? " (순자산 기준)" : ""
-        return "\(year)년 말 예상 자산\(basis)"
+        let basis = hasDebt ? String(localized: " (순자산 기준)") : ""
+        return String(localized: "\(year)년 말 예상 자산\(basis)")
     }
     // 퇴사각 — 위젯·알림과 같은 계산. 월 저축은 '내 목표'의 계획값을 쓴다
     // (기록의 수입·지출도 결국 그 계획값을 옮겨 적은 것이라 따로 평균 내면 0이 되곤 했다).
@@ -281,52 +281,52 @@ struct DashboardView: View {
         // 1) 자산 추세 — the signal the user cares most about (줄어드는가).
         if let d = delta {
             if d > 0 {
-                out.append(.init(title: "자산 추세",
-                                 detail: "지난주보다 +\(Fmt.krw(d))원 — 늘고 있어요",
+                out.append(.init(title: String(localized: "자산 추세"),
+                                 detail: String(localized: "지난주보다 +\(Fmt.krw(d))원 — 늘고 있어요"),
                                  level: .good, symbol: "arrow.up.right"))
             } else if d < 0 {
-                out.append(.init(title: "자산 추세",
-                                 detail: "지난주보다 \(Fmt.krw(d))원 — 줄고 있어요",
+                out.append(.init(title: String(localized: "자산 추세"),
+                                 detail: String(localized: "지난주보다 \(Fmt.krw(d))원 — 줄고 있어요"),
                                  level: .bad, symbol: "arrow.down.right"))
             } else {
-                out.append(.init(title: "자산 추세",
-                                 detail: "지난주와 비슷해요", level: .caution, symbol: "arrow.right"))
+                out.append(.init(title: String(localized: "자산 추세"),
+                                 detail: String(localized: "지난주와 비슷해요"), level: .caution, symbol: "arrow.right"))
             }
         } else {
-            out.append(.init(title: "자산 추세",
-                             detail: "기록 2개부터 늘었는지 줄었는지 알 수 있어요",
+            out.append(.init(title: String(localized: "자산 추세"),
+                             detail: String(localized: "기록 2개부터 늘었는지 줄었는지 알 수 있어요"),
                              level: .neutral, symbol: "chart.xyaxis.line"))
         }
 
         // 2) 월 저축 — 버는 것보다 많이 쓰면 경고.
         let sav = monthlySavingsNow
         if sav > 0 {
-            out.append(.init(title: "월 저축",
-                             detail: "매달 +\(Fmt.krw(sav))원씩 쌓이는 중", level: .good, symbol: "tray.and.arrow.down.fill"))
+            out.append(.init(title: String(localized: "월 저축"),
+                             detail: String(localized: "매달 +\(Fmt.krw(sav))원씩 쌓이는 중"), level: .good, symbol: "tray.and.arrow.down.fill"))
         } else if sav < 0 {
-            out.append(.init(title: "월 저축",
-                             detail: "버는 것보다 \(Fmt.krw(-sav))원 더 써요", level: .bad, symbol: "tray.and.arrow.up.fill"))
+            out.append(.init(title: String(localized: "월 저축"),
+                             detail: String(localized: "버는 것보다 \(Fmt.krw(-sav))원 더 써요"), level: .bad, symbol: "tray.and.arrow.up.fill"))
         } else {
-            out.append(.init(title: "월 저축",
-                             detail: "월 저축을 입력하면 신호가 켜져요", level: .neutral, symbol: "tray.fill"))
+            out.append(.init(title: String(localized: "월 저축"),
+                             detail: String(localized: "월 저축을 입력하면 신호가 켜져요"), level: .neutral, symbol: "tray.fill"))
         }
 
         // 3) 패시브 인컴 — 있으면 좋은 신호 (선택의 영역).
         if monthlyPassiveIncome > 0 {
-            out.append(.init(title: "패시브 인컴",
-                             detail: "월 \(Fmt.krw(monthlyPassiveIncome))원이 들어와요", level: .good, symbol: "dollarsign.arrow.circlepath"))
+            out.append(.init(title: String(localized: "패시브 인컴"),
+                             detail: String(localized: "월 \(Fmt.krw(monthlyPassiveIncome))원이 들어와요"), level: .good, symbol: "dollarsign.arrow.circlepath"))
         } else {
-            out.append(.init(title: "패시브 인컴",
-                             detail: "배당·월세·이자를 넣으면 들어오는 돈이 보여요", level: .neutral, symbol: "dollarsign.circle"))
+            out.append(.init(title: String(localized: "패시브 인컴"),
+                             detail: String(localized: "배당·월세·이자를 넣으면 들어오는 돈이 보여요"), level: .neutral, symbol: "dollarsign.circle"))
         }
 
         // 4) 부채 비중 — 총자산 대비 빚이 과한가.
         if hasDebt {
             let pct = Fmt.percent(debtRatio, fraction: 0)
             let level: SignalLevel = debtRatio < 0.4 ? .good : (debtRatio < 0.7 ? .caution : .bad)
-            let tail = debtRatio < 0.4 ? "적정 수준" : (debtRatio < 0.7 ? "다소 높아요" : "부담이 커요")
-            out.append(.init(title: "부채 비중",
-                             detail: "총자산의 \(pct) — \(tail)", level: level, symbol: "creditcard.trianglebadge.exclamationmark"))
+            let tail = debtRatio < 0.4 ? String(localized: "적정 수준") : (debtRatio < 0.7 ? String(localized: "다소 높아요") : String(localized: "부담이 커요"))
+            out.append(.init(title: String(localized: "부채 비중"),
+                             detail: String(localized: "총자산의 \(pct) — \(tail)"), level: level, symbol: "creditcard.trianglebadge.exclamationmark"))
         }
 
         return out
@@ -341,10 +341,10 @@ struct DashboardView: View {
 
     private var overallHeadline: String {
         switch overallSignal {
-        case .good:    return "재정이 순항 중이에요"
-        case .caution: return "조금 주의가 필요해요"
-        case .bad:     return "점검이 필요한 신호가 있어요"
-        case .neutral: return "기록을 모으면 신호가 켜져요"
+        case .good:    return String(localized: "재정이 순항 중이에요")
+        case .caution: return String(localized: "조금 주의가 필요해요")
+        case .bad:     return String(localized: "점검이 필요한 신호가 있어요")
+        case .neutral: return String(localized: "기록을 모으면 신호가 켜져요")
         }
     }
 
@@ -368,13 +368,13 @@ struct DashboardView: View {
                             FuturePreviewEntry(compact: true)
                                 .cardStyle()
                             if SellWatchCard.hasContent(assets) {
-                                section("매도 원칙", "정해 둔 대로 팔 때가 됐나") { sellCard }
+                                section(String(localized: "매도 원칙"), String(localized: "정해 둔 대로 팔 때가 됐나")) { sellCard }
                             }
-                            section("이번 주", "지난 기록과 비교해 무엇이 달라졌나") {
+                            section(String(localized: "이번 주"), String(localized: "지난 기록과 비교해 무엇이 달라졌나")) {
                                 welcomeCard
                             }
                             if showLevers { leverCard }
-                            section("내 돈의 상태", "자산이 벌어 오는 돈과 바로 쓸 수 있는 돈") {
+                            section(String(localized: "내 돈의 상태"), String(localized: "자산이 벌어 오는 돈과 바로 쓸 수 있는 돈")) {
                                 cashFlowCard
                                 liquidityCard
                             }
@@ -388,7 +388,7 @@ struct DashboardView: View {
                                 if settings.goalConfigured { goalProgressCard }
                                 NavigationLink {
                                     ProjectionDetailView(startingAssets: projectionBase,
-                                                         basisLabel: hasDebt ? "순자산" : nil,
+                                                         basisLabel: hasDebt ? String(localized: "순자산") : nil,
                                                          monthlyTakeHome: settings.monthlyTakeHome,
                                                          plannedExpense: settings.plannedMonthlyExpense,
                                                          monthlySavings: plannedSavings,
@@ -446,16 +446,16 @@ struct DashboardView: View {
 
                 VStack(spacing: 14) {
                     stepRow(number: 1,
-                            title: "30초 만에 내 퇴사일 보기",
-                            detail: "생활비·나이·순자산·저축만 대략 넣으면 돼요",
+                            title: String(localized: "30초 만에 내 퇴사일 보기"),
+                            detail: String(localized: "생활비·나이·순자산·저축만 대략 넣으면 돼요"),
                             symbol: "flame.fill")
                     stepRow(number: 2,
-                            title: "자산을 하나씩 적기",
-                            detail: "주식·코인·부동산·전세·현금 — 시세는 자동으로",
+                            title: String(localized: "자산을 하나씩 적기"),
+                            detail: String(localized: "주식·코인·부동산·전세·현금 — 시세는 자동으로"),
                             symbol: "wonsign.circle.fill")
                     stepRow(number: 3,
-                            title: "자동으로 쌓이는 기록",
-                            detail: "자산에 변동이 생기면 그날 기록이 자동 저장돼요",
+                            title: String(localized: "자동으로 쌓이는 기록"),
+                            detail: String(localized: "자산에 변동이 생기면 그날 기록이 자동 저장돼요"),
                             symbol: "chart.xyaxis.line")
                 }
 
@@ -580,7 +580,7 @@ struct DashboardView: View {
         }
         for (k, amt) in prior where !seen.contains(k) && abs(amt) >= 1 {
             let m = meta[k]
-            out.append(AssetDelta(name: (m?.name.isEmpty == false ? m!.name : "삭제된 항목"),
+            out.append(AssetDelta(name: (m?.name.isEmpty == false ? m!.name : String(localized: "삭제된 항목")),
                                   netDelta: -amt, isDebt: m?.isDebt ?? false))
         }
         return out.sorted { abs($0.netDelta) > abs($1.netDelta) }
@@ -615,7 +615,7 @@ struct DashboardView: View {
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
                         Spacer()
-                        DeltaChip(text: Fmt.krw(abs(it.displayDelta)) + "원",
+                        DeltaChip(text: Fmt.krw(abs(it.displayDelta)) + String(localized: "원"),
                                   up: it.displayDelta > 0, tint: deltaColor(it))
                     }
                 }
@@ -632,8 +632,8 @@ struct DashboardView: View {
     // 자산·부채 증감 두 막대. 순자산 변화는 카드 머리의 해석 줄이 말한다.
     private var netWorthChangeChart: some View {
         let c = lastRecordChange
-        let assetsBar = AssetChangeBar(label: "자산", value: c?.assets ?? 0,  positiveIsGood: true)
-        let debtBar   = AssetChangeBar(label: "부채",   value: -(c?.debt ?? 0), positiveIsGood: true)
+        let assetsBar = AssetChangeBar(label: String(localized: "자산"), value: c?.assets ?? 0,  positiveIsGood: true)
+        let debtBar   = AssetChangeBar(label: String(localized: "부채"),   value: -(c?.debt ?? 0), positiveIsGood: true)
         // 부채가 자산과 같은 부호면 자산 끝에서 이어 그려 겹치지 않게 한다.
         let dStart = assetsBar.value * debtBar.value > 0 ? assetsBar.value : 0
         let dEnd   = dStart + debtBar.value
@@ -646,11 +646,11 @@ struct DashboardView: View {
             }
             Chart {
                 BarMark(xStart: .value("시작", 0.0), xEnd: .value("변화", assetsBar.value * barAnim),
-                        y: .value("항목", "변화"), height: .ratio(0.5))
+                        y: .value("항목", String(localized: "변화")), height: .ratio(0.5))
                     .foregroundStyle(changeBarColor(assetsBar))
                     .cornerRadius(4)
                 BarMark(xStart: .value("시작", dStart * barAnim), xEnd: .value("변화", dEnd * barAnim),
-                        y: .value("항목", "변화"), height: .ratio(0.5))
+                        y: .value("항목", String(localized: "변화")), height: .ratio(0.5))
                     .foregroundStyle(changeBarColor(debtBar)).cornerRadius(4)
                 RuleMark(x: .value("0", 0.0)).foregroundStyle(Theme.hairline)
             }
@@ -702,8 +702,7 @@ struct DashboardView: View {
     // "지난 기록"의 정체 — 비교 대상 스냅샷의 날짜와 며칠 전인지.
     private func recordDateText(_ date: Date) -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "M월 d일"
+        f.setLocalizedDateFormatFromTemplate("MMMd")
         return f.string(from: date)
     }
 
@@ -810,7 +809,7 @@ struct DashboardView: View {
                 .foregroundStyle(Theme.accent)
             }
             if let date = o.date {
-                Text(o.years ?? 0 < 1.0 / 12.0 ? "지금 그만둬도 돼요" : QuickStartView.monthText(date))
+                Text(o.years ?? 0 < 1.0 / 12.0 ? String(localized: "지금 그만둬도 돼요") : QuickStartView.monthText(date))
                     .font(.system(.largeTitle, design: .rounded, weight: .bold))
                     .foregroundStyle(Theme.textPrimary)
                     .contentTransition(.numericText())
@@ -882,9 +881,9 @@ struct DashboardView: View {
     private func retireGapText(_ o: FireOutlook) -> String? {
         let target = settings.targetRetireAge
         guard target > 0, let at = o.ageAtFire else { return nil }
-        if at < target { return "목표 \(target)세보다 \(target - at)년 빨라요" }
-        if at > target { return "목표 \(target)세보다 \(at - target)년 늦어요" }
-        return "목표 \(target)세에 딱 맞아요"
+        if at < target { return String(localized: "목표 \(target)세보다 \(target - at)년 빨라요") }
+        if at > target { return String(localized: "목표 \(target)세보다 \(at - target)년 늦어요") }
+        return String(localized: "목표 \(target)세에 딱 맞아요")
     }
 
     // --- 매도 원칙 ---
@@ -924,17 +923,17 @@ struct DashboardView: View {
     private var changeHeadline: String {
         let net = lastNetChange ?? 0
         if let d = fireShiftDays, d != 0 {
-            return "퇴사일이 약 \(durationText(days: abs(d))) \(d > 0 ? "당겨졌어요" : "밀렸어요")"
+            return String(localized: "퇴사일이 약 \(durationText(days: abs(d))) \(d > 0 ? String(localized: "당겨졌어요") : String(localized: "밀렸어요"))")
         }
-        if net > 0 { return "자산이 늘었어요" }
-        if net < 0 { return "자산이 줄었어요" }
-        return "지난 기록과 같아요"
+        if net > 0 { return String(localized: "자산이 늘었어요") }
+        if net < 0 { return String(localized: "자산이 줄었어요") }
+        return String(localized: "지난 기록과 같아요")
     }
 
     private func durationText(days: Int) -> String {
         if days >= 365 { return Fmt.years(Double(days) / 365) }
-        if days >= 60 { return "\(days / 30)개월" }
-        return "\(days)일"
+        if days >= 60 { return String(localized: "\(days / 30)개월") }
+        return String(localized: "\(days)일")
     }
 
     // --- 앞당기려면: 두 가지 손잡이 ---
@@ -953,11 +952,11 @@ struct DashboardView: View {
     }
 
     private func leverEffect(_ changed: Double?) -> String {
-        guard let changed else { return "아직 정해지지 않아요" }
-        guard let now = outlook.years else { return "\(Fmt.years(changed)) 뒤로 생겨요" }
+        guard let changed else { return String(localized: "아직 정해지지 않아요") }
+        guard let now = outlook.years else { return String(localized: "\(Fmt.years(changed)) 뒤로 생겨요") }
         let months = Int(((now - changed) * 12).rounded())
-        if months <= 0 { return "1개월 안쪽으로 빨라져요" }
-        return "\(Fmt.years(Double(months) / 12)) 빨라져요"
+        if months <= 0 { return String(localized: "1개월 안쪽으로 빨라져요") }
+        return String(localized: "\(Fmt.years(Double(months) / 12)) 빨라져요")
     }
 
     private var leverCard: some View {
@@ -973,11 +972,11 @@ struct DashboardView: View {
                         .foregroundStyle(Theme.textSecond)
                 }
                 leverRow(symbol: "tray.and.arrow.down",
-                         title: "매달 \(Fmt.krw(step))원 더 모으기",
+                         title: String(localized: "매달 \(Fmt.krw(step))원 더 모으기"),
                          effect: leverEffect(yearsIf(savingsDelta: step)))
                 Divider().overlay(Theme.hairline).padding(.leading, 40)
                 leverRow(symbol: "cart",
-                         title: "은퇴 후 생활비 월 \(Fmt.krw(step))원 줄이기",
+                         title: String(localized: "은퇴 후 생활비 월 \(Fmt.krw(step))원 줄이기"),
                          effect: leverEffect(yearsIf(expenseDelta: -step)))
                 Divider().overlay(Theme.hairline)
                 HStack(spacing: 2) {
@@ -1006,7 +1005,7 @@ struct DashboardView: View {
                 Text(title)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
-                Text("퇴사일이 " + effect)
+                Text(String(localized: "퇴사일이 ") + effect)
                     .font(.subheadline)
                     .foregroundStyle(Theme.textSecond)
             }
@@ -1039,18 +1038,18 @@ struct DashboardView: View {
                 .font(.headline)
                 .foregroundStyle(Theme.textPrimary)
             if showAsset {
-                goalBar(title: "자산 목표 달성률",
+                goalBar(title: String(localized: "자산 목표 달성률"),
                         progress: goalProgress,
-                        detail: "목표까지 \(Fmt.krw(goalRemaining))원 남음"
+                        detail: String(localized: "목표까지 \(Fmt.krw(goalRemaining))원 남음")
                             + ((lastNetChange ?? 0) != 0
-                               ? " · 이번에 \((lastNetChange ?? 0) > 0 ? "+" : "−")\(Fmt.percent(abs(goalChangePP), fraction: 1)) \((lastNetChange ?? 0) > 0 ? "가까워졌어요" : "멀어졌어요")"
+                               ? String(localized: " · 이번에 \((lastNetChange ?? 0) > 0 ? "+" : "−")\(Fmt.percent(abs(goalChangePP), fraction: 1)) \((lastNetChange ?? 0) > 0 ? String(localized: "가까워졌어요") : String(localized: "멀어졌어요"))")
                                : ""))
             }
             if showIncome {
                 let cov = settings.incomeGoalMonthly > 0 ? monthlyPassiveIncome / settings.incomeGoalMonthly : 0
-                goalBar(title: "패시브 인컴 목표 달성률",
+                goalBar(title: String(localized: "패시브 인컴 목표 달성률"),
                         progress: cov,
-                        detail: "목표 월 패시브 인컴 \(Fmt.krw(settings.incomeGoalMonthly))원의 \(Fmt.percent(min(cov, 1), fraction: 0)) 커버")
+                        detail: String(localized: "목표 월 패시브 인컴 \(Fmt.krw(settings.incomeGoalMonthly))원의 \(Fmt.percent(min(cov, 1), fraction: 0)) 커버"))
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1119,7 +1118,7 @@ struct DashboardView: View {
                         .foregroundStyle(Theme.textSecond)
                 }
                 Spacer()
-                InfoPopoverButton(text: "지금 받고 있는 패시브 인컴이에요(목표 아님) — 자산 탭에 등록한 월세·배당·이자·연금·스테이킹에서 자동으로 합산해요. 주 수입은 월÷4.345로 환산했고, 막대는 은퇴 후 월 생활비를 얼마나 커버하는지 보여줘요. 목표 대비 달성률은 아래 ‘패시브 인컴 목표 달성률’에 있어요.")
+                InfoPopoverButton(text: String(localized: "지금 받고 있는 패시브 인컴이에요(목표 아님) — 자산 탭에 등록한 월세·배당·이자·연금·스테이킹에서 자동으로 합산해요. 주 수입은 월÷4.345로 환산했고, 막대는 은퇴 후 월 생활비를 얼마나 커버하는지 보여줘요. 목표 대비 달성률은 아래 ‘패시브 인컴 목표 달성률’에 있어요."))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -1221,7 +1220,7 @@ struct DashboardView: View {
                         .foregroundStyle(Theme.textSecond)
                 }
                 Spacer()
-                InfoPopoverButton(text: "목표 패시브 인컴을 ‘지금 포트폴리오가 실제로 내는 수익률’로 나눠 필요한 자본을 계산해요. 같은 수익률을 유지한다고 가정한 값이라, 더 높은 배당·이자 전략을 쓰면 필요 자금은 줄어듭니다. 참고로 내 목표(한 해 생활비 ÷ 인출률) 기준 필요 자금은 \(Fmt.krw(fireNumber))원이에요.")
+                InfoPopoverButton(text: String(localized: "목표 패시브 인컴을 ‘지금 포트폴리오가 실제로 내는 수익률’로 나눠 필요한 자본을 계산해요. 같은 수익률을 유지한다고 가정한 값이라, 더 높은 배당·이자 전략을 쓰면 필요 자금은 줄어듭니다. 참고로 내 목표(한 해 생활비 ÷ 인출률) 기준 필요 자금은 \(Fmt.krw(fireNumber))원이에요."))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -1279,25 +1278,25 @@ struct DashboardView: View {
     private var metricsGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
             MetricCard(
-                title: "FIRE 목표 금액",
-                value: "\(Fmt.krw(fireNumber))원",
+                title: String(localized: "FIRE 목표 금액"),
+                value: String(localized: "\(Fmt.krw(fireNumber))원"),
                 symbol: "target",
                 tint: Theme.accent
             )
             MetricCard(
-                title: "월 저축 (계획)",
-                value: "\(Fmt.krw(plannedSavings))원",
+                title: String(localized: "월 저축 (계획)"),
+                value: String(localized: "\(Fmt.krw(plannedSavings))원"),
                 symbol: "arrow.up.forward",
                 tint: Theme.positive
             )
             MetricCard(
-                title: "지난주 대비",
-                value: delta != nil ? "\(delta! >= 0 ? "+" : "")\(Fmt.krw(delta!))원" : "—",
+                title: String(localized: "지난주 대비"),
+                value: delta != nil ? String(localized: "\(delta! >= 0 ? "+" : "")\(Fmt.krw(delta!))원") : "—",
                 symbol: delta ?? 0 >= 0 ? "chart.line.uptrend.xyaxis" : "chart.line.downtrend.xyaxis",
                 tint: (delta ?? 0) >= 0 ? Theme.rise : Theme.fall
             )
             MetricCard(
-                title: "저축률 (계획)",
+                title: String(localized: "저축률 (계획)"),
                 value: Fmt.percent(latest?.savingsRate ?? 0, fraction: 0),
                 symbol: "percent",
                 tint: Theme.accent
@@ -1326,9 +1325,9 @@ struct DashboardView: View {
                 .foregroundStyle(Theme.accent)
 
             if plannedSavings != 0 || monthlyPassiveIncome > 0 {
-                Text("현재 \(Fmt.krw(projectionBase))원 + (월 저축 \(Fmt.krw(plannedSavings))원"
-                     + (monthlyPassiveIncome > 0 ? " + 월 패시브 인컴 \(Fmt.krw(monthlyPassiveIncome))원" : "")
-                     + ") × 남은 \(monthsLeftInYear)개월. 자산 가치 상승은 반영하지 않아요.")
+                Text(String(localized: "현재 \(Fmt.krw(projectionBase))원 + (월 저축 \(Fmt.krw(plannedSavings))원")
+                     + (monthlyPassiveIncome > 0 ? String(localized: " + 월 패시브 인컴 \(Fmt.krw(monthlyPassiveIncome))원") : "")
+                     + String(localized: ") × 남은 \(monthsLeftInYear)개월. 자산 가치 상승은 반영하지 않아요."))
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
             } else {
@@ -1350,7 +1349,7 @@ struct DashboardView: View {
                         Text("쓸 수 있는 돈 (유동)")
                             .font(.caption)
                             .foregroundStyle(Theme.textSecond)
-                        InfoPopoverButton(text: "순자산 \(Fmt.krw(netWorth))원 중 실제 쓸 수 있는 돈입니다. 실거주 부동산·전세보증금·연금·부채는 묶인 돈으로 빠집니다.")
+                        InfoPopoverButton(text: String(localized: "순자산 \(Fmt.krw(netWorth))원 중 실제 쓸 수 있는 돈입니다. 실거주 부동산·전세보증금·연금·부채는 묶인 돈으로 빠집니다."))
                     }
                     Text("\(Fmt.krw(liquidNetWorth))원")
                         .font(.system(.title, design: .rounded, weight: .bold))
@@ -1542,31 +1541,31 @@ struct ProjectionDetailView: View {
     var body: some View {
         Form {
             Section {
-                resultRow("올해 말 예상 자산", projected, tint: Theme.accent, big: true)
+                resultRow(String(localized: "올해 말 예상 자산"), projected, tint: Theme.accent, big: true)
             } footer: {
                 Text("예정된 수입만 더한 값입니다. 주식·부동산 등 자산 가치가 오를 거라는 가정은 넣지 않았어요.")
                     .font(.caption)
             }
 
             Section("계산 가정") {
-                assumptionRow(basisLabel == nil ? "현재 자산" : "현재 \(basisLabel!)",
+                assumptionRow(basisLabel == nil ? String(localized: "현재 자산") : String(localized: "현재 \(basisLabel!)"),
                               Fmt.krwBoth(startingAssets))
                 if monthlyTakeHome > 0 {
-                    assumptionRow("세후 월급", Fmt.krwBoth(monthlyTakeHome))
+                    assumptionRow(String(localized: "세후 월급"), Fmt.krwBoth(monthlyTakeHome))
                 }
                 if plannedExpense > 0 {
-                    assumptionRow("월 지출", Fmt.krwBoth(plannedExpense))
+                    assumptionRow(String(localized: "월 지출"), Fmt.krwBoth(plannedExpense))
                 }
-                assumptionRow("월 저축", Fmt.krwBoth(monthlySavings),
+                assumptionRow(String(localized: "월 저축"), Fmt.krwBoth(monthlySavings),
                               tint: monthlySavings >= 0 ? Theme.positive : Theme.negative)
-                assumptionRow("월 패시브 인컴 (배당·월세 등)", Fmt.krwBoth(monthlyPassiveIncome),
+                assumptionRow(String(localized: "월 패시브 인컴 (배당·월세 등)"), Fmt.krwBoth(monthlyPassiveIncome),
                               tint: monthlyPassiveIncome > 0 ? Theme.positive : Theme.textPrimary)
-                assumptionRow("올해 남은 개월", "\(steps.count)개월")
+                assumptionRow(String(localized: "올해 남은 개월"), String(localized: "\(steps.count)개월"))
             }
 
             Section("기간 합계") {
-                resultRow("저축 누적", totalSavings, tint: Theme.positive)
-                resultRow("수입 누적 (배당·월세 등)", totalPassive, tint: Theme.accent)
+                resultRow(String(localized: "저축 누적"), totalSavings, tint: Theme.positive)
+                resultRow(String(localized: "수입 누적 (배당·월세 등)"), totalPassive, tint: Theme.accent)
             }
 
             Section("월별 시뮬레이션") {
@@ -1581,8 +1580,8 @@ struct ProjectionDetailView: View {
                                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                                 .foregroundStyle(Theme.accent)
                         }
-                        Text("시작 \(Fmt.krw(step.start)) + 저축 \(Fmt.krw(step.savings))"
-                             + (step.passiveIncome >= 1 ? " + 수입 \(Fmt.krw(step.passiveIncome))" : ""))
+                        Text(String(localized: "시작 \(Fmt.krw(step.start)) + 저축 \(Fmt.krw(step.savings))")
+                             + (step.passiveIncome >= 1 ? String(localized: " + 수입 \(Fmt.krw(step.passiveIncome))") : ""))
                             .font(.caption)
                             .foregroundStyle(Theme.textSecond)
                     }
@@ -1621,7 +1620,7 @@ struct ProjectionDetailView: View {
 
     private func monthName(_ date: Date) -> String {
         let m = Calendar.current.component(.month, from: date)
-        return "\(m)월"
+        return String(localized: "\(m)월")
     }
 }
 
@@ -1683,16 +1682,16 @@ struct WhatIfView: View {
                 if amount > 0 {
                     verdictCard
                     HStack(spacing: 14) {
-                        outcomeCard(title: "빚 갚기",
-                                    subtitle: "아낀 이자",
+                        outcomeCard(title: String(localized: "빚 갚기"),
+                                    subtitle: String(localized: "아낀 이자"),
                                     value: savedInterest,
-                                    tag: "확정",
+                                    tag: String(localized: "확정"),
                                     tint: Theme.positive,
                                     highlighted: !investWins)
-                        outcomeCard(title: "투자하기",
-                                    subtitle: "기대 수익",
+                        outcomeCard(title: String(localized: "투자하기"),
+                                    subtitle: String(localized: "기대 수익"),
                                     value: investGain,
-                                    tag: "변동 위험",
+                                    tag: String(localized: "변동 위험"),
                                     tint: Theme.accent,
                                     highlighted: investWins)
                     }
@@ -1730,8 +1729,8 @@ struct WhatIfView: View {
                 }
             }
 
-            rateSlider(title: "부채 연이자율", value: $debtRatePct, tint: Theme.negative)
-            rateSlider(title: "투자 연수익률", value: $investRatePct, tint: Theme.accent)
+            rateSlider(title: String(localized: "부채 연이자율"), value: $debtRatePct, tint: Theme.negative)
+            rateSlider(title: String(localized: "투자 연수익률"), value: $investRatePct, tint: Theme.accent)
 
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
@@ -1781,7 +1780,7 @@ struct WhatIfView: View {
             Text(investWins ? "투자가 유리해요" : "빚 갚기가 유리해요")
                 .font(.title3.weight(.bold))
                 .foregroundStyle(investWins ? Theme.accent : Theme.positive)
-            Text("\(yearsInt)년 후 약 \(Fmt.krw(abs(diff)))원 \(investWins ? "더 벌 수 있어요" : "더 아낄 수 있어요").")
+            Text("\(yearsInt)년 후 약 \(Fmt.krw(abs(diff)))원 \(investWins ? String(localized: "더 벌 수 있어요") : String(localized: "더 아낄 수 있어요")).")
                 .font(.subheadline)
                 .foregroundStyle(Theme.textPrimary)
             Text(investWins

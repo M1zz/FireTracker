@@ -117,7 +117,7 @@ struct CalcSaveRow: View {
             inputs: CalcSnapshot.capture(kind)
         )
         context.insert(entry)
-        guard context.saveReporting("계산") else { return }
+        guard context.saveReporting(String(localized: "계산")) else { return }
         AppUsage.log(.calcSaved)
         withAnimation { justSaved = true }
         // 잠깐만 확인 표시를 두고 원래 문구로 돌아간다.
@@ -211,7 +211,7 @@ struct SavedCalcsView: View {
     private var filterChips: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                chip(label: "전체", active: filter == nil) { filter = nil }
+                chip(label: String(localized: "전체"), active: filter == nil) { filter = nil }
                 ForEach(usedKinds) { k in
                     chip(label: k.label, active: filter == k) { filter = k }
                 }
@@ -306,7 +306,7 @@ struct SavedCalcsView: View {
         for index in offsets {
             context.delete(shown[index])
         }
-        context.saveReporting("삭제")
+        context.saveReporting(String(localized: "삭제"))
     }
 }
 
@@ -318,17 +318,17 @@ struct SavedCalcsView: View {
 /// 안 보낸다. 허브 쪽만 보면 사용자가 없는 건지 전송이 막힌 건지 구분이 안 되므로,
 /// 보내는 쪽 상태를 여기서 보여준다.
 struct UsageDiagnosticsSection: View {
-    @State private var cloudStatus = "확인 중…"
+    @State private var cloudStatus = String(localized: "확인 중…")
 
     var body: some View {
         Section {
-            row("iCloud 상태", cloudStatus, warn: cloudStatus.contains("안 됨"))
-            row("마지막 전송",
-                AppUsage.lastSentAt.map(Fmt.date) ?? "아직 없음",
+            row(String(localized: "iCloud 상태"), cloudStatus, warn: cloudStatus.contains(String(localized: "안 됨")))
+            row(String(localized: "마지막 전송"),
+                AppUsage.lastSentAt.map(Fmt.date) ?? String(localized: "아직 없음"),
                 warn: AppUsage.lastSentAt == nil)
-            row("이 기기 ID", String(AppUsage.installID.prefix(8)) + "…")
+            row(String(localized: "이 기기 ID"), String(AppUsage.installID.prefix(8)) + "…")
             let m = AppUsage.currentMetrics
-            row("보내는 지표", m.isEmpty ? "아직 없음" : "\(m.count)개", warn: m.isEmpty)
+            row(String(localized: "보내는 지표"), m.isEmpty ? String(localized: "아직 없음") : String(localized: "\(m.count)개"), warn: m.isEmpty)
         } header: {
             Text("사용 통계 전송 (개발자)")
         } footer: {

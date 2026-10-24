@@ -53,8 +53,8 @@ struct SnapshotsView: View {
                 Text(Fmt.date(s.date))
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
-                Text("저축률 \(Fmt.percent(s.savingsRate, fraction: 0)) · 자산 \(s.entryList.count)개"
-                     + (s.note.isEmpty ? "" : " · \(s.note)"))
+                Text(String(localized: "저축률 \(Fmt.percent(s.savingsRate, fraction: 0)) · 자산 \(s.entryList.count)개")
+                     + (s.note.isEmpty ? "" : " · \(s.note == "자동 기록" ? String(localized: "자동 기록") : s.note)"))
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
             }
@@ -86,7 +86,7 @@ struct SnapshotsView: View {
 
     private func delete(at offsets: IndexSet) {
         for i in offsets { context.delete(snapshots[i]) }
-        context.saveReporting("기록")
+        context.saveReporting(String(localized: "기록"))
     }
 }
 
@@ -205,14 +205,14 @@ struct SnapshotDetail: View {
         snapshot.monthlyExpense = Double(expense) ?? 0
         snapshot.monthlyPassiveIncome = Double(passiveIncome) ?? 0
         snapshot.note = note
-        context.saveReporting("기록")
+        context.saveReporting(String(localized: "기록"))
         AppUsage.log(.snapshotSaved)
         dismiss()
     }
 
     private func deleteSnapshot() {
         context.delete(snapshot)
-        context.saveReporting("기록")
+        context.saveReporting(String(localized: "기록"))
         dismiss()
     }
 }

@@ -39,9 +39,9 @@ struct TrendView: View {
         }
         var label: String {
             switch self {
-            case .week:  return "주"
-            case .month: return "달"
-            case .year:  return "해"
+            case .week:  return String(localized: "주")
+            case .month: return String(localized: "달")
+            case .year:  return String(localized: "해")
             }
         }
     }
@@ -80,7 +80,7 @@ struct TrendView: View {
                     //    (예전엔 세그먼트가 차트 아래에 있어서 뭘 보는지 모른 채 스크롤했다.)
                     if availableModes.count > 1 {
                         Picker("", selection: $mode) {
-                            ForEach(availableModes) { Text($0.rawValue).tag($0) }
+                            ForEach(availableModes) { Text(LocalizedStringKey($0.rawValue)).tag($0) }
                         }
                         .pickerStyle(.segmented)
                     }
@@ -110,7 +110,7 @@ struct TrendView: View {
                                 .font(.caption)
                                 .foregroundStyle(Theme.textSecond)
                             Picker("", selection: $period) {
-                                ForEach(availablePeriods) { Text("\($0.rawValue)간").tag($0) }
+                                ForEach(availablePeriods) { Text(LocalizedStringKey("\($0.rawValue)간")).tag($0) }
                             }
                             .pickerStyle(.segmented)
                             .fixedSize()
@@ -310,7 +310,7 @@ struct TrendView: View {
                 // 비교할 데이터가 있는 기간만 — 한 기간뿐이면 세그먼트를 숨긴다.
                 if availablePeriods.count > 1 {
                     Picker("", selection: $period) {
-                        ForEach(availablePeriods) { Text("\($0.rawValue)간").tag($0) }
+                        ForEach(availablePeriods) { Text(LocalizedStringKey("\($0.rawValue)간")).tag($0) }
                     }
                     .pickerStyle(.segmented)
                     .fixedSize()
@@ -374,9 +374,9 @@ struct TrendView: View {
             .frame(height: 220)
 
             HStack(spacing: 12) {
-                legendSquare("자산", Theme.positive)
-                legendSquare("부채", Theme.textSecond.opacity(0.35))
-                legendDot("순자산", Theme.accent)
+                legendSquare(String(localized: "자산"), Theme.positive)
+                legendSquare(String(localized: "부채"), Theme.textSecond.opacity(0.35))
+                legendDot(String(localized: "순자산"), Theme.accent)
                 Spacer()
             }
         }
@@ -402,10 +402,9 @@ struct TrendView: View {
     // "오늘"·"6월 8일" 같은 이번 달 날짜 라벨.
     private func thisMonthDayLabel(_ date: Date) -> String {
         let cal = Calendar.current
-        if cal.isDateInToday(date) { return "오늘" }
+        if cal.isDateInToday(date) { return String(localized: "오늘") }
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "M월 d일"
+        f.setLocalizedDateFormatFromTemplate("MMMd")
         return f.string(from: date)
     }
 
@@ -636,21 +635,19 @@ struct TrendView: View {
 
     private func periodLabel(_ date: Date) -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
         switch period {
-        case .week:  f.dateFormat = "M/d"
-        case .month: f.dateFormat = "M월"
-        case .year:  f.dateFormat = "yyyy년"
+        case .week:  f.setLocalizedDateFormatFromTemplate("Md")
+        case .month: f.setLocalizedDateFormatFromTemplate("MMM")
+        case .year:  f.setLocalizedDateFormatFromTemplate("yyyy")
         }
         return f.string(from: date)
     }
     private func periodLabelFull(_ date: Date) -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
         switch period {
-        case .week:  f.dateFormat = "yyyy년 M월 d일"
-        case .month: f.dateFormat = "yyyy년 M월"
-        case .year:  f.dateFormat = "yyyy년"
+        case .week:  f.setLocalizedDateFormatFromTemplate("yyyyMMMd")
+        case .month: f.setLocalizedDateFormatFromTemplate("yyyyMMMM")
+        case .year:  f.setLocalizedDateFormatFromTemplate("yyyy")
         }
         return f.string(from: date)
     }
@@ -891,7 +888,7 @@ struct TrendView: View {
             .frame(height: 240)
 
             HStack(spacing: 12) {
-                legendDot("순자산", Theme.accent)
+                legendDot(String(localized: "순자산"), Theme.accent)
                 Text("막대는 카테고리별 자산, 라인은 부채를 뺀 순자산이에요.")
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)

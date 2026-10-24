@@ -35,7 +35,11 @@ THEME = dict(bg="#FAF6F0", ink="#1F1B17", sub="#6E675C", dark_bg="#1F1B17", dark
 BASE_CSS = """
 * { margin:0; padding:0; box-sizing:border-box; }
 html,body { width:%(W)dpx; height:%(H)dpx; overflow:hidden; }
-body { background:%(bg)s; font-family:-apple-system, "Apple SD Gothic Neo", "Hiragino Sans", sans-serif; position:relative; }
+body { background:%(bg)s; font-family:-apple-system, "SF Pro Display", "Helvetica Neue", "Apple SD Gothic Neo", sans-serif; position:relative; }
+:lang(ja) body { font-family:-apple-system, "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif; }
+:lang(zh-Hans) body { font-family:-apple-system, "PingFang SC", sans-serif; }
+:lang(zh-Hant) body { font-family:-apple-system, "PingFang TC", sans-serif; }
+
 .headline { font-size:96px; font-weight:800; color:%(ink)s; letter-spacing:-2px; line-height:1.22; text-wrap:balance; }
 .sub { font-size:50px; font-weight:500; color:%(sub)s; letter-spacing:-1px; line-height:1.35; text-wrap:balance; }
 :lang(ko) .headline, :lang(ko) .sub { word-break:keep-all; }

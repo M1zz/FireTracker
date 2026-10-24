@@ -34,7 +34,7 @@ struct JourneyGoalsSection: View {
     @State private var milestoneMetric: FireGoalType = .assets
     // 기간별 목표 그래프에서 보고 있는 구간(이번 달/올해/5년/은퇴). 전체를 한 번에
     // 펼치지 않고 고른 구간만 확대해 본다.
-    @State private var milestoneHorizonLabel: String = "올해"
+    @State private var milestoneHorizonLabel: String = String(localized: "올해")
 
     private let milestoneSetupTip = MilestoneSetupTip()
 
@@ -101,8 +101,7 @@ struct JourneyGoalsSection: View {
     // "지난 기록"의 정체 — 비교 대상 스냅샷의 날짜.
     private func recordDateText(_ date: Date) -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "M월 d일"
+        f.setLocalizedDateFormatFromTemplate("MMMd")
         return f.string(from: date)
     }
 
@@ -111,10 +110,10 @@ struct JourneyGoalsSection: View {
     private var milestoneHorizons: [(label: String, months: Int)] {
         guard let m = settings.monthsToRetire else { return [] }
         var out: [(String, Int)] = []
-        for (label, mo) in [("이번 달", 1), ("올해", max(1, monthsLeftInYear)), ("5년", 60)] where mo < m {
+        for (label, mo) in [(String(localized: "이번 달"), 1), (String(localized: "올해"), max(1, monthsLeftInYear)), (String(localized: "5년"), 60)] where mo < m {
             out.append((label, mo))
         }
-        out.append(("은퇴", m))
+        out.append((String(localized: "은퇴"), m))
         return out
     }
 
@@ -146,8 +145,8 @@ struct JourneyGoalsSection: View {
             }
             .frame(height: 7)
             Text(gap < 1
-                 ? "이미 달성 🎉 · 현재 \(isAsset ? "" : "월 ")\(Fmt.krw(current))원 (목표 \(isAsset ? "" : "월 ")\(Fmt.krw(target))원)"
-                 : "\(Fmt.percent(progress, fraction: 0)) · 현재 \(isAsset ? "" : "월 ")\(Fmt.krw(current))원 · \(isAsset ? "" : "월 ")\(Fmt.krw(gap))원 더 필요")
+                 ? "이미 달성 🎉 · 현재 \(isAsset ? "" : String(localized: "월 "))\(Fmt.krw(current))원 (목표 \(isAsset ? "" : String(localized: "월 "))\(Fmt.krw(target))원)"
+                 : "\(Fmt.percent(progress, fraction: 0)) · 현재 \(isAsset ? "" : String(localized: "월 "))\(Fmt.krw(current))원 · \(isAsset ? "" : String(localized: "월 "))\(Fmt.krw(gap))원 더 필요")
                 .font(.caption2)
                 .foregroundStyle(gap < 1 ? Theme.positive : Theme.textSecond)
         }
@@ -160,11 +159,11 @@ struct JourneyGoalsSection: View {
         let now = Date()
         let monthStart = cal.date(from: cal.dateComponents([.year, .month], from: now)) ?? now
         switch label {
-        case "이번 달":
+        case String(localized: "이번 달"):
             let next = cal.date(byAdding: .month, value: 1, to: monthStart) ?? now
             let end = cal.date(byAdding: .second, value: -1, to: next) ?? next
             return (monthStart, end)
-        case "올해":
+        case String(localized: "올해"):
             let y = cal.component(.year, from: now)
             let start = cal.date(from: DateComponents(year: y, month: 1, day: 1)) ?? monthStart
             let end = cal.date(from: DateComponents(year: y, month: 12, day: 31, hour: 23, minute: 59, second: 59)) ?? now
@@ -205,9 +204,9 @@ struct JourneyGoalsSection: View {
 
         var actual: [TrajPoint] = snapshots
             .filter { $0.date >= start && $0.date <= now }
-            .map { TrajPoint(date: $0.date, value: value($0), label: "기록") }
+            .map { TrajPoint(date: $0.date, value: value($0), label: String(localized: "기록")) }
             .sorted { $0.date < $1.date }
-        actual.append(TrajPoint(date: now, value: current, label: "지금"))
+        actual.append(TrajPoint(date: now, value: current, label: String(localized: "지금")))
 
         return TrajModel(start: start, end: end, now: now, current: current,
                          goalEnd: goalEnd, actual: actual,
@@ -221,16 +220,16 @@ struct JourneyGoalsSection: View {
     @ViewBuilder
     private func trajectoryChart(metric: FireGoalType, label: String, months: Int) -> some View {
         if let mdl = trajectoryModel(metric: metric, label: label, months: months) {
-            let goalPt = TrajPoint(date: mdl.end, value: mdl.goalEnd, label: "목표")
-            let nowPt = TrajPoint(date: mdl.now, value: mdl.current, label: "지금")
-            let records = mdl.actual.filter { $0.label == "기록" }
+            let goalPt = TrajPoint(date: mdl.end, value: mdl.goalEnd, label: String(localized: "목표"))
+            let nowPt = TrajPoint(date: mdl.now, value: mdl.current, label: String(localized: "지금"))
+            let records = mdl.actual.filter { $0.label == String(localized: "기록") }
             VStack(alignment: .leading, spacing: 8) {
             Chart {
                 // 과거 기록 → 지금까지는 실선으로 이어 실제 흐름을 보여주고,
                 // 지금 → 목표는 점선으로 — 아직 오지 않은 '필요한 페이스'라서.
                 ForEach(mdl.actual) { p in
                     LineMark(x: .value("시점", p.date), y: .value("값", p.value),
-                             series: .value("계열", "실제"))
+                             series: .value("계열", String(localized: "실제")))
                         .foregroundStyle(Theme.accent)
                         .interpolationMethod(.catmullRom)
                         .lineStyle(StrokeStyle(lineWidth: 2))
@@ -238,12 +237,12 @@ struct JourneyGoalsSection: View {
                 // 지금 → 목표 (지금부터 필요한 페이스).
                 ForEach([nowPt, goalPt]) { p in
                     LineMark(x: .value("시점", p.date), y: .value("값", p.value),
-                             series: .value("계열", "지금→목표"))
+                             series: .value("계열", String(localized: "지금→목표")))
                         .foregroundStyle(Theme.accent.opacity(0.7))
                         .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [2, 3]))
                 }
                 // 기록 점 + 지금·목표 강조.
-                ForEach(mdl.actual.filter { $0.label == "기록" }) { p in
+                ForEach(mdl.actual.filter { $0.label == String(localized: "기록") }) { p in
                     PointMark(x: .value("시점", p.date), y: .value("값", p.value))
                         .foregroundStyle(Theme.accent.opacity(0.4))
                         .symbolSize(20)
@@ -306,7 +305,7 @@ struct JourneyGoalsSection: View {
                let hit = records.min(by: {
                    abs($0.date.timeIntervalSince(sel)) < abs($1.date.timeIntervalSince(sel))
                }) {
-                Text("\(recordDateText(hit.date)) 기록 · \(metric == .assets ? "" : "월 ")\(Fmt.krw(hit.value))원")
+                Text("\(recordDateText(hit.date)) 기록 · \(metric == .assets ? "" : String(localized: "월 "))\(Fmt.krw(hit.value))원")
                     .font(.caption2)
                     .foregroundStyle(Theme.accent)
             } else if !records.isEmpty {
@@ -328,7 +327,7 @@ struct JourneyGoalsSection: View {
         let metric = settings.fireGoalType == .both ? milestoneMetric : settings.fireGoalType
         let horizons = milestoneHorizons
         // 선택한 구간 — 저장된 라벨이 목록에 없으면 가장 가까운 구간으로.
-        let sel = horizons.first { $0.label == milestoneHorizonLabel } ?? horizons.first ?? ("은퇴", settings.monthsToRetire ?? 0)
+        let sel = horizons.first { $0.label == milestoneHorizonLabel } ?? horizons.first ?? (String(localized: "은퇴"), settings.monthsToRetire ?? 0)
         return VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("기간별 목표")
@@ -383,9 +382,9 @@ struct JourneyGoalsSection: View {
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
                 HStack(spacing: 0) {
-                    paceStat("하루", daily)
-                    paceStat("주", weekly)
-                    paceStat("월", monthly)
+                    paceStat(String(localized: "하루"), daily)
+                    paceStat(String(localized: "주"), weekly)
+                    paceStat(String(localized: "월"), monthly)
                 }
                 if monthlySavingsNow > 0 {
                     let ratio = monthlySavingsNow / monthly
@@ -414,10 +413,10 @@ struct JourneyGoalsSection: View {
 
     // "3개월"·"2년 4개월"·"오늘" 같은 남은 기간 텍스트.
     private func horizonRemainText(_ months: Int) -> String {
-        if months <= 0 { return "이번 달" }
+        if months <= 0 { return String(localized: "이번 달") }
         let y = months / 12, mo = months % 12
-        if y > 0 && mo > 0 { return "\(y)년 \(mo)개월 뒤" }
-        if y > 0 { return "\(y)년 뒤" }
-        return "\(mo)개월 뒤"
+        if y > 0 && mo > 0 { return String(localized: "\(y)년 \(mo)개월 뒤") }
+        if y > 0 { return String(localized: "\(y)년 뒤") }
+        return String(localized: "\(mo)개월 뒤")
     }
 }

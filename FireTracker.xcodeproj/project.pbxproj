@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		38E33F7EB564676F8FCC2BE8 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */; };
+		7A1C0E5B9D2F4A6B8C3E1D07 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */; };
 		0AD91CF5213402C3FF4D8D9E /* FireSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */; };
 		555219EE5C66ADE4C6892A72 /* FireSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */; };
 		66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1565B7348B6849C756363468 /* FireTrackerSpec.swift */; };
@@ -338,6 +339,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A1C0E5B9D2F4A6B8C3E1D07 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

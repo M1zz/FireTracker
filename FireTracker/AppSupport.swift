@@ -31,12 +31,12 @@ extension ModelContext {
     /// "저장했어요" 같은 확인 표시는 true 일 때만 띄울 것.
     @MainActor
     @discardableResult
-    func saveReporting(_ what: String = "변경 내용") -> Bool {
+    func saveReporting(_ what: String = String(localized: "변경 내용")) -> Bool {
         do {
             try save()
             return true
         } catch {
-            AppAlerts.shared.show("\(what) 저장에 실패했어요. 기기 저장 공간을 확인한 뒤 다시 시도해 주세요.")
+            AppAlerts.shared.show(String(localized: "\(what) 저장에 실패했어요. 기기 저장 공간을 확인한 뒤 다시 시도해 주세요."))
             return false
         }
     }
@@ -160,7 +160,7 @@ enum MonthlyReminder {
 
     private static func schedule(summary: FireSummary) {
         let content = UNMutableNotificationContent()
-        content.title = "이번 달 퇴사각"
+        content.title = String(localized: "이번 달 퇴사각")
         content.body = body(for: summary)
         content.sound = .default
 
@@ -174,13 +174,13 @@ enum MonthlyReminder {
 
     private static func body(for s: FireSummary) -> String {
         if s.locked {
-            return "새 달이 시작됐어요. 이번 달 자산을 확인해 보세요."
+            return String(localized: "새 달이 시작됐어요. 이번 달 자산을 확인해 보세요.")
         }
         guard s.goalConfigured, let when = s.fireDateText else {
-            return "새 달이 시작됐어요. 목표를 정하면 언제 그만둘 수 있는지 알려 드릴게요."
+            return String(localized: "새 달이 시작됐어요. 목표를 정하면 언제 그만둘 수 있는지 알려 드릴게요.")
         }
         let pct = Int((min(s.progress, 1) * 100).rounded())
-        return "지난번 계산으로는 \(when)에 그만둘 수 있어요(목표의 \(pct)%). 이번 달 자산을 확인해 보세요."
+        return String(localized: "지난번 계산으로는 \(when)에 그만둘 수 있어요(목표의 \(pct)%). 이번 달 자산을 확인해 보세요.")
     }
 }
 
@@ -220,11 +220,11 @@ enum SellWatch {
         static func < (l: Signal, r: Signal) -> Bool { l.rawValue < r.rawValue }
         var label: String {
             switch self {
-            case .stopHit:    return "지금 팔 때"
-            case .targetHit:  return "목표가 도달"
-            case .nearStop:   return "팔 준비"
-            case .nearTarget: return "목표가 근처"
-            case .holding:    return "지켜보는 중"
+            case .stopHit:    return String(localized: "지금 팔 때")
+            case .targetHit:  return String(localized: "목표가 도달")
+            case .nearStop:   return String(localized: "팔 준비")
+            case .nearTarget: return String(localized: "목표가 근처")
+            case .holding:    return String(localized: "지켜보는 중")
             }
         }
         var urgent: Bool { self == .stopHit || self == .targetHit }
@@ -285,13 +285,13 @@ enum SellWatch {
 
         if let floor = stopPrice(a), price <= floor, a.stopAlertedPeak != a.peakUnitPrice {
             a.stopAlertedPeak = a.peakUnitPrice
-            notify(a, id: "stop", title: "\(a.name) — 지금 팔 때예요",
-                   body: "고점 \(Fmt.krw(a.peakUnitPrice))원에서 \(Fmt.trimNumber(a.trailingStopPct))% 넘게 빠졌어요(지금 \(Fmt.krw(price))원). 정해 둔 원칙대로 팔아 주세요.")
+            notify(a, id: "stop", title: String(localized: "\(a.name) — 지금 팔 때예요"),
+                   body: String(localized: "고점 \(Fmt.krw(a.peakUnitPrice))원에서 \(Fmt.trimNumber(a.trailingStopPct))% 넘게 빠졌어요(지금 \(Fmt.krw(price))원). 정해 둔 원칙대로 팔아 주세요."))
         }
         if a.sellTargetPrice > 0, price >= a.sellTargetPrice, a.targetAlertedFor != a.sellTargetPrice {
             a.targetAlertedFor = a.sellTargetPrice
-            notify(a, id: "target", title: "\(a.name) — 목표가에 닿았어요",
-                   body: "살 때 정한 \(Fmt.krw(a.sellTargetPrice))원에 닿았어요(지금 \(Fmt.krw(price))원). 팔기로 한 가격이에요.")
+            notify(a, id: "target", title: String(localized: "\(a.name) — 목표가에 닿았어요"),
+                   body: String(localized: "살 때 정한 \(Fmt.krw(a.sellTargetPrice))원에 닿았어요(지금 \(Fmt.krw(price))원). 팔기로 한 가격이에요."))
         }
     }
 
@@ -302,7 +302,7 @@ enum SellWatch {
         content.title = title
         // 앱 잠금을 켰으면 잠금 화면에 금액을 내보이지 않는다.
         content.body = UserDefaults.standard.bool(forKey: "appLockEnabled")
-            ? "정해 둔 매도 원칙에 닿았어요. 앱에서 확인해 주세요." : body
+            ? String(localized: "정해 둔 매도 원칙에 닿았어요. 앱에서 확인해 주세요.") : body
         content.sound = .default
         let request = UNNotificationRequest(identifier: "sell-\(id)-\(a.key.uuidString)",
                                             content: content, trigger: nil)

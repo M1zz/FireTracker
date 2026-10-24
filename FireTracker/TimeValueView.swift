@@ -183,8 +183,8 @@ struct TimeSimSection: View {
                             tint: g0 > annualReturn ? Theme.accent : Theme.positive) { showInfo = true }
 
             HStack(alignment: .top, spacing: 10) {
-                tvStat("한계 시급", tvWon(marginalWage), sub: "추가 1시간의 값", tint: Theme.accent)
-                tvStat("FIRE 시급", tvWon(fireWage), sub: "자산이 버는 시급", tint: Theme.positive)
+                tvStat(String(localized: "한계 시급"), tvWon(marginalWage), sub: String(localized: "추가 1시간의 값"), tint: Theme.accent)
+                tvStat(String(localized: "FIRE 시급"), tvWon(fireWage), sub: String(localized: "자산이 버는 시급"), tint: Theme.positive)
             }
 
             crossoverChart
@@ -192,17 +192,17 @@ struct TimeSimSection: View {
             crossoverLegend
 
             SimLeverPanel(levers: levers, selection: $leverID) {
-                SimPanelButton(title: "시간 사는 지출", icon: "cart") { showBuys = true }
+                SimPanelButton(title: String(localized: "시간 사는 지출"), icon: "cart") { showBuys = true }
             } footer: {
-                Text("지금 1시간을 팔면 \(horizon)년 뒤 \(tvHours(usableBoughtBack))으로 돌아와요"
-                     + (boughtHours > 0 ? " · 하루 순증 \(netGain >= 0 ? "+" : "−")\(tvHours(abs(netGain)))" : ""))
+                Text(String(localized: "지금 1시간을 팔면 \(horizon)년 뒤 \(tvHours(usableBoughtBack))으로 돌아와요")
+                     + (boughtHours > 0 ? String(localized: " · 하루 순증 \(netGain >= 0 ? "+" : "−")\(tvHours(abs(netGain)))") : ""))
                     .font(.caption2)
                     .foregroundStyle(usableBoughtBack < 1 ? Theme.negative : Theme.textSecond)
             }
         }
         .simResultCard()
         .sheet(isPresented: $showInfo) {
-            SimSheet(title: "해석·저장") {
+            SimSheet(title: String(localized: "해석·저장")) {
                 wageCard
                 crossoverCard
                 oneHourCard
@@ -210,15 +210,15 @@ struct TimeSimSection: View {
                 conclusionCard
                 CalcSaveRow(
                     kind: .time,
-                    headline: "한계 시급 \(tvWon(marginalWage)) · 하루 밀도 ×\(String(format: "%.2f", density))",
-                    detail: "회계적 시급 \(tvWon(accountingWage)) · FIRE 시급 \(tvWon(fireWage)) · 주 \(Int(hoursPerWeek))시간"
-                        + (boughtHours > 0 ? " · 순증 \(tvHours(netGain))" : "")
+                    headline: String(localized: "한계 시급 \(tvWon(marginalWage)) · 하루 밀도 ×\(String(format: "%.2f", density))"),
+                    detail: String(localized: "회계적 시급 \(tvWon(accountingWage)) · FIRE 시급 \(tvWon(fireWage)) · 주 \(Int(hoursPerWeek))시간")
+                        + (boughtHours > 0 ? String(localized: " · 순증 \(tvHours(netGain))") : "")
                 )
                 simDisclaimer
             }
         }
         .sheet(isPresented: $showBuys) {
-            SimSheet(title: "하루의 밀도") { densityCard }
+            SimSheet(title: String(localized: "하루의 밀도")) { densityCard }
         }
         .onAppear(perform: load)
         .onChange(of: buys) { _, _ in save() }
@@ -227,11 +227,11 @@ struct TimeSimSection: View {
     private var shortHeadline: String {
         if g0 > annualReturn {
             if let x = crossoverYear, x <= 40 {
-                return "지금은 시급에 투자할 때 · 전환점 \(String(format: "%.0f", x))년 뒤"
+                return String(localized: "지금은 시급에 투자할 때 · 전환점 \(String(format: "%.0f", x))년 뒤")
             }
-            return "지금은 시급에 투자할 때"
+            return String(localized: "지금은 시급에 투자할 때")
         }
-        return "저장이 유리한 구간 — 전환점을 지났어요"
+        return String(localized: "저장이 유리한 구간 — 전환점을 지났어요")
     }
 
     // 조작 패널 — 예전 카드마다 흩어져 있던 입력칸을 한곳에.
@@ -241,16 +241,16 @@ struct TimeSimSection: View {
         let marginal = Binding<Double>(get: { marginalWage },
                                        set: { marginalText = String(Int($0.rounded())) })
         return [
-            SimLever(id: "세후 월소득", value: income, range: SimLever.fit(0...20_000_000, income.wrappedValue),
-                     step: 100_000, text: "월 \(tvWon(monthlyIncome))", unit: 10_000, unitLabel: "만원"),
-            .count("주 투입시간", $weeklyHours, 10...100, prefix: "주 ", suffix: "시간"),
-            SimLever(id: "한계 시급", value: marginal, range: SimLever.fit(0...300_000, marginal.wrappedValue),
-                     step: 1_000, text: tvWon(marginalWage), unitLabel: "원"),
-            .percent("자산수익률 r", $returnPct, 0...15, step: 0.5),
-            .percent("시급성장률 g", $growthPct, 0...30, step: 0.5),
-            .percent("성장 둔화", $decayPct, 0...30, step: 1, prefix: "", suffix: "%/년"),
-            .count("몇 년 뒤", $horizonText, 1...50, suffix: "년 뒤"),
-            .percent("체력 할인", $lifePct, 0...5, step: 0.1, prefix: "", suffix: "%/년"),
+            SimLever(id: String(localized: "세후 월소득"), value: income, range: SimLever.fit(0...20_000_000, income.wrappedValue),
+                     step: 100_000, text: String(localized: "월 \(tvWon(monthlyIncome))"), unit: 10_000, unitLabel: String(localized: "만원")),
+            .count(String(localized: "주 투입시간"), $weeklyHours, 10...100, prefix: String(localized: "주 "), suffix: String(localized: "시간")),
+            SimLever(id: String(localized: "한계 시급"), value: marginal, range: SimLever.fit(0...300_000, marginal.wrappedValue),
+                     step: 1_000, text: tvWon(marginalWage), unitLabel: String(localized: "원")),
+            .percent(String(localized: "자산수익률 r"), $returnPct, 0...15, step: 0.5),
+            .percent(String(localized: "시급성장률 g"), $growthPct, 0...30, step: 0.5),
+            .percent(String(localized: "성장 둔화"), $decayPct, 0...30, step: 1, prefix: "", suffix: String(localized: "%/년")),
+            .count(String(localized: "몇 년 뒤"), $horizonText, 1...50, suffix: String(localized: "년 뒤")),
+            .percent(String(localized: "체력 할인"), $lifePct, 0...5, step: 0.1, prefix: "", suffix: String(localized: "%/년")),
         ]
     }
 
@@ -261,18 +261,18 @@ struct TimeSimSection: View {
     private var incomeSourceNote: String {
         if tvNum(netMonthly) > 0 {
             if let r = latestWageRecord {
-                return "직접 적은 금액으로 계산해요. 구매력 탭 기록은 \(r.year)년 \(tvWon(r.monthly))이에요."
+                return String(localized: "직접 적은 금액으로 계산해요. 구매력 탭 기록은 \(r.year)년 \(tvWon(r.monthly))이에요.")
             }
-            return "세전이 아니라 실제로 통장에 들어오는 금액으로 적어야 시급이 정직해져요."
+            return String(localized: "세전이 아니라 실제로 통장에 들어오는 금액으로 적어야 시급이 정직해져요.")
         }
         if let r = latestWageRecord {
-            return "구매력 탭에 적어 둔 \(r.year)년 월급 \(tvWon(r.monthly))을 쓰고 있어요. 근로시간만 넣으면 시급이 나와요."
+            return String(localized: "구매력 탭에 적어 둔 \(r.year)년 월급 \(tvWon(r.monthly))을 쓰고 있어요. 근로시간만 넣으면 시급이 나와요.")
         }
         if wageCountry != "KR" {
             let c = CPIData.country(wageCountry)
-            return "구매력 탭 기록이 \(c.flag) \(c.name) 통화라 원화 계산과 섞이지 않게 가져오지 않았어요. 여기 직접 적어 주세요."
+            return String(localized: "구매력 탭 기록이 \(c.flag) \(c.name) 통화라 원화 계산과 섞이지 않게 가져오지 않았어요. 여기 직접 적어 주세요.")
         }
-        return "구매력 탭에 월급을 적어 두면 여기서 자동으로 가져와요."
+        return String(localized: "구매력 탭에 월급을 적어 두면 여기서 자동으로 가져와요.")
     }
 
     private var wageCard: some View {
@@ -299,10 +299,10 @@ struct TimeSimSection: View {
             Divider().overlay(Theme.hairline)
 
             HStack(alignment: .top, spacing: 10) {
-                tvStat("회계적 시급", tvWon(accountingWage), sub: "번 돈 ÷ 쓴 시간")
-                tvStat("한계 시급", tvWon(marginalWage), sub: "추가 1시간의 값",
+                tvStat(String(localized: "회계적 시급"), tvWon(accountingWage), sub: String(localized: "번 돈 ÷ 쓴 시간"))
+                tvStat(String(localized: "한계 시급"), tvWon(marginalWage), sub: String(localized: "추가 1시간의 값"),
                        tint: Theme.accent)
-                tvStat("FIRE 시급", tvWon(fireWage), sub: "자산이 버는 시급",
+                tvStat(String(localized: "FIRE 시급"), tvWon(fireWage), sub: String(localized: "자산이 버는 시급"),
                        tint: Theme.positive)
             }
 
@@ -331,7 +331,7 @@ struct TimeSimSection: View {
                 .foregroundStyle(Theme.textSecond)
                 .fixedSize(horizontal: false, vertical: true)
 
-            tvRow("번 시급", $earnWageText, suffix: "원", money: true,
+            tvRow(String(localized: "번 시급"), $earnWageText, suffix: String(localized: "원"), money: true,
                   placeholder: Fmt.won(marginalWage))
 
             Divider().overlay(Theme.hairline)
@@ -380,7 +380,7 @@ struct TimeSimSection: View {
                     .foregroundStyle(Theme.textPrimary)
                 Spacer(minLength: 4)
                 Picker("", selection: cycleBinding(idx)) {
-                    ForEach(Cycle.allCases) { Text($0.rawValue).tag($0) }
+                    ForEach(Cycle.allCases) { Text(LocalizedStringKey($0.rawValue)).tag($0) }
                 }
                 .pickerStyle(.menu)
                 .tint(Theme.accent)
@@ -414,7 +414,7 @@ struct TimeSimSection: View {
             // 이 줄만 놓고 본 산 시급 — 번 시급보다 싸야 남는 장사다.
             if buys[idx].boughtWage > 0 {
                 let cheap = buys[idx].boughtWage < earnWage
-                Text("산 시급 \(tvWon(buys[idx].boughtWage)) · 내 시급보다 \(cheap ? "싸요" : "비싸요")")
+                Text("산 시급 \(tvWon(buys[idx].boughtWage)) · 내 시급보다 \(cheap ? String(localized: "싸요") : String(localized: "비싸요"))")
                     .font(.caption2)
                     .foregroundStyle(cheap ? Theme.positive : Theme.negative)
                     .frame(maxWidth: .infinity, alignment: .trailing)
@@ -450,12 +450,12 @@ struct TimeSimSection: View {
     }
 
     private static let presets: [(name: String, cost: Double, hours: Double, cycle: Cycle)] = [
-        ("가사도우미", 100_000, 4, .weekly),
-        ("배달·밀키트", 15_000, 1, .daily),
-        ("택시", 12_000, 0.5, .daily),
-        ("세탁 서비스", 30_000, 2, .weekly),
-        ("식기세척기·로봇청소기", 50_000, 10, .monthly),
-        ("직접 입력", 0, 0, .monthly),
+        (String(localized: "가사도우미"), 100_000, 4, .weekly),
+        (String(localized: "배달·밀키트"), 15_000, 1, .daily),
+        (String(localized: "택시"), 12_000, 0.5, .daily),
+        (String(localized: "세탁 서비스"), 30_000, 2, .weekly),
+        (String(localized: "식기세척기·로봇청소기"), 50_000, 10, .monthly),
+        (String(localized: "직접 입력"), 0, 0, .monthly),
     ]
 
     // 네 가지 하루 — 밀도만 보면 놓치는 것을 순증이 잡아낸다.
@@ -485,18 +485,18 @@ struct TimeSimSection: View {
 
     private static let scenarios: [(label: String, earn: Double, buys: () -> [TimeBuy])] = [
         // 24시간을 전부 팔았지만 산 시간은 없다 → 밀도 1.0, 순증 0.
-        ("A 24시간 다 판 날", 10_000, { [] }),
+        (String(localized: "A 24시간 다 판 날"), 10_000, { [] }),
         // 번 만큼 그대로 되샀다 → 밀도 2.0이지만 순증은 0. 두께는 빌려온 것.
-        ("B 번 만큼 되산 날", 10_000, {
-            [TimeBuy(name: "산 시간", cost: 240_000, hours: 24, cycle: .daily)]
+        (String(localized: "B 번 만큼 되산 날"), 10_000, {
+            [TimeBuy(name: String(localized: "산 시간"), cost: 240_000, hours: 24, cycle: .daily)]
         }),
         // 내 시급보다 훨씬 싸게 샀다 → 순증 +4.1시간.
-        ("C 싸게 산 날", 100_000, {
-            [TimeBuy(name: "산 시간", cost: 90_000, hours: 5, cycle: .daily)]
+        (String(localized: "C 싸게 산 날"), 100_000, {
+            [TimeBuy(name: String(localized: "산 시간"), cost: 90_000, hours: 5, cycle: .daily)]
         }),
         // 내 시급보다 비싼 시간을 샀다 → 밀도는 올라도 순증 −3.2시간.
-        ("D 비싸게 산 날", 15_000, {
-            [TimeBuy(name: "산 시간", cost: 70_000, hours: 1.5, cycle: .daily)]
+        (String(localized: "D 비싸게 산 날"), 15_000, {
+            [TimeBuy(name: String(localized: "산 시간"), cost: 70_000, hours: 1.5, cycle: .daily)]
         }),
     ]
 
@@ -540,10 +540,10 @@ struct TimeSimSection: View {
             }
 
             HStack(alignment: .top, spacing: 10) {
-                tvStat("번 시급", tvWon(earnWage), sub: "내 시간을 판 값")
-                tvStat("산 시급", tvWon(boughtWage), sub: "남의 시간을 산 값")
-                tvStat("환율 배율", wageRatio > 0 ? "×\(String(format: "%.2f", wageRatio))" : "—",
-                       sub: "번 ÷ 산", tint: up ? Theme.positive : (flat ? Theme.textSecond : Theme.negative))
+                tvStat(String(localized: "번 시급"), tvWon(earnWage), sub: String(localized: "내 시간을 판 값"))
+                tvStat(String(localized: "산 시급"), tvWon(boughtWage), sub: String(localized: "남의 시간을 산 값"))
+                tvStat(String(localized: "환율 배율"), wageRatio > 0 ? "×\(String(format: "%.2f", wageRatio))" : "—",
+                       sub: String(localized: "번 ÷ 산"), tint: up ? Theme.positive : (flat ? Theme.textSecond : Theme.negative))
             }
 
             Text("하루 기준으로 지출 \(tvWon(boughtCost)) · 되찾은 시간 \(tvHours(boughtHours))")
@@ -554,15 +554,15 @@ struct TimeSimSection: View {
 
     private var densityVerdict: String {
         if boughtHours <= 0 {
-            return "산 시간이 없어요. 24시간을 어떻게 쓰든 하루의 두께는 그대로 1이에요."
+            return String(localized: "산 시간이 없어요. 24시간을 어떻게 쓰든 하루의 두께는 그대로 1이에요.")
         }
         if wageRatio > 1.05 {
-            return "번 시급이 산 시급보다 비싸요. 두께가 진짜로 \(tvHours(netGain))만큼 늘었어요."
+            return String(localized: "번 시급이 산 시급보다 비싸요. 두께가 진짜로 \(tvHours(netGain))만큼 늘었어요.")
         }
         if wageRatio >= 0.95 {
-            return "번 시급과 산 시급이 같아요. 밀도는 올랐지만 시간이 자리만 옮겼을 뿐, 늘지는 않았어요."
+            return String(localized: "번 시급과 산 시급이 같아요. 밀도는 올랐지만 시간이 자리만 옮겼을 뿐, 늘지는 않았어요.")
         }
-        return "내 시급보다 비싼 시간을 샀어요. 밀도는 올라 보여도 실제로는 \(tvHours(abs(netGain)))을 잃었어요."
+        return String(localized: "내 시급보다 비싼 시간을 샀어요. 밀도는 올라 보여도 실제로는 \(tvHours(abs(netGain)))을 잃었어요.")
     }
 
     private var densityBar: some View {
@@ -596,11 +596,11 @@ struct TimeSimSection: View {
                 .foregroundStyle(Theme.textSecond)
                 .fixedSize(horizontal: false, vertical: true)
             HStack(alignment: .top, spacing: 10) {
-                tvStat("FIRE 시급", tvWon(fireWage), sub: "자산 \(Fmt.krw(netWorth))원 기준",
+                tvStat(String(localized: "FIRE 시급"), tvWon(fireWage), sub: String(localized: "자산 \(Fmt.krw(netWorth))원 기준"),
                        tint: Theme.positive)
-                tvStat("월 자산수익", tvWon(monthlyAssetIncome), sub: "연 \(Fmt.percent(annualReturn)) 가정")
-                tvStat("살 수 있는 시간", hoursFromAssets > 0 ? "월 \(tvHours(hoursFromAssets))" : "—",
-                       sub: "지금 산 시급 기준", tint: Theme.accent)
+                tvStat(String(localized: "월 자산수익"), tvWon(monthlyAssetIncome), sub: String(localized: "연 \(Fmt.percent(annualReturn)) 가정"))
+                tvStat(String(localized: "살 수 있는 시간"), hoursFromAssets > 0 ? String(localized: "월 \(tvHours(hoursFromAssets))") : "—",
+                       sub: String(localized: "지금 산 시급 기준"), tint: Theme.accent)
             }
             if fireWage > 0 && marginalWage > 0 {
                 let share = fireWage / marginalWage
@@ -700,8 +700,8 @@ struct TimeSimSection: View {
     // 범례는 차트 위에 얹지 않고 아래 한 줄로 — 곡선·주석과 겹치지 않게.
     private var crossoverLegend: some View {
         HStack(spacing: 14) {
-            tvLegend(Theme.accent, "시급성장률 g")
-            tvLegend(Theme.positive, "자산수익률 r")
+            tvLegend(Theme.accent, String(localized: "시급성장률 g"))
+            tvLegend(Theme.positive, String(localized: "자산수익률 r"))
         }
         .font(.caption2)
     }
@@ -709,19 +709,19 @@ struct TimeSimSection: View {
     private var crossoverHeadline: String {
         if g0 > annualReturn {
             if let x = crossoverYear, x <= 40 {
-                let age = settings.currentAge > 0 ? " · \(settings.currentAge + Int(x.rounded()))세" : ""
-                return "지금은 시급에 투자할 때 (전환점 \(String(format: "%.0f", x))년 뒤\(age))"
+                let age = settings.currentAge > 0 ? String(localized: " · \(settings.currentAge + Int(x.rounded()))세") : ""
+                return String(localized: "지금은 시급에 투자할 때 (전환점 \(String(format: "%.0f", x))년 뒤\(age))")
             }
-            return "지금은 시급에 투자할 때"
+            return String(localized: "지금은 시급에 투자할 때")
         }
-        return "이미 저장이 유리한 구간 — FIRE 전환점을 지났어요"
+        return String(localized: "이미 저장이 유리한 구간 — FIRE 전환점을 지났어요")
     }
 
     private var crossoverBody: String {
         if g0 > annualReturn {
-            return "시급이 자산보다 빨리 크고 있어요. 지금 1시간을 팔아 저장하면 나중에 헐값이 되니, 그 시간은 시급을 올리는 데 쓰는 편이 나아요. 전환점을 지나면 반대가 돼요."
+            return String(localized: "시급이 자산보다 빨리 크고 있어요. 지금 1시간을 팔아 저장하면 나중에 헐값이 되니, 그 시간은 시급을 올리는 데 쓰는 편이 나아요. 전환점을 지나면 반대가 돼요.")
         }
-        return "시급 성장이 자산 수익보다 느려요. 지금부터는 번 시간을 저장해서 자산이 대신 벌게 하는 쪽이 유리해요."
+        return String(localized: "시급 성장이 자산 수익보다 느려요. 지금부터는 번 시간을 저장해서 자산이 대신 벌게 하는 쪽이 유리해요.")
     }
 
     // MARK: 5 — 지금 1시간의 값
@@ -779,11 +779,11 @@ struct TimeSimSection: View {
 
             // 판 시간 vs 지킨 시간 — 길이로 바로 비교.
             VStack(spacing: 8) {
-                tvCompareBar("팔았을 때 돌아오는 시간", value: usable, peak: max(1, usable),
+                tvCompareBar(String(localized: "팔았을 때 돌아오는 시간"), value: usable, peak: max(1, usable),
                              color: usable < 1 ? Theme.negative : Theme.positive,
                              caption: tvHours(usable))
-                tvCompareBar("팔지 않았을 때 남는 시간", value: 1, peak: max(1, usable),
-                             color: Theme.accent, caption: "1시간")
+                tvCompareBar(String(localized: "팔지 않았을 때 남는 시간"), value: 1, peak: max(1, usable),
+                             color: Theme.accent, caption: String(localized: "1시간"))
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -971,14 +971,14 @@ private func tvNum(_ s: String, _ fallback: Double = 0) -> Double {
 // 시급은 만원 단위로 자르면 18,462원이 '1만원'이 돼 버린다.
 // 100만원 미만은 원 단위로 정확히, 그 위는 앱 표기(억·만)를 따른다.
 private func tvWon(_ v: Double) -> String {
-    guard v.isFinite else { return "0원" }
-    if abs(v) < 1_000_000 { return "\(Int(v.rounded()).formatted())원" }
+    guard v.isFinite else { return String(localized: "0원") }
+    if abs(v) < 1_000_000 { return String(localized: "\(Int(v.rounded()).formatted())원") }
     return Fmt.wonKo(v)
 }
 
 // 3.17 → "3.2시간", 24 → "24시간".
 private func tvHours(_ v: Double) -> String {
-    guard v.isFinite else { return "0시간" }
-    if abs(v - v.rounded()) < 0.05 { return "\(Int(v.rounded()))시간" }
-    return "\(String(format: "%.1f", v))시간"
+    guard v.isFinite else { return String(localized: "0시간") }
+    if abs(v - v.rounded()) < 0.05 { return String(localized: "\(Int(v.rounded()))시간") }
+    return String(localized: "\(String(format: "%.1f", v))시간")
 }

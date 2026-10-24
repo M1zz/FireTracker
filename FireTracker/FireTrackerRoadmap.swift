@@ -8,7 +8,7 @@
 //     - 새 항목: `.planned`. 손대기 시작하면 `.building`. 내보내면 `.shipped("1.2.0")`.
 //     - id 는 한 번 정하면 바꾸지 않는다(문구는 바꿔도 된다). 같은 피처는 다른 앱과 같은 id 를 쓴다.
 //     - 문구는 사용자 말로 쓴다(내부 이름 · 기술 용어 금지). 영어는 FireTracker/Localizable.xcstrings 에 넣는다
-//       (앱의 다른 화면은 한국어 하나지만, 이 화면 문구만은 en · ko 를 둘 다 둔다).
+//       (앱이 지원하는 모든 언어를 채운다 — deploy.env 의 LOCALES).
 //     - 사용자에게 보일 만한 것만 적는다. 리팩터링 · 시험 · 빌드 설정은 `.sprintcommander/tasks.json` 의 몫이다.
 //
 
@@ -30,10 +30,10 @@ extension FireTrackerSpec {
         .init(id: "a11y.motion", status: .planned,
               title: NSLocalizedString("움직임 줄이기", comment: "Roadmap item: reduce motion"),
               detail: NSLocalizedString("움직임 줄이기를 켜면 화면 효과가 차분해져요.", comment: "Roadmap item detail: reduce motion")),
-        .init(id: "lang.english", status: .planned,
+        .init(id: "lang.english", status: .shipped("1.2.1"),
               title: NSLocalizedString("영어 지원", comment: "Roadmap item: English"),
               detail: NSLocalizedString("앱을 영어로도 쓸 수 있어요.", comment: "Roadmap item detail: English")),
-        .init(id: "lang.more", status: .planned,
+        .init(id: "lang.more", status: .shipped("1.2.1"),
               title: NSLocalizedString("더 많은 언어", comment: "Roadmap item: more languages"),
               detail: NSLocalizedString("더 많은 나라 말로 앱을 쓸 수 있게 해요.", comment: "Roadmap item detail: more languages")),
         .init(id: "whatsnew", status: .planned,

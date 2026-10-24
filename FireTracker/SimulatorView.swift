@@ -276,12 +276,12 @@ struct SimLever: Identifiable {
         let b = Binding<Double>(get: { Double(text.wrappedValue) ?? 0 },
                                 set: { text.wrappedValue = String(Int($0.rounded())) })
         return SimLever(id: label, value: b, range: fit(range, b.wrappedValue), step: step,
-                        text: "\(prefix)\(Fmt.krw(b.wrappedValue))원", unit: 10_000, unitLabel: "만원")
+                        text: String(localized: "\(prefix)\(Fmt.krw(b.wrappedValue))원"), unit: 10_000, unitLabel: String(localized: "만원"))
     }
 
     // 문자열로 저장된 % 칸 — 소수 한 자리까지.
     static func percent(_ label: String, _ text: Binding<String>, _ range: ClosedRange<Double>,
-                        step: Double, prefix: String = "연 ", suffix: String = "%") -> SimLever {
+                        step: Double, prefix: String = String(localized: "연 "), suffix: String = "%") -> SimLever {
         let b = Binding<Double>(get: { Double(text.wrappedValue) ?? 0 },
                                 set: { text.wrappedValue = Fmt.trimNumber(($0 * 10).rounded() / 10) })
         return SimLever(id: label, value: b, range: fit(range, b.wrappedValue), step: step,
@@ -402,7 +402,7 @@ struct SimLeverPanel<Trailing: View, Footer: View>: View {
                             selection = l.id
                             withAnimation { proxy.scrollTo(l.id, anchor: .center) }
                         } label: {
-                            Text(l.id)
+                            Text(LocalizedStringKey(l.id))
                                 .font(.caption.weight(.semibold))
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 6)
@@ -426,7 +426,7 @@ struct SimLeverPanel<Trailing: View, Footer: View>: View {
                         onBeginEdit()
                         o.action()
                     } label: {
-                        Text(o.id)
+                        Text(LocalizedStringKey(o.id))
                             .font(.subheadline.weight(.semibold))
                             .padding(.horizontal, 14)
                             .padding(.vertical, 7)
@@ -681,7 +681,7 @@ private struct LifecycleSimSection: View {
         let pensionYear = (Double(retirePension) ?? 0) * 12
         let passiveYear = (Double(passiveMonthly) ?? 0) * 12
 
-        var pts: [LifePoint] = [LifePoint(age: a.cur, value: asset, phase: "모으는 시기")]
+        var pts: [LifePoint] = [LifePoint(age: a.cur, value: asset, phase: String(localized: "모으는 시기"))]
         var peak = asset
         var depletion: Int? = nil
         // 분기점 — 한 해 투자수익(자산×수익률)이 그 해 순저축을 넘어서는 첫 나이.
@@ -710,12 +710,12 @@ private struct LifecycleSimSection: View {
             }
             if asset <= 0, depletion == nil, age > a.retire { depletion = age }
             asset = max(0, asset)
-            let phase = working ? "모으는 시기" : "쓰는 시기"
+            let phase = working ? String(localized: "모으는 시기") : String(localized: "쓰는 시기")
             pts.append(LifePoint(age: age, value: asset, phase: phase))
             if age == a.retire {
                 peak = asset
                 // 경계점을 양쪽 단계에 모두 넣어 라인이 끊기지 않게.
-                pts.append(LifePoint(age: age, value: asset, phase: "쓰는 시기"))
+                pts.append(LifePoint(age: age, value: asset, phase: String(localized: "쓰는 시기")))
             }
         }
         return (pts, peak, asset, depletion, crossover)
@@ -801,15 +801,15 @@ private struct LifecycleSimSection: View {
         let feasible = result.depletionAge == nil
         let comfy = feasible && result.end >= result.peak
         let headline = feasible
-            ? (comfy ? "여유로운 은퇴 전략이에요" : "은퇴 가능한 전략이에요")
-            : "은퇴하기엔 아직 부족한 전략이에요"
+            ? (comfy ? String(localized: "여유로운 은퇴 전략이에요") : String(localized: "은퇴 가능한 전략이에요"))
+            : String(localized: "은퇴하기엔 아직 부족한 전략이에요")
         let reason: String
         if let dep = result.depletionAge {
-            reason = "은퇴 후 \(dep)세에 자산이 바닥나요. 은퇴 후 월 생활비를 줄이거나, 은퇴를 늦추거나, 수익률·저축을 높여보세요."
+            reason = String(localized: "은퇴 후 \(dep)세에 자산이 바닥나요. 은퇴 후 월 생활비를 줄이거나, 은퇴를 늦추거나, 수익률·저축을 높여보세요.")
         } else if comfy {
-            reason = "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원을 써도 \(a.end)세에 \(Fmt.krw(result.end))원이 남아요."
+            reason = String(localized: "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원을 써도 \(a.end)세에 \(Fmt.krw(result.end))원이 남아요.")
         } else {
-            reason = "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원으로 \(a.end)세까지 버틸 수 있어요."
+            reason = String(localized: "은퇴(\(a.retire)세) 후 월 \(Fmt.krw(want))원으로 \(a.end)세까지 버틸 수 있어요.")
         }
         return (feasible, comfy, headline, reason)
     }
@@ -817,8 +817,8 @@ private struct LifecycleSimSection: View {
     /// 저장 목록에 남길 조건 요약.
     private var conditionSummary: String {
         let a = ages
-        return "\(a.cur)세 → \(a.retire)세 은퇴 · 시작 \(Fmt.krw(Double(startAsset) ?? 0))원 · "
-            + "연봉 \(Fmt.krw(Double(grossSalary) ?? 0))원 · 수익률 \(returnPct)% · 희망 월 \(Fmt.krw(Double(retireMonthly) ?? 0))원"
+        return String(localized: "\(a.cur)세 → \(a.retire)세 은퇴 · 시작 \(Fmt.krw(Double(startAsset) ?? 0))원 · ")
+            + String(localized: "연봉 \(Fmt.krw(Double(grossSalary) ?? 0))원 · 수익률 \(returnPct)% · 희망 월 \(Fmt.krw(Double(retireMonthly) ?? 0))원")
     }
 
     var body: some View {
@@ -872,11 +872,11 @@ private struct LifecycleSimSection: View {
             .popoverTip(enoughAnchorTip)
 
             HStack(spacing: 0) {
-                simStat("은퇴(\(a.retire)세) 자산", "\(Fmt.krw(result.peak))원", tint: .blue)
+                simStat(String(localized: "은퇴(\(a.retire)세) 자산"), String(localized: "\(Fmt.krw(result.peak))원"), tint: .blue)
                 if let dep = result.depletionAge {
-                    simStat("자산 고갈", "\(dep)세", tint: Theme.negative)
+                    simStat(String(localized: "자산 고갈"), String(localized: "\(dep)세"), tint: Theme.negative)
                 } else {
-                    simStat("\(a.end)세 잔액", "\(Fmt.krw(result.end))원", tint: .orange)
+                    simStat(String(localized: "\(a.end)세 잔액"), String(localized: "\(Fmt.krw(result.end))원"), tint: .orange)
                 }
             }
 
@@ -929,7 +929,7 @@ private struct LifecycleSimSection: View {
                 if let base = baseline, isChanged(result.points) {
                     ForEach(base.points) { p in
                         LineMark(x: .value("나이", p.age), y: .value("자산", p.value),
-                                 series: .value("곡선", "바꾸기 전"))
+                                 series: .value("곡선", String(localized: "바꾸기 전")))
                             .foregroundStyle(Theme.textSecond.opacity(0.55))
                             .interpolationMethod(.catmullRom)
                             .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
@@ -951,7 +951,7 @@ private struct LifecycleSimSection: View {
                 }
             }
             .chartXSelection(value: $selectedAge)
-            .chartForegroundStyleScale(["모으는 시기": Color.blue, "쓰는 시기": Color.orange])
+            .chartForegroundStyleScale([String(localized: "모으는 시기"): Color.blue, String(localized: "쓰는 시기"): Color.orange])
             .chartXScale(domain: a.cur...a.end)
             .chartLegend(.hidden)
             .chartPlotStyle { $0.padding(.top, 16) }
@@ -973,7 +973,7 @@ private struct LifecycleSimSection: View {
             SimLeverPanel(levers: Lever.allCases.map(lever), selection: $leverID,
                           onBeginEdit: captureBaseline) {
                 if isChanged(result.points) {
-                    SimPanelButton(title: "되돌리기", icon: "arrow.uturn.backward", action: resetToBaseline)
+                    SimPanelButton(title: String(localized: "되돌리기"), icon: "arrow.uturn.backward", action: resetToBaseline)
                 }
             } footer: {
                 if let b = baseline, isChanged(result.points) {
@@ -996,7 +996,7 @@ private struct LifecycleSimSection: View {
     private func infoSheet(_ result: (points: [LifePoint], peak: Double, end: Double, depletionAge: Int?, crossoverAge: Int?),
                            _ a: (cur: Int, retire: Int, end: Int),
                            _ v: (feasible: Bool, comfy: Bool, headline: String, reason: String)) -> some View {
-        SimSheet(title: "해석·저장") {
+        SimSheet(title: String(localized: "해석·저장")) {
             VStack(alignment: .leading, spacing: 10) {
                 Text("이 결과의 뜻")
                     .font(.headline)
@@ -1091,12 +1091,12 @@ private struct LifecycleSimSection: View {
     private func lever(_ l: Lever) -> SimLever {
         let ag = ages
         switch l {
-        case .retireMonthly: return .money(l.rawValue, $retireMonthly, 500_000...15_000_000, step: 100_000, prefix: "월 ")
-        case .living:        return .money(l.rawValue, $monthlyLiving, 500_000...10_000_000, step: 100_000, prefix: "월 ")
-        case .salary:        return .money(l.rawValue, $grossSalary, 10_000_000...300_000_000, step: 1_000_000, prefix: "연 ")
+        case .retireMonthly: return .money(l.rawValue, $retireMonthly, 500_000...15_000_000, step: 100_000, prefix: String(localized: "월 "))
+        case .living:        return .money(l.rawValue, $monthlyLiving, 500_000...10_000_000, step: 100_000, prefix: String(localized: "월 "))
+        case .salary:        return .money(l.rawValue, $grossSalary, 10_000_000...300_000_000, step: 1_000_000, prefix: String(localized: "연 "))
         case .startAsset:    return .money(l.rawValue, $startAsset, 0...3_000_000_000, step: 10_000_000)
-        case .passive:       return .money(l.rawValue, $passiveMonthly, 0...5_000_000, step: 50_000, prefix: "월 ")
-        case .pension:       return .money(l.rawValue, $retirePension, 0...5_000_000, step: 50_000, prefix: "월 ")
+        case .passive:       return .money(l.rawValue, $passiveMonthly, 0...5_000_000, step: 50_000, prefix: String(localized: "월 "))
+        case .pension:       return .money(l.rawValue, $retirePension, 0...5_000_000, step: 50_000, prefix: String(localized: "월 "))
         case .returnPct:     return .percent(l.rawValue, $returnPct, 0...12, step: 0.5)
         case .raise:         return .percent(l.rawValue, $raisePct, 0...10, step: 0.5)
         case .inflation:     return .percent(l.rawValue, $inflationPct, 0...6, step: 0.1)
@@ -1107,17 +1107,17 @@ private struct LifecycleSimSection: View {
                                     set: { retireAge = String(Int($0.rounded())) })
             return SimLever(id: l.rawValue, value: b,
                             range: Double(ag.cur + 1)...Double(max(ag.cur + 2, 80, ag.retire)),
-                            step: 1, text: "\(ag.retire)세", unitLabel: "세")
+                            step: 1, text: String(localized: "\(ag.retire)세"), unitLabel: String(localized: "세"))
         case .currentAge:
             let b = Binding<Double>(get: { Double(ages.cur) },
                                     set: { currentAge = String(Int($0.rounded())) })
             return SimLever(id: l.rawValue, value: b, range: 15...Double(max(80, ag.cur)),
-                            step: 1, text: "\(ag.cur)세", unitLabel: "세")
+                            step: 1, text: String(localized: "\(ag.cur)세"), unitLabel: String(localized: "세"))
         case .endAge:
             let b = Binding<Double>(get: { Double(ages.end) },
                                     set: { endAge = String(Int($0.rounded())) })
             return SimLever(id: l.rawValue, value: b, range: Double(ag.retire + 1)...Double(max(110, ag.end)),
-                            step: 1, text: "\(ag.end)세까지", unitLabel: "세")
+                            step: 1, text: String(localized: "\(ag.end)세까지"), unitLabel: String(localized: "세"))
         }
     }
 
@@ -1153,8 +1153,8 @@ private struct LifecycleSimSection: View {
     private func changeSummary(_ r: (points: [LifePoint], peak: Double, end: Double, depletionAge: Int?, crossoverAge: Int?),
                                _ b: Baseline) -> some View {
         let endText: (Double, Int?) -> String = { end, dep in
-            if let dep { return "\(dep)세 고갈" }
-            return "\(Fmt.krw(end))원 남음"
+            if let dep { return String(localized: "\(dep)세 고갈") }
+            return String(localized: "\(Fmt.krw(end))원 남음")
         }
         let better = (r.depletionAge ?? 999, r.end) >= (b.depletionAge ?? 999, b.end)
         return VStack(alignment: .leading, spacing: 3) {
@@ -1170,7 +1170,7 @@ private struct LifecycleSimSection: View {
     // 변동성 빠른 프리셋 — 보수(8)/균형(12)/공격(18)으로 한 탭 세팅.
     private var volatilityPresets: some View {
         HStack(spacing: 8) {
-            ForEach([("보수 8%", "8"), ("균형 12%", "12"), ("공격 18%", "18")], id: \.0) { label, value in
+            ForEach([(String(localized: "보수 8%"), "8"), (String(localized: "균형 12%"), "12"), (String(localized: "공격 18%"), "18")], id: \.0) { label, value in
                 Button { volatilityPct = value } label: {
                     Text(label)
                         .font(.caption.weight(.semibold))
@@ -1240,7 +1240,7 @@ private struct LifecycleSimSection: View {
         FireSettings.markGoalConfigured()
         // 월 패시브 인컴은 계산용 입력(자산에서 미리 채운 값)이라 반영하지 않는다.
         // 현재 패시브 인컴은 실제 보유 자산(주식 배당 등)에서만 나와야 한다.
-        guard context.saveReporting("목표") else { return }
+        guard context.saveReporting(String(localized: "목표")) else { return }
         reflected = true
         // 만족점을 다시 확정한 순간 — 4단계 재점검 타이머를 리셋하고 닻 질문은 닫는다.
         ReflectionState.markReviewed()
@@ -1263,7 +1263,7 @@ private struct MortgageSimSection: View {
     @State private var added = false
     @State private var showAddConfirm = false
     @State private var showInfo = false
-    @State private var leverID = "원금"
+    @State private var leverID = String(localized: "원금")
 
     enum RepayMethod: String, CaseIterable, Identifiable {
         case equalPayment = "원리금균등"
@@ -1283,11 +1283,11 @@ private struct MortgageSimSection: View {
         // 자산 탭에 부채로 추가할 때 쓰는 정식 이름.
         var assetName: String {
             switch self {
-            case .mortgage: return "주택담보대출"
-            case .jeonse:   return "전세자금대출"
-            case .credit:   return "신용대출"
-            case .car:      return "자동차 할부"
-            case .minus:    return "마이너스통장"
+            case .mortgage: return String(localized: "주택담보대출")
+            case .jeonse:   return String(localized: "전세자금대출")
+            case .credit:   return String(localized: "신용대출")
+            case .car:      return String(localized: "자동차 할부")
+            case .minus:    return String(localized: "마이너스통장")
             }
         }
         // 종류별 일반적인 조건(2026 기준 근사) — 선택 시 입력칸에 시드된다.
@@ -1369,18 +1369,18 @@ private struct MortgageSimSection: View {
         }
         let monthlyText: String = {
             if method == .equalPrincipal, let f = sched.first, let l = sched.last {
-                return "\(Fmt.krw(f.payment)) → \(Fmt.krw(l.payment))원"
+                return String(localized: "\(Fmt.krw(f.payment)) → \(Fmt.krw(l.payment))원")
             }
-            return "\(Fmt.krw(sched.first?.payment ?? 0))원"
+            return String(localized: "\(Fmt.krw(sched.first?.payment ?? 0))원")
         }()
 
         return VStack(alignment: .leading, spacing: 10) {
-            SimResultHeader(title: "총 이자 \(Fmt.krw(totalInterest))원 · 원금의 \(Fmt.percent(p > 0 ? totalInterest / p : 0, fraction: 0))",
+            SimResultHeader(title: String(localized: "총 이자 \(Fmt.krw(totalInterest))원 · 원금의 \(Fmt.percent(p > 0 ? totalInterest / p : 0, fraction: 0))"),
                             icon: "banknote", tint: Theme.negative) { showInfo = true }
 
             HStack(spacing: 0) {
-                simStat(method == .bullet ? "월 이자" : "월 상환액", monthlyText)
-                simStat("총 상환액", "\(Fmt.krw(totalPaid))원")
+                simStat(method == .bullet ? String(localized: "월 이자") : String(localized: "월 상환액"), monthlyText)
+                simStat(String(localized: "총 상환액"), String(localized: "\(Fmt.krw(totalPaid))원"))
             }
 
             // 남은 원금이 줄어드는 동안 낸 이자가 얼마나 쌓이는지 — 같은 눈금 위에.
@@ -1392,11 +1392,11 @@ private struct MortgageSimSection: View {
                                            startPoint: .top, endPoint: .bottom)
                         )
                     LineMark(x: .value("개월", pt.month), y: .value("남은 원금", pt.balance),
-                             series: .value("선", "남은 원금"))
+                             series: .value("선", String(localized: "남은 원금")))
                         .foregroundStyle(Theme.negative)
                         .lineStyle(StrokeStyle(lineWidth: 2))
                     LineMark(x: .value("개월", pt.month), y: .value("낸 이자", pt.paidInterest),
-                             series: .value("선", "낸 이자"))
+                             series: .value("선", String(localized: "낸 이자")))
                         .foregroundStyle(Theme.accent)
                         .lineStyle(StrokeStyle(lineWidth: 2.5))
                 }
@@ -1416,8 +1416,8 @@ private struct MortgageSimSection: View {
             .frame(minHeight: 140, maxHeight: .infinity)
 
             HStack(spacing: 14) {
-                simLegend(Theme.negative, "남은 원금")
-                simLegend(Theme.accent, "그때까지 낸 이자")
+                simLegend(Theme.negative, String(localized: "남은 원금"))
+                simLegend(Theme.accent, String(localized: "그때까지 낸 이자"))
             }
 
             SimLeverPanel(levers: levers, selection: $leverID) {
@@ -1428,16 +1428,16 @@ private struct MortgageSimSection: View {
         }
         .simResultCard()
         .sheet(isPresented: $showInfo) {
-            SimSheet(title: "해석·저장") {
-                SimInfoCard(title: "상환 결과") {
+            SimSheet(title: String(localized: "해석·저장")) {
+                SimInfoCard(title: String(localized: "상환 결과")) {
                     HStack(spacing: 0) {
-                        simStat("총 상환액", "\(Fmt.krw(totalPaid))원")
-                        simStat("총 이자", "\(Fmt.krw(totalInterest))원", tint: Theme.negative)
+                        simStat(String(localized: "총 상환액"), String(localized: "\(Fmt.krw(totalPaid))원"))
+                        simStat(String(localized: "총 이자"), String(localized: "\(Fmt.krw(totalInterest))원"), tint: Theme.negative)
                     }
                     HStack(spacing: 0) {
-                        simStat("이자 비율(원금 대비)", Fmt.percent(p > 0 ? totalInterest / p : 0, fraction: 1),
+                        simStat(String(localized: "이자 비율(원금 대비)"), Fmt.percent(p > 0 ? totalInterest / p : 0, fraction: 1),
                                 tint: Theme.negative)
-                        simStat(method == .bullet ? "월 이자" : "월 상환액", monthlyText)
+                        simStat(method == .bullet ? String(localized: "월 이자") : String(localized: "월 상환액"), monthlyText)
                     }
                     Text(methodNote)
                         .font(.caption)
@@ -1452,18 +1452,18 @@ private struct MortgageSimSection: View {
                         $0.assetClass == .debt && $0.name == loanKind.assetName && $0.amount == p
                     }
                     simActionButton(
-                        title: debtAdded ? "부채로 추가됨" : "이 대출을 자산에 부채로 추가",
+                        title: debtAdded ? String(localized: "부채로 추가됨") : String(localized: "이 대출을 자산에 부채로 추가"),
                         done: debtAdded,
-                        confirmTitle: "이 대출을 부채로 추가할까요?",
-                        confirmMessage: "남은 대출 잔액 \(Fmt.krw(p))원과 연 이자율 \(ratePct)%가 자산 탭에 ‘부채’로 등록됩니다.",
+                        confirmTitle: String(localized: "이 대출을 부채로 추가할까요?"),
+                        confirmMessage: String(localized: "남은 대출 잔액 \(Fmt.krw(p))원과 연 이자율 \(ratePct)%가 자산 탭에 ‘부채’로 등록됩니다."),
                         isPresented: $showAddConfirm,
                         action: addAsDebt
                     )
 
                     CalcSaveRow(
                         kind: .loan,
-                        headline: "총 이자 \(Fmt.krw(totalInterest))원 · 총 상환 \(Fmt.krw(totalPaid))원",
-                        detail: "\(loanKind.rawValue) · 원금 \(Fmt.krw(p))원 · 연 \(ratePct)% · \(years)년 · \(method.rawValue)"
+                        headline: String(localized: "총 이자 \(Fmt.krw(totalInterest))원 · 총 상환 \(Fmt.krw(totalPaid))원"),
+                        detail: String(localized: "\(String(localized: String.LocalizationValue(loanKind.rawValue))) · 원금 \(Fmt.krw(p))원 · 연 \(ratePct)% · \(years)년 · \(String(localized: String.LocalizationValue(method.rawValue)))")
                     )
                 }
                 simDisclaimer
@@ -1473,16 +1473,16 @@ private struct MortgageSimSection: View {
 
     private var methodNote: String {
         switch method {
-        case .equalPayment:   return "원리금균등 — 매달 같은 금액을 내요. 초반엔 이자 비중이 크고, 갈수록 원금 비중이 커져요."
-        case .equalPrincipal: return "원금균등 — 원금을 매달 같은 만큼 갚아 첫 달 부담이 크지만, 총 이자는 원리금균등보다 적어요."
-        case .bullet:         return "만기일시 — 매달 이자만 내고 원금은 마지막에 한 번에 갚아요. 총 이자가 가장 커요."
+        case .equalPayment:   return String(localized: "원리금균등 — 매달 같은 금액을 내요. 초반엔 이자 비중이 크고, 갈수록 원금 비중이 커져요.")
+        case .equalPrincipal: return String(localized: "원금균등 — 원금을 매달 같은 만큼 갚아 첫 달 부담이 크지만, 총 이자는 원리금균등보다 적어요.")
+        case .bullet:         return String(localized: "만기일시 — 매달 이자만 내고 원금은 마지막에 한 번에 갚아요. 총 이자가 가장 커요.")
         }
     }
 
     // 조작 패널의 값들 — 대출 종류를 고르면 그 대출의 일반적인 조건으로 채운다.
     private var levers: [SimLever] {
         [
-            .choice("대출 종류", current: loanKind.rawValue, LoanKind.allCases.map { k in
+            .choice(String(localized: "대출 종류"), current: loanKind.rawValue, LoanKind.allCases.map { k in
                 SimOption(id: k.rawValue, selected: loanKind == k) {
                     loanKind = k
                     let d = k.defaults
@@ -1493,10 +1493,10 @@ private struct MortgageSimSection: View {
                     added = false
                 }
             }),
-            .money("원금", $principal, 10_000_000...2_000_000_000, step: 10_000_000),
-            .percent("이자율", $ratePct, 0...15, step: 0.1),
-            .count("기간", $years, 1...40, suffix: "년"),
-            .choice("상환 방식", current: method.rawValue, RepayMethod.allCases.map { m in
+            .money(String(localized: "원금"), $principal, 10_000_000...2_000_000_000, step: 10_000_000),
+            .percent(String(localized: "이자율"), $ratePct, 0...15, step: 0.1),
+            .count(String(localized: "기간"), $years, 1...40, suffix: String(localized: "년")),
+            .choice(String(localized: "상환 방식"), current: method.rawValue, RepayMethod.allCases.map { m in
                 SimOption(id: m.rawValue, selected: method == m) { method = m }
             }),
         ]
@@ -1510,7 +1510,7 @@ private struct MortgageSimSection: View {
                           annualYieldPct: Double(ratePct) ?? 0,
                           sortOrder: assets.count)
         context.insert(asset)
-        added = context.saveReporting("자산")
+        added = context.saveReporting(String(localized: "자산"))
     }
 
     // x축을 '년' 단위 라벨로.
@@ -1545,7 +1545,7 @@ private struct SavingsSimSection: View {
     @State private var added = false
     @State private var showAddConfirm = false
     @State private var showInfo = false
-    @State private var leverID = "기간"
+    @State private var leverID = String(localized: "기간")
 
     enum SavingKind: String, CaseIterable, Identifiable {
         case deposit = "정기예금"
@@ -1655,18 +1655,18 @@ private struct SavingsSimSection: View {
         let reached = goalValue > 0 && maturity >= goalValue
         let headline: String = {
             if goalValue > 0 {
-                return reached ? "만기 \(Fmt.krw(maturity))원 · 목표 달성"
-                               : "만기 \(Fmt.krw(maturity))원 · 목표의 \(Fmt.percent(min(maturity / goalValue, 1), fraction: 0))"
+                return reached ? String(localized: "만기 \(Fmt.krw(maturity))원 · 목표 달성")
+                               : String(localized: "만기 \(Fmt.krw(maturity))원 · 목표의 \(Fmt.percent(min(maturity / goalValue, 1), fraction: 0))")
             }
-            return "만기에 \(Fmt.krw(maturity))원을 받아요"
+            return String(localized: "만기에 \(Fmt.krw(maturity))원을 받아요")
         }()
         VStack(alignment: .leading, spacing: 10) {
             SimResultHeader(title: headline, icon: reached ? "checkmark.seal.fill" : "banknote",
                             tint: Theme.positive) { showInfo = true }
 
             HStack(spacing: 0) {
-                simStat("원금", "\(Fmt.krw(r.principal))원")
-                simStat(taxed ? "세후 이자" : "이자", "+\(Fmt.krw(afterTax))원", tint: Theme.positive)
+                simStat(String(localized: "원금"), String(localized: "\(Fmt.krw(r.principal))원"))
+                simStat(taxed ? String(localized: "세후 이자") : String(localized: "이자"), String(localized: "+\(Fmt.krw(afterTax))원"), tint: Theme.positive)
             }
 
             // 목표까지 모이는 흐름 — 월별 누적 잔액 곡선 + 목표선.
@@ -1689,8 +1689,8 @@ private struct SavingsSimSection: View {
             added = false
         }
         .sheet(isPresented: $showInfo) {
-            SimSheet(title: "해석·저장") {
-                SimInfoCard(title: "만기 수령액") {
+            SimSheet(title: String(localized: "해석·저장")) {
+                SimInfoCard(title: String(localized: "만기 수령액")) {
                     Text("\(Fmt.krw(maturity))원")
                         .font(.system(.title2, design: .rounded, weight: .bold))
                         .foregroundStyle(Theme.positive)
@@ -1713,14 +1713,14 @@ private struct SavingsSimSection: View {
                     }
                     .frame(height: 8)
                     HStack(spacing: 0) {
-                        simStat("원금", "\(Fmt.krw(r.principal))원")
-                        simStat("세전 이자", "\(Fmt.krw(r.interest))원", tint: Theme.positive)
+                        simStat(String(localized: "원금"), String(localized: "\(Fmt.krw(r.principal))원"))
+                        simStat(String(localized: "세전 이자"), String(localized: "\(Fmt.krw(r.interest))원"), tint: Theme.positive)
                     }
                     HStack(spacing: 0) {
                         if taxed {
-                            simStat("세금(15.4%)", "−\(Fmt.krw(tax))원", tint: Theme.negative)
+                            simStat(String(localized: "세금(15.4%)"), String(localized: "−\(Fmt.krw(tax))원"), tint: Theme.negative)
                         }
-                        simStat("세후 이자", "\(Fmt.krw(afterTax))원", tint: Theme.positive)
+                        simStat(String(localized: "세후 이자"), String(localized: "\(Fmt.krw(afterTax))원"), tint: Theme.positive)
                     }
                     if kind == .parking {
                         Text("파킹·CMA는 매일 이자가 붙어 월 복리로 근사해서 계산해요.")
@@ -1731,15 +1731,15 @@ private struct SavingsSimSection: View {
 
                 // 예금·파킹은 지금 넣어둔 원금이 곧 현재 자산 → 현금·예금으로 바로 추가.
                 if kind != .installment, (Double(principal) ?? 0) > 0 {
-                    let cashName = kind == .deposit ? "정기예금" : "파킹통장"
+                    let cashName = kind == .deposit ? String(localized: "정기예금") : String(localized: "파킹통장")
                     let cashAdded = added || assets.contains {
                         $0.assetClass == .cash && $0.name == cashName && $0.amount == (Double(principal) ?? 0)
                     }
                     simActionButton(
-                        title: cashAdded ? "현금·예금에 추가됨" : "이 \(kind == .deposit ? "예금" : "잔액")을 자산에 추가",
+                        title: cashAdded ? String(localized: "현금·예금에 추가됨") : String(localized: "이 \(kind == .deposit ? String(localized: "예금") : String(localized: "잔액"))을 자산에 추가"),
                         done: cashAdded,
-                        confirmTitle: "자산에 추가할까요?",
-                        confirmMessage: "\(kind == .deposit ? "원금" : "잔액") \(Fmt.krw(Double(principal) ?? 0))원이 ‘현금·예금’으로 등록되고, 연 \(ratePct)% 이자가 패시브 인컴에 반영됩니다.",
+                        confirmTitle: String(localized: "자산에 추가할까요?"),
+                        confirmMessage: String(localized: "\(kind == .deposit ? String(localized: "원금") : String(localized: "잔액")) \(Fmt.krw(Double(principal) ?? 0))원이 ‘현금·예금’으로 등록되고, 연 \(ratePct)% 이자가 패시브 인컴에 반영됩니다."),
                         isPresented: $showAddConfirm,
                         action: addAsCash
                     )
@@ -1747,8 +1747,8 @@ private struct SavingsSimSection: View {
 
                 CalcSaveRow(
                     kind: .savings,
-                    headline: "만기 \(Fmt.krw(maturity))원 · 세후 이자 \(Fmt.krw(afterTax))원",
-                    detail: "\(kind.rawValue) · \(kind == .installment ? "월 \(Fmt.krw(Double(monthly) ?? 0))원" : "원금 \(Fmt.krw(Double(principal) ?? 0))원") · \(months)개월 · 연 \(ratePct)%\(taxed ? " · 이자소득세 반영" : "")"
+                    headline: String(localized: "만기 \(Fmt.krw(maturity))원 · 세후 이자 \(Fmt.krw(afterTax))원"),
+                    detail: String(localized: "\(String(localized: String.LocalizationValue(kind.rawValue))) · \(kind == .installment ? String(localized: "월 \(Fmt.krw(Double(monthly) ?? 0))원") : String(localized: "원금 \(Fmt.krw(Double(principal) ?? 0))원")) · \(months)개월 · 연 \(ratePct)%\(taxed ? String(localized: " · 이자소득세 반영") : "")")
                 )
                 simDisclaimer
             }
@@ -1758,43 +1758,43 @@ private struct SavingsSimSection: View {
     // 조작 패널의 값들 — 종류에 따라 원금·월 납입이 바뀌어 보인다.
     private var levers: [SimLever] {
         var list: [SimLever] = [
-            .choice("종류", current: kind.rawValue, SavingKind.allCases.map { k in
+            .choice(String(localized: "종류"), current: kind.rawValue, SavingKind.allCases.map { k in
                 SimOption(id: k.rawValue, selected: kind == k) { kind = k }
             }),
         ]
         switch kind {
         case .deposit:
-            list.append(.money("원금", $principal, 1_000_000...500_000_000, step: 1_000_000))
+            list.append(.money(String(localized: "원금"), $principal, 1_000_000...500_000_000, step: 1_000_000))
         case .installment:
-            list.append(.money("월 납입액", $monthly, 100_000...5_000_000, step: 100_000, prefix: "월 "))
+            list.append(.money(String(localized: "월 납입액"), $monthly, 100_000...5_000_000, step: 100_000, prefix: String(localized: "월 ")))
         case .parking:
-            list.append(.money("현재 잔액", $principal, 0...500_000_000, step: 1_000_000))
-            list.append(.money("월 추가 입금", $monthly, 0...5_000_000, step: 100_000, prefix: "월 "))
+            list.append(.money(String(localized: "현재 잔액"), $principal, 0...500_000_000, step: 1_000_000))
+            list.append(.money(String(localized: "월 추가 입금"), $monthly, 0...5_000_000, step: 100_000, prefix: String(localized: "월 ")))
         }
-        list.append(.count("기간", $months, 1...120, suffix: "개월"))
-        list.append(.percent("이자율", $ratePct, 0...10, step: 0.1))
+        list.append(.count(String(localized: "기간"), $months, 1...120, suffix: String(localized: "개월")))
+        list.append(.percent(String(localized: "이자율"), $ratePct, 0...10, step: 0.1))
         if kind != .parking {
-            list.append(.choice("이자 계산", current: compound.rawValue, CompoundKind.allCases.map { c in
+            list.append(.choice(String(localized: "이자 계산"), current: compound.rawValue, CompoundKind.allCases.map { c in
                 SimOption(id: c.rawValue, selected: compound == c) { compound = c }
             }))
         }
-        list.append(.choice("세금", current: taxed ? "이자과세 15.4%" : "비과세", [
-            SimOption(id: "이자과세 15.4%", selected: taxed) { taxed = true },
-            SimOption(id: "비과세", selected: !taxed) { taxed = false },
+        list.append(.choice(String(localized: "세금"), current: taxed ? String(localized: "이자과세 15.4%") : String(localized: "비과세"), [
+            SimOption(id: String(localized: "이자과세 15.4%"), selected: taxed) { taxed = true },
+            SimOption(id: String(localized: "비과세"), selected: !taxed) { taxed = false },
         ]))
-        list.append(.money("목표 금액", $goal, 0...1_000_000_000, step: 1_000_000))
+        list.append(.money(String(localized: "목표 금액"), $goal, 0...1_000_000_000, step: 1_000_000))
         return list
     }
 
     // 예금·파킹 원금을 현금·예금 자산으로 만들어 카탈로그에 넣는다.
     private func addAsCash() {
-        let asset = Asset(name: kind == .deposit ? "정기예금" : "파킹통장", assetClass: .cash,
+        let asset = Asset(name: kind == .deposit ? String(localized: "정기예금") : String(localized: "파킹통장"), assetClass: .cash,
                           amount: Double(principal) ?? 0,
                           incomeKind: .interest,
                           annualYieldPct: Double(ratePct) ?? 0,
                           sortOrder: assets.count)
         context.insert(asset)
-        added = context.saveReporting("자산")
+        added = context.saveReporting(String(localized: "자산"))
     }
 
     // 월별 누적 잔액 곡선 + 목표선.
@@ -1865,7 +1865,7 @@ private struct InvestForecastSection: View {
     @AppStorage("sim.invest.years")   private var yearsText = "5"
     @AppStorage("sim.invest.monthly") private var monthlyAdd = "0"
     @State private var showInfo = false
-    @State private var leverID = "기간"
+    @State private var leverID = String(localized: "기간")
 
     // 예측에 쓰는 자산 종류 하나 — 현재액 + 가정한 연 수익률·변동성.
     private struct ClassAssumption: Identifiable {
@@ -2042,12 +2042,12 @@ private struct InvestForecastSection: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                SimResultHeader(title: "\(years)년 뒤 \(Fmt.krw(last?.mid ?? 0))원 (중앙값)",
+                SimResultHeader(title: String(localized: "\(years)년 뒤 \(Fmt.krw(last?.mid ?? 0))원 (중앙값)"),
                                 icon: "chart.line.uptrend.xyaxis", tint: Theme.accent) { showInfo = true }
 
                 HStack(spacing: 0) {
-                    simStat("보수적 (하위 10%)", "\(Fmt.krw(last?.low ?? 0))원")
-                    simStat("낙관적 (상위 10%)", "\(Fmt.krw(last?.high ?? 0))원", tint: Theme.accent)
+                    simStat(String(localized: "보수적 (하위 10%)"), String(localized: "\(Fmt.krw(last?.low ?? 0))원"))
+                    simStat(String(localized: "낙관적 (상위 10%)"), String(localized: "\(Fmt.krw(last?.high ?? 0))원"), tint: Theme.accent)
                 }
 
                 forecastChart(band)
@@ -2064,8 +2064,8 @@ private struct InvestForecastSection: View {
         }
         .simResultCard()
         .sheet(isPresented: $showInfo) {
-            SimSheet(title: "해석·저장") {
-                SimInfoCard(title: "\(years)년 뒤 내 자산은") {
+            SimSheet(title: String(localized: "해석·저장")) {
+                SimInfoCard(title: String(localized: "\(years)년 뒤 내 자산은")) {
                     if let last {
                         Text("\(Fmt.krw(last.mid))원")
                             .font(.system(.title2, design: .rounded, weight: .bold))
@@ -2075,7 +2075,7 @@ private struct InvestForecastSection: View {
                             .foregroundStyle(Theme.textSecond)
                     }
                     if let year1 = band.first(where: { $0.month >= 12 }) {
-                        simStat("1년 후 (중앙값)", "\(Fmt.krw(year1.mid))원")
+                        simStat(String(localized: "1년 후 (중앙값)"), String(localized: "\(Fmt.krw(year1.mid))원"))
                     }
                     Text("지금 자산을 종류별로 나눠, 해마다 출렁이는 수익률로 200번 굴려 본 결과예요. 가운데 선은 중앙값, 음영은 하위 10% ~ 상위 10% 범위예요. 정확한 예언이 아니라 ‘이 정도 범위’ 감각용이에요.")
                         .font(.caption)
@@ -2095,8 +2095,8 @@ private struct InvestForecastSection: View {
                 if let tail = band.last {
                     CalcSaveRow(
                         kind: .invest,
-                        headline: "\(yearsText)년 뒤 중앙값 \(Fmt.krw(tail.mid))원",
-                        detail: "보수 \(Fmt.krw(tail.low))원 ~ 낙관 \(Fmt.krw(tail.high))원 · 월 추가 \(Fmt.krw(Double(monthlyAdd) ?? 0))원 · 자산 \(asm.count)종"
+                        headline: String(localized: "\(yearsText)년 뒤 중앙값 \(Fmt.krw(tail.mid))원"),
+                        detail: String(localized: "보수 \(Fmt.krw(tail.low))원 ~ 낙관 \(Fmt.krw(tail.high))원 · 월 추가 \(Fmt.krw(Double(monthlyAdd) ?? 0))원 · 자산 \(asm.count)종")
                     )
                 }
                 simDisclaimer
@@ -2106,12 +2106,20 @@ private struct InvestForecastSection: View {
 
     private var levers: [SimLever] {
         [
-            .count("기간", $yearsText, 1...30, suffix: "년 뒤"),
-            .money("월 추가 투자", $monthlyAdd, 0...10_000_000, step: 100_000, prefix: "월 "),
+            .count(String(localized: "기간"), $yearsText, 1...30, suffix: String(localized: "년 뒤")),
+            .money(String(localized: "월 추가 투자"), $monthlyAdd, 0...10_000_000, step: 100_000, prefix: String(localized: "월 ")),
         ]
     }
 
     // 모델에게 넘길 요약 — 구성·가정·예측 범위를 짧은 한국어 프롬프트로.
+    /// 설명을 받을 말 — 앱을 보고 있는 언어로 답하게 한다.
+    private static var answerLanguage: String {
+        let code = Bundle.main.preferredLocalizations.first ?? "ko"
+        if code.hasPrefix("ko") { return "한국어 존댓말로" }
+        let name = Locale(identifier: "en").localizedString(forIdentifier: code) ?? code
+        return "\(name)(언어 코드 \(code))로"
+    }
+
     private func aiPrompt(_ asm: [ClassAssumption], band: [BandPoint]) -> String {
         let comp = asm.map {
             "\($0.assetClass.label) \(Fmt.krw($0.current))원(연 \(pct2($0.mu))%±\(pct2($0.sigma))%)"
@@ -2124,7 +2132,7 @@ private struct InvestForecastSection: View {
         구성: \(comp).
         예측: \(tail).
         위 숫자를 바탕으로, 포트폴리오의 변동성 구성이 예측 범위에 어떤 영향을 주는지와 \
-        범위를 좁히고 싶을 때 고려할 점을 한국어 존댓말 3문장 이내로 설명하라. \
+        범위를 좁히고 싶을 때 고려할 점을 \(Self.answerLanguage) 3문장 이내로 설명하라. \
         새로운 숫자를 지어내지 말고, 특정 종목 추천은 하지 마라.
         """
     }
@@ -2317,35 +2325,35 @@ private struct WageSimSection: View {
                 let change = span.first.realIndexed > 0
                     ? span.last.realIndexed / span.first.realIndexed - 1 : 0
                 let nominal = span.first.nominal > 0 ? span.last.nominal / span.first.nominal - 1 : 0
-                SimResultHeader(title: "\(yearLabel(span.first.year))→\(yearLabel(span.last.year))년 구매력 \(change >= 0 ? "▲" : "▼") \(Fmt.percent(abs(change)))",
+                SimResultHeader(title: String(localized: "\(yearLabel(span.first.year))→\(yearLabel(span.last.year))년 구매력 \(change >= 0 ? "▲" : "▼") \(Fmt.percent(abs(change)))"),
                                 icon: change >= 0 ? "arrow.up.right" : "arrow.down.right",
                                 tint: change >= 0 ? Theme.rise : Theme.fall) { showInfo = true }
                 HStack(spacing: 0) {
-                    simStat("명목 월급", signed(nominal))
-                    simStat("실질(구매력)", signed(change), tint: change >= 0 ? Theme.rise : Theme.fall)
+                    simStat(String(localized: "명목 월급"), signed(nominal))
+                    simStat(String(localized: "실질(구매력)"), signed(change), tint: change >= 0 ? Theme.rise : Theme.fall)
                 }
                 nominalRealChart
                     .frame(minHeight: 140, maxHeight: .infinity)
                 HStack(spacing: 14) {
-                    simLegend(Theme.textSecond.opacity(0.35), "명목(통장에 찍힌 돈)")
-                    simLegend(Theme.accent, "실질 · \(realMode == .today ? "\(yearLabel(baseYear))년" : "2020년") 물가 기준")
+                    simLegend(Theme.textSecond.opacity(0.35), String(localized: "명목(통장에 찍힌 돈)"))
+                    simLegend(Theme.accent, String(localized: "실질 · \(realMode == .today ? String(localized: "\(yearLabel(baseYear))년") : String(localized: "2020년")) 물가 기준"))
                 }
             } else {
-                SimResultHeader(title: "월급 기록으로 구매력 보기", icon: "wonsign.circle",
+                SimResultHeader(title: String(localized: "월급 기록으로 구매력 보기"), icon: "wonsign.circle",
                                 tint: Theme.textPrimary) { showInfo = true }
                 emptyState
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
 
             SimLeverPanel(levers: levers, selection: $leverID) {
-                SimPanelButton(title: "월급 기록", icon: "list.bullet") { showList = true }
+                SimPanelButton(title: String(localized: "월급 기록"), icon: "list.bullet") { showList = true }
             } footer: {
                 EmptyView()
             }
         }
         .simResultCard()
         .sheet(isPresented: $showInfo) {
-            SimSheet(title: "해석·저장") {
+            SimSheet(title: String(localized: "해석·저장")) {
                 if let span {
                     purchasingPowerCard(span)
                     summaryCard(span)
@@ -2354,8 +2362,8 @@ private struct WageSimSection: View {
                         ? span.last.realIndexed / span.first.realIndexed - 1 : 0
                     CalcSaveRow(
                         kind: .wage,
-                        headline: "\(yearLabel(span.first.year))→\(yearLabel(span.last.year))년 구매력 \(change >= 0 ? "▲" : "▼") \(Fmt.percent(abs(change)))",
-                        detail: "\(country.flag) \(country.name) 물가 기준 · 월급 기록 \(rows.count)개 · \(span.years)년"
+                        headline: String(localized: "\(yearLabel(span.first.year))→\(yearLabel(span.last.year))년 구매력 \(change >= 0 ? "▲" : "▼") \(Fmt.percent(abs(change)))"),
+                        detail: String(localized: "\(country.flag) \(country.name) 물가 기준 · 월급 기록 \(rows.count)개 · \(span.years)년")
                     )
                 } else if rows.count == 1, let only = rows.first {
                     singleEntryCard(only)
@@ -2368,7 +2376,7 @@ private struct WageSimSection: View {
             }
         }
         .sheet(isPresented: $showList) {
-            SimSheet(title: "월급 기록") { inputCard }
+            SimSheet(title: String(localized: "월급 기록")) { inputCard }
         }
         .onAppear {
             load()
@@ -2409,9 +2417,9 @@ private struct WageSimSection: View {
                     .foregroundStyle(Theme.textSecond)
                 HStack(spacing: 8) {
                     if country.code == "KR" {
-                        capsuleButton("예시로 채워보기") { fillExample() }
+                        capsuleButton(String(localized: "예시로 채워보기")) { fillExample() }
                     }
-                    capsuleButton("월급 기록 넣기") { showList = true }
+                    capsuleButton(String(localized: "월급 기록 넣기")) { showList = true }
                 }
             }
         }
@@ -2442,16 +2450,16 @@ private struct WageSimSection: View {
                     if let i = entries.firstIndex(where: { $0.id == id }) { entries[i].monthly = v.rounded() }
                 }
             )
-            return SimLever(id: "\(yearLabel(e.year))년", value: b,
+            return SimLever(id: String(localized: "\(yearLabel(e.year))년"), value: b,
                             range: SimLever.fit(0...sliderMax, b.wrappedValue),
                             step: sliderStep, text: country.money(b.wrappedValue),
                             unit: won ? 10_000 : 1,
-                            unitLabel: won ? "만원" : country.symbol.trimmingCharacters(in: .whitespaces))
+                            unitLabel: won ? String(localized: "만원") : country.symbol.trimmingCharacters(in: .whitespaces))
         }
-        list.append(.choice("실질 기준", current: realMode.rawValue, RealMode.allCases.map { m in
+        list.append(.choice(String(localized: "실질 기준"), current: realMode.rawValue, RealMode.allCases.map { m in
             SimOption(id: m.rawValue, selected: realMode == m) { realMode = m }
         }))
-        list.append(.choice("나라", current: "\(country.flag) \(country.name)", CPIData.all.map { c in
+        list.append(.choice(String(localized: "나라"), current: "\(country.flag) \(country.name)", CPIData.all.map { c in
             SimOption(id: "\(c.flag) \(c.name)", selected: c.code == countryCode) { countryCode = c.code }
         }))
         return list
@@ -2471,11 +2479,11 @@ private struct WageSimSection: View {
 
     // 자료 출처 + 그 나라 확정 물가가 어디까지인지.
     private var sourceNote: String {
-        let range = "\(yearLabel(country.firstYear))~\(yearLabel(country.lastYear))년"
+        let range = String(localized: "\(yearLabel(country.firstYear))~\(yearLabel(country.lastYear))년")
         let clamped = Self.thisYear > country.lastYear
-            ? " \(yearLabel(country.lastYear))년 이후 월급은 \(yearLabel(country.lastYear))년 물가로 계산해요(그 뒤 물가는 아직 확정 전)."
+            ? String(localized: " \(yearLabel(country.lastYear))년 이후 월급은 \(yearLabel(country.lastYear))년 물가로 계산해요(그 뒤 물가는 아직 확정 전).")
             : ""
-        return "물가는 \(country.flag) \(country.name)의 소비자물가지수(2020년 = 100) 연평균이고 \(range) 자료가 들어 있어요.\(clamped) 출처는 World Bank(원자료는 각국 통계기관)이고, 전국 평균이라 내가 실제로 쓰는 품목과는 다를 수 있어요."
+        return String(localized: "물가는 \(country.flag) \(country.name)의 소비자물가지수(2020년 = 100) 연평균이고 \(range) 자료가 들어 있어요.\(clamped) 출처는 World Bank(원자료는 각국 통계기관)이고, 전국 평균이라 내가 실제로 쓰는 품목과는 다를 수 있어요.")
     }
 
     // MARK: 입력
@@ -2659,9 +2667,9 @@ private struct WageSimSection: View {
 
             // 같은 잣대(오늘 물가)로 옮겨 놓고 나란히 비교.
             VStack(spacing: 10) {
-                compareBar(label: "\(yearLabel(span.first.year))년 월급을 오늘 물가로",
+                compareBar(label: String(localized: "\(yearLabel(span.first.year))년 월급을 오늘 물가로"),
                            value: thenInToday, peak: peak, color: Theme.textSecond.opacity(0.45))
-                compareBar(label: "\(yearLabel(span.last.year))년 월급",
+                compareBar(label: String(localized: "\(yearLabel(span.last.year))년 월급"),
                            value: nowNominal, peak: peak, color: up ? Theme.rise : Theme.fall)
             }
         }
@@ -2779,7 +2787,7 @@ private struct WageSimSection: View {
                         }
                     }
                     if let n = r.nominalRate, let i = r.inflationRate {
-                        Text("내 인상 \(signed(n)) · 물가 \(signed(i))\(r.gapYears > 1 ? " (\(r.gapYears)년 연평균)" : "")")
+                        Text("내 인상 \(signed(n)) · 물가 \(signed(i))\(r.gapYears > 1 ? String(localized: " (\(r.gapYears)년 연평균)") : "")")
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
                             .padding(.leading, 62)
@@ -2815,15 +2823,15 @@ private struct WageSimSection: View {
                 .font(.headline)
                 .foregroundStyle(Theme.textPrimary)
             HStack(spacing: 0) {
-                simStat("명목 월급", signed(nominalTotal))
-                simStat("물가", signed(priceTotal), tint: Theme.negative)
-                simStat("실질(구매력)", signed(realTotal),
+                simStat(String(localized: "명목 월급"), signed(nominalTotal))
+                simStat(String(localized: "물가"), signed(priceTotal), tint: Theme.negative)
+                simStat(String(localized: "실질(구매력)"), signed(realTotal),
                         tint: realTotal >= 0 ? Theme.rise : Theme.fall)
             }
             HStack(spacing: 0) {
-                simStat("연평균 인상", signed(nominalCAGR))
-                simStat("연평균 물가", signed(priceCAGR), tint: Theme.negative)
-                simStat("연평균 실질", signed(realCAGR),
+                simStat(String(localized: "연평균 인상"), signed(nominalCAGR))
+                simStat(String(localized: "연평균 물가"), signed(priceCAGR), tint: Theme.negative)
+                simStat(String(localized: "연평균 실질"), signed(realCAGR),
                         tint: realCAGR >= 0 ? Theme.rise : Theme.fall)
             }
             Divider().overlay(Theme.hairline)

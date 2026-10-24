@@ -21,16 +21,16 @@ enum DemoData {
     private static func makeItems(now: Date) -> [Item] {
         let m = 1_000_000.0
         return [
-            Item(asset: Asset(name: "래미안 아파트", assetClass: .realEstate,
+            Item(asset: Asset(name: String(localized: "래미안 아파트"), assetClass: .realEstate,
                               amount: 650 * m, costBasis: 520 * m,
                               realEstateUse: .residence, liquidity: .locked),
                  history: [610, 612, 615, 618, 622, 628, 635, 640, 645, 650].map { $0 * m },
                  annualYieldPct: 0),
-            Item(asset: Asset(name: "주택담보대출", assetClass: .debt,
+            Item(asset: Asset(name: String(localized: "주택담보대출"), assetClass: .debt,
                               amount: 280 * m, incomeKind: .other, monthlyIncome: 1_250_000),
                  history: [302.5, 300, 297.5, 295, 292.5, 290, 287.5, 285, 282.5, 280].map { $0 * m },
                  annualYieldPct: 0),
-            Item(asset: Asset(name: "삼성전자", assetClass: .stocks,
+            Item(asset: Asset(name: String(localized: "삼성전자"), assetClass: .stocks,
                               amount: 11.7 * m, quantity: 150, symbol: "005930",
                               currency: "KRW", autoPriced: true, unitPriceKRW: 78_000,
                               lastPriced: now, incomeKind: .dividend, annualYieldPct: 2.1,
@@ -51,21 +51,21 @@ enum DemoData {
                               costBasis: 7.6 * m),
                  history: [6.2, 6.5, 6.4, 6.8, 7.1, 7.0, 7.6, 7.9, 8.2, 8.4].map { $0 * m },
                  annualYieldPct: 1.8),
-            Item(asset: Asset(name: "비트코인", assetClass: .crypto,
+            Item(asset: Asset(name: String(localized: "비트코인"), assetClass: .crypto,
                               amount: 12.8 * m, quantity: 0.08, symbol: "BTC",
                               currency: "KRW", autoPriced: true, unitPriceKRW: 160 * m,
                               lastPriced: now, costBasis: 9.5 * m),
                  history: [8.2, 9.6, 8.8, 10.4, 12.5, 11.2, 13.8, 12.6, 12.2, 12.8].map { $0 * m },
                  annualYieldPct: 0),
-            Item(asset: Asset(name: "파킹통장", assetClass: .cash,
+            Item(asset: Asset(name: String(localized: "파킹통장"), assetClass: .cash,
                               amount: 28 * m, incomeKind: .interest, annualYieldPct: 3.0),
                  history: [16, 17.5, 19, 20.5, 21, 22.5, 24, 25.5, 26.5, 28].map { $0 * m },
                  annualYieldPct: 3.0),
-            Item(asset: Asset(name: "퇴직연금 IRP", assetClass: .pension,
+            Item(asset: Asset(name: String(localized: "퇴직연금 IRP"), assetClass: .pension,
                               amount: 42 * m, costBasis: 36 * m, liquidity: .locked),
                  history: [36.5, 37, 37.6, 38.2, 38.8, 39.4, 40, 40.7, 41.3, 42].map { $0 * m },
                  annualYieldPct: 0),
-            Item(asset: Asset(name: "주택청약저축", assetClass: .deposit,
+            Item(asset: Asset(name: String(localized: "주택청약저축"), assetClass: .deposit,
                               amount: 12 * m, liquidity: .locked),
                  history: [9.3, 9.6, 9.9, 10.2, 10.5, 10.8, 11.1, 11.4, 11.7, 12].map { $0 * m },
                  annualYieldPct: 0),
@@ -152,7 +152,7 @@ enum DemoData {
             let liquidClasses: Set<AssetClass> = [.cash, .stocks, .fund, .bond, .crypto]
             var passive = 0.0
             var liquid = 0.0
-            let snap = NetWorthSnapshot(date: date, note: "데모 데이터",
+            let snap = NetWorthSnapshot(date: date, note: String(localized: "데모 데이터"),
                                         monthlyIncome: 4_800_000, monthlyExpense: expense)
             context.insert(snap)
             for (item, value) in zip(items, values) {

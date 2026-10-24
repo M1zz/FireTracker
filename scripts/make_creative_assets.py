@@ -45,12 +45,12 @@ SEARCH = {
     "pt-BR": ("Calculadora de aposentadoria", "Quanto falta para<br>a sua saída?", "Registre seus ativos e veja o que falta para a meta"),
     "ru": ("Калькулятор пенсии", "Сколько осталось<br>до вашего ухода?", "Запишите активы и увидите, сколько осталось до цели"),
     "th": ("เครื่องคิดเลขเกษียณ", "อีกไกลแค่ไหน<br>จะออกจากงานได้?", "บันทึกสินทรัพย์แล้วดูว่าเหลืออีกเท่าไรถึงเป้า"),
-    "vi": ("Máy tính nghỉ hưu", "Ngày nghỉ việc của bạn<br>còn bao xa?", "Ghi tài sản để thấy còn bao nhiêu đến mục tiêu"),
+    "vi": ("Máy tính nghỉ hưu", "Bao giờ bạn<br>nghỉ việc được?", "Ghi tài sản để biết còn thiếu bao nhiêu"),
     "cs": ("Důchodová kalkulačka", "Jak daleko je<br>váš odchod?", "Zapište majetek a uvidíte, kolik chybí k cíli"),
     "da": ("Pensionsberegner", "Hvor langt er der<br>til dit stop?", "Registrér aktiver og se, hvad der mangler til målet"),
     "el": ("Υπολογιστής σύνταξης", "Πόσο μακριά είναι<br>η αποχώρησή σας;", "Καταγράψτε τα περιουσιακά σας και δείτε τι λείπει για τον στόχο"),
     "fi": ("Eläkelaskuri", "Kuinka kaukana<br>lopetuksesi on?", "Kirjaa varasi ja näe, paljonko tavoitteeseen on matkaa"),
-    "id": ("Kalkulator pensiun", "Seberapa jauh<br>tanggal berhenti Anda?", "Catat aset dan lihat sisa menuju target"),
+    "id": ("Kalkulator pensiun", "Kapan Anda<br>bisa berhenti?", "Catat aset, lihat sisa menuju target"),
     "nb": ("Pensjonskalkulator", "Hvor langt er det<br>til du kan slutte?", "Registrer eiendeler og se hva som mangler til målet"),
     "nl": ("Pensioenrekenmachine", "Hoe ver is<br>jouw stopdatum?", "Noteer bezittingen en zie wat er tot je doel ontbreekt"),
     "pl": ("Kalkulator emerytalny", "Jak daleko jest<br>twoje odejście?", "Zapisz aktywa i zobacz, ile brakuje do celu"),
@@ -76,7 +76,7 @@ HEADER = {
     "vi": ("Máy tính FIRE", "Khoảng cách đến ngày nghỉ việc,<br>xem bằng con số"),
     "cs": ("Kalkulačka FIRE", "Vzdálenost k odchodu<br>změřte čísly"),
     "da": ("FIRE-beregner", "Mål afstanden til dit stop<br>med tal"),
-    "el": ("Υπολογιστής FIRE", "Μετρήστε με αριθμούς<br>την απόσταση ως την αποχώρηση"),
+    "el": ("Υπολογιστής FIRE", "Η αποχώρησή σας,<br>σε αριθμούς"),
     "fi": ("FIRE-laskuri", "Mittaa lopetukseen<br>jäävä matka luvuilla"),
     "id": ("Kalkulator FIRE", "Ukur jarak menuju<br>tanggal berhenti dengan angka"),
     "nb": ("FIRE-kalkulator", "Mål avstanden til sluttdatoen<br>med tall"),
@@ -91,7 +91,11 @@ BASE_CSS = """
 * { margin:0; padding:0; box-sizing:border-box; }
 html,body { width:%(W)dpx; height:%(H)dpx; overflow:hidden; }
 body { background:#FAF6F0; position:relative;
-  font-family:-apple-system, "SF Pro Display", "Apple SD Gothic Neo", sans-serif; }
+  font-family:-apple-system, "SF Pro Display", "Helvetica Neue", "Apple SD Gothic Neo", sans-serif; }
+:lang(ja) body { font-family:-apple-system, "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif; }
+:lang(zh-Hans) body { font-family:-apple-system, "PingFang SC", sans-serif; }
+:lang(zh-Hant) body { font-family:-apple-system, "PingFang TC", sans-serif; }
+
 .glow { position:absolute; border-radius:50%%; filter:blur(170px); pointer-events:none; }
 .text { position:absolute; display:flex; flex-direction:column; justify-content:center; }
 .eyebrow { font-weight:800; color:#D18A22; letter-spacing:-0.01em; line-height:1.15; }

@@ -1,5 +1,159 @@
 # 릴리즈 노트
 
+## 1.2.1
+
+### 앱스토어 (한국어)
+
+이제 24개 언어로 앱을 쓸 수 있어요
+자산 탭에서 팔 때가 된 종목을 바로 확인해요
+금액과 날짜가 내 언어에 맞게 보여요
+
+### App Store (English)
+
+The app now comes in 24 languages
+See what to sell right on the Assets tab
+Amounts and dates follow your language
+
+### App Store (en-GB)
+
+The app is now available in 24 languages
+See what to sell straight from Assets
+Amounts and dates now suit your language
+
+### App Store (ja)
+
+アプリが24の言語に対応しました
+資産タブで売りどきの銘柄をすぐ確認できます
+金額と日付があなたの言語で表示されます
+
+### App Store (zh-Hans)
+
+应用现已支持24种语言
+在资产页即可看到该卖出的持仓
+金额和日期按你的语言显示
+
+### App Store (zh-Hant)
+
+App 現已支援 24 種語言
+在資產頁就能看到該賣出的持股
+金額與日期依你的語言顯示
+
+### App Store (Spanish)
+
+La app ya está disponible en 24 idiomas
+Ve en Activos qué conviene vender
+Importes y fechas según tu idioma
+
+### App Store (German)
+
+Die App gibt es jetzt in 24 Sprachen
+Verkaufssignale jetzt im Tab Vermögen
+Beträge und Daten passend zur Sprache
+
+### App Store (French)
+
+L’app est disponible en 24 langues
+L’onglet Actifs montre quoi vendre
+Montants et dates adaptés à votre langue
+
+### App Store (Italian)
+
+L’app ora parla 24 lingue
+In Patrimonio vedi subito cosa vendere
+Importi e date nella tua lingua
+
+### App Store (pt-BR)
+
+O app agora está em 24 idiomas
+Veja em Ativos o que é hora de vender
+Valores e datas no formato do seu idioma
+
+### App Store (Russian)
+
+Приложение теперь на 24 языках
+В разделе Активы видно, что продать
+Суммы и даты в формате вашего языка
+
+### App Store (Thai)
+
+แอปรองรับ 24 ภาษาแล้ว
+ดูได้ทันทีในแท็บสินทรัพย์ว่าควรขายตัวไหน
+จำนวนเงินและวันที่แสดงตามภาษาของคุณ
+
+### App Store (Vietnamese)
+
+Ứng dụng nay có 24 ngôn ngữ
+Xem ngay mã nên bán trong tab Tài sản
+Số tiền và ngày hiển thị theo ngôn ngữ
+
+### App Store (Czech)
+
+Aplikace je nyní ve 24 jazycích
+Na kartě Majetek hned uvidíte, co prodat
+Částky a data podle vašeho jazyka
+
+### App Store (Danish)
+
+Appen findes nu på 24 sprog
+Se under Aktiver, hvad der bør sælges
+Beløb og datoer følger dit sprog
+
+### App Store (Greek)
+
+Η εφαρμογή είναι πλέον σε 24 γλώσσες
+Δείτε αμέσως τι να πουλήσετε
+Ποσά και ημερομηνίες στη γλώσσα σας
+
+### App Store (Finnish)
+
+Sovellus toimii nyt 24 kielellä
+Varat-välilehti näyttää, mitä myydä
+Summat ja päivämäärät kielesi mukaan
+
+### App Store (Indonesian)
+
+Aplikasi kini tersedia dalam 24 bahasa
+Lihat aset yang perlu dijual di tab Aset
+Jumlah dan tanggal sesuai bahasamu
+
+### App Store (Norwegian Bokmål)
+
+Appen finnes nå på 24 språk
+Se under Eiendeler hva som bør selges
+Beløp og datoer følger språket ditt
+
+### App Store (Dutch)
+
+De app is nu beschikbaar in 24 talen
+Zie bij Bezittingen wat je kunt verkopen
+Bedragen en datums in jouw taal
+
+### App Store (Polish)
+
+Aplikacja działa teraz w 24 językach
+Na karcie Aktywa widać, co czas sprzedać
+Kwoty i daty zgodne z Twoim językiem
+
+### App Store (Swedish)
+
+Appen finns nu på 24 språk
+Se under Tillgångar vad som bör säljas
+Belopp och datum följer ditt språk
+
+### App Store (Turkish)
+
+Uygulama artık 24 dilde
+Satma zamanı gelenler Varlıklar'da
+Tutarlar ve tarihler dilinize göre
+
+### 상세 변경 사항 (스토어 노출 안 함)
+
+- 24개 언어(LOCALES 전부) 앱 번역. 그동안 문자열 카탈로그에 안 들어가던 화면 문구(String 으로 넘기던 제목·안내·계산기 문구·위젯·알림) 약 550개를 String(localized:) 로 바꿔 번역.
+- 금액 표기: 한국어는 억/만 그대로, 다른 언어는 그 나라 말의 큰 수 표기(1.2M · 5.2億 등). 날짜는 고정 ko_KR 포맷 대신 언어별 템플릿.
+- 위젯 확장에 문자열 카탈로그를 넣어 위젯도 번역.
+- 자산 탭 자산 구성 아래 매도 원칙 요약(SellWatchCard).
+- 로드맵: 영어 지원 · 더 많은 언어 → 1.2.1 출시.
+
 ## 1.2.0
 
 ### 앱스토어 (한국어)

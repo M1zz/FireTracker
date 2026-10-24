@@ -81,16 +81,16 @@ struct AssetsView: View {
             .map { a in
                 let note: String
                 if a.monthlyIncome > 0 {
-                    note = "직접 입력"
+                    note = String(localized: "직접 입력")
                 } else if a.annualYieldPct > 0 {
-                    note = "연 \(Fmt.trimNumber(a.annualYieldPct))% · 평가액 기준"
+                    note = String(localized: "연 \(Fmt.trimNumber(a.annualYieldPct))% · 평가액 기준")
                 } else {
                     note = ""
                 }
                 return IncomeLine(
                     id: a.key.uuidString,
                     name: a.name.isEmpty ? a.displayClassLabel : a.name,
-                    kind: a.incomeKind == .none ? "현금흐름" : a.incomeKind.label,
+                    kind: a.incomeKind == .none ? String(localized: "현금흐름") : a.incomeKind.label,
                     symbol: incomeIcon(a.incomeKind),
                     monthly: a.effectiveMonthlyIncome,
                     note: note
@@ -318,9 +318,9 @@ struct AssetsView: View {
 
             liquidityBar
             HStack(spacing: 10) {
-                legendDot("유동 \(Fmt.krw(liquidTotal))원", Theme.positive)
+                legendDot(String(localized: "유동 \(Fmt.krw(liquidTotal))원"), Theme.positive)
                 if lockedTotal > 0 {
-                    legendDot("묶임 \(Fmt.krw(lockedTotal))원", Theme.textSecond.opacity(0.5))
+                    legendDot(String(localized: "묶임 \(Fmt.krw(lockedTotal))원"), Theme.textSecond.opacity(0.5))
                 }
             }
             .font(.caption2)
@@ -344,18 +344,18 @@ struct AssetsView: View {
                 Divider().overlay(Theme.hairline)
                 HStack(spacing: 0) {
                     if monthlyIncome > 0 {
-                        flowStat(title: "월 현금흐름",
-                                 value: "+\(Fmt.krw(monthlyIncome))원",
+                        flowStat(title: String(localized: "월 현금흐름"),
+                                 value: String(localized: "+\(Fmt.krw(monthlyIncome))원"),
                                  tint: Theme.positive)
                     }
                     if totalDebtCost > 0 {
-                        flowStat(title: "부채가 가져가는 돈",
-                                 value: "−\(Fmt.krw(totalDebtCost))원",
+                        flowStat(title: String(localized: "부채가 가져가는 돈"),
+                                 value: String(localized: "−\(Fmt.krw(totalDebtCost))원"),
                                  tint: Theme.negative)
                     }
                     if totalGain != 0 {
-                        flowStat(title: "총 평가 차익",
-                                 value: "\(totalGain >= 0 ? "+" : "-")\(Fmt.krw(abs(totalGain)))원",
+                        flowStat(title: String(localized: "총 평가 차익"),
+                                 value: String(localized: "\(totalGain >= 0 ? "+" : "-")\(Fmt.krw(abs(totalGain)))원"),
                                  tint: totalGain >= 0 ? Theme.positive : Theme.negative)
                     }
                 }
@@ -384,7 +384,7 @@ struct AssetsView: View {
             HStack(spacing: 6) {
                 if refresher.isRefreshing {
                     ProgressView().controlSize(.mini)
-                    Text(refresher.statusMessage ?? "갱신 중…")
+                    Text(refresher.statusMessage ?? String(localized: "갱신 중…"))
                 } else {
                     Image(systemName: "arrow.clockwise")
                     if let when = refresher.lastRefreshText {
@@ -479,13 +479,13 @@ struct AssetsView: View {
     private struct IncomeRoute { let title: String; let cls: AssetClass; let desc: String }
     private var incomeRoutes: [IncomeRoute] {
         [
-            .init(title: "배당주", cls: .stocks, desc: "주식 배당금 · 코스피 ~2%, S&P500 ~1.5%"),
-            .init(title: "고배당 ETF·펀드", cls: .fund, desc: "고배당 ETF ~4.5% · 자동 분산"),
-            .init(title: "월세 부동산", cls: .realEstate, desc: "오피스텔 ~5%, 아파트 ~2.4%"),
-            .init(title: "예금·적금 이자", cls: .cash, desc: "예금 ~3% · 가장 안전"),
-            .init(title: "채권 이자", cls: .bond, desc: "국채·회사채 표면이자"),
-            .init(title: "연금", cls: .pension, desc: "연금저축·IRP 운용수익 ~3~5%"),
-            .init(title: "코인 스테이킹", cls: .crypto, desc: "ETH 스테이킹 ~3~4%"),
+            .init(title: String(localized: "배당주"), cls: .stocks, desc: String(localized: "주식 배당금 · 코스피 ~2%, S&P500 ~1.5%")),
+            .init(title: String(localized: "고배당 ETF·펀드"), cls: .fund, desc: String(localized: "고배당 ETF ~4.5% · 자동 분산")),
+            .init(title: String(localized: "월세 부동산"), cls: .realEstate, desc: String(localized: "오피스텔 ~5%, 아파트 ~2.4%")),
+            .init(title: String(localized: "예금·적금 이자"), cls: .cash, desc: String(localized: "예금 ~3% · 가장 안전")),
+            .init(title: String(localized: "채권 이자"), cls: .bond, desc: String(localized: "국채·회사채 표면이자")),
+            .init(title: String(localized: "연금"), cls: .pension, desc: String(localized: "연금저축·IRP 운용수익 ~3~5%")),
+            .init(title: String(localized: "코인 스테이킹"), cls: .crypto, desc: String(localized: "ETH 스테이킹 ~3~4%")),
         ]
     }
 
@@ -622,28 +622,42 @@ struct AssetsView: View {
         return nil
     }
 
+    private var compositionTitle: some View {
+        Text("자산 구성")
+            .font(.headline)
+            .foregroundStyle(Theme.textPrimary)
+    }
+
+    private var totalModePicker: some View {
+        Picker("", selection: $totalMode) {
+            ForEach(AssetTotalMode.allCases) { mode in
+                Text(LocalizedStringKey(mode.rawValue)).tag(mode)
+            }
+        }
+        .pickerStyle(.segmented)
+    }
+
+    private var assetCountLabel: some View {
+        Text("\(assets.count)개 자산")
+            .font(.caption)
+            .foregroundStyle(Theme.textSecond)
+    }
+
     // Donut chart + legend showing how net worth breaks down by class.
     private var compositionCard: some View {
         let rows = compositionRows
         let sum = rows.reduce(0) { $0 + $1.amount }
         return VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("자산 구성")
-                    .font(.headline)
-                    .foregroundStyle(Theme.textPrimary)
-                Spacer()
-                if hasDebt {
-                    Picker("", selection: $totalMode) {
-                        ForEach(AssetTotalMode.allCases) { mode in
-                            Text(mode.rawValue).tag(mode)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .fixedSize()
-                } else {
-                    Text("\(assets.count)개 자산")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
+            // 말이 긴 언어(그리스어 등)에선 제목 옆에 안 들어가므로 아래 줄로 내린다.
+            ViewThatFits(in: .horizontal) {
+                HStack {
+                    compositionTitle
+                    Spacer()
+                    if hasDebt { totalModePicker.fixedSize() } else { assetCountLabel }
+                }
+                VStack(alignment: .leading, spacing: 10) {
+                    compositionTitle
+                    if hasDebt { totalModePicker } else { assetCountLabel }
                 }
             }
 
@@ -694,7 +708,7 @@ struct AssetsView: View {
                     // 도넛 구멍 지름 ≈ 차트 짧은 변 × innerRadius(0.62), 여유 8pt.
                     let hole = min(geo.size.width, geo.size.height) * 0.62 - 8
                     VStack(spacing: 2) {
-                        Text(selSlice?.assetClass.label ?? "전체")
+                        Text(selSlice?.assetClass.label ?? String(localized: "전체"))
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
                         Text("\(Fmt.krw(selSlice?.amount ?? sum))원")
@@ -875,7 +889,7 @@ struct AssetsView: View {
                 // 보유 수량 한 줄 — 예) 32주 · 평단 387,500원. 목록에서 바로 몇 주인지 보이게.
                 if asset.quantity > 0,
                    asset.assetClass == .stocks || asset.assetClass == .fund || asset.assetClass == .crypto {
-                    let unit = asset.assetClass == .crypto ? "개" : "주"
+                    let unit = asset.assetClass == .crypto ? String(localized: "개") : String(localized: "shares.unit", defaultValue: "주")
                     let avg = asset.averagePrice
                     Text(avg > 0
                          ? "\(Fmt.trimNumber(asset.quantity))\(unit) · 평단 \(Fmt.krw(avg))원"
@@ -945,7 +959,7 @@ struct AssetsView: View {
     private func deletePending() {
         for a in pendingDelete { context.delete(a) }
         pendingDelete = []
-        context.saveReporting("삭제")
+        context.saveReporting(String(localized: "삭제"))
     }
 
     // Open the editor for a brand-new holding, pre-set to a category so the
@@ -1491,14 +1505,14 @@ struct AssetEditor: View {
 
     private var namePlaceholder: String {
         switch assetClass {
-        case .stocks:     return "이름 (예: 삼성전자, Apple)"
-        case .fund:       return "이름 (예: KODEX 200, SPY)"
-        case .crypto:     return "이름 (예: 비트코인)"
-        case .realEstate: return "아파트명 (예: 래미안)"
-        case .jeonse:     return "이름 (예: 우리집 전세)"
-        case .pension:    return "이름 (예: 국민연금, IRP)"
-        case .debt:       return "이름 (예: 주택담보대출, 신용대출)"
-        default:          return "이름"
+        case .stocks:     return String(localized: "이름 (예: 삼성전자, Apple)")
+        case .fund:       return String(localized: "이름 (예: KODEX 200, SPY)")
+        case .crypto:     return String(localized: "이름 (예: 비트코인)")
+        case .realEstate: return String(localized: "아파트명 (예: 래미안)")
+        case .jeonse:     return String(localized: "이름 (예: 우리집 전세)")
+        case .pension:    return String(localized: "이름 (예: 국민연금, IRP)")
+        case .debt:       return String(localized: "이름 (예: 주택담보대출, 신용대출)")
+        default:          return String(localized: "이름")
         }
     }
 
@@ -1518,7 +1532,7 @@ struct AssetEditor: View {
         let others = otherSameSideTotal
         let total = others + thisAmount
         let pct = total > 0 ? thisAmount / total : 0
-        let sideLabel = isDebt ? "전체 부채" : "전체 자산"
+        let sideLabel = isDebt ? String(localized: "전체 부채") : String(localized: "전체 자산")
         let tint = isDebt ? Theme.negative : Theme.accent
         HStack {
             Text("현재 \(sideLabel)")
@@ -1555,18 +1569,18 @@ struct AssetEditor: View {
 
     private var realEstateUseHint: String {
         switch realEstateUse {
-        case .residence:  return "내가 사는 집입니다. 현금흐름 없이 평가액만 잡힙니다."
-        case .jeonse:     return "전세를 줬습니다. 받은 보증금은 현금(유동)으로 인식됩니다."
-        case .wolse:      return "월세를 줬습니다. 매달 월세가 현금흐름으로 잡힙니다."
-        case .semiJeonse: return "반전세입니다. 보증금(현금) + 월세(현금흐름) 둘 다 입력하세요."
+        case .residence:  return String(localized: "내가 사는 집입니다. 현금흐름 없이 평가액만 잡힙니다.")
+        case .jeonse:     return String(localized: "전세를 줬습니다. 받은 보증금은 현금(유동)으로 인식됩니다.")
+        case .wolse:      return String(localized: "월세를 줬습니다. 매달 월세가 현금흐름으로 잡힙니다.")
+        case .semiJeonse: return String(localized: "반전세입니다. 보증금(현금) + 월세(현금흐름) 둘 다 입력하세요.")
         }
     }
 
     private var autoHint: String {
         switch assetClass {
-        case .crypto:        return "업비트 시세로 자동 계산됩니다 (키 불필요)."
-        case .stocks, .fund: return currency == "USD" ? "Finnhub 시세 + 실시간 환율로 환산합니다." : "Yahoo Finance 시세로 계산합니다 (키 불필요)."
-        case .realEstate:    return "법정동코드 + 아파트명으로 국토부 최근 실거래가를 조회합니다."
+        case .crypto:        return String(localized: "업비트 시세로 자동 계산됩니다 (키 불필요).")
+        case .stocks, .fund: return currency == "USD" ? String(localized: "Finnhub 시세 + 실시간 환율로 환산합니다.") : String(localized: "Yahoo Finance 시세로 계산합니다 (키 불필요).")
+        case .realEstate:    return String(localized: "법정동코드 + 아파트명으로 국토부 최근 실거래가를 조회합니다.")
         default:          return ""
         }
     }
@@ -1671,8 +1685,8 @@ struct AssetEditor: View {
             if let t = Double(sellTarget), t > 0 {
                 let avg = avgBuyPrice
                 let cur = unitPriceKRW
-                Text([avg > 0 ? "평단보다 \(t >= avg ? "+" : "−")\(Fmt.percent(abs(t / avg - 1), fraction: 1))" : nil,
-                      cur > 0 ? "지금 \(Fmt.krw(cur))원" : nil]
+                Text([avg > 0 ? String(localized: "평단보다 \(t >= avg ? "+" : "−")\(Fmt.percent(abs(t / avg - 1), fraction: 1))") : nil,
+                      cur > 0 ? String(localized: "지금 \(Fmt.krw(cur))원") : nil]
                         .compactMap { $0 }.joined(separator: " · "))
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
@@ -1710,7 +1724,7 @@ struct AssetEditor: View {
         assetClass == .stocks || assetClass == .fund || assetClass == .crypto
     }
 
-    private var buyUnitLabel: String { assetClass == .crypto ? "개" : "주" }
+    private var buyUnitLabel: String { assetClass == .crypto ? String(localized: "개") : String(localized: "shares.unit", defaultValue: "주") }
 
     // 편집 중인 원장을 재생한 결과 — 보유 수량·투자 원금·평단·실현손익.
     private var ledger: TradeLedger { TradeLedger.replay(tradeRows) }
@@ -1851,7 +1865,6 @@ struct AssetEditor: View {
             }
             .pickerStyle(.segmented)
             DatePicker("날짜", selection: $tradeDate, displayedComponents: .date)
-                .environment(\.locale, Locale(identifier: "ko_KR"))
             TextField("수량 (\(buyUnitLabel))", text: $tradeQty)
                 .keyboardType(.decimalPad)
             TextField("\(buyUnitLabel)당 단가 (원)", text: $tradePrice.commaGrouped)
@@ -1893,8 +1906,7 @@ struct AssetEditor: View {
 
     private static func tradeDateText(_ date: Date) -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "yyyy.MM.dd"
+        f.setLocalizedDateFormatFromTemplate("yyyyMMdd")
         return f.string(from: date)
     }
 
@@ -1906,7 +1918,7 @@ struct AssetEditor: View {
     }
     private var openingSummary: String {
         let qty = openingQuantity > 0 ? "\(Fmt.trimNumber(openingQuantity))\(buyUnitLabel) · " : ""
-        return "\(qty)\(Fmt.krw(openingCost))원으로 시작한 걸로 남겨요 (날짜·금액은 나중에 고칠 수 있어요)"
+        return String(localized: "\(qty)\(Fmt.krw(openingCost))원으로 시작한 걸로 남겨요 (날짜·금액은 나중에 고칠 수 있어요)")
     }
 
     private func seedOpeningTrade() {
@@ -1974,9 +1986,9 @@ struct AssetEditor: View {
     private var yieldPresets: [(label: String, pct: Double)] {
         switch incomeKind {
         case .dividend:
-            return [("코스피 2%", 2), ("S&P500 1.5%", 1.5), ("고배당 ETF 4.5%", 4.5), ("무배당 0%", 0)]
+            return [(String(localized: "코스피 2%"), 2), ("S&P500 1.5%", 1.5), (String(localized: "고배당 ETF 4.5%"), 4.5), (String(localized: "무배당 0%"), 0)]
         case .interest:
-            return [("예금 3%", 3), ("0%", 0)]
+            return [(String(localized: "예금 3%"), 3), ("0%", 0)]
         case .staking:
             return [("ETH 3.5%", 3.5), ("0%", 0)]
         default:
@@ -2025,12 +2037,12 @@ struct AssetEditor: View {
     // 소득 유형에 맞춘 입력 칸 이름.
     private var incomeAmountLabel: String {
         switch incomeKind {
-        case .rent:     return "월세 (원)"
-        case .pension:  return "월 연금 수령액 (원)"
-        case .interest: return "월 이자 (원)"
-        case .dividend: return "월 배당 (원)"
-        case .staking:  return "월 스테이킹 보상 (원)"
-        default:        return "월 소득 (원)"
+        case .rent:     return String(localized: "월세 (원)")
+        case .pension:  return String(localized: "월 연금 수령액 (원)")
+        case .interest: return String(localized: "월 이자 (원)")
+        case .dividend: return String(localized: "월 배당 (원)")
+        case .staking:  return String(localized: "월 스테이킹 보상 (원)")
+        default:        return String(localized: "월 소득 (원)")
         }
     }
 
@@ -2177,11 +2189,11 @@ struct AssetEditor: View {
                 Text("이 자산의 구성")
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
-                compositionRow(depositLiquid ? "보유 현금 (유동)" : "보유 현금 (묶임)",
+                compositionRow(depositLiquid ? String(localized: "보유 현금 (유동)") : String(localized: "보유 현금 (묶임)"),
                                symbol: depositLiquid ? "banknote.fill" : "lock.fill",
                                value: cash,
                                tint: depositLiquid ? Theme.positive : Theme.textSecond)
-                compositionRow("\(assetClass.label) 지분 (묶임)",
+                compositionRow(String(localized: "\(assetClass.label) 지분 (묶임)"),
                                symbol: "lock.fill", value: equity, tint: Theme.textSecond)
                 HStack {
                     Text("총자산 기여")
@@ -2279,11 +2291,11 @@ struct AssetEditor: View {
     private var tickerHint: String {
         switch assetClass {
         case .stocks, .fund:
-            return "티커/종목코드(ETF 포함)를 먼저 넣고 칸을 벗어나면 이름이 자동으로 채워지고, ‘시세 자동’으로 현재가도 불러올 수 있어요. 미국=Finnhub, 국내=Yahoo. 비워두면 직접 입력합니다."
+            return String(localized: "티커/종목코드(ETF 포함)를 먼저 넣고 칸을 벗어나면 이름이 자동으로 채워지고, ‘시세 자동’으로 현재가도 불러올 수 있어요. 미국=Finnhub, 국내=Yahoo. 비워두면 직접 입력합니다.")
         case .crypto:
-            return "코인 심볼을 넣고 칸을 벗어나면 이름이 자동으로 채워지고, 업비트 시세로 현재가를 자동 계산해요(키 불필요). 비워두면 직접 입력합니다."
+            return String(localized: "코인 심볼을 넣고 칸을 벗어나면 이름이 자동으로 채워지고, 업비트 시세로 현재가를 자동 계산해요(키 불필요). 비워두면 직접 입력합니다.")
         case .realEstate:
-            return "법정동코드를 넣으면 국토부 최근 실거래가를 불러올 수 있어요. 비워두면 금액만 직접 입력합니다."
+            return String(localized: "법정동코드를 넣으면 국토부 최근 실거래가를 불러올 수 있어요. 비워두면 금액만 직접 입력합니다.")
         default:
             return ""
         }
@@ -2355,7 +2367,7 @@ struct AssetEditor: View {
     private func fetch() async {
         fetching = true
         failed = false
-        status = "불러오는 중…"
+        status = String(localized: "불러오는 중…")
         do {
             let qty = Double(quantity) ?? 0
             let result = try await PriceService.autoValue(
@@ -2375,9 +2387,9 @@ struct AssetEditor: View {
             lastPriced = Date()
             failed = false
             if assetClass == .realEstate {
-                status = "최근 실거래가 반영됨"
+                status = String(localized: "최근 실거래가 반영됨")
             } else {
-                status = "단가 \(Fmt.krw(result.unit))원 × \(quantity.isEmpty ? "0" : quantity)"
+                status = String(localized: "단가 \(Fmt.krw(result.unit))원 × \(quantity.isEmpty ? "0" : quantity)")
             }
             // 주식·ETF면 예상 배당을 '배당률'로 저장 — 평가액 기준으로 자동 계산되고
             // 평가액이 바뀌어도 따라간다. 사용자가 배당을 직접 안 넣었을 때만.
@@ -2389,12 +2401,12 @@ struct AssetEditor: View {
                     let yieldPct = perShare / result.unit * 100
                     incomeKind = .dividend
                     annualYieldPct = Fmt.trimNumber(yieldPct)
-                    status += " · 예상 배당률 \(Fmt.trimNumber(yieldPct))% 반영"
+                    status += String(localized: " · 예상 배당률 \(Fmt.trimNumber(yieldPct))% 반영")
                 }
             }
         } catch {
             failed = true
-            status = "실패: \(error.localizedDescription)"
+            status = String(localized: "실패: \(error.localizedDescription)")
         }
         fetching = false
     }
@@ -2475,7 +2487,7 @@ struct AssetEditor: View {
             target.peakUnitPrice = 0
             target.stopAlertedPeak = 0
         }
-        context.saveReporting("자산")
+        context.saveReporting(String(localized: "자산"))
         // 원칙을 걸었으면 알림 권한을 묻는다(이미 정했으면 조용히 지나감).
         if SellWatch.isWatched(target) {
             Task { await SellWatch.requestPermission() }
@@ -2490,7 +2502,7 @@ struct AssetEditor: View {
 
     private func deleteAsset() {
         if let asset { context.delete(asset) }
-        context.saveReporting("자산")
+        context.saveReporting(String(localized: "자산"))
         dismiss()
     }
 }
@@ -2502,7 +2514,7 @@ struct AmountScrubber: View {
     @Binding var value: String   // 콤마 없는 숫자 문자열 (예: "50000000")
 
     private static let units: [(label: String, step: Double)] = [
-        ("1만", 10_000), ("10만", 100_000), ("100만", 1_000_000), ("1000만", 10_000_000)
+        (String(localized: "1만"), 10_000), (String(localized: "10만"), 100_000), (String(localized: "100만"), 1_000_000), (String(localized: "1000만"), 10_000_000)
     ]
     // 사용자가 단위를 고르기 전엔 값 크기에 맞는 단위를 자동 선택.
     @State private var unitIndex: Int?
@@ -2875,10 +2887,10 @@ struct ScreenshotImportView: View {
         let upd = selected.filter { m[$0.id] != nil }.count
         let add = selected.count - upd
         var parts: [String] = []
-        if upd > 0 { parts.append("갱신 \(upd)") }
-        if add > 0 { parts.append("추가 \(add)") }
-        if !soldKeys.isEmpty { parts.append("정리 \(soldKeys.count)") }
-        return parts.isEmpty ? "적용" : parts.joined(separator: " · ")
+        if upd > 0 { parts.append(String(localized: "갱신 \(upd)")) }
+        if add > 0 { parts.append(String(localized: "추가 \(add)")) }
+        if !soldKeys.isEmpty { parts.append(String(localized: "정리 \(soldKeys.count)")) }
+        return parts.isEmpty ? String(localized: "적용") : parts.joined(separator: " · ")
     }
 
     var body: some View {
@@ -3098,7 +3110,7 @@ struct ScreenshotImportView: View {
             }
         }
         guard !images.isEmpty else {
-            loadError = "이미지를 불러오지 못했습니다."
+            loadError = String(localized: "이미지를 불러오지 못했습니다.")
             return
         }
         let batches = await Task.detached(priority: .userInitiated) {
@@ -3262,7 +3274,7 @@ struct ScreenshotImportView: View {
         for a in holdings where soldKeys.contains(a.key) {
             context.delete(a)
         }
-        context.saveReporting("자산")
+        context.saveReporting(String(localized: "자산"))
         if order > startingSortOrder { AppUsage.log(.assetAdded) }
         applyProgress = nil
         if assets.contains(where: SellWatch.isWatched) { await SellWatch.requestPermission() }
@@ -3324,7 +3336,7 @@ struct NetWorthBreakdownView: View {
                     ForEach(positives) { a in
                         breakdownRow(a, value: a.netValue, sign: "+", tint: Theme.positive)
                     }
-                    subtotal("총자산", grossAssets, tint: Theme.textPrimary)
+                    subtotal(String(localized: "총자산"), grossAssets, tint: Theme.textPrimary)
                 } header: {
                     Text("보유 자산 (+)")
                 }
@@ -3334,7 +3346,7 @@ struct NetWorthBreakdownView: View {
                         ForEach(debts) { a in
                             breakdownRow(a, value: a.amount, sign: "−", tint: Theme.negative)
                         }
-                        subtotal("부채 합계", debtTotal, sign: "−", tint: Theme.negative)
+                        subtotal(String(localized: "부채 합계"), debtTotal, sign: "−", tint: Theme.negative)
                     } header: {
                         Text("부채 (−)")
                     }
@@ -3458,18 +3470,18 @@ struct SellSignalRow: View {
             let dd = Fmt.trimNumber((status.drawdown * 1000).rounded() / 10)
             switch status.signal {
             case .stopHit:
-                parts.append("고점 \(Fmt.krw(status.peak))원에서 \(dd)% 빠져 기준(−\(Fmt.trimNumber(asset.trailingStopPct))%)을 넘었어요. 정한 대로 파세요")
+                parts.append(String(localized: "고점 \(Fmt.krw(status.peak))원에서 \(dd)% 빠져 기준(−\(Fmt.trimNumber(asset.trailingStopPct))%)을 넘었어요. 정한 대로 파세요"))
             default:
                 let room = Fmt.trimNumber(((status.roomToFloor ?? 0) * 1000).rounded() / 10)
-                parts.append("고점 대비 −\(dd)% · \(room)% 더 빠지면 팔 때(\(Fmt.krw(floor))원)")
+                parts.append(String(localized: "고점 대비 −\(dd)% · \(room)% 더 빠지면 팔 때(\(Fmt.krw(floor))원)"))
             }
         }
         if let target = status.target {
             if status.signal == .targetHit {
-                parts.append("살 때 정한 목표가 \(Fmt.krw(target))원에 닿았어요")
+                parts.append(String(localized: "살 때 정한 목표가 \(Fmt.krw(target))원에 닿았어요"))
             } else {
                 let up = Fmt.trimNumber(((status.toTarget ?? 0) * 1000).rounded() / 10)
-                parts.append("목표가 \(Fmt.krw(target))원까지 +\(up)%")
+                parts.append(String(localized: "목표가 \(Fmt.krw(target))원까지 +\(up)%"))
             }
         }
         return parts.joined(separator: " · ")

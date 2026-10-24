@@ -81,12 +81,12 @@ struct GoalSettingsView: View {
 
     private var goalSection: some View {
         Section {
-            goalMoneyRow(title: "은퇴 후 월 생활비", placeholder: "3,000,000",
+            goalMoneyRow(title: String(localized: "은퇴 후 월 생활비"), placeholder: "3,000,000",
                          text: monthlyExpenseBinding)
 
-            goalSliderRow(title: "안전 인출률", value: $swr,
+            goalSliderRow(title: String(localized: "안전 인출률"), value: $swr,
                           range: 0.02...0.06, step: 0.005)
-            goalSliderRow(title: "예상 연 수익률", value: $expectedReturn,
+            goalSliderRow(title: String(localized: "예상 연 수익률"), value: $expectedReturn,
                           range: 0...0.12, step: 0.005)
 
             // 자동 계산되는 목표 금액 — 같은 자리에서 바로 확인.
@@ -107,8 +107,8 @@ struct GoalSettingsView: View {
             }
             .pickerStyle(.segmented)
 
-            goalAgeRow(title: "현재 나이", text: $currentAge)
-            goalAgeRow(title: "목표 은퇴 나이", text: $retireAge)
+            goalAgeRow(title: String(localized: "현재 나이"), text: $currentAge)
+            goalAgeRow(title: String(localized: "목표 은퇴 나이"), text: $retireAge)
             if let cur = Int(currentAge), let ret = Int(retireAge), ret > cur {
                 HStack {
                     Text("은퇴까지")
@@ -132,7 +132,7 @@ struct GoalSettingsView: View {
     @ViewBuilder
     private var netSavingsSection: some View {
         Section {
-            goalMoneyField(title: "월 저축 (수입 − 지출)", hint: "차액만 입력", text: $netSavingsPlan)
+            goalMoneyField(title: String(localized: "월 저축 (수입 − 지출)"), hint: String(localized: "차액만 입력"), text: $netSavingsPlan)
         } header: {
             Text("올해 말 예측 — 월 저축")
         } footer: {
@@ -145,8 +145,8 @@ struct GoalSettingsView: View {
     @ViewBuilder
     private var incomeExpenseSection: some View {
         Section {
-            goalMoneyField(title: "세후 월급", hint: "연봉이면 ÷12", text: $monthlyTakeHome)
-            goalMoneyField(title: "월 지출", hint: "매달 평균 지출", text: $plannedExpense)
+            goalMoneyField(title: String(localized: "세후 월급"), hint: String(localized: "연봉이면 ÷12"), text: $monthlyTakeHome)
+            goalMoneyField(title: String(localized: "월 지출"), hint: String(localized: "매달 평균 지출"), text: $plannedExpense)
             let income = Double(monthlyTakeHome) ?? 0
             let expense = Double(plannedExpense) ?? 0
             if income > 0 || expense > 0 {
@@ -170,7 +170,7 @@ struct GoalSettingsView: View {
     @ViewBuilder
     private var passiveIncomeSection: some View {
         Section {
-            goalMoneyField(title: "목표 연간 패시브 인컴", hint: "예: 12,000,000", text: $annualDividend)
+            goalMoneyField(title: String(localized: "목표 연간 패시브 인컴"), hint: String(localized: "예: 12,000,000"), text: $annualDividend)
             if let v = Double(annualDividend), v > 0 {
                 HStack {
                     Text("월 목표")
@@ -230,7 +230,7 @@ struct GoalSettingsView: View {
         target.fireGoalType = goalType
         target.currentAge = Int(currentAge) ?? 0
         target.targetRetireAge = Int(retireAge) ?? 0
-        context.saveReporting("목표")
+        context.saveReporting(String(localized: "목표"))
     }
 }
 

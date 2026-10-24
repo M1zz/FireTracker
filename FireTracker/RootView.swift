@@ -24,6 +24,9 @@ struct RootView: View {
     private var showDemoBanner: Bool {
         // 동기화 중에 데모를 켜면 다른 기기의 실데이터까지 지워지므로 아예 띄우지 않는다.
         guard !SyncManager.activeThisLaunch || demoActive else { return false }
+        #if DEBUG
+        if ShotMode.isOn { return false }
+        #endif
         return demoActive || (assets.isEmpty && snapshots.isEmpty)
     }
 
@@ -84,6 +87,9 @@ struct RootView: View {
         }
         .onAppear {
             bootstrapSettings()
+            #if DEBUG
+            ShotMode.apply(context: context, demoActive: demoActive)
+            #endif
             // 익명 사용 스냅샷 — 지표를 먼저 채운 다음 보낸다(첫 실행에도 값이 실리도록).
             reportUsage()
             publishSummary()
@@ -298,7 +304,7 @@ struct AppLockGate<Content: View>: View {
     private func authenticate() {
         guard lockEnabled, !isUnlocked, !authenticating else { return }
         let context = LAContext()
-        context.localizedFallbackTitle = "기기 암호 입력"
+        context.localizedFallbackTitle = String(localized: "기기 암호 입력")
         var error: NSError?
         // Biometrics with passcode fallback, so a failed Face ID can still
         // unlock via the device passcode.
@@ -311,7 +317,7 @@ struct AppLockGate<Content: View>: View {
         }
         authenticating = true
         context.evaluatePolicy(policy,
-                               localizedReason: "자산 정보를 보려면 인증이 필요합니다.") { success, _ in
+                               localizedReason: String(localized: "자산 정보를 보려면 인증이 필요합니다.")) { success, _ in
             Task { @MainActor in
                 authenticating = false
                 if success { isUnlocked = true }
@@ -356,3 +362,19 @@ struct AppLockGate<Content: View>: View {
         }
     }
 }
+
+#if DEBUG
+// 스토어 스크린샷용 — `-shotMode YES -shotTab 2` 로 띄우면 데모 데이터를 넣고 그 탭을 연다(배너는 숨김).
+enum ShotMode {
+    static var isOn: Bool { UserDefaults.standard.bool(forKey: "shotMode") }
+
+    @MainActor
+    static func apply(context: ModelContext, demoActive: Bool) {
+        guard isOn else { return }
+        // 언어마다 데모 자산 이름이 그 언어로 들어가도록 매번 새로 넣는다.
+        if demoActive { try? DemoData.disable(context: context) }
+        try? DemoData.enable(context: context)
+        AppRouter.shared.selectedTab = UserDefaults.standard.integer(forKey: "shotTab")
+    }
+}
+#endif

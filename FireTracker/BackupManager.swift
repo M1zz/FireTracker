@@ -406,7 +406,7 @@ enum BackupManager {
 
     /// 목록에 보일 사람 말 이름.
     static func kindLabel(_ file: BackupFile) -> String {
-        file.url.lastPathComponent.hasPrefix(safetyPrefix) ? "복원 직전 상태" : "앱을 켤 때 자동 저장"
+        file.url.lastPathComponent.hasPrefix(safetyPrefix) ? String(localized: "복원 직전 상태") : String(localized: "앱을 켤 때 자동 저장")
     }
 
     private static func pruneOldBackups() {

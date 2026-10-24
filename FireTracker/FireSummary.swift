@@ -46,8 +46,7 @@ struct FireSummary: Codable, Equatable {
     var fireDateText: String? {
         guard let fireDate else { return nil }
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "yyyy년 M월"
+        f.setLocalizedDateFormatFromTemplate("yyyyMMMM")
         return f.string(from: fireDate)
     }
 }

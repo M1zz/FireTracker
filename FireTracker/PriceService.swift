@@ -11,11 +11,11 @@ enum PriceError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .badURL:            return "잘못된 요청 주소"
-        case .http(let c):       return "서버 오류 (HTTP \(c))"
-        case .decode:            return "응답을 해석할 수 없습니다"
-        case .empty:             return "결과가 없습니다"
-        case .missingKey(let k): return "\(k) API 키가 필요합니다 (설정 탭에서 입력)"
+        case .badURL:            return String(localized: "잘못된 요청 주소")
+        case .http(let c):       return String(localized: "서버 오류 (HTTP \(c))")
+        case .decode:            return String(localized: "응답을 해석할 수 없습니다")
+        case .empty:             return String(localized: "결과가 없습니다")
+        case .missingKey(let k): return String(localized: "\(k) API 키가 필요합니다 (설정 탭에서 입력)")
         case .message(let m):    return m
         }
     }
@@ -60,7 +60,7 @@ enum PriceService {
             let value = try await apartmentKRW(lawdCd: symbol, aptName: name, date: date, serviceKey: dataGoKey)
             return (value, value)
         default:
-            throw PriceError.message("이 자산 종류는 자동 시세를 지원하지 않습니다")
+            throw PriceError.message(String(localized: "이 자산 종류는 자동 시세를 지원하지 않습니다"))
         }
     }
 
@@ -81,7 +81,7 @@ enum PriceService {
         let code = symbol.uppercased()
             .replacingOccurrences(of: "KRW-", with: "")
             .trimmingCharacters(in: .whitespaces)
-        guard !code.isEmpty else { throw PriceError.message("코인 심볼을 입력하세요 (예: BTC)") }
+        guard !code.isEmpty else { throw PriceError.message(String(localized: "코인 심볼을 입력하세요 (예: BTC)")) }
         guard let url = URL(string: "https://api.upbit.com/v1/ticker?markets=KRW-\(code)") else {
             throw PriceError.badURL
         }
@@ -89,7 +89,7 @@ enum PriceService {
         guard let arr = result as? [[String: Any]],
               let first = arr.first,
               let price = first["trade_price"] as? Double else {
-            throw PriceError.message("'\(code)' 시세를 찾을 수 없습니다")
+            throw PriceError.message(String(localized: "'\(code)' 시세를 찾을 수 없습니다"))
         }
         return price
     }
@@ -101,7 +101,7 @@ enum PriceService {
         guard let obj = result as? [String: Any],
               let rates = obj["rates"] as? [String: Any],
               let krw = rates["KRW"] as? Double else {
-            throw PriceError.message("환율을 가져오지 못했습니다")
+            throw PriceError.message(String(localized: "환율을 가져오지 못했습니다"))
         }
         return krw
     }
@@ -167,7 +167,7 @@ enum PriceService {
 
     static func yahooKRStock(code: String) async throws -> (price: Double, name: String) {
         let iscd = krCode(code)
-        guard iscd.count == 6 else { throw PriceError.message("종목코드 6자리를 입력하세요 (예: 005930)") }
+        guard iscd.count == 6 else { throw PriceError.message(String(localized: "종목코드 6자리를 입력하세요 (예: 005930)")) }
         for suffix in [".KS", ".KQ"] {
             guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/\(iscd)\(suffix)?interval=1d&range=1d") else { continue }
             let result = try? await json(url, headers: ["User-Agent": "Mozilla/5.0"])
@@ -180,7 +180,7 @@ enum PriceService {
                 return (price, name)
             }
         }
-        throw PriceError.message("'\(iscd)' 국내 시세를 찾을 수 없습니다")
+        throw PriceError.message(String(localized: "'\(iscd)' 국내 시세를 찾을 수 없습니다"))
     }
 
     // MARK: - 티커·종목코드로 종목 이름 조회 (best-effort, 실패 시 빈 문자열)
@@ -251,16 +251,16 @@ enum PriceService {
     static func usStockUnitKRW(symbol: String, finnhubKey: String) async throws -> Double {
         // 사용자가 키를 따로 넣지 않으면 앱 내장 기본 키를 쓴다.
         let key = finnhubKey.isEmpty ? defaultFinnhubKey : finnhubKey
-        guard !key.isEmpty else { throw PriceError.missingKey("Finnhub(미국주식)") }
+        guard !key.isEmpty else { throw PriceError.missingKey(String(localized: "Finnhub(미국주식)")) }
         let sym = symbol.uppercased().trimmingCharacters(in: .whitespaces)
-        guard !sym.isEmpty else { throw PriceError.message("티커를 입력하세요 (예: AAPL)") }
+        guard !sym.isEmpty else { throw PriceError.message(String(localized: "티커를 입력하세요 (예: AAPL)")) }
         guard let url = URL(string: "https://finnhub.io/api/v1/quote?symbol=\(sym)&token=\(key)") else {
             throw PriceError.badURL
         }
         let result = try await json(url)
         guard let obj = result as? [String: Any],
               let usd = obj["c"] as? Double, usd > 0 else {
-            throw PriceError.message("'\(sym)' 시세를 찾을 수 없습니다")
+            throw PriceError.message(String(localized: "'\(sym)' 시세를 찾을 수 없습니다"))
         }
         let fx = try await usdToKrw()
         return usd * fx
@@ -268,9 +268,9 @@ enum PriceService {
 
     // MARK: - 국내 주식 (한국투자증권 KIS, 키 필요) → KRW per share
     static func krStockUnitKRW(code: String, appKey: String, appSecret: String) async throws -> Double {
-        guard !appKey.isEmpty, !appSecret.isEmpty else { throw PriceError.missingKey("한국투자증권(국내주식)") }
+        guard !appKey.isEmpty, !appSecret.isEmpty else { throw PriceError.missingKey(String(localized: "한국투자증권(국내주식)")) }
         let iscd = krCode(code)
-        guard iscd.count == 6 else { throw PriceError.message("종목코드 6자리를 입력하세요 (예: 005930)") }
+        guard iscd.count == 6 else { throw PriceError.message(String(localized: "종목코드 6자리를 입력하세요 (예: 005930)")) }
 
         let token = try await KISTokenStore.shared.token(appKey: appKey, appSecret: appSecret)
         let base = "https://openapi.koreainvestment.com:9443"
@@ -295,7 +295,7 @@ enum PriceService {
         guard let output = obj["output"] as? [String: Any],
               let priceStr = output["stck_prpr"] as? String,
               let price = Double(priceStr), price > 0 else {
-            throw PriceError.message("'\(iscd)' 시세를 찾을 수 없습니다")
+            throw PriceError.message(String(localized: "'\(iscd)' 시세를 찾을 수 없습니다"))
         }
         return price
     }
@@ -306,9 +306,9 @@ enum PriceService {
                              aptName: String,
                              date: Date,
                              serviceKey: String) async throws -> Double {
-        guard !serviceKey.isEmpty else { throw PriceError.missingKey("공공데이터포털(부동산)") }
+        guard !serviceKey.isEmpty else { throw PriceError.missingKey(String(localized: "공공데이터포털(부동산)")) }
         let code5 = String(lawdCd.filter { $0.isNumber }.prefix(5))
-        guard code5.count == 5 else { throw PriceError.message("법정동코드 5자리를 입력하세요 (예: 11680)") }
+        guard code5.count == 5 else { throw PriceError.message(String(localized: "법정동코드 5자리를 입력하세요 (예: 11680)")) }
 
         let cal = Calendar(identifier: .gregorian)
         let fmt = DateFormatter()
@@ -322,7 +322,7 @@ enum PriceService {
                 return amount
             }
         }
-        throw PriceError.message("최근 6개월 내 일치하는 실거래가가 없습니다")
+        throw PriceError.message(String(localized: "최근 6개월 내 일치하는 실거래가가 없습니다"))
     }
 
     private static func apartmentMonthKRW(code5: String,

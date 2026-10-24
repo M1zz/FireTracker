@@ -156,15 +156,15 @@ enum AppUsage {
     static func iCloudStatus() async -> String {
         let container = CKContainer(identifier: FireTrackerSpec.feedback.containerIdentifier)
         guard let status = try? await container.accountStatus() else {
-            return "확인 실패"
+            return String(localized: "확인 실패")
         }
         switch status {
-        case .available:                 return "사용 가능"
-        case .noAccount:                 return "iCloud 미로그인 — 전송 안 됨"
-        case .restricted:                return "제한됨(기기 관리 정책) — 전송 안 됨"
-        case .couldNotDetermine:         return "확인 불가 — 전송 안 됨"
-        case .temporarilyUnavailable:    return "일시적으로 불가 — 나중에 재시도"
-        @unknown default:                return "알 수 없음"
+        case .available:                 return String(localized: "사용 가능")
+        case .noAccount:                 return String(localized: "iCloud 미로그인 — 전송 안 됨")
+        case .restricted:                return String(localized: "제한됨(기기 관리 정책) — 전송 안 됨")
+        case .couldNotDetermine:         return String(localized: "확인 불가 — 전송 안 됨")
+        case .temporarilyUnavailable:    return String(localized: "일시적으로 불가 — 나중에 재시도")
+        @unknown default:                return String(localized: "알 수 없음")
         }
     }
 }

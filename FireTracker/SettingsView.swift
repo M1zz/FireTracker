@@ -105,7 +105,7 @@ struct SettingsView: View {
                         showRestoreConfirm = true
                     }
                 case .failure(let error):
-                    show(message: "파일을 열지 못했어요: \(error.localizedDescription)")
+                    show(message: String(localized: "파일을 열지 못했어요: \(error.localizedDescription)"))
                 }
             },
             onRestore: { performRestore() },
@@ -286,7 +286,7 @@ struct SettingsView: View {
                                 ?? FireSummary(progress: 0, goalConfigured: false, locked: lockEnabled, updatedAt: Date())
                             reminderOn = await MonthlyReminder.enable(summary: summary)
                             if !reminderOn {
-                                show(message: "알림 권한이 꺼져 있어요. 설정 앱 ▸ 알림 ▸ 퇴사각에서 켤 수 있어요.")
+                                show(message: String(localized: "알림 권한이 꺼져 있어요. 설정 앱 ▸ 알림 ▸ 퇴사각에서 켤 수 있어요."))
                             }
                         }
                     } else {
@@ -317,8 +317,8 @@ struct SettingsView: View {
     @ViewBuilder
     private var apiSection: some View {
         Section {
-            apiField(title: "공공데이터포털 서비스키",
-                     hint: "‘일반 인증키(Decoding)’를 붙여 넣기",
+            apiField(title: String(localized: "공공데이터포털 서비스키"),
+                     hint: String(localized: "‘일반 인증키(Decoding)’를 붙여 넣기"),
                      text: $dataGoKey)
             // 정확한 데이터셋 주소는 바뀔 수 있어 검색 결과로 보낸다.
             Link(destination: URL(string: "https://www.data.go.kr/tcs/dss/selectDataSetList.do?keyword=%EC%95%84%ED%8C%8C%ED%8A%B8%20%EB%A7%A4%EB%A7%A4%20%EC%8B%A4%EA%B1%B0%EB%9E%98%EA%B0%80")!) {
@@ -411,9 +411,9 @@ struct SettingsView: View {
         do {
             try DemoData.enable(context: context)
             load()   // 화면 입력칸도 데모 설정값으로 새로고침.
-            show(message: "데모 데이터로 전환했어요. 자산·추이·계산 탭을 확인해보세요. 토글을 끄면 내 데이터가 그대로 돌아옵니다.")
+            show(message: String(localized: "데모 데이터로 전환했어요. 자산·추이·계산 탭을 확인해보세요. 토글을 끄면 내 데이터가 그대로 돌아옵니다."))
         } catch {
-            show(message: "데모 데이터를 넣지 못했어요: \(error.localizedDescription)")
+            show(message: String(localized: "데모 데이터를 넣지 못했어요: \(error.localizedDescription)"))
         }
     }
 
@@ -421,9 +421,9 @@ struct SettingsView: View {
         do {
             try DemoData.disable(context: context)
             load()
-            show(message: "내 데이터로 돌아왔어요.")
+            show(message: String(localized: "내 데이터로 돌아왔어요."))
         } catch {
-            show(message: "데이터를 되돌리지 못했어요: \(error.localizedDescription)")
+            show(message: String(localized: "데이터를 되돌리지 못했어요: \(error.localizedDescription)"))
         }
     }
 
@@ -433,7 +433,7 @@ struct SettingsView: View {
             showShareSheet = true
             AppUsage.log(.backupExported)
         } catch {
-            show(message: "백업 파일을 만들지 못했어요: \(error.localizedDescription)")
+            show(message: String(localized: "백업 파일을 만들지 못했어요: \(error.localizedDescription)"))
         }
     }
 
@@ -447,9 +447,9 @@ struct SettingsView: View {
             try BackupManager.restore(fromFileAt: url, context: context)
             load()   // 화면의 입력칸도 복원된 설정값으로 새로고침.
             AppUsage.log(.backupRestored)
-            show(message: "복원을 완료했어요. 모든 자산·기록·설정이 백업 시점으로 돌아왔습니다.")
+            show(message: String(localized: "복원을 완료했어요. 모든 자산·기록·설정이 백업 시점으로 돌아왔습니다."))
         } catch {
-            show(message: "복원에 실패했어요: \(error.localizedDescription)")
+            show(message: String(localized: "복원에 실패했어요: \(error.localizedDescription)"))
         }
     }
 
@@ -497,14 +497,14 @@ struct SettingsView: View {
         switch biometryType {
         case .faceID:  return "Face ID"
         case .touchID: return "Touch ID"
-        default:       return "기기 암호"
+        default:       return String(localized: "기기 암호")
         }
     }
     private var biometryLabel: String {
         switch biometryType {
-        case .faceID:  return "Face ID로 자산 정보를 보호합니다"
-        case .touchID: return "Touch ID로 자산 정보를 보호합니다"
-        default:       return "기기 암호로 자산 정보를 보호합니다"
+        case .faceID:  return String(localized: "Face ID로 자산 정보를 보호합니다")
+        case .touchID: return String(localized: "Touch ID로 자산 정보를 보호합니다")
+        default:       return String(localized: "기기 암호로 자산 정보를 보호합니다")
         }
     }
 
@@ -530,7 +530,7 @@ struct SettingsView: View {
             context.insert(target)
         }
         target.dataGoKey = dataGoKey
-        context.saveReporting("API 키")
+        context.saveReporting(String(localized: "API 키"))
     }
 }
 
@@ -609,8 +609,7 @@ private struct AutoBackupListView: View {
 
     private var dateFormatter: DateFormatter {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ko_KR")
-        f.dateFormat = "yyyy년 M월 d일 (E) a h:mm"
+        f.setLocalizedDateFormatFromTemplate("yyyyMMMdEjmm")
         return f
     }
 

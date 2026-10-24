@@ -22,12 +22,12 @@ enum CalcKind: String, Codable, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .lifecycle: return "생애주기"
-        case .loan:      return "대출"
-        case .savings:   return "저축"
-        case .invest:    return "투자"
-        case .wage:      return "구매력"
-        case .time:      return "시간"
+        case .lifecycle: return String(localized: "생애주기")
+        case .loan:      return String(localized: "대출")
+        case .savings:   return String(localized: "저축")
+        case .invest:    return String(localized: "투자")
+        case .wage:      return String(localized: "구매력")
+        case .time:      return String(localized: "시간")
         }
     }
 

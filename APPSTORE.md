@@ -1,7 +1,6 @@
 # 퇴사각 App Store 문구
 
 ## ko
-
 ### 지원 URL
 
 https://m1zz.github.io/FireTracker/
@@ -58,18 +57,17 @@ https://m1zz.github.io/FireTracker/
 이 앱의 계산은 입력값을 바탕으로 한 참고용 결과이며 투자 권유가 아닙니다.
 
 ## en
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/en/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/en/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/en/
 
 ### 이름
 
@@ -85,7 +83,7 @@ retirement,independence,savings,passive,income,portfolio,withdrawal,nestegg,divi
 
 ### 프로모션 텍스트
 
-Log your assets, income and spending each month and see your FIRE progress and projected date right away. Your target is set with the 4% rule, and net worth and savings rate build into charts. Know your quit date by the numbers, not a hunch.
+Log your assets each month to see your FIRE progress and projected quit date. Your target follows the 4% rule. Know when you can quit by the numbers, not a hunch.
 
 ### 설명
 
@@ -115,18 +113,17 @@ Your records stay on this device and no account is needed. You can back up and r
 Calculations in this app are reference results based on your inputs and are not investment advice.
 
 ## en-GB
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/en/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/en/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/en/
 
 ### 이름
 
@@ -142,7 +139,7 @@ retirement,independence,savings,passive,income,portfolio,withdrawal,pension,divi
 
 ### 프로모션 텍스트
 
-Log your assets, income and spending each month and see your FIRE progress and projected date straight away. Your target is set with the 4% rule, and net worth and savings rate build into charts. Know your quit date by the numbers, not a hunch.
+Log your assets each month to see your FIRE progress and projected quit date. Your target follows the 4% rule. Know when you can quit by the numbers, not a gut feeling.
 
 ### 설명
 
@@ -172,18 +169,17 @@ Your records stay on this device and no account is needed. You can back up and r
 Calculations in this app are reference results based on your inputs and are not investment advice.
 
 ## ja
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/ja/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/ja/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/ja/
 
 ### 이름
 
@@ -229,18 +225,17 @@ Toesagakは、資産を記録すると、経済的自立（FIRE）の目標ま�
 このアプリの計算は入力値に基づく参考結果であり、投資の勧誘ではありません。
 
 ## zh-Hans
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/zh-Hans/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/zh-Hans/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/zh-Hans/
 
 ### 이름
 
@@ -286,18 +281,17 @@ Toesagak是一款退休计算器：记录资产后，会显示距离财务自由
 本App的计算是基于输入值的参考结果，不构成投资建议。
 
 ## zh-Hant
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/zh-Hant/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/zh-Hant/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/zh-Hant/
 
 ### 이름
 
@@ -343,18 +337,17 @@ Toesagak是一款退休計算器：記錄資產後，會顯示距離財務自由
 本App的計算是基於輸入值的參考結果，不構成投資建議。
 
 ## es
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/es/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/es/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/es/
 
 ### 이름
 
@@ -400,18 +393,17 @@ Tus registros se guardan en este dispositivo y no hace falta cuenta. Puedes hace
 Los cálculos de esta app son resultados orientativos basados en lo que introduces y no constituyen asesoramiento de inversión.
 
 ## de
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/de/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/de/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/de/
 
 ### 이름
 
@@ -457,18 +449,17 @@ Deine Einträge bleiben auf diesem Gerät, ein Konto ist nicht nötig. Alle Date
 Die Berechnungen dieser App sind Orientierungswerte auf Basis deiner Eingaben und keine Anlageberatung.
 
 ## fr
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/fr/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/fr/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/fr/
 
 ### 이름
 
@@ -514,18 +505,17 @@ Vos enregistrements restent sur cet appareil et aucun compte n’est nécessaire
 Les calculs de cette app sont des résultats indicatifs fondés sur vos saisies et ne constituent pas un conseil en investissement.
 
 ## it
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/it/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/it/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/it/
 
 ### 이름
 
@@ -571,18 +561,17 @@ Le registrazioni restano su questo dispositivo e non serve alcun account. Puoi f
 I calcoli di questa app sono risultati indicativi basati sui dati inseriti e non costituiscono consulenza di investimento.
 
 ## pt-BR
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/pt-BR/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/pt-BR/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/pt-BR/
 
 ### 이름
 
@@ -628,18 +617,17 @@ Seus registros ficam neste aparelho e não é preciso conta. Você pode fazer ba
 Os cálculos deste app são resultados de referência baseados no que você informa e não são recomendação de investimento.
 
 ## ru
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/ru/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/ru/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/ru/
 
 ### 이름
 
@@ -685,18 +673,17 @@ Toesagak — калькулятор выхода на пенсию: по зап�
 Расчёты в приложении — справочные результаты на основе введённых вами данных, а не инвестиционная рекомендация.
 
 ## th
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/th/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/th/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/th/
 
 ### 이름
 
@@ -742,18 +729,17 @@ Toesagak เป็นเครื่องคิดเลขเกษียณ �
 การคำนวณในแอปนี้เป็นผลลัพธ์เพื่อการอ้างอิงจากข้อมูลที่คุณกรอก ไม่ใช่คำแนะนำการลงทุน
 
 ## vi
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/vi/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/vi/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/vi/
 
 ### 이름
 
@@ -799,18 +785,17 @@ Bản ghi lưu trên thiết bị này và không cần tài khoản. Bạn có 
 Các phép tính trong ứng dụng là kết quả tham khảo dựa trên dữ liệu bạn nhập, không phải lời khuyên đầu tư.
 
 ## cs
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/cs/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/cs/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/cs/
 
 ### 이름
 
@@ -856,18 +841,17 @@ Záznamy zůstávají v tomto zařízení a nepotřebujete účet. Všechna data
 Výpočty v aplikaci jsou orientační výsledky podle vašich údajů a nejsou investičním poradenstvím.
 
 ## da
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/da/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/da/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/da/
 
 ### 이름
 
@@ -913,18 +897,17 @@ Dine registreringer ligger på denne enhed, og du behøver ingen konto. Du kan s
 Beregningerne i denne app er vejledende resultater baseret på det, du indtaster, og er ikke investeringsrådgivning.
 
 ## el
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/el/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/el/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/el/
 
 ### 이름
 
@@ -970,18 +953,17 @@ Toesagak: Υπολογιστής FIRE
 Οι υπολογισμοί της εφαρμογής είναι ενδεικτικά αποτελέσματα με βάση όσα εισαγάγετε και δεν αποτελούν επενδυτική συμβουλή.
 
 ## fi
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/fi/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/fi/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/fi/
 
 ### 이름
 
@@ -1027,18 +1009,17 @@ Merkintäsi pysyvät tällä laitteella, eikä tiliä tarvita. Voit varmuuskopio
 Apin laskelmat ovat syöttämiisi tietoihin perustuvia suuntaa-antavia tuloksia, eivätkä ne ole sijoitusneuvontaa.
 
 ## id
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/id/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/id/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/id/
 
 ### 이름
 
@@ -1084,18 +1065,17 @@ Catatan Anda tersimpan di perangkat ini dan tidak perlu akun. Anda bisa mencadan
 Perhitungan di app ini adalah hasil acuan berdasarkan masukan Anda dan bukan saran investasi.
 
 ## nb
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/nb/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/nb/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/nb/
 
 ### 이름
 
@@ -1141,18 +1121,17 @@ Registreringene dine ligger på denne enheten, og du trenger ingen konto. Du kan
 Beregningene i denne appen er veiledende resultater basert på det du skriver inn, og er ikke investeringsrådgivning.
 
 ## nl
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/nl/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/nl/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/nl/
 
 ### 이름
 
@@ -1198,18 +1177,17 @@ Je registraties blijven op dit toestel en je hebt geen account nodig. Je kunt al
 De berekeningen in deze app zijn richtinggevende resultaten op basis van je invoer en geen beleggingsadvies.
 
 ## pl
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/pl/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/pl/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/pl/
 
 ### 이름
 
@@ -1255,18 +1233,17 @@ Zapisy zostają na tym urządzeniu i nie potrzeba konta. Wszystkie dane możesz 
 Obliczenia w aplikacji są poglądowymi wynikami opartymi na wpisanych danych i nie stanowią porady inwestycyjnej.
 
 ## sv
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/sv/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/sv/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/sv/
 
 ### 이름
 
@@ -1312,18 +1289,17 @@ Dina registreringar ligger kvar på den här enheten och inget konto behövs. Du
 Beräkningarna i appen är vägledande resultat baserade på det du anger och är inte investeringsrådgivning.
 
 ## tr
-
 ### 지원 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/tr/
 
 ### 개인정보처리방침 URL
 
-https://m1zz.github.io/FireTracker/privacy.html
+https://m1zz.github.io/FireTracker/tr/privacy.html
 
 ### 마케팅 URL
 
-https://m1zz.github.io/FireTracker/
+https://m1zz.github.io/FireTracker/tr/
 
 ### 이름
 

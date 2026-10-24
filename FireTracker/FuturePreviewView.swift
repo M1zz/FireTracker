@@ -322,7 +322,7 @@ struct FuturePreviewView: View {
                 Text("\(Fmt.krw(c.monthlySpend + costs.monthlyFixed))원")
                     .font(.system(.title, design: .rounded, weight: .bold))
                     .foregroundStyle(Theme.textPrimary)
-                lineItem("생활비", c.monthlySpend)
+                lineItem(String(localized: "생활비"), c.monthlySpend)
                 lineItem(String(localized: "건강보험료 · \(costs.bestHealthLabel)"), costs.bestHealthMonthly)
                 if costs.voluntaryPensionMonthly > 0 {
                     lineItem(String(localized: "국민연금 임의가입"), costs.voluntaryPensionMonthly)

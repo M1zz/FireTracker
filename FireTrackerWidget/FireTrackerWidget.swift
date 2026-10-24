@@ -61,7 +61,7 @@ struct FireWidgetView: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(accent)
             Spacer(minLength: 0)
-            Text(s.fireDateText ?? "아직 멀어요")
+            Text(s.fireDateText ?? String(localized: "아직 멀어요"))
                 .font(.system(.title3, design: .rounded, weight: .bold))
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)
@@ -83,7 +83,7 @@ struct FireWidgetView: View {
         VStack(alignment: .leading, spacing: 2) {
             Label("퇴사각", systemImage: "flame.fill")
                 .font(.caption2.weight(.semibold))
-            Text(s.fireDateText ?? "아직 멀어요")
+            Text(s.fireDateText ?? String(localized: "아직 멀어요"))
                 .font(.headline)
             Text("목표의 \(percent(s.progress))")
                 .font(.caption2)

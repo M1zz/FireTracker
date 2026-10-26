@@ -114,6 +114,10 @@ struct RootView: View {
         } message: {
             Text(alerts.message ?? "")
         }
+        // 매도 알림을 눌러 들어오면 그 종목의 할 일을 바로 띄운다.
+        .sheet(isPresented: $router.showSellSignals, onDismiss: { router.sellFocus = nil }) {
+            NavigationStack { SellSignalsView(focus: router.sellFocus, asSheet: true) }
+        }
         // 다른 기기의 변경이 내려오면 같은 날 기록·설정이 둘이 될 수 있다 — 하나만 남긴다.
         .onReceive(NotificationCenter.default.publisher(for: .NSPersistentStoreRemoteChange)) { _ in
             guard SyncManager.activeThisLaunch else { return }

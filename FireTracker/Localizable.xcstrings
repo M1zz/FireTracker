@@ -210915,6 +210915,4301 @@
           }
         }
       }
+    },
+    "지금 할 일 %lld개" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금 할 일 %lld개"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To do now: %lld"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To do now: %lld"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今やること %lld件"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "现在要做的事 %lld项"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在要做的事 %lld項"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por hacer ahora: %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À faire maintenant : %lld"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt zu tun: %lld"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Da fare ora: %lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fazer agora: %lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сделать сейчас: %lld"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu te doen: %lld"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do zrobienia teraz: %lld"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Att göra nu: %lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi yapılacak: %lld"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Udělat teď: %lld"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skal gøres nu: %lld"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Να γίνει τώρα: %lld"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tee nyt: %lld"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lakukan sekarang: %lld"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gjør nå: %lld"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ต้องทำตอนนี้ %lld รายการ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cần làm ngay: %lld"
+          }
+        }
+      }
+    },
+    "증권사 앱에서 지금 가격을 다시 보고 파세요. 판 다음엔 ‘팔았으면 기록하기’로 수량을 고쳐 두세요." : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "증권사 앱에서 지금 가격을 다시 보고 파세요. 판 다음엔 ‘팔았으면 기록하기’로 수량을 고쳐 두세요."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check the live price in your brokerage app before selling. After you sell, update the quantity with ‘Record the sale’."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check the live price in your brokerage app before selling. After you sell, update the quantity with ‘Record the sale’."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "証券アプリで今の価格を確認してから売ってください。売ったら「売ったら記録」で数量を直しておきましょう。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请先在券商App中确认当前价格再卖出。卖出后，用“卖出后记录”更新数量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請先在券商App中確認當前價格再賣出。賣出後，用「賣出後記錄」更新數量。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consulta el precio actual en tu app de bróker antes de vender. Después, actualiza la cantidad con «Registrar la venta»."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérifiez le prix actuel dans votre app de courtage avant de vendre. Ensuite, mettez à jour la quantité avec « Enregistrer la vente »."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prüfe vor dem Verkauf den aktuellen Kurs in deiner Broker-App. Danach die Stückzahl mit „Verkauf erfassen“ anpassen."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controlla il prezzo attuale nell’app del broker prima di vendere. Dopo, aggiorna la quantità con «Registra la vendita»."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confira o preço atual no app da corretora antes de vender. Depois, atualize a quantidade em “Registrar a venda”."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Перед продажей проверьте текущую цену в приложении брокера. После продажи обновите количество через «Записать продажу»."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controleer de actuele koers in je broker-app voordat je verkoopt. Werk daarna het aantal bij met ‘Verkoop vastleggen’."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przed sprzedażą sprawdź aktualną cenę w aplikacji brokera. Po sprzedaży zaktualizuj ilość przez „Zapisz sprzedaż”."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolla aktuellt pris i din mäklarapp innan du säljer. Uppdatera sedan antalet med ”Registrera försäljningen”."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satmadan önce aracı kurum uygulamanızda güncel fiyatı kontrol edin. Sattıktan sonra adedi “Satışı kaydet” ile güncelleyin."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Před prodejem zkontrolujte aktuální cenu v aplikaci brokera. Po prodeji upravte množství přes „Zapsat prodej“."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tjek den aktuelle kurs i din mæglerapp, før du sælger. Opdater derefter antallet med ‘Registrér salget’."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ελέγξτε την τρέχουσα τιμή στην εφαρμογή του χρηματιστή πριν πουλήσετε. Μετά, ενημερώστε την ποσότητα με «Καταγραφή πώλησης»."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarkista nykyinen hinta välittäjäsovelluksesta ennen myyntiä. Päivitä sen jälkeen määrä kohdasta ”Kirjaa myynti”."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cek harga terkini di aplikasi sekuritas sebelum menjual. Setelah menjual, perbarui jumlahnya lewat ‘Catat penjualan’."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sjekk dagens kurs i meglerappen før du selger. Oppdater deretter antallet med ‘Registrer salget’."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตรวจราคาล่าสุดในแอปโบรกเกอร์ก่อนขาย ขายแล้วให้แก้จำนวนด้วย ‘บันทึกการขาย’"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hãy xem giá hiện tại trong ứng dụng chứng khoán trước khi bán. Bán xong, cập nhật số lượng bằng ‘Ghi lại giao dịch bán’."
+          }
+        }
+      }
+    },
+    "팔았으면 기록하기" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "팔았으면 기록하기"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record the sale"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record the sale"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "売ったら記録"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "卖出后记录"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "賣出後記錄"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar la venta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrer la vente"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verkauf erfassen"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registra la vendita"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar a venda"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Записать продажу"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verkoop vastleggen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapisz sprzedaż"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrera försäljningen"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satışı kaydet"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapsat prodej"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrér salget"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Καταγραφή πώλησης"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kirjaa myynti"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catat penjualan"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrer salget"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึกการขาย"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ghi lại giao dịch bán"
+          }
+        }
+      }
+    },
+    "고점에서 정한 만큼 빠졌어요. 원칙대로 팔 때예요" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "고점에서 정한 만큼 빠졌어요. 원칙대로 팔 때예요"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It has fallen from its peak by your set amount. Time to sell, as planned."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It has fallen from its peak by your set amount. Time to sell, as planned."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高値から決めた分だけ下がりました。ルール通り売る時です"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已从高点跌到你设定的幅度。该按原则卖出了"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已從高點跌到你設定的幅度。該按原則賣出了"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ha caído desde su máximo lo que fijaste. Es hora de vender, según tu regla."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il a baissé depuis son plus haut de l’écart fixé. C’est le moment de vendre, comme prévu."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vom Hoch um deinen festgelegten Wert gefallen. Zeit zu verkaufen, wie geplant."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "È sceso dal massimo della soglia fissata. È il momento di vendere, come previsto."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caiu do pico o quanto você definiu. Hora de vender, como planejado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цена упала от пика на заданную величину. Пора продавать, как решили."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gedaald vanaf de piek met jouw grens. Tijd om te verkopen, zoals gepland."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spadł od szczytu o ustalony próg. Czas sprzedać zgodnie z zasadą."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Har fallit från toppen med din gräns. Dags att sälja, enligt plan."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zirveden belirlediğiniz kadar düştü. Kurala göre satma zamanı."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klesla od vrcholu o nastavenou hranici. Čas prodat podle pravidla."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faldet fra toppen med din grænse. Tid til at sælge, som planlagt."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Έπεσε από την κορυφή όσο ορίσατε. Ώρα να πουλήσετε, όπως σχεδιάσατε."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laskenut huipusta asettamasi verran. Aika myydä suunnitelman mukaan."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudah turun dari puncak sesuai batasmu. Saatnya menjual sesuai aturan."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falt fra toppen med grensen din. På tide å selge, som planlagt."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลดลงจากจุดสูงสุดถึงเกณฑ์ที่ตั้งไว้แล้ว ถึงเวลาขายตามหลักที่วางไว้"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã giảm từ đỉnh đúng mức bạn đặt. Đến lúc bán theo nguyên tắc."
+          }
+        }
+      }
+    },
+    "살 때 정한 목표가에 닿았어요. 원칙대로 팔 때예요" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "살 때 정한 목표가에 닿았어요. 원칙대로 팔 때예요"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It reached the target price you set when buying. Time to sell, as planned."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It reached the target price you set when buying. Time to sell, as planned."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買うときに決めた目標価格に届きました。ルール通り売る時です"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已达到买入时设定的目标价。该按原则卖出了"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已達到買入時設定的目標價。該按原則賣出了"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alcanzó el precio objetivo que fijaste al comprar. Es hora de vender, según tu regla."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il a atteint le prix cible fixé à l’achat. C’est le moment de vendre, comme prévu."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein beim Kauf festgelegtes Kursziel ist erreicht. Zeit zu verkaufen, wie geplant."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ha raggiunto il prezzo obiettivo fissato all’acquisto. È il momento di vendere, come previsto."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atingiu o preço-alvo definido na compra. Hora de vender, como planejado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Достигнута целевая цена, заданная при покупке. Пора продавать, как решили."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het koersdoel van bij aankoop is bereikt. Tijd om te verkopen, zoals gepland."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Osiągnięto cenę docelową ustaloną przy zakupie. Czas sprzedać zgodnie z zasadą."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Riktkursen du satte vid köpet är nådd. Dags att sälja, enligt plan."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alırken belirlediğiniz hedef fiyata ulaştı. Kurala göre satma zamanı."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dosáhla cílové ceny stanovené při nákupu. Čas prodat podle pravidla."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kursmålet fra købet er nået. Tid til at sælge, som planlagt."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Έφτασε την τιμή-στόχο που ορίσατε στην αγορά. Ώρα να πουλήσετε, όπως σχεδιάσατε."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostohetken tavoitehinta saavutettu. Aika myydä suunnitelman mukaan."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudah mencapai harga target saat membeli. Saatnya menjual sesuai aturan."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kursmålet fra kjøpet er nådd. På tide å selge, som planlagt."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถึงราคาเป้าหมายที่ตั้งไว้ตอนซื้อแล้ว ถึงเวลาขายตามหลักที่วางไว้"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã chạm giá mục tiêu đặt khi mua. Đến lúc bán theo nguyên tắc."
+          }
+        }
+      }
+    },
+    "보유 %@%@ · %@" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보유 %@%@ · %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holding %1$@%2$@ · %3$@"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holding %1$@%2$@ · %3$@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保有 %1$@%2$@ · %3$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "持有 %1$@%2$@ · %3$@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "持有 %1$@%2$@ · %3$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En cartera %1$@%2$@ · %3$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Détenu %1$@%2$@ · %3$@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestand %1$@%2$@ · %3$@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In portafoglio %1$@%2$@ · %3$@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em carteira %1$@%2$@ · %3$@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "В портфеле %1$@%2$@ · %3$@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In bezit %1$@%2$@ · %3$@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posiadane %1$@%2$@ · %3$@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Innehav %1$@%2$@ · %3$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elde %1$@%2$@ · %3$@"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drženo %1$@%2$@ · %3$@"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beholdning %1$@%2$@ · %3$@"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Κατέχετε %1$@%2$@ · %3$@"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omistus %1$@%2$@ · %3$@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dimiliki %1$@%2$@ · %3$@"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beholdning %1$@%2$@ · %3$@"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถืออยู่ %1$@%2$@ · %3$@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang giữ %1$@%2$@ · %3$@"
+          }
+        }
+      }
+    },
+    "공포·탐욕 지수 보기" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공포·탐욕 지수 보기"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Fear & Greed Index"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Fear & Greed Index"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恐怖・強欲指数を見る"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看恐惧与贪婪指数"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看恐懼與貪婪指數"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver índice de miedo y codicia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir l’indice peur et avidité"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fear-&-Greed-Index ansehen"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vedi indice paura e avidità"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver índice de medo e ganância"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Индекс страха и жадности"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bekijk angst-en-hebzuchtindex"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobacz indeks strachu i chciwości"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visa rädsla-och-girighetsindex"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korku ve açgözlülük endeksini gör"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazit index strachu a chamtivosti"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se frygt- og grådighedsindeks"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Δείκτης φόβου και απληστίας"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Näytä pelko ja ahneus -indeksi"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lihat indeks takut dan serakah"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se frykt- og grådighetsindeks"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ดูดัชนีความกลัวและความโลภ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem chỉ số sợ hãi và tham lam"
+          }
+        }
+      }
+    },
+    "공포·탐욕 지수" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공포·탐욕 지수"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fear & Greed Index"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fear & Greed Index"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恐怖・強欲指数"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恐惧与贪婪指数"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恐懼與貪婪指數"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Índice de miedo y codicia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice peur et avidité"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fear-&-Greed-Index"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice paura e avidità"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Índice de medo e ganância"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Индекс страха и жадности"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Angst-en-hebzuchtindex"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indeks strachu i chciwości"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rädsla-och-girighetsindex"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korku ve açgözlülük endeksi"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Index strachu a chamtivosti"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frygt- og grådighedsindeks"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Δείκτης φόβου και απληστίας"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pelko ja ahneus -indeksi"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indeks takut dan serakah"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frykt- og grådighetsindeks"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ดัชนีความกลัวและความโลภ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chỉ số sợ hãi và tham lam"
+          }
+        }
+      }
+    },
+    "중립" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "중립"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutral"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutral"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中立"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中性"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中性"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutral"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutre"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutral"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutrale"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutro"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нейтрально"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutraal"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutralnie"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutral"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nötr"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutrální"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutral"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ουδέτερο"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutraali"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Netral"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nøytral"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เป็นกลาง"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trung lập"
+          }
+        }
+      }
+    },
+    "극단적 탐욕" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "극단적 탐욕"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extreme greed"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extreme greed"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "極度の強欲"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "极度贪婪"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "極度貪婪"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Codicia extrema"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avidité extrême"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extreme Gier"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avidità estrema"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ganância extrema"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Крайняя жадность"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extreme hebzucht"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skrajna chciwość"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extrem girighet"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aşırı açgözlülük"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extrémní chamtivost"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekstrem grådighed"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ακραία απληστία"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Äärimmäinen ahneus"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serakah ekstrem"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekstrem grådighet"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "โลภสุดขีด"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tham lam tột độ"
+          }
+        }
+      }
+    },
+    "시장 모멘텀" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시장 모멘텀"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Market momentum"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Market momentum"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "市場モメンタム"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "市场动能"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "市場動能"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impulso del mercado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dynamique du marché"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marktmomentum"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Momentum di mercato"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Momento do mercado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Импульс рынка"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marktmomentum"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Momentum rynku"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marknadsmomentum"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piyasa momentumu"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tržní momentum"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markedsmomentum"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ορμή αγοράς"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markkinamomentum"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Momentum pasar"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markedsmomentum"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "โมเมนตัมตลาด"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đà thị trường"
+          }
+        }
+      }
+    },
+    "주가 강도" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주가 강도"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stock price strength"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stock price strength"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "株価の強さ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "股价强度"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "股價強度"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortaleza del precio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Force des cours"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kursstärke"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forza dei prezzi"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Força dos preços"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сила цен"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koerssterkte"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siła cen"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kursstyrka"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fiyat gücü"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Síla cen"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kursstyrke"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ισχύς τιμών"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurssivahvuus"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kekuatan harga"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kursstyrke"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ความแข็งแกร่งของราคา"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sức mạnh giá"
+          }
+        }
+      }
+    },
+    "안전자산 수요" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "안전자산 수요"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safe-haven demand"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safe-haven demand"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安全資産需要"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "避险需求"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "避險需求"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demanda de refugio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demande de valeurs refuges"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachfrage nach sicheren Häfen"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domanda di beni rifugio"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demanda por porto seguro"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спрос на защитные активы"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vraag naar veilige havens"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popyt na bezpieczne aktywa"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efterfrågan på säkra tillgångar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güvenli liman talebi"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poptávka po bezpečných aktivech"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efterspørgsel på sikre aktiver"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ζήτηση ασφαλών καταφυγίων"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turvasatamien kysyntä"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permintaan aset aman"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etterspørsel etter trygge aktiva"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ความต้องการสินทรัพย์ปลอดภัย"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhu cầu tài sản an toàn"
+          }
+        }
+      }
+    },
+    "정크본드 수요" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정크본드 수요"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Junk bond demand"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Junk bond demand"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ジャンク債需要"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "垃圾债需求"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "垃圾債需求"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demanda de bonos basura"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demande d’obligations à haut rendement"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachfrage nach Junk Bonds"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domanda di junk bond"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demanda por títulos de alto risco"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спрос на мусорные облигации"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vraag naar junkbonds"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popyt na obligacje śmieciowe"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efterfrågan på skräpobligationer"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yüksek getirili tahvil talebi"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poptávka po rizikových dluhopisech"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efterspørgsel på junkobligationer"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ζήτηση ομολόγων υψηλού κινδύνου"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roskalainojen kysyntä"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permintaan obligasi sampah"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etterspørsel etter søppelobligasjoner"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ความต้องการพันธบัตรขยะ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhu cầu trái phiếu rác"
+          }
+        }
+      }
+    },
+    "지금 시장을 움직이는 감정은?" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금 시장을 움직이는 감정은?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What emotion is driving the market now?"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What emotion is driving the market now?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今、市場を動かしている感情は？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "现在推动市场的是什么情绪？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在推動市場的是什麼情緒？"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Qué emoción mueve hoy el mercado?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quelle émotion guide le marché ?"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welche Emotion treibt den Markt gerade?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quale emozione muove il mercato ora?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Que emoção move o mercado agora?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Какая эмоция движет рынком сейчас?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welke emotie drijft de markt nu?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jaka emocja napędza teraz rynek?"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vilken känsla driver marknaden nu?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu an piyasayı hangi duygu yönetiyor?"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jaká emoce teď řídí trh?"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvilken følelse driver markedet nu?"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ποιο συναίσθημα κινεί τώρα την αγορά;"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikä tunne ohjaa markkinaa nyt?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emosi apa yang menggerakkan pasar sekarang?"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvilken følelse driver markedet nå?"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตอนนี้อารมณ์ไหนขับเคลื่อนตลาด"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cảm xúc nào đang dẫn dắt thị trường?"
+          }
+        }
+      }
+    },
+    "전일 종가" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전일 종가"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous close"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous close"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前日終値"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前一交易日收盘"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前一交易日收盤"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cierre anterior"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clôture précédente"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vortagesschluss"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiusura precedente"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fechamento anterior"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Предыдущее закрытие"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorige slot"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poprzednie zamknięcie"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Föregående stängning"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önceki kapanış"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Předchozí uzavření"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forrige lukning"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προηγούμενο κλείσιμο"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edellinen päätös"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Penutupan sebelumnya"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forrige sluttkurs"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปิดวันก่อน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phiên trước"
+          }
+        }
+      }
+    },
+    "1주 전" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1주 전"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 week ago"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 week ago"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1週間前"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1周前"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1週前"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hace 1 semana"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il y a 1 semaine"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vor 1 Woche"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 settimana fa"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Há 1 semana"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Неделю назад"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 week geleden"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tydzień temu"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 vecka sedan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hafta önce"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Před týdnem"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 uge siden"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πριν από 1 εβδομάδα"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viikko sitten"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 minggu lalu"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 uke siden"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 สัปดาห์ก่อน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 tuần trước"
+          }
+        }
+      }
+    },
+    "1달 전" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1달 전"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 month ago"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 month ago"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1か月前"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1个月前"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1個月前"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hace 1 mes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il y a 1 mois"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vor 1 Monat"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 mese fa"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Há 1 mês"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Месяц назад"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 maand geleden"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miesiąc temu"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 månad sedan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ay önce"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Před měsícem"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 måned siden"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πριν από 1 μήνα"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuukausi sitten"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 bulan lalu"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 måned siden"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 เดือนก่อน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 tháng trước"
+          }
+        }
+      }
+    },
+    "1년 전" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1년 전"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 year ago"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 year ago"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1年前"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1年前"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1年前"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hace 1 año"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il y a 1 an"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vor 1 Jahr"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 anno fa"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Há 1 ano"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Год назад"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 jaar geleden"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rok temu"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 år sedan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 yıl önce"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Před rokem"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 år siden"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πριν από 1 έτος"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vuosi sitten"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 tahun lalu"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 år siden"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ปีก่อน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 năm trước"
+          }
+        }
+      }
+    },
+    "최근 1년" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최근 1년"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Past year"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Past year"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直近1年"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "近一年"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "近一年"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Último año"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernière année"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letztes Jahr"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ultimo anno"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Último ano"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Последний год"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afgelopen jaar"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostatni rok"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senaste året"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son 1 yıl"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poslední rok"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seneste år"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Τελευταίο έτος"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viimeinen vuosi"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setahun terakhir"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siste år"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ปีที่ผ่านมา"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 năm qua"
+          }
+        }
+      }
+    },
+    "지표별 점수" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지표별 점수"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score by indicator"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score by indicator"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指標別スコア"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "各指标得分"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "各指標得分"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puntuación por indicador"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score par indicateur"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wert je Indikator"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punteggio per indicatore"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontuação por indicador"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оценка по индикаторам"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score per indicator"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wynik wg wskaźnika"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poäng per indikator"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Göstergeye göre puan"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skóre podle ukazatele"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score pr. indikator"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Βαθμός ανά δείκτη"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pisteet mittareittain"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skor per indikator"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poeng per indikator"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คะแนนรายตัวชี้วัด"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Điểm theo chỉ báo"
+          }
+        }
+      }
+    },
+    "어떻게 계산하나요" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "어떻게 계산하나요"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How it’s calculated"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How it’s calculated"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "計算方法"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如何计算"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如何計算"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo se calcula"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode de calcul"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So wird berechnet"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Come si calcola"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como é calculado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Как считается"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoe het berekend wordt"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak to liczymy"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Så räknas det"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nasıl hesaplanır"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak se počítá"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sådan beregnes det"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πώς υπολογίζεται"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Näin se lasketaan"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cara menghitungnya"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slik beregnes det"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คำนวณอย่างไร"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cách tính"
+          }
+        }
+      }
+    },
+    "S&P 500 이 125일 이동평균보다 얼마나 위에 있나" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S&P 500 이 125일 이동평균보다 얼마나 위에 있나"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How far the S&P 500 is above its 125-day moving average"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How far the S&P 500 is above its 125-day moving average"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S&P 500が125日移動平均をどれだけ上回っているか"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标普500高于其125日均线多少"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "標普500高於其125日均線多少"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuánto está el S&P 500 por encima de su media de 125 días"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écart du S&P 500 au-dessus de sa moyenne mobile à 125 jours"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie weit der S&P 500 über seinem 125-Tage-Durchschnitt liegt"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quanto l’S&P 500 è sopra la media mobile a 125 giorni"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quanto o S&P 500 está acima da média de 125 dias"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Насколько S&P 500 выше 125-дневной средней"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoe ver de S&P 500 boven het 125-daags gemiddelde staat"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak wysoko S&P 500 jest ponad średnią 125-dniową"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hur långt S&P 500 ligger över sitt 125-dagars snitt"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S&P 500’ün 125 günlük ortalamanın ne kadar üstünde olduğu"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak vysoko je S&P 500 nad 125denním průměrem"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvor langt S&P 500 ligger over sit 125-dages gennemsnit"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πόσο πάνω από τον 125ήμερο μέσο όρο είναι ο S&P 500"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuinka paljon S&P 500 on 125 päivän keskiarvon yläpuolella"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seberapa jauh S&P 500 di atas rata-rata 125 hari"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvor langt S&P 500 ligger over 125-dagers snitt"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S&P 500 อยู่เหนือค่าเฉลี่ย 125 วันมากแค่ไหน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S&P 500 cao hơn đường trung bình 125 ngày bao nhiêu"
+          }
+        }
+      }
+    },
+    "S&P 500 이 52주 최저와 최고 사이 어디쯤인가" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S&P 500 이 52주 최저와 최고 사이 어디쯤인가"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Where the S&P 500 sits between its 52-week low and high"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Where the S&P 500 sits between its 52-week low and high"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S&P 500が52週安値と高値の間のどこにあるか"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标普500处于52周最低与最高之间的哪个位置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "標普500處於52週最低與最高之間的哪個位置"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dónde está el S&P 500 entre su mínimo y máximo de 52 semanas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Position du S&P 500 entre son plus bas et son plus haut sur 52 semaines"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wo der S&P 500 zwischen 52-Wochen-Tief und -Hoch steht"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dove si trova l’S&P 500 tra minimo e massimo a 52 settimane"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onde o S&P 500 está entre a mínima e a máxima de 52 semanas"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Где S&P 500 между 52-недельным минимумом и максимумом"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waar de S&P 500 staat tussen het 52-weekse laag en hoog"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gdzie jest S&P 500 między 52-tygodniowym dołkiem a szczytem"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Var S&P 500 ligger mellan 52-veckors lägsta och högsta"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S&P 500’ün 52 haftalık en düşük ve en yüksek arasındaki yeri"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kde je S&P 500 mezi 52týdenním minimem a maximem"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvor S&P 500 ligger mellem 52-ugers laveste og højeste"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πού βρίσκεται ο S&P 500 ανάμεσα στο χαμηλό και υψηλό 52 εβδομάδων"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missä S&P 500 on 52 viikon alimman ja ylimmän välillä"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posisi S&P 500 di antara terendah dan tertinggi 52 minggu"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvor S&P 500 ligger mellom 52-ukers laveste og høyeste"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S&P 500 อยู่ตรงไหนระหว่างจุดต่ำสุดและสูงสุดรอบ 52 สัปดาห์"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S&P 500 nằm ở đâu giữa đáy và đỉnh 52 tuần"
+          }
+        }
+      }
+    },
+    "VIX 가 50일 평균보다 낮을수록 탐욕" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIX 가 50일 평균보다 낮을수록 탐욕"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The further the VIX is below its 50-day average, the more greed"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The further the VIX is below its 50-day average, the more greed"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIXが50日平均より低いほど強欲"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIX越低于50日均值越贪婪"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIX越低於50日均值越貪婪"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuanto más baja el VIX frente a su media de 50 días, más codicia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus le VIX est sous sa moyenne à 50 jours, plus il y a d’avidité"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je weiter der VIX unter seinem 50-Tage-Schnitt, desto mehr Gier"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Più il VIX è sotto la media a 50 giorni, più avidità"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quanto mais o VIX abaixo da média de 50 dias, mais ganância"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Чем ниже VIX своей 50-дневной средней, тем больше жадности"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoe lager de VIX onder het 50-daags gemiddelde, hoe meer hebzucht"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im niżej VIX pod średnią 50-dniową, tym więcej chciwości"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ju lägre VIX under 50-dagars snittet, desto mer girighet"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIX 50 günlük ortalamanın ne kadar altındaysa o kadar açgözlülük"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čím níž je VIX pod 50denním průměrem, tím víc chamtivosti"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jo lavere VIX under 50-dages snittet, desto mere grådighed"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Όσο πιο χαμηλά ο VIX από τον 50ήμερο μέσο, τόσο περισσότερη απληστία"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mitä alempana VIX on 50 päivän keskiarvosta, sitä enemmän ahneutta"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Makin rendah VIX di bawah rata-rata 50 hari, makin serakah"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jo lavere VIX under 50-dagers snittet, desto mer grådighet"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIX ยิ่งต่ำกว่าค่าเฉลี่ย 50 วันยิ่งโลภ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIX càng thấp hơn trung bình 50 ngày càng tham lam"
+          }
+        }
+      }
+    },
+    "최근 20일 주식(SPY) 수익률 − 미국 국채(TLT) 수익률" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최근 20일 주식(SPY) 수익률 − 미국 국채(TLT) 수익률"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-day stock (SPY) return minus US Treasury (TLT) return"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-day stock (SPY) return minus US Treasury (TLT) return"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直近20日の株式(SPY)リターン − 米国債(TLT)リターン"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "近20日股票(SPY)收益 − 美国国债(TLT)收益"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "近20日股票(SPY)報酬 − 美國公債(TLT)報酬"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rentabilidad a 20 días de acciones (SPY) − bonos del Tesoro de EE. UU. (TLT)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendement sur 20 jours des actions (SPY) − bons du Trésor US (TLT)"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-Tage-Rendite Aktien (SPY) − US-Staatsanleihen (TLT)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendimento a 20 giorni azioni (SPY) − Treasury USA (TLT)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retorno de 20 dias de ações (SPY) − Tesouro dos EUA (TLT)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доходность акций (SPY) за 20 дней − гособлигаций США (TLT)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-daags rendement aandelen (SPY) − Amerikaanse staatsobligaties (TLT)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-dniowy zwrot akcji (SPY) − obligacji USA (TLT)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-dagars avkastning aktier (SPY) − amerikanska statsobligationer (TLT)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20 günlük hisse (SPY) getirisi − ABD hazine tahvili (TLT) getirisi"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20denní výnos akcií (SPY) − amerických dluhopisů (TLT)"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-dages afkast aktier (SPY) − amerikanske statsobligationer (TLT)"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Απόδοση 20 ημερών μετοχών (SPY) − ομολόγων ΗΠΑ (TLT)"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20 päivän tuotto osakkeet (SPY) − USA:n valtionlainat (TLT)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imbal hasil 20 hari saham (SPY) − obligasi AS (TLT)"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-dagers avkastning aksjer (SPY) − amerikanske statsobligasjoner (TLT)"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ผลตอบแทน 20 วันของหุ้น (SPY) − พันธบัตรสหรัฐฯ (TLT)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lợi nhuận 20 ngày cổ phiếu (SPY) − trái phiếu Mỹ (TLT)"
+          }
+        }
+      }
+    },
+    "최근 20일 하이일드 채권(HYG) 수익률 − 국채(IEF) 수익률" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최근 20일 하이일드 채권(HYG) 수익률 − 국채(IEF) 수익률"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-day high-yield bond (HYG) return minus Treasury (IEF) return"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-day high-yield bond (HYG) return minus Treasury (IEF) return"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直近20日のハイイールド債(HYG)リターン − 国債(IEF)リターン"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "近20日高收益债(HYG)收益 − 国债(IEF)收益"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "近20日高收益債(HYG)報酬 − 公債(IEF)報酬"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rentabilidad a 20 días de bonos high yield (HYG) − Tesoro (IEF)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendement sur 20 jours du haut rendement (HYG) − Trésor (IEF)"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-Tage-Rendite Hochzinsanleihen (HYG) − Staatsanleihen (IEF)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendimento a 20 giorni high yield (HYG) − Treasury (IEF)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retorno de 20 dias de high yield (HYG) − Tesouro (IEF)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доходность высокодоходных облигаций (HYG) за 20 дней − гособлигаций (IEF)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-daags rendement high yield (HYG) − staatsobligaties (IEF)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-dniowy zwrot obligacji high yield (HYG) − skarbowych (IEF)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-dagars avkastning högräntefonder (HYG) − statsobligationer (IEF)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20 günlük yüksek getirili tahvil (HYG) − hazine (IEF) getirisi"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20denní výnos high-yield dluhopisů (HYG) − státních (IEF)"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-dages afkast high yield (HYG) − statsobligationer (IEF)"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Απόδοση 20 ημερών ομολόγων υψηλής απόδοσης (HYG) − κρατικών (IEF)"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20 päivän tuotto korkean tuoton lainat (HYG) − valtionlainat (IEF)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imbal hasil 20 hari obligasi high yield (HYG) − obligasi pemerintah (IEF)"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20-dagers avkastning høyrente (HYG) − statsobligasjoner (IEF)"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ผลตอบแทน 20 วันของพันธบัตรผลตอบแทนสูง (HYG) − พันธบัตรรัฐบาล (IEF)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lợi nhuận 20 ngày trái phiếu lợi suất cao (HYG) − trái phiếu chính phủ (IEF)"
+          }
+        }
+      }
+    },
+    "CNN 공포·탐욕 지수와 같은 방식이에요. 지표마다 지금 값이 최근 1년 중 어디쯤인지를 0~100 점으로 바꾸고, 다섯 지표를 똑같은 비중으로 평균내요. 50이 평소, 0에 가까울수록 공포, 100에 가까울수록 탐욕이에요." : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN 공포·탐욕 지수와 같은 방식이에요. 지표마다 지금 값이 최근 1년 중 어디쯤인지를 0~100 점으로 바꾸고, 다섯 지표를 똑같은 비중으로 평균내요. 50이 평소, 0에 가까울수록 공포, 100에 가까울수록 탐욕이에요."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It works like CNN’s Fear & Greed Index. Each indicator’s current value is ranked against the past year as a 0–100 score, and the five scores are averaged with equal weight. 50 is normal, near 0 is fear, near 100 is greed."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It works like CNN’s Fear & Greed Index. Each indicator’s current value is ranked against the past year as a 0–100 score, and the five scores are averaged with equal weight. 50 is normal, near 0 is fear, near 100 is greed."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNNの恐怖・強欲指数と同じ方式です。各指標の今の値が直近1年のどのあたりかを0〜100点に換算し、5つの指標を同じ比重で平均します。50が平常、0に近いほど恐怖、100に近いほど強欲です。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "与CNN恐惧与贪婪指数的方法相同。把每个指标当前值在近一年中的位置换算成0到100分，再将五个指标等权平均。50为常态，越接近0越恐惧，越接近100越贪婪。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "與CNN恐懼與貪婪指數的方法相同。把每個指標目前值在近一年中的位置換算成0到100分，再將五個指標等權平均。50為常態，越接近0越恐懼，越接近100越貪婪。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Funciona como el índice de miedo y codicia de CNN. El valor actual de cada indicador se compara con el último año en una escala de 0 a 100 y se promedian los cinco por igual. 50 es lo normal, cerca de 0 es miedo y cerca de 100 es codicia."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Même méthode que l’indice Fear & Greed de CNN. La valeur actuelle de chaque indicateur est classée sur l’année écoulée en score de 0 à 100, puis les cinq scores sont moyennés à poids égal. 50 est la normale, près de 0 la peur, près de 100 l’avidité."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Funktioniert wie der Fear & Greed Index von CNN. Der aktuelle Wert jedes Indikators wird gegen das letzte Jahr als 0–100-Wert eingeordnet und die fünf Werte gleich gewichtet gemittelt. 50 ist normal, nahe 0 Angst, nahe 100 Gier."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Funziona come il Fear & Greed Index di CNN. Il valore attuale di ogni indicatore viene collocato nell’ultimo anno come punteggio da 0 a 100 e i cinque punteggi sono mediati con lo stesso peso. 50 è normale, vicino a 0 paura, vicino a 100 avidità."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Funciona como o índice Fear & Greed da CNN. O valor atual de cada indicador é posicionado no último ano como nota de 0 a 100, e as cinco notas recebem o mesmo peso na média. 50 é o normal, perto de 0 é medo e perto de 100 é ganância."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Работает как индекс страха и жадности CNN. Текущее значение каждого индикатора сравнивается с последним годом и переводится в балл от 0 до 100, затем пять баллов усредняются с равным весом. 50 — норма, ближе к 0 — страх, ближе к 100 — жадность."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkt zoals de Fear & Greed Index van CNN. De huidige waarde van elke indicator wordt tegen het afgelopen jaar gerangschikt als score van 0 tot 100, en de vijf scores worden gelijk gewogen gemiddeld. 50 is normaal, bij 0 angst, bij 100 hebzucht."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Działa jak indeks Fear & Greed CNN. Bieżąca wartość każdego wskaźnika jest odnoszona do ostatniego roku jako wynik 0–100, a pięć wyników uśrednia się z równą wagą. 50 to norma, blisko 0 strach, blisko 100 chciwość."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fungerar som CNN:s Fear & Greed Index. Varje indikators nuvarande värde rangordnas mot det senaste året som poäng 0–100, och de fem poängen viktas lika i ett snitt. 50 är normalt, nära 0 rädsla, nära 100 girighet."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN Korku ve Açgözlülük Endeksi ile aynı yöntem. Her göstergenin güncel değeri son bir yıla göre 0–100 puana çevrilir ve beş puanın eşit ağırlıklı ortalaması alınır. 50 normal, 0’a yakın korku, 100’e yakın açgözlülüktür."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Funguje jako index Fear & Greed od CNN. Aktuální hodnota každého ukazatele se zařadí vůči poslednímu roku jako skóre 0–100 a pět skóre se zprůměruje se stejnou vahou. 50 je normál, blízko 0 strach, blízko 100 chamtivost."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virker som CNN’s Fear & Greed Index. Hver indikators aktuelle værdi rangeres mod det seneste år som en score fra 0 til 100, og de fem scores vægtes ligeligt i et gennemsnit. 50 er normalt, nær 0 frygt, nær 100 grådighed."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Λειτουργεί όπως ο δείκτης Fear & Greed του CNN. Η τρέχουσα τιμή κάθε δείκτη κατατάσσεται έναντι του τελευταίου έτους σε βαθμό 0–100 και οι πέντε βαθμοί υπολογίζονται με ίσο βάρος. 50 είναι το κανονικό, κοντά στο 0 φόβος, κοντά στο 100 απληστία."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toimii kuten CNN:n Fear & Greed -indeksi. Kunkin mittarin nykyarvo sijoitetaan viime vuoteen pisteinä 0–100, ja viiden mittarin pisteet keskiarvotetaan samalla painolla. 50 on normaali, lähellä 0 pelko, lähellä 100 ahneus."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caranya sama dengan Fear & Greed Index CNN. Nilai terkini tiap indikator diperingkat terhadap setahun terakhir menjadi skor 0–100, lalu kelima skor dirata-rata dengan bobot sama. 50 normal, dekat 0 takut, dekat 100 serakah."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fungerer som CNNs Fear & Greed Index. Hver indikators nåverdi rangeres mot det siste året som en poengsum fra 0 til 100, og de fem poengsummene vektes likt i et snitt. 50 er normalt, nær 0 frykt, nær 100 grådighet."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใช้วิธีเดียวกับดัชนี Fear & Greed ของ CNN นำค่าปัจจุบันของแต่ละตัวชี้วัดมาเทียบกับช่วง 1 ปีที่ผ่านมาเป็นคะแนน 0–100 แล้วเฉลี่ยห้าตัวด้วยน้ำหนักเท่ากัน 50 คือปกติ ใกล้ 0 คือกลัว ใกล้ 100 คือโลภ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cách tính giống chỉ số Fear & Greed của CNN. Giá trị hiện tại của mỗi chỉ báo được xếp hạng so với 1 năm qua thành điểm 0–100, rồi lấy trung bình năm chỉ báo với trọng số bằng nhau. 50 là bình thường, gần 0 là sợ hãi, gần 100 là tham lam."
+          }
+        }
+      }
+    },
+    "CNN 은 지표 7개를 쓰지만 풋/콜 비율과 거래량 폭 지표는 무료로 받을 수 없어 뺐어요. 그래서 CNN 숫자와 똑같지는 않고 비슷하게 움직여요. 미국 시장 기준이고 하루 한 번 종가로 바뀌어요. 투자 권유가 아니에요." : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN 은 지표 7개를 쓰지만 풋/콜 비율과 거래량 폭 지표는 무료로 받을 수 없어 뺐어요. 그래서 CNN 숫자와 똑같지는 않고 비슷하게 움직여요. 미국 시장 기준이고 하루 한 번 종가로 바뀌어요. 투자 권유가 아니에요."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN uses seven indicators, but the put/call ratio and volume breadth aren’t freely available, so they’re left out. The number tracks CNN’s closely but isn’t identical. It reflects the US market and updates once a day at the close. Not investment advice."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN uses seven indicators, but the put/call ratio and volume breadth aren’t freely available, so they’re left out. The number tracks CNN’s closely but isn’t identical. It reflects the US market and updates once a day at the close. Not investment advice."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNNは7つの指標を使いますが、プット・コール比率と出来高の広がり指標は無料で取得できないため除きました。そのためCNNの数値と同じではなく、近い動きをします。米国市場基準で、1日1回終値で更新されます。投資の勧誘ではありません。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN使用7个指标，但看跌/看涨比率和成交量广度指标无法免费获取，因此未纳入。所以数值与CNN不完全相同，但走势相近。以美国市场为准，每天按收盘价更新一次。不构成投资建议。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN使用7個指標，但賣權/買權比率和成交量廣度指標無法免費取得，因此未納入。所以數值與CNN不完全相同，但走勢相近。以美國市場為準，每天依收盤價更新一次。不構成投資建議。"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN usa siete indicadores, pero la ratio put/call y la amplitud por volumen no están disponibles gratis, así que se excluyen. Por eso el número no es idéntico al de CNN, aunque se mueve de forma parecida. Refleja el mercado de EE. UU. y se actualiza una vez al día al cierre. No es asesoramiento de inversión."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN utilise sept indicateurs, mais le ratio put/call et l’ampleur des volumes ne sont pas accessibles gratuitement, ils sont donc exclus. Le chiffre n’est pas identique à celui de CNN mais évolue de façon proche. Il reflète le marché américain et se met à jour une fois par jour à la clôture. Ce n’est pas un conseil en investissement."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN nutzt sieben Indikatoren, Put/Call-Ratio und Volumenbreite sind aber nicht frei verfügbar und fehlen daher. Der Wert ist nicht identisch mit CNN, verläuft aber ähnlich. Er bildet den US-Markt ab und wird einmal täglich zum Schluss aktualisiert. Keine Anlageberatung."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN usa sette indicatori, ma il rapporto put/call e l’ampiezza dei volumi non sono disponibili gratis, quindi sono esclusi. Il numero non è identico a quello di CNN ma si muove in modo simile. Riflette il mercato USA e si aggiorna una volta al giorno alla chiusura. Non è un consiglio d’investimento."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A CNN usa sete indicadores, mas a razão put/call e a amplitude por volume não estão disponíveis de graça, então ficaram de fora. Por isso o número não é idêntico ao da CNN, mas se move de forma parecida. Reflete o mercado dos EUA e atualiza uma vez por dia no fechamento. Não é recomendação de investimento."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN использует семь индикаторов, но коэффициент put/call и ширину рынка по объёму нельзя получить бесплатно, поэтому они исключены. Число не совпадает с CNN, но движется похоже. Отражает рынок США и обновляется раз в день по закрытию. Не является инвестиционной рекомендацией."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN gebruikt zeven indicatoren, maar de put/call-ratio en volumebreedte zijn niet gratis beschikbaar en zijn weggelaten. Het getal is dus niet gelijk aan dat van CNN, maar beweegt vergelijkbaar. Het volgt de Amerikaanse markt en wordt eenmaal per dag bij het slot bijgewerkt. Geen beleggingsadvies."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN używa siedmiu wskaźników, ale wskaźnik put/call i szerokość wolumenu nie są dostępne za darmo, więc je pominięto. Wynik nie jest identyczny z CNN, ale zmienia się podobnie. Dotyczy rynku USA i aktualizuje się raz dziennie po zamknięciu. To nie jest porada inwestycyjna."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN använder sju indikatorer, men put/call-kvoten och volymbredd finns inte gratis, så de är uteslutna. Siffran är därför inte identisk med CNN:s men rör sig likartat. Den speglar den amerikanska marknaden och uppdateras en gång om dagen vid stängning. Inte investeringsråd."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN yedi gösterge kullanır, ancak put/call oranı ve hacim genişliği ücretsiz alınamadığı için çıkarıldı. Bu yüzden sayı CNN ile birebir aynı değildir ama benzer hareket eder. ABD piyasasını yansıtır ve günde bir kez kapanışta güncellenir. Yatırım tavsiyesi değildir."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN používá sedm ukazatelů, ale poměr put/call a šíři podle objemu nelze získat zdarma, proto jsou vynechány. Číslo tak není stejné jako u CNN, ale pohybuje se podobně. Odráží americký trh a aktualizuje se jednou denně při uzavření. Nejde o investiční doporučení."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN bruger syv indikatorer, men put/call-forholdet og volumenbredde er ikke gratis tilgængelige, så de er udeladt. Tallet er derfor ikke identisk med CNN’s, men bevæger sig ens. Det afspejler det amerikanske marked og opdateres én gang dagligt ved lukning. Ikke investeringsrådgivning."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το CNN χρησιμοποιεί επτά δείκτες, αλλά ο λόγος put/call και το εύρος όγκου δεν είναι διαθέσιμα δωρεάν, οπότε εξαιρούνται. Ο αριθμός δεν είναι ίδιος με του CNN αλλά κινείται παρόμοια. Αφορά την αγορά των ΗΠΑ και ενημερώνεται μία φορά την ημέρα στο κλείσιμο. Δεν αποτελεί επενδυτική συμβουλή."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN käyttää seitsemää mittaria, mutta put/call-suhde ja volyymin laajuus eivät ole ilmaiseksi saatavilla, joten ne on jätetty pois. Luku ei siksi ole sama kuin CNN:llä, mutta liikkuu samansuuntaisesti. Se kuvaa Yhdysvaltain markkinaa ja päivittyy kerran päivässä päätöskurssilla. Ei sijoitusneuvontaa."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN memakai tujuh indikator, tetapi rasio put/call dan luas volume tidak tersedia gratis sehingga tidak dipakai. Jadi angkanya tidak persis sama dengan CNN, tapi bergerak mirip. Berdasarkan pasar AS dan diperbarui sekali sehari saat penutupan. Bukan saran investasi."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN bruker sju indikatorer, men put/call-forholdet og volumbredde er ikke gratis tilgjengelig, så de er utelatt. Tallet er derfor ikke identisk med CNNs, men beveger seg likt. Det gjelder det amerikanske markedet og oppdateres én gang daglig ved stengning. Ikke investeringsråd."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN ใช้ตัวชี้วัด 7 ตัว แต่อัตราส่วน put/call และความกว้างของปริมาณซื้อขายไม่มีให้ใช้ฟรีจึงตัดออก ตัวเลขจึงไม่เท่ากับของ CNN แต่เคลื่อนไหวใกล้เคียงกัน อิงตลาดสหรัฐฯ และอัปเดตวันละครั้งตามราคาปิด ไม่ใช่คำแนะนำการลงทุน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CNN dùng bảy chỉ báo, nhưng tỷ lệ put/call và độ rộng khối lượng không có miễn phí nên được bỏ ra. Vì vậy con số không giống hệt CNN nhưng biến động tương tự. Dựa trên thị trường Mỹ và cập nhật mỗi ngày một lần theo giá đóng cửa. Không phải lời khuyên đầu tư."
+          }
+        }
+      }
+    },
+    "%@ %lld" : {
+      "shouldTranslate" : false
     }
   },
   "version" : "1.1"

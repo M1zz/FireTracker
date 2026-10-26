@@ -447,11 +447,11 @@ struct AssetsView: View {
                         Text(line.name)
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(Theme.textPrimary)
-                            .lineLimit(1)
+                            .fixedSize(horizontal: false, vertical: true)
                         Text(line.note.isEmpty ? line.kind : "\(line.kind) · \(line.note)")
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
-                            .lineLimit(1)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     Spacer()
                     VStack(alignment: .trailing, spacing: 1) {
@@ -462,7 +462,7 @@ struct AssetsView: View {
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
                     }
-                    .lineLimit(1)
+                    .fixedSize()
                     .layoutPriority(1)
                 }
             }
@@ -522,7 +522,7 @@ struct AssetsView: View {
                             Text(route.desc)
                                 .font(.caption2)
                                 .foregroundStyle(Theme.textSecond)
-                                .lineLimit(1)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                         Spacer()
                         Image(systemName: "plus.circle.fill")
@@ -854,7 +854,7 @@ struct AssetsView: View {
                 Text(asset.name.isEmpty ? asset.displayClassLabel : asset.name)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
-                    .lineLimit(1)
+                    .fixedSize(horizontal: false, vertical: true)
                 HStack(spacing: 6) {
                     if asset.assetClass == .realEstate {
                         Text(asset.realEstateUse.label)
@@ -885,7 +885,7 @@ struct AssetsView: View {
                     }
                 }
                 .font(.caption2)
-                .lineLimit(1)
+                .fixedSize(horizontal: false, vertical: true)
                 // 보유 수량 한 줄 — 예) 32주 · 평단 387,500원. 목록에서 바로 몇 주인지 보이게.
                 if asset.quantity > 0,
                    asset.assetClass == .stocks || asset.assetClass == .fund || asset.assetClass == .crypto {
@@ -896,7 +896,7 @@ struct AssetsView: View {
                          : "\(Fmt.trimNumber(asset.quantity))\(unit)")
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
-                        .lineLimit(1)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 // 세부 종목 한 줄 요약 — 예) 삼성전자 1,000만 · 애플 2,000만
                 if !asset.detailList.isEmpty {
@@ -904,7 +904,7 @@ struct AssetsView: View {
                         .joined(separator: " · "))
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
-                        .lineLimit(1)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 // 전세 보증금 구성 — 오른쪽 금액 열에 붙이면 이름·부제목이
                 // 다 잘리므로, 왼쪽 전체 폭에서 축약 표기(억/만)로 보여준다.
@@ -912,7 +912,7 @@ struct AssetsView: View {
                     Text("현금 \(Fmt.wonKo(asset.depositCash)) + 지분 \(Fmt.wonKo(asset.equityValue))")
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
-                        .lineLimit(1)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -3197,7 +3197,7 @@ struct ScreenshotImportView: View {
                     HStack(spacing: 4) {
                         Image(systemName: l.chosen == nil ? "minus.circle" : "checkmark.seal.fill")
                         Text(l.chosen.map { "\($0.code) · \($0.name)" } ?? "코드 없이 넣기")
-                            .lineLimit(1)
+                            .fixedSize(horizontal: false, vertical: true)
                         Image(systemName: "chevron.up.chevron.down").font(.caption2)
                     }
                     .font(.caption.weight(.semibold))
@@ -3446,7 +3446,7 @@ struct SellSignalRow: View {
                 Text(asset.name)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
-                    .lineLimit(1)
+                    .fixedSize(horizontal: false, vertical: true)
                 SellSignalChip(signal: status.signal)
                 Spacer(minLength: 4)
                 Text("\(Fmt.krw(status.price))원")
@@ -3460,7 +3460,7 @@ struct SellSignalRow: View {
             Text(detail)
                 .font(.caption2)
                 .foregroundStyle(Theme.textSecond)
-                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -3490,8 +3490,12 @@ struct SellSignalRow: View {
 
 // 매도 원칙 전체 — 급한 순서로. 누르면 그 종목의 원칙을 고친다.
 struct SellSignalsView: View {
+    /// 알림으로 들어왔을 때 그 종목 — 할 일 맨 위에 둔다.
+    var focus: UUID? = nil
+    var asSheet = false
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @State private var editing: Asset?
+    @Environment(\.dismiss) private var dismiss
 
     private var watched: [(Asset, SellWatch.Status)] {
         assets.compactMap { a in SellWatch.status(a).map { (a, $0) } }
@@ -3501,9 +3505,26 @@ struct SellSignalsView: View {
             }
     }
     private var unwatchable: [Asset] { assets.filter(SellWatch.isUnwatchable) }
+    /// 원칙에 닿아 지금 손을 써야 하는 종목 — 알림 받은 종목이 맨 위.
+    private var actionable: [(Asset, SellWatch.Status)] {
+        watched.filter { $0.1.signal == .stopHit || $0.1.signal == .targetHit }
+            .sorted { l, _ in l.0.key == focus }
+    }
 
     var body: some View {
         List {
+            if !actionable.isEmpty {
+                Section {
+                    ForEach(actionable, id: \.0.key) { a, st in
+                        SellActionRow(asset: a, status: st, highlighted: a.key == focus) { editing = a }
+                            .listRowBackground(a.key == focus ? Theme.negative.opacity(0.12) : Theme.surface)
+                    }
+                } header: {
+                    Text("지금 할 일 \(actionable.count)개")
+                } footer: {
+                    Text("증권사 앱에서 지금 가격을 다시 보고 파세요. 판 다음엔 ‘팔았으면 기록하기’로 수량을 고쳐 두세요.")
+                }
+            }
             Section {
                 ForEach(watched, id: \.0.key) { a, st in
                     Button { editing = a } label: { SellSignalRow(asset: a, status: st) }
@@ -3541,6 +3562,13 @@ struct SellSignalsView: View {
         .background(Theme.bg.ignoresSafeArea())
         .navigationTitle("매도 원칙")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if asSheet {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("닫기") { dismiss() }
+                }
+            }
+        }
         .sheet(item: $editing) { a in
             AssetEditor(asset: a, nextSortOrder: assets.count)
         }
@@ -3551,6 +3579,59 @@ struct SellSignalsView: View {
                                        description: Text("주식·펀드·코인을 열어 ‘팔 원칙’을 정하면 여기에 모여요."))
             }
         }
+    }
+}
+
+// 원칙에 닿은 종목 하나 — 무엇을 해야 하는지 크게, 바로 기록할 수 있게.
+struct SellActionRow: View {
+    let asset: Asset
+    let status: SellWatch.Status
+    var highlighted = false
+    let onRecord: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                if highlighted {
+                    Image(systemName: "bell.badge.fill")
+                        .foregroundStyle(Theme.negative)
+                }
+                Text(asset.name)
+                    .font(.headline)
+                    .foregroundStyle(Theme.textPrimary)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 4)
+                SellSignalChip(signal: status.signal)
+            }
+            Text(instruction)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(status.signal == .stopHit ? Theme.negative : Theme.positive)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(holding)
+                .font(.body)
+                .foregroundStyle(Theme.textSecond)
+                .fixedSize(horizontal: false, vertical: true)
+            Button(action: onRecord) {
+                Label("팔았으면 기록하기", systemImage: "square.and.pencil")
+                    .font(.body.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+        }
+        .padding(.vertical, 4)
+    }
+
+    private var instruction: String {
+        status.signal == .stopHit
+            ? String(localized: "고점에서 정한 만큼 빠졌어요. 원칙대로 팔 때예요")
+            : String(localized: "살 때 정한 목표가에 닿았어요. 원칙대로 팔 때예요")
+    }
+
+    private var holding: String {
+        let price = String(localized: "지금 \(Fmt.krw(status.price))원")
+        guard asset.quantity > 0 else { return price }
+        let unit = asset.assetClass == .crypto ? String(localized: "개") : String(localized: "shares.unit", defaultValue: "주")
+        return String(localized: "보유 \(Fmt.trimNumber(asset.quantity))\(unit) · \(price)")
     }
 }
 

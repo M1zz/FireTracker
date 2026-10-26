@@ -50,6 +50,9 @@ extension ModelContext {
 final class AppRouter {
     static let shared = AppRouter()
     var selectedTab = 0
+    // 매도 알림을 눌러 들어오면 그 종목을 맨 위에 둔 '지금 할 일' 화면을 바로 띄운다.
+    var sellFocus: UUID?
+    var showSellSignals = false
 
     enum Tab { static let dashboard = 0, assets = 1, journey = 2, calc = 3, settings = 4 }
 }
@@ -304,6 +307,7 @@ enum SellWatch {
         content.body = UserDefaults.standard.bool(forKey: "appLockEnabled")
             ? String(localized: "정해 둔 매도 원칙에 닿았어요. 앱에서 확인해 주세요.") : body
         content.sound = .default
+        content.userInfo = ["sellAssetKey": a.key.uuidString]
         let request = UNNotificationRequest(identifier: "sell-\(id)-\(a.key.uuidString)",
                                             content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request)
@@ -359,5 +363,16 @@ final class ForegroundNotificationPresenter: NSObject, UNUserNotificationCenterD
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
         [.banner, .list, .sound]
+    }
+
+    /// 매도 알림을 누르면 그냥 앱만 열지 않고, 그 종목과 할 일을 바로 보여 준다.
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse) async {
+        guard let raw = response.notification.request.content.userInfo["sellAssetKey"] as? String,
+              let key = UUID(uuidString: raw) else { return }
+        await MainActor.run {
+            AppRouter.shared.sellFocus = key
+            AppRouter.shared.showSellSignals = true
+        }
     }
 }

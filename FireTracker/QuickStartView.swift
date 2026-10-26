@@ -206,9 +206,9 @@ struct QuickStartView: View {
     }
 
     private func row(_ title: String, _ value: String) -> some View {
-        HStack {
+        AdaptiveRow {
             Text(title).font(.subheadline).foregroundStyle(Theme.textSecond)
-            Spacer()
+        } trailing: {
             Text(value)
                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                 .foregroundStyle(Theme.textPrimary)

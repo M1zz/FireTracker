@@ -509,11 +509,11 @@ struct TimeSimSection: View {
 
             // 24시간 위에 '산 시간'을 얹어 두께를 보여준다.
             VStack(alignment: .leading, spacing: 6) {
-                HStack(alignment: .firstTextBaseline) {
+                AdaptiveRow(alignment: .firstTextBaseline) {
                     Text("시간등가 \(tvHours(timeEquivalent))")
                         .font(.system(.title3, design: .rounded).weight(.bold))
                         .foregroundStyle(Theme.textPrimary)
-                    Spacer()
+                } trailing: {
                     Text("밀도 ×\(String(format: "%.2f", density))")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.accent)
@@ -941,9 +941,9 @@ struct TimeSimSection: View {
     private func tvCompareBar(_ label: String, value: Double, peak: Double,
                               color: Color, caption: String) -> some View {
         VStack(alignment: .leading, spacing: 5) {
-            HStack {
+            AdaptiveRow {
                 Text(label).font(.caption).foregroundStyle(Theme.textSecond)
-                Spacer()
+            } trailing: {
                 Text(caption)
                     .font(.system(.caption, design: .rounded).weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)

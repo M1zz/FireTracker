@@ -17,6 +17,8 @@ struct FireTrackerApp: App {
         LeeoKit.bootstrap(FireTrackerSpec.self, usageReporting: false)
         // 앱을 보는 중에 매도 알림이 와도 배너로 보이게.
         UNUserNotificationCenter.current().delegate = ForegroundNotificationPresenter.shared
+        // 세그먼트 폭을 글자 길이에 맞춰 나눈다 — 긴 언어에서 한 칸만 '…'로 잘리지 않게.
+        UISegmentedControl.appearance().apportionsSegmentWidthsByContent = true
     }
 
     var sharedModelContainer: ModelContainer = {

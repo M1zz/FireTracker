@@ -112,9 +112,9 @@ struct SnapshotDetail: View {
                     DatePicker("월", selection: $date, displayedComponents: .date)
                 }
                 Section("순자산") {
-                    HStack {
+                    AdaptiveRow {
                         Text("순자산")
-                        Spacer()
+                    } trailing: {
                         Text("\(Fmt.krw(snapshot.netWorth))원")
                             .font(.system(.body, design: .rounded).weight(.semibold))
                             .foregroundStyle(Theme.accent)

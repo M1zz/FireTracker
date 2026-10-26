@@ -497,11 +497,11 @@ struct FuturePreviewView: View {
     }
 
     private func lineItem(_ label: String, _ value: Double) -> some View {
-        HStack {
+        AdaptiveRow {
             Text(label)
                 .font(.body)
                 .foregroundStyle(Theme.textSecond)
-            Spacer()
+        } trailing: {
             Text("\(Fmt.krw(value))원")
                 .font(.system(.body, design: .rounded).weight(.semibold))
                 .foregroundStyle(Theme.textPrimary)
@@ -630,11 +630,11 @@ struct FutureAgeRow: View {
 
     var body: some View {
         Stepper(value: $value, in: range) {
-            HStack {
+            AdaptiveRow {
                 Text(label)
                     .font(.body)
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 Text("\(value)세")
                     .font(.system(.body, design: .rounded).weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
@@ -937,11 +937,11 @@ struct WithdrawalDetailView: View {
 
     private func compareRow(_ label: String, _ plan: WithdrawalPlan, highlight: Bool) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack {
+            AdaptiveRow {
                 Text(label)
                     .font(.body.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 Text("\(Fmt.krw(plan.totalTax))원")
                     .font(.system(.body, design: .rounded).weight(.bold))
                     .foregroundStyle(highlight ? Theme.positive : Theme.textPrimary)
@@ -1045,11 +1045,11 @@ struct ScenarioCompareView: View {
                     let r = ScenarioOutcome.compute(s, ctx: c)
                     Button { editing = s } label: {
                         VStack(alignment: .leading, spacing: 6) {
-                            HStack {
+                            AdaptiveRow {
                                 Text(s.name)
                                     .font(.headline)
                                     .foregroundStyle(Theme.textPrimary)
-                                Spacer()
+                            } trailing: {
                                 Text(Fmt.percent(r.success, fraction: 0))
                                     .font(.system(.title3, design: .rounded, weight: .bold))
                                     .foregroundStyle(survivalColor(r.success))

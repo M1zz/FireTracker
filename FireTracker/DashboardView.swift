@@ -228,7 +228,8 @@ struct DashboardView: View {
     private var yearEndLabel: String {
         let year = Calendar.current.component(.year, from: Date())
         let basis = hasDebt ? String(localized: " (순자산 기준)") : ""
-        return String(localized: "\(year)년 말 예상 자산\(basis)")
+        // 연도는 숫자 묶음 기호 없이(2,026 X) 그대로.
+        return String(localized: "\(String(year))년 말 예상 자산\(basis)")
     }
     // 퇴사각 — 위젯·알림과 같은 계산. 월 저축은 '내 목표'의 계획값을 쓴다
     // (기록의 수입·지출도 결국 그 계획값을 옮겨 적은 것이라 따로 평균 내면 0이 되곤 했다).
@@ -518,11 +519,11 @@ struct DashboardView: View {
     // so no HStack is needed; 오르면 빨강, 내리면 파랑.
     // 라벨 + 금액 한 줄. 색은 호출부가 정함(오름 붉은색 / 내림 푸른색 / 중립).
     private func kvRow(_ label: String, _ value: String, color: Color) -> some View {
-        HStack {
+        AdaptiveRow {
             Text(label)
                 .font(.subheadline)
                 .foregroundStyle(Theme.textSecond)
-            Spacer()
+        } trailing: {
             Text(value)
                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                 .foregroundStyle(color)
@@ -603,20 +604,24 @@ struct DashboardView: View {
                 .foregroundStyle(Theme.textSecond)
             VStack(spacing: 6) {
                 ForEach(items.prefix(6)) { it in
-                    HStack(spacing: 8) {
-                        Circle()
-                            .fill(it.isDebt ? Theme.negative : Theme.positive)
-                            .frame(width: 6, height: 6)
-                        Text(it.name)
-                            .font(.caption)
-                            .foregroundStyle(Theme.textPrimary)
-                            .lineLimit(1)
-                        Text(it.isDebt ? "부채" : "자산")
-                            .font(.caption2)
-                            .foregroundStyle(Theme.textSecond)
-                        Spacer()
+                    AdaptiveRow {
+                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                            Circle()
+                                .fill(it.isDebt ? Theme.negative : Theme.positive)
+                                .frame(width: 6, height: 6)
+                            Text(it.name)
+                                .font(.caption)
+                                .foregroundStyle(Theme.textPrimary)
+                                .lineLimit(2)
+                            Text(it.isDebt ? "부채" : "자산")
+                                .font(.caption2)
+                                .foregroundStyle(Theme.textSecond)
+                                .fixedSize()
+                        }
+                    } trailing: {
                         DeltaChip(text: Fmt.krw(abs(it.displayDelta)) + String(localized: "원"),
                                   up: it.displayDelta > 0, tint: deltaColor(it))
+                            .padding(.leading, 14)
                     }
                 }
                 if items.count > 6 {
@@ -676,11 +681,11 @@ struct DashboardView: View {
     // A labelled progress bar for a FIRE goal达성률 (자산 또는 패시브 인컴).
     private func goalBar(title: String, progress: Double, detail: String) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack {
+            AdaptiveRow(alignment: .firstTextBaseline) {
                 Text(title)
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
-                Spacer()
+            } trailing: {
                 Text(Fmt.percent(min(progress, 1), fraction: 1))
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                     .foregroundStyle(progress >= 1 ? Theme.positive : Theme.accent)
@@ -796,11 +801,11 @@ struct DashboardView: View {
     private var fireHeroContent: some View {
         let o = outlook
         return VStack(alignment: .leading, spacing: 10) {
-            HStack {
+            AdaptiveRow {
                 Text("퇴사각")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.accent)
-                Spacer()
+            } trailing: {
                 HStack(spacing: 2) {
                     Text("내 목표")
                     Image(systemName: "chevron.right")
@@ -842,40 +847,61 @@ struct DashboardView: View {
 
     // 답 카드 아래 숫자 타일 두 장 — 왼쪽은 남은 금액, 오른쪽은 달성률과 칸 게이지.
     private var fireStatTiles: some View {
-        let o = outlook
-        return HStack(spacing: 10) {
-            VStack(spacing: 2) {
-                Text(o.progress >= 1 ? "0원" : "\(Fmt.krw(max(0, o.fireNumber - o.netWorth)))원")
-                    .font(.system(.title3, design: .rounded, weight: .bold))
-                    .foregroundStyle(Theme.textPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-                Text("남은 금액")
-                    .font(.caption)
-                    .foregroundStyle(Theme.textSecond)
+        // 나란히 들어가면 두 장을 옆으로, 금액이 길어 안 들어가면(긴 언어) 위아래로 쌓는다.
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) {
+                remainingTile(fill: false)
+                progressTile
             }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 10)
-            .frame(width: 128)
-            .tileStyle()
-
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(alignment: .firstTextBaseline) {
-                    Text(Fmt.percent(min(o.progress, 1), fraction: 0))
-                        .font(.system(.title3, design: .rounded, weight: .bold))
-                        .foregroundStyle(Theme.textPrimary)
-                    Spacer(minLength: 4)
-                    Text("목표 달성")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
-                }
-                GoalBar(progress: o.progress)
+            // 두 타일 높이를 맞춘다.
+            .fixedSize(horizontal: false, vertical: true)
+            VStack(spacing: 10) {
+                remainingTile(fill: true)
+                progressTile
             }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 16)
-            .frame(maxWidth: .infinity)
-            .tileStyle()
         }
+    }
+
+    // 남은 금액 — 금액은 줄이거나 자르지 않는다.
+    private func remainingTile(fill: Bool) -> some View {
+        let o = outlook
+        return VStack(spacing: 2) {
+            Text(o.progress >= 1 ? "0원" : "\(Fmt.krw(max(0, o.fireNumber - o.netWorth)))원")
+                .font(.system(.title3, design: .rounded, weight: .bold))
+                .foregroundStyle(Theme.textPrimary)
+                .fixedSize()
+            Text("남은 금액")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+                .fixedSize()
+        }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 14)
+        .frame(minWidth: 128, maxWidth: fill ? .infinity : nil, maxHeight: .infinity)
+        // 옆 타일과 나란할 땐 금액 폭을 그대로 차지한다(남는 폭은 달성률 타일이 갖는다).
+        .fixedSize(horizontal: !fill, vertical: false)
+        .tileStyle()
+    }
+
+    // 달성률 — 왼쪽 타일처럼 숫자 위, 이름 아래로 두어 좁아도 한 줄씩 읽힌다.
+    private var progressTile: some View {
+        let o = outlook
+        return VStack(alignment: .leading, spacing: 2) {
+            Text(Fmt.percent(min(o.progress, 1), fraction: 0))
+                .font(.system(.title3, design: .rounded, weight: .bold))
+                .foregroundStyle(Theme.textPrimary)
+                .fixedSize()
+            Text("목표 달성")
+                .font(.caption)
+                .foregroundStyle(Theme.textSecond)
+                .fixedSize()
+            GoalBar(progress: o.progress)
+                .padding(.top, 8)
+        }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .tileStyle()
     }
 
     private func retireGapText(_ o: FireOutlook) -> String? {
@@ -970,6 +996,7 @@ struct DashboardView: View {
                     Text("하나만 골라 바꿔 보고, 다음 기록에서 확인하세요.")
                         .font(.subheadline)
                         .foregroundStyle(Theme.textSecond)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 leverRow(symbol: "tray.and.arrow.down",
                          title: String(localized: "매달 \(Fmt.krw(step))원 더 모으기"),
@@ -979,12 +1006,14 @@ struct DashboardView: View {
                          title: String(localized: "은퇴 후 생활비 월 \(Fmt.krw(step))원 줄이기"),
                          effect: leverEffect(yearsIf(expenseDelta: -step)))
                 Divider().overlay(Theme.hairline)
-                HStack(spacing: 2) {
+                AdaptiveRow {
                     Text("월 저축 \(Fmt.krw(outlook.monthlySavings))원 · 연 수익 \(Fmt.percent(outlook.annualReturn, fraction: 0)) 가정")
                         .foregroundStyle(Theme.textSecond)
-                    Spacer()
-                    Text("내 목표 고치기")
-                    Image(systemName: "chevron.right")
+                } trailing: {
+                    HStack(spacing: 2) {
+                        Text("내 목표 고치기")
+                        Image(systemName: "chevron.right")
+                    }
                 }
                 .font(.caption)
                 .foregroundStyle(Theme.positive)
@@ -1009,6 +1038,8 @@ struct DashboardView: View {
                     .font(.subheadline)
                     .foregroundStyle(Theme.textSecond)
             }
+            // 링크 안의 글은 높이를 다 받지 못해 '…'로 잘리곤 한다 — 필요한 만큼 줄을 쓴다.
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -1134,11 +1165,11 @@ struct DashboardView: View {
                 }
 
                 if monthlyDebtCost > 0 {
-                    HStack {
+                    AdaptiveRow {
                         Text("부채가 가져가는 돈")
                             .font(.subheadline)
                             .foregroundStyle(Theme.textSecond)
-                        Spacer()
+                    } trailing: {
                         Text("월 −\(Fmt.krw(monthlyDebtCost))원")
                             .font(.system(.subheadline, design: .rounded).weight(.semibold))
                             .foregroundStyle(Theme.negative)
@@ -1174,11 +1205,11 @@ struct DashboardView: View {
                 // 수입이 잡히는 자산이 없을 때 — 입력을 유도.
                 VStack(alignment: .leading, spacing: 6) {
                     if monthlyDebtCost > 0 {
-                        HStack {
+                        AdaptiveRow {
                             Text("부채가 가져가는 돈")
                                 .font(.subheadline)
                                 .foregroundStyle(Theme.textSecond)
-                            Spacer()
+                        } trailing: {
                             Text("월 −\(Fmt.krw(monthlyDebtCost))원")
                                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                                 .foregroundStyle(Theme.negative)
@@ -1308,11 +1339,11 @@ struct DashboardView: View {
     // savings plus scheduled passive income. No asset-appreciation guesswork.
     private var projectionCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
+            AdaptiveRow {
                 Text(yearEndLabel)
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 HStack(spacing: 2) {
                     Text("근거 보기")
                     Image(systemName: "chevron.right")
@@ -1487,6 +1518,7 @@ struct DeltaChip: View {
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
         .background(tint.opacity(0.12), in: Capsule())
+        .fixedSize()
     }
 }
 
@@ -1571,11 +1603,11 @@ struct ProjectionDetailView: View {
             Section("월별 시뮬레이션") {
                 ForEach(steps) { step in
                     VStack(alignment: .leading, spacing: 4) {
-                        HStack {
+                        AdaptiveRow {
                             Text(monthName(step.date))
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(Theme.textPrimary)
-                            Spacer()
+                        } trailing: {
                             Text("\(Fmt.krw(step.end))원")
                                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                                 .foregroundStyle(Theme.accent)
@@ -1597,9 +1629,9 @@ struct ProjectionDetailView: View {
     }
 
     private func assumptionRow(_ title: String, _ value: String, tint: Color = Theme.textPrimary) -> some View {
-        HStack {
+        AdaptiveRow {
             Text(title).foregroundStyle(Theme.textSecond)
-            Spacer()
+        } trailing: {
             Text(value)
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(tint)
@@ -1733,11 +1765,11 @@ struct WhatIfView: View {
             rateSlider(title: String(localized: "투자 연수익률"), value: $investRatePct, tint: Theme.accent)
 
             VStack(alignment: .leading, spacing: 6) {
-                HStack {
+                AdaptiveRow {
                     Text("기간")
                         .font(.subheadline)
                         .foregroundStyle(Theme.textPrimary)
-                    Spacer()
+                } trailing: {
                     Text("\(yearsInt)년")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.accent)
@@ -1756,11 +1788,11 @@ struct WhatIfView: View {
 
     private func rateSlider(title: String, value: Binding<Double>, tint: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack {
+            AdaptiveRow {
                 Text(title)
                     .font(.subheadline)
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 Text("연 \(Fmt.percent(value.wrappedValue / 100, fraction: 1))")
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                     .foregroundStyle(tint)
@@ -1796,11 +1828,11 @@ struct WhatIfView: View {
     private func outcomeCard(title: String, subtitle: String, value: Double,
                              tag: String, tint: Color, highlighted: Bool) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
+            AdaptiveRow {
                 Text(title)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 Text(tag)
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(tint)

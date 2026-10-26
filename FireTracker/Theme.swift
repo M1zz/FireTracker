@@ -99,3 +99,27 @@ extension View {
             )
     }
 }
+
+// 한 줄 행(이름 … 금액·칩·버튼) — 한 줄에 들어가면 한 줄, 안 들어가면 뒤쪽을 다음 줄로 통째로 내린다.
+// '…'로 자르지도, 단어 중간에서 쪼개지도 않게. 뒤쪽(trailing)은 언제나 한 덩어리로 둔다.
+struct AdaptiveRow<Leading: View, Trailing: View>: View {
+    var alignment: VerticalAlignment = .center
+    var spacing: CGFloat = 8
+    @ViewBuilder var leading: Leading
+    @ViewBuilder var trailing: Trailing
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: alignment, spacing: spacing) {
+                leading
+                Spacer(minLength: spacing)
+                trailing.fixedSize()
+            }
+            VStack(alignment: .leading, spacing: 4) {
+                leading.fixedSize(horizontal: false, vertical: true)
+                trailing.fixedSize()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}

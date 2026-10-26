@@ -361,7 +361,9 @@ struct SimLeverPanel<Trailing: View, Footer: View>: View {
                 }
             }
 
+            // 차트가 높이를 다 가져가도 안내문은 '…'로 잘리지 않게.
             footer
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(12)
         .background(Theme.surfaceHigh.opacity(0.6))
@@ -485,16 +487,17 @@ struct SimResultHeader: View {
     var tint: Color = Theme.textPrimary
     let onInfo: () -> Void
     var body: some View {
-        HStack(spacing: 6) {
-            if let icon {
-                Image(systemName: icon).foregroundStyle(tint)
+        // 판정 … [해석·저장] — 한 줄에 안 들어가면 버튼을 판정 아래 줄로 내린다.
+        AdaptiveRow(spacing: 6) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                if let icon {
+                    Image(systemName: icon).foregroundStyle(tint)
+                }
+                Text(title)
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
+                    .foregroundStyle(tint)
             }
-            Text(title)
-                .font(.system(.subheadline, design: .rounded, weight: .bold))
-                .foregroundStyle(tint)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-            Spacer(minLength: 0)
+        } trailing: {
             // 해석·가정·저장은 따로 띄워 차트 자리를 지킨다.
             Button(action: onInfo) {
                 Label("해석·저장", systemImage: "doc.text")
@@ -871,7 +874,7 @@ private struct LifecycleSimSection: View {
             // 3단계 — 닻: '충분한 삶'의 값을 마주하되 매일 쫓지 말라고 짚는다.
             .popoverTip(enoughAnchorTip)
 
-            HStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 12) {
                 simStat(String(localized: "은퇴(\(a.retire)세) 자산"), String(localized: "\(Fmt.krw(result.peak))원"), tint: .blue)
                 if let dep = result.depletionAge {
                     simStat(String(localized: "자산 고갈"), String(localized: "\(dep)세"), tint: Theme.negative)
@@ -1378,7 +1381,7 @@ private struct MortgageSimSection: View {
             SimResultHeader(title: String(localized: "총 이자 \(Fmt.krw(totalInterest))원 · 원금의 \(Fmt.percent(p > 0 ? totalInterest / p : 0, fraction: 0))"),
                             icon: "banknote", tint: Theme.negative) { showInfo = true }
 
-            HStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 12) {
                 simStat(method == .bullet ? String(localized: "월 이자") : String(localized: "월 상환액"), monthlyText)
                 simStat(String(localized: "총 상환액"), String(localized: "\(Fmt.krw(totalPaid))원"))
             }
@@ -1430,11 +1433,11 @@ private struct MortgageSimSection: View {
         .sheet(isPresented: $showInfo) {
             SimSheet(title: String(localized: "해석·저장")) {
                 SimInfoCard(title: String(localized: "상환 결과")) {
-                    HStack(spacing: 0) {
+                    HStack(alignment: .top, spacing: 12) {
                         simStat(String(localized: "총 상환액"), String(localized: "\(Fmt.krw(totalPaid))원"))
                         simStat(String(localized: "총 이자"), String(localized: "\(Fmt.krw(totalInterest))원"), tint: Theme.negative)
                     }
-                    HStack(spacing: 0) {
+                    HStack(alignment: .top, spacing: 12) {
                         simStat(String(localized: "이자 비율(원금 대비)"), Fmt.percent(p > 0 ? totalInterest / p : 0, fraction: 1),
                                 tint: Theme.negative)
                         simStat(method == .bullet ? String(localized: "월 이자") : String(localized: "월 상환액"), monthlyText)
@@ -1664,7 +1667,7 @@ private struct SavingsSimSection: View {
             SimResultHeader(title: headline, icon: reached ? "checkmark.seal.fill" : "banknote",
                             tint: Theme.positive) { showInfo = true }
 
-            HStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 12) {
                 simStat(String(localized: "원금"), String(localized: "\(Fmt.krw(r.principal))원"))
                 simStat(taxed ? String(localized: "세후 이자") : String(localized: "이자"), String(localized: "+\(Fmt.krw(afterTax))원"), tint: Theme.positive)
             }
@@ -1712,7 +1715,7 @@ private struct SavingsSimSection: View {
                         .clipShape(Capsule())
                     }
                     .frame(height: 8)
-                    HStack(spacing: 0) {
+                    HStack(alignment: .top, spacing: 12) {
                         simStat(String(localized: "원금"), String(localized: "\(Fmt.krw(r.principal))원"))
                         simStat(String(localized: "세전 이자"), String(localized: "\(Fmt.krw(r.interest))원"), tint: Theme.positive)
                     }
@@ -2045,7 +2048,7 @@ private struct InvestForecastSection: View {
                 SimResultHeader(title: String(localized: "\(years)년 뒤 \(Fmt.krw(last?.mid ?? 0))원 (중앙값)"),
                                 icon: "chart.line.uptrend.xyaxis", tint: Theme.accent) { showInfo = true }
 
-                HStack(spacing: 0) {
+                HStack(alignment: .top, spacing: 12) {
                     simStat(String(localized: "보수적 (하위 10%)"), String(localized: "\(Fmt.krw(last?.low ?? 0))원"))
                     simStat(String(localized: "낙관적 (상위 10%)"), String(localized: "\(Fmt.krw(last?.high ?? 0))원"), tint: Theme.accent)
                 }
@@ -2328,7 +2331,7 @@ private struct WageSimSection: View {
                 SimResultHeader(title: String(localized: "\(yearLabel(span.first.year))→\(yearLabel(span.last.year))년 구매력 \(change >= 0 ? "▲" : "▼") \(Fmt.percent(abs(change)))"),
                                 icon: change >= 0 ? "arrow.up.right" : "arrow.down.right",
                                 tint: change >= 0 ? Theme.rise : Theme.fall) { showInfo = true }
-                HStack(spacing: 0) {
+                HStack(alignment: .top, spacing: 12) {
                     simStat(String(localized: "명목 월급"), signed(nominal))
                     simStat(String(localized: "실질(구매력)"), signed(change), tint: change >= 0 ? Theme.rise : Theme.fall)
                 }
@@ -2645,11 +2648,11 @@ private struct WageSimSection: View {
         let nowNominal = span.last.nominal
         let peak = max(thenInToday, nowNominal, 1)
         return VStack(alignment: .leading, spacing: 14) {
-            HStack {
+            AdaptiveRow {
                 Text("내 구매력")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 Text("\(yearLabel(span.first.year)) → \(yearLabel(span.last.year))년")
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
@@ -2679,11 +2682,11 @@ private struct WageSimSection: View {
 
     private func compareBar(label: String, value: Double, peak: Double, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 5) {
-            HStack {
+            AdaptiveRow {
                 Text(label)
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
-                Spacer()
+            } trailing: {
                 Text(country.money(value))
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
@@ -2822,13 +2825,13 @@ private struct WageSimSection: View {
             Text("\(span.years)년 동안")
                 .font(.headline)
                 .foregroundStyle(Theme.textPrimary)
-            HStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 12) {
                 simStat(String(localized: "명목 월급"), signed(nominalTotal))
                 simStat(String(localized: "물가"), signed(priceTotal), tint: Theme.negative)
                 simStat(String(localized: "실질(구매력)"), signed(realTotal),
                         tint: realTotal >= 0 ? Theme.rise : Theme.fall)
             }
-            HStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 12) {
                 simStat(String(localized: "연평균 인상"), signed(nominalCAGR))
                 simStat(String(localized: "연평균 물가"), signed(priceCAGR), tint: Theme.negative)
                 simStat(String(localized: "연평균 실질"), signed(realCAGR),

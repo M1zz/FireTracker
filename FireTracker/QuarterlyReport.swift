@@ -251,11 +251,11 @@ struct QuarterlyReportView: View {
             row(String(localized: "내가 모은 돈"), r.savedByMe)
             row(String(localized: "시장이 움직인 돈"), r.byMarket)
             if r.avgSavingsRate != 0 {
-                HStack {
+                AdaptiveRow {
                     Text("평균 저축률")
                         .font(.body)
                         .foregroundStyle(Theme.textSecond)
-                    Spacer()
+                } trailing: {
                     Text(Fmt.percent(r.avgSavingsRate, fraction: 0))
                         .font(.system(.body, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.textPrimary)
@@ -287,11 +287,11 @@ struct QuarterlyReportView: View {
     }
 
     private func row(_ label: String, _ value: Double) -> some View {
-        HStack {
+        AdaptiveRow {
             Text(label)
                 .font(.body)
                 .foregroundStyle(Theme.textSecond)
-            Spacer()
+        } trailing: {
             Text("\(value >= 0 ? "▲" : "▼") \(Fmt.krw(abs(value)))원")
                 .font(.system(.body, design: .rounded).weight(.semibold))
                 .foregroundStyle(value >= 0 ? Theme.rise : Theme.fall)

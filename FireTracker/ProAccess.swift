@@ -237,7 +237,7 @@ struct FuturePreviewEntry: View {
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
                 Text("건보료·연금·세금까지 넣은 퇴사 후의 삶")
-                    .font(.body)
+                    .font(.subheadline)
                     .foregroundStyle(Theme.textSecond)
                     .fixedSize(horizontal: false, vertical: true)
             }

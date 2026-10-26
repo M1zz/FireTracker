@@ -92,11 +92,11 @@ struct GoalSettingsView: View {
             // 자동 계산되는 목표 금액 — 같은 자리에서 바로 확인.
             let annualExp = Double(annualExpense) ?? 0
             let target = annualExp / max(swr, 0.0001)
-            HStack {
+            AdaptiveRow {
                 Text("FIRE 목표 금액")
                     .font(.subheadline)
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 Text("\(Fmt.krw(target))원")
                     .font(.system(.body, design: .rounded).weight(.semibold))
                     .foregroundStyle(Theme.accent)
@@ -110,11 +110,11 @@ struct GoalSettingsView: View {
             goalAgeRow(title: String(localized: "현재 나이"), text: $currentAge)
             goalAgeRow(title: String(localized: "목표 은퇴 나이"), text: $retireAge)
             if let cur = Int(currentAge), let ret = Int(retireAge), ret > cur {
-                HStack {
+                AdaptiveRow {
                     Text("은퇴까지")
                         .font(.subheadline)
                         .foregroundStyle(Theme.textPrimary)
-                    Spacer()
+                } trailing: {
                     Text("\(ret - cur)년")
                         .font(.system(.body, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.accent)
@@ -150,9 +150,9 @@ struct GoalSettingsView: View {
             let income = Double(monthlyTakeHome) ?? 0
             let expense = Double(plannedExpense) ?? 0
             if income > 0 || expense > 0 {
-                HStack {
+                AdaptiveRow {
                     Text("월 저축")
-                    Spacer()
+                } trailing: {
                     Text("\(Fmt.krw(income - expense))원")
                         .font(.system(.body, design: .rounded).weight(.semibold))
                         .foregroundStyle(income - expense >= 0 ? Theme.positive : Theme.negative)
@@ -172,9 +172,9 @@ struct GoalSettingsView: View {
         Section {
             goalMoneyField(title: String(localized: "목표 연간 패시브 인컴"), hint: String(localized: "예: 12,000,000"), text: $annualDividend)
             if let v = Double(annualDividend), v > 0 {
-                HStack {
+                AdaptiveRow {
                     Text("월 목표")
-                    Spacer()
+                } trailing: {
                     Text("\(Fmt.krw(v / 12))원")
                         .font(.system(.body, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.accent)
@@ -303,11 +303,11 @@ private func goalMoneyField(title: String, hint: String, text: Binding<String>) 
 private func goalSliderRow(title: String, value: Binding<Double>,
                            range: ClosedRange<Double>, step: Double) -> some View {
     VStack(alignment: .leading, spacing: 6) {
-        HStack {
+        AdaptiveRow {
             Text(title)
                 .font(.subheadline)
                 .foregroundStyle(Theme.textPrimary)
-            Spacer()
+        } trailing: {
             Text(Fmt.percent(value.wrappedValue, fraction: 1))
                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                 .foregroundStyle(Theme.accent)

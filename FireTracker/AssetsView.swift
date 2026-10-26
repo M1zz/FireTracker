@@ -404,11 +404,11 @@ struct AssetsView: View {
     // 패시브 인컴 상세 — 월 현금흐름이 '어디서 얼마' 나오는지 펼쳐 보여준다.
     private var passiveIncomeCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
+            AdaptiveRow {
                 Text("패시브 인컴 상세")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 Text("월 +\(Fmt.krw(monthlyIncome))원")
                     .font(.system(.subheadline, design: .rounded).weight(.bold))
                     .foregroundStyle(Theme.positive)
@@ -672,6 +672,7 @@ struct AssetsView: View {
                         Text("부채 비율")
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
+                            .fixedSize()
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
                                 Capsule().fill(Theme.hairline)
@@ -683,6 +684,7 @@ struct AssetsView: View {
                         Text(Fmt.percent(debtRatio, fraction: 1))
                             .font(.system(.caption2, design: .rounded).weight(.semibold))
                             .foregroundStyle(Theme.negative)
+                            .fixedSize()
                     }
                     .padding(.top, 2)
                 }
@@ -731,44 +733,72 @@ struct AssetsView: View {
             .animation(.easeInOut(duration: 0.3), value: selectedSlice)
             .animation(.easeInOut(duration: 0.45), value: rows.map(\.amount))
 
-            VStack(spacing: 4) {
-                ForEach(rows, id: \.assetClass) { item in
-                    let isDebt = item.assetClass == .debt
-                    let selected = selSlice?.assetClass == item.assetClass
-                    HStack(spacing: 10) {
-                        Circle()
-                            .fill(Color(hexCode: item.assetClass.colorHex))
-                            .frame(width: 10, height: 10)
-                        Text(item.assetClass.label)
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.textPrimary)
-                        Spacer()
-                        Text("\(isDebt ? "-" : "")\(Fmt.krw(item.amount))원")
-                            .font(.subheadline.monospacedDigit())
-                            .foregroundStyle(isDebt ? Theme.negative : Theme.textSecond)
-                        Text(Fmt.percent(sum > 0 ? item.amount / sum : 0, fraction: 0))
-                            .font(.caption.monospacedDigit())
-                            .foregroundStyle(Theme.textSecond)
-                            .frame(width: 40, alignment: .trailing)
-                    }
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 8)
-                    .background(selected ? Color(hexCode: item.assetClass.colorHex).opacity(0.14) : Color.clear)
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.25)) {
-                            // 범례를 탭해도 선택/해제 — 도넛과 연동.
-                            selectedSlice = selected ? nil : sliceMidAngle(for: item.assetClass)
-                        }
-                    }
-                }
+            // 범례는 줄마다 모양이 같아야 읽힌다 — 모든 줄이 한 줄에 들어가면 한 줄로,
+            // 하나라도 넘치면(긴 언어) 모든 줄을 '이름 / 금액·비율' 두 줄로 같이 바꾼다.
+            ViewThatFits(in: .horizontal) {
+                legendList(rows, sum: sum, selSlice: selSlice, stacked: false)
+                legendList(rows, sum: sum, selSlice: selSlice, stacked: true)
             }
             .animation(.easeInOut(duration: 0.3), value: selectedSlice)
             .animation(.easeInOut(duration: 0.45), value: rows.map(\.assetClass))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardStyle()
+    }
+
+    private func legendList(_ rows: [(assetClass: AssetClass, amount: Double)], sum: Double,
+                            selSlice: (assetClass: AssetClass, amount: Double)?, stacked: Bool) -> some View {
+        VStack(spacing: 4) {
+            ForEach(rows, id: \.assetClass) { item in
+                let isDebt = item.assetClass == .debt
+                let selected = selSlice?.assetClass == item.assetClass
+                let name = HStack(spacing: 10) {
+                    Circle()
+                        .fill(Color(hexCode: item.assetClass.colorHex))
+                        .frame(width: 10, height: 10)
+                    Text(item.assetClass.label)
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.textPrimary)
+                        .fixedSize(horizontal: !stacked, vertical: true)
+                }
+                let figures = HStack(spacing: 10) {
+                    Text("\(isDebt ? "-" : "")\(Fmt.krw(item.amount))원")
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundStyle(isDebt ? Theme.negative : Theme.textSecond)
+                    if stacked { Spacer(minLength: 4) }
+                    Text(Fmt.percent(sum > 0 ? item.amount / sum : 0, fraction: 0))
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(Theme.textSecond)
+                        .frame(minWidth: 36, alignment: .trailing)
+                }
+                .fixedSize(horizontal: !stacked, vertical: false)
+                Group {
+                    if stacked {
+                        VStack(alignment: .leading, spacing: 2) {
+                            name
+                            figures.padding(.leading, 20)
+                        }
+                    } else {
+                        HStack(spacing: 10) {
+                            name
+                            Spacer(minLength: 8)
+                            figures
+                        }
+                    }
+                }
+                .padding(.vertical, 6)
+                .padding(.horizontal, 8)
+                .background(selected ? Color(hexCode: item.assetClass.colorHex).opacity(0.14) : Color.clear)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        // 범례를 탭해도 선택/해제 — 도넛과 연동.
+                        selectedSlice = selected ? nil : sliceMidAngle(for: item.assetClass)
+                    }
+                }
+            }
+        }
     }
 
     // 도감 대상 종류 — 직접 입력·부채는 수집 개념에서 제외.
@@ -786,11 +816,11 @@ struct AssetsView: View {
         let total = collectibleClasses.count
         let count = collectibleClasses.filter { collected.contains($0) }.count
         return VStack(alignment: .leading, spacing: 14) {
-            HStack {
+            AdaptiveRow {
                 Text("자산 도감")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 Text("\(count)/\(total) 수집")
                     .font(.caption.weight(.semibold).monospacedDigit())
                     .foregroundStyle(count == total ? Theme.accent : Theme.textSecond)
@@ -855,37 +885,15 @@ struct AssetsView: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
                     .fixedSize(horizontal: false, vertical: true)
-                HStack(spacing: 6) {
-                    if asset.assetClass == .realEstate {
-                        Text(asset.realEstateUse.label)
-                            .foregroundStyle(Color(hexCode: asset.assetClass.colorHex))
-                    } else {
-                        Text(asset.displayClassLabel)
-                            .foregroundStyle(Theme.textSecond)
-                    }
-                    if asset.liquidity == .locked {
-                        Image(systemName: "lock.fill")
-                            .foregroundStyle(Theme.textSecond)
-                    }
-                    if asset.autoPriced {
-                        Image(systemName: "antenna.radiowaves.left.and.right")
-                            .foregroundStyle(Theme.accent)
-                    }
-                    // 매도 원칙에 닿았거나 가까우면 목록에서도 바로 보이게.
-                    if let st = SellWatch.status(asset), st.signal != .holding {
-                        SellSignalChip(signal: st.signal)
-                    }
-                    if asset.effectiveMonthlyIncome > 0 {
-                        Text("월 \(Fmt.wonKo(asset.effectiveMonthlyIncome))")
-                            .foregroundStyle(Theme.positive)
-                    }
-                    if asset.monthlyDebtCost > 0 {
-                        Text("월 −\(Fmt.wonKo(asset.monthlyDebtCost))")
-                            .foregroundStyle(Theme.negative)
+                // 종류·표시 … 월 수입/비용 — 한 줄에 안 들어가면 수입/비용을 다음 줄로.
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 6) { rowTags(asset); rowFlows(asset) }
+                    VStack(alignment: .leading, spacing: 3) {
+                        HStack(spacing: 6) { rowTags(asset) }
+                        HStack(spacing: 6) { rowFlows(asset) }
                     }
                 }
                 .font(.caption2)
-                .fixedSize(horizontal: false, vertical: true)
                 // 보유 수량 한 줄 — 예) 32주 · 평단 387,500원. 목록에서 바로 몇 주인지 보이게.
                 if asset.quantity > 0,
                    asset.assetClass == .stocks || asset.assetClass == .fund || asset.assetClass == .crypto {
@@ -927,6 +935,43 @@ struct AssetsView: View {
                 .layoutPriority(1)
         }
         .padding(.vertical, 4)
+    }
+
+    @ViewBuilder private func rowTags(_ asset: Asset) -> some View {
+        if asset.assetClass == .realEstate {
+            Text(asset.realEstateUse.label)
+                .foregroundStyle(Color(hexCode: asset.assetClass.colorHex))
+                .fixedSize()
+        } else {
+            Text(asset.displayClassLabel)
+                .foregroundStyle(Theme.textSecond)
+                .fixedSize()
+        }
+        if asset.liquidity == .locked {
+            Image(systemName: "lock.fill")
+                .foregroundStyle(Theme.textSecond)
+        }
+        if asset.autoPriced {
+            Image(systemName: "antenna.radiowaves.left.and.right")
+                .foregroundStyle(Theme.accent)
+        }
+        // 매도 원칙에 닿았거나 가까우면 목록에서도 바로 보이게.
+        if let st = SellWatch.status(asset), st.signal != .holding {
+            SellSignalChip(signal: st.signal)
+        }
+    }
+
+    @ViewBuilder private func rowFlows(_ asset: Asset) -> some View {
+        if asset.effectiveMonthlyIncome > 0 {
+            Text("월 \(Fmt.wonKo(asset.effectiveMonthlyIncome))")
+                .foregroundStyle(Theme.positive)
+                .fixedSize()
+        }
+        if asset.monthlyDebtCost > 0 {
+            Text("월 −\(Fmt.wonKo(asset.monthlyDebtCost))")
+                .foregroundStyle(Theme.negative)
+                .fixedSize()
+        }
     }
 
     private var emptyState: some View {
@@ -1372,9 +1417,9 @@ struct AssetEditor: View {
 
                 Section(isDebt ? "남은 빚" : "평가액") {
                     if auto {
-                        HStack {
+                        AdaptiveRow {
                             Text("현재 평가액")
-                            Spacer()
+                        } trailing: {
                             Text("\(Fmt.krw(Double(amount) ?? 0))원")
                                 .font(.system(.body, design: .rounded).weight(.semibold))
                                 .foregroundStyle(Theme.accent)
@@ -1534,19 +1579,19 @@ struct AssetEditor: View {
         let pct = total > 0 ? thisAmount / total : 0
         let sideLabel = isDebt ? String(localized: "전체 부채") : String(localized: "전체 자산")
         let tint = isDebt ? Theme.negative : Theme.accent
-        HStack {
+        AdaptiveRow {
             Text("현재 \(sideLabel)")
                 .font(.caption).foregroundStyle(Theme.textSecond)
-            Spacer()
+        } trailing: {
             Text("\(Fmt.krw(others))원")
                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                 .foregroundStyle(Theme.textPrimary)
         }
         if thisAmount > 0 {
-            HStack {
+            AdaptiveRow {
                 Text("이 자산 포함 시")
                     .font(.caption).foregroundStyle(Theme.textSecond)
-                Spacer()
+            } trailing: {
                 Text("\(Fmt.krw(thisAmount))원 · \(sideLabel)의 \(Fmt.percent(pct, fraction: 1))")
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                     .foregroundStyle(tint)
@@ -1603,9 +1648,9 @@ struct AssetEditor: View {
             TextField("또는 연 이자율 (%)", text: $annualYieldPct)
                 .keyboardType(.decimalPad)
             if previewMonthlyIncome > 0 {
-                HStack {
+                AdaptiveRow {
                     Text("매달 빠져나가는 돈")
-                    Spacer()
+                } trailing: {
                     Text("−\(Fmt.krw(previewMonthlyIncome))원")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.negative)
@@ -1644,17 +1689,17 @@ struct AssetEditor: View {
             }
             if let cb = Double(costBasis), cb > 0 {
                 let cur = Double(amount) ?? 0
-                HStack {
+                AdaptiveRow {
                     Text("현재 평가액")
-                    Spacer()
+                } trailing: {
                     Text("\(Fmt.krw(cur))원")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.textPrimary)
                 }
                 let g = cur - cb
-                HStack {
+                AdaptiveRow {
                     Text("평가 손익")
-                    Spacer()
+                } trailing: {
                     Text("\(g >= 0 ? "+" : "-")\(Fmt.krw(abs(g)))원 (\(g >= 0 ? "+" : "-")\(Fmt.percent(abs(g / cb), fraction: 1)))")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(g >= 0 ? Theme.positive : Theme.negative)
@@ -1697,9 +1742,9 @@ struct AssetEditor: View {
                 }
             }
             if let a = asset, a.peakUnitPrice > 0, stopPct > 0 {
-                HStack {
+                AdaptiveRow {
                     Text("지금까지 고점")
-                    Spacer()
+                } trailing: {
                     Text("\(Fmt.krw(a.peakUnitPrice))원 · \(Fmt.krw(a.peakUnitPrice * (1 - stopPct / 100)))원 아래면 알림")
                         .font(.system(.footnote, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.textSecond)
@@ -1751,17 +1796,17 @@ struct AssetEditor: View {
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.accent)
                 }
-                HStack {
+                AdaptiveRow {
                     Text("투자 원금")
-                    Spacer()
+                } trailing: {
                     Text("\(Fmt.krw(l.costBasis))원")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.textPrimary)
                 }
                 if l.realized != 0 {
-                    HStack {
+                    AdaptiveRow {
                         Text("실현 손익")
-                        Spacer()
+                    } trailing: {
                         Text("\(l.realized >= 0 ? "+" : "−")\(Fmt.krw(abs(l.realized)))원")
                             .font(.system(.subheadline, design: .rounded).weight(.semibold))
                             .foregroundStyle(l.realized >= 0 ? Theme.positive : Theme.negative)
@@ -1875,9 +1920,9 @@ struct AssetEditor: View {
                     .keyboardType(.numberPad)
             }
             if tradeAmount > 0 {
-                HStack {
+                AdaptiveRow {
                     Text("\(tradeKind.label) 금액")
-                    Spacer()
+                } trailing: {
                     Text("\(Fmt.krw(tradeAmount))원")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.textPrimary)
@@ -2069,9 +2114,9 @@ struct AssetEditor: View {
                 TextField("또는 연 수익률 (%)", text: $annualYieldPct)
                     .keyboardType(.decimalPad)
                 if previewMonthlyIncome > 0 {
-                    HStack {
+                    AdaptiveRow {
                         Text("예상 현금흐름")
-                        Spacer()
+                    } trailing: {
                         Text("월 \(Fmt.krw(previewMonthlyIncome))원 · 연 \(Fmt.krw(previewMonthlyIncome * 12))원")
                             .font(.system(.subheadline, design: .rounded).weight(.semibold))
                             .foregroundStyle(Theme.positive)
@@ -2195,9 +2240,9 @@ struct AssetEditor: View {
                                tint: depositLiquid ? Theme.positive : Theme.textSecond)
                 compositionRow(String(localized: "\(assetClass.label) 지분 (묶임)"),
                                symbol: "lock.fill", value: equity, tint: Theme.textSecond)
-                HStack {
+                AdaptiveRow {
                     Text("총자산 기여")
-                    Spacer()
+                } trailing: {
                     Text("\(Fmt.krw(value))원")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.accent)
@@ -3384,9 +3429,9 @@ struct NetWorthBreakdownView: View {
     }
 
     private func subtotal(_ title: String, _ value: Double, sign: String = "+", tint: Color) -> some View {
-        HStack {
+        AdaptiveRow {
             Text(title).font(.subheadline.weight(.semibold)).foregroundStyle(Theme.textPrimary)
-            Spacer()
+        } trailing: {
             Text("\(sign)\(Fmt.krw(value))원")
                 .font(.system(.subheadline, design: .rounded).weight(.bold))
                 .foregroundStyle(tint)
@@ -3406,6 +3451,7 @@ struct SellSignalChip: View {
             .padding(.vertical, 3)
             .foregroundStyle(tint)
             .background(tint.opacity(0.14), in: Capsule())
+            .fixedSize()
     }
     private var tint: Color {
         switch signal {
@@ -3442,17 +3488,20 @@ struct SellSignalRow: View {
     let status: SellWatch.Status
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 6) {
+            // 이름 … 칩·가격 — 좁으면 칩·가격을 이름 아래 줄로 통째로 내린다.
+            AdaptiveRow(spacing: 6) {
                 Text(asset.name)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
-                    .fixedSize(horizontal: false, vertical: true)
-                SellSignalChip(signal: status.signal)
-                Spacer(minLength: 4)
-                Text("\(Fmt.krw(status.price))원")
-                    .font(.system(.caption, design: .rounded).weight(.semibold))
-                    .foregroundStyle(Theme.textPrimary)
-                    .monospacedDigit()
+                    .lineLimit(2)
+            } trailing: {
+                HStack(spacing: 6) {
+                    SellSignalChip(signal: status.signal)
+                    Text("\(Fmt.krw(status.price))원")
+                        .font(.system(.caption, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.textPrimary)
+                        .monospacedDigit()
+                }
             }
             if status.floor != nil {
                 DrawdownBar(drawdown: status.drawdown, limit: asset.trailingStopPct / 100)
@@ -3540,9 +3589,9 @@ struct SellSignalsView: View {
                 Section {
                     ForEach(unwatchable, id: \.key) { a in
                         Button { editing = a } label: {
-                            HStack {
+                            AdaptiveRow {
                                 Text(a.name).foregroundStyle(Theme.textPrimary)
-                                Spacer()
+                            } trailing: {
                                 Text(a.symbol.isEmpty ? "종목 코드 없음" : "자동 시세 꺼짐")
                                     .font(.caption)
                                     .foregroundStyle(Theme.textSecond)
@@ -3591,16 +3640,18 @@ struct SellActionRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                if highlighted {
-                    Image(systemName: "bell.badge.fill")
-                        .foregroundStyle(Theme.negative)
+            AdaptiveRow(alignment: .firstTextBaseline) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    if highlighted {
+                        Image(systemName: "bell.badge.fill")
+                            .foregroundStyle(Theme.negative)
+                    }
+                    Text(asset.name)
+                        .font(.headline)
+                        .foregroundStyle(Theme.textPrimary)
+                        .lineLimit(2)
                 }
-                Text(asset.name)
-                    .font(.headline)
-                    .foregroundStyle(Theme.textPrimary)
-                    .fixedSize(horizontal: false, vertical: true)
-                Spacer(minLength: 4)
+            } trailing: {
                 SellSignalChip(signal: status.signal)
             }
             Text(instruction)
@@ -3672,6 +3723,7 @@ struct SellWatchCard: View {
                         Text(headline(list: list, alerts: alerts))
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(Theme.textPrimary)
+                            .fixedSize(horizontal: false, vertical: true)
                         Text(subline(list: list, alerts: alerts))
                             .font(.caption)
                             .foregroundStyle(Theme.textSecond)
@@ -3693,19 +3745,20 @@ struct SellWatchCard: View {
                             .foregroundStyle(Theme.textSecond)
                     }
                 }
-                HStack {
+                AdaptiveRow {
                     if !unwatchable.isEmpty {
                         Text("시세를 몰라 못 보는 종목 \(unwatchable.count)개")
                             .font(.caption2)
                             .foregroundStyle(.orange)
                     }
-                    Spacer()
-                    Text("전체 보기")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.textSecond)
-                    Image(systemName: "chevron.right")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.textSecond)
+                } trailing: {
+                    HStack(spacing: 4) {
+                        Text("전체 보기")
+                            .font(.caption.weight(.semibold))
+                        Image(systemName: "chevron.right")
+                            .font(.caption2.weight(.semibold))
+                    }
+                    .foregroundStyle(Theme.textSecond)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

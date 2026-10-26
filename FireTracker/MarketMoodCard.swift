@@ -564,11 +564,11 @@ struct FearGreedView: View {
             ForEach(r.components) { c in
                 let b = FearGreedBand(score: c.score)
                 VStack(alignment: .leading, spacing: 6) {
-                    HStack {
+                    AdaptiveRow {
                         Text(c.title)
                             .font(.body.weight(.semibold))
                             .foregroundStyle(Theme.textPrimary)
-                        Spacer()
+                    } trailing: {
                         Text("\(b.label) \(Int(c.score.rounded()))")
                             .font(.body.weight(.semibold))
                             .foregroundStyle(b.color)

@@ -340,11 +340,11 @@ struct UsageDiagnosticsSection: View {
     }
 
     private func row(_ label: String, _ value: String, warn: Bool = false) -> some View {
-        HStack {
+        AdaptiveRow {
             Text(label)
                 .font(.subheadline)
                 .foregroundStyle(Theme.textPrimary)
-            Spacer()
+        } trailing: {
             Text(value)
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(warn ? Theme.negative : Theme.textSecond)

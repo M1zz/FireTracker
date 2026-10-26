@@ -123,6 +123,9 @@ struct RootView: View {
             guard SyncManager.activeThisLaunch else { return }
             SyncManager.dedupe(context: context)
         }
+        #if DEBUG
+        .modifier(ShotSheet())
+        #endif
         .environmentObject(refresher)
         // 앱 시작 시 — 마지막 갱신이 7일 이상 지났으면 시세·배당을 자동 갱신하고,
         // 이번 달 기록이 없으면 최신 평가액으로 월 1회 자동 스냅샷을 남긴다.
@@ -369,8 +372,11 @@ struct AppLockGate<Content: View>: View {
 
 #if DEBUG
 // 스토어 스크린샷용 — `-shotMode YES -shotTab 2` 로 띄우면 데모 데이터를 넣고 그 탭을 연다(배너는 숨김).
+// `-shotSheet sell|future|mood` 를 더하면 그 화면을 시트로 바로 띄우고, `-shotScroll 0.5` 면
+// 스크롤 화면을 그 높이(0 위 ~ 1 아래)에서 연다(언어별 레이아웃 점검용).
 enum ShotMode {
     static var isOn: Bool { UserDefaults.standard.bool(forKey: "shotMode") }
+    static var sheet: String? { isOn ? UserDefaults.standard.string(forKey: "shotSheet") : nil }
 
     @MainActor
     static func apply(context: ModelContext, demoActive: Bool) {
@@ -379,6 +385,20 @@ enum ShotMode {
         if demoActive { try? DemoData.disable(context: context) }
         try? DemoData.enable(context: context)
         AppRouter.shared.selectedTab = UserDefaults.standard.integer(forKey: "shotTab")
+        if sheet == "sell" { AppRouter.shared.showSellSignals = true }
+    }
+}
+
+private struct ShotSheet: ViewModifier {
+    @State private var shown = ShotMode.sheet == "future" || ShotMode.sheet == "mood"
+    private let scroll = UserDefaults.standard.double(forKey: "shotScroll")
+    func body(content: Content) -> some View {
+        content.defaultScrollAnchor(ShotMode.isOn ? UnitPoint(x: 0.5, y: scroll) : nil)
+        .sheet(isPresented: $shown) {
+            NavigationStack {
+                if ShotMode.sheet == "future" { FuturePreviewView() } else { FearGreedView() }
+            }
+        }
     }
 }
 #endif

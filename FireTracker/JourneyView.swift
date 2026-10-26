@@ -127,11 +127,11 @@ struct JourneyGoalsSection: View {
         let progress = target > 0 ? min(current / target, 1) : 0
         let gap = max(0, target - current)
         return VStack(alignment: .leading, spacing: 5) {
-            HStack {
+            AdaptiveRow {
                 Text(label)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 Text(isAsset ? "\(Fmt.krw(target))원" : "월 \(Fmt.krw(target))원")
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                     .foregroundStyle(Theme.accent)
@@ -281,7 +281,8 @@ struct JourneyGoalsSection: View {
                         AxisValueLabel(format: .dateTime.day())
                     }
                 } else if mdl.spanDays <= 550 {
-                    AxisMarks(values: .stride(by: .month, count: 2)) { _ in
+                    // 석 달 간격 — 달 이름이 긴 언어(러시아어 등)에서도 눈금 글자가 서로 겹치지 않게.
+                    AxisMarks(values: .stride(by: .month, count: 3)) { _ in
                         AxisGridLine().foregroundStyle(Theme.hairline)
                         AxisValueLabel(format: .dateTime.month(.abbreviated))
                     }
@@ -329,18 +330,18 @@ struct JourneyGoalsSection: View {
         // 선택한 구간 — 저장된 라벨이 목록에 없으면 가장 가까운 구간으로.
         let sel = horizons.first { $0.label == milestoneHorizonLabel } ?? horizons.first ?? (String(localized: "은퇴"), settings.monthsToRetire ?? 0)
         return VStack(alignment: .leading, spacing: 14) {
-            HStack {
+            // 제목 옆에 안 들어가면(긴 언어) 선택기를 제목 아래 줄로 내린다.
+            AdaptiveRow {
                 Text("기간별 목표")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 if settings.fireGoalType == .both {
                     Picker("", selection: $milestoneMetric) {
                         Text("자산").tag(FireGoalType.assets)
                         Text("패시브 인컴").tag(FireGoalType.income)
                     }
                     .pickerStyle(.segmented)
-                    .fixedSize()
                 }
             }
 

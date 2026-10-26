@@ -67,6 +67,19 @@ struct TrendView: View {
         var grossAssets: Double { netWorth + debt }
     }
 
+    private var periodLabel: some View {
+        Text("기준")
+            .font(.caption)
+            .foregroundStyle(Theme.textSecond)
+    }
+
+    private var periodPicker: some View {
+        Picker("", selection: $period) {
+            ForEach(availablePeriods) { Text(LocalizedStringKey("\($0.rawValue)간")).tag($0) }
+        }
+        .pickerStyle(.segmented)
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -105,16 +118,16 @@ struct TrendView: View {
                     }
 
                     if mode != .netWorth, availablePeriods.count > 1 {
-                        HStack {
-                            Text("기준")
-                                .font(.caption)
-                                .foregroundStyle(Theme.textSecond)
-                            Picker("", selection: $period) {
-                                ForEach(availablePeriods) { Text(LocalizedStringKey("\($0.rawValue)간")).tag($0) }
+                        ViewThatFits(in: .horizontal) {
+                            HStack {
+                                periodLabel
+                                periodPicker.fixedSize()
+                                Spacer()
                             }
-                            .pickerStyle(.segmented)
-                            .fixedSize()
-                            Spacer()
+                            VStack(alignment: .leading, spacing: 6) {
+                                periodLabel
+                                periodPicker
+                            }
                         }
                     }
                 }
@@ -542,11 +555,11 @@ struct TrendView: View {
             .map { (cls: $0.key, items: $0.value, total: $0.value.reduce(0) { $0 + $1.net }) }
             .sorted { abs($0.total) > abs($1.total) }
         return VStack(alignment: .leading, spacing: 14) {
-            HStack {
+            AdaptiveRow {
                 Text("바뀐 것")
                     .font(.headline)
                     .foregroundStyle(Theme.textPrimary)
-                Spacer()
+            } trailing: {
                 Text(periodLabelFull(date))
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)

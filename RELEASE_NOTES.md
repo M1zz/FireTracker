@@ -1,5 +1,158 @@
 # 릴리즈 노트
 
+## 1.2.2
+
+### 앱스토어 (한국어)
+
+캡처로 가져올 때 맞출 종목을 직접 골라요
+금액 옆에 원이 바로 붙어 읽기 쉬워요
+자산 목록이 더 깔끔해졌어요
+
+### App Store (English)
+
+Match each holding when importing
+Currency now sits right by the amount
+The asset list looks cleaner
+
+### App Store (en-GB)
+
+Choose each holding when importing
+Currency now sits right by the amount
+The asset list is tidier
+
+### App Store (ja)
+
+スクショ取り込み時に対応する銘柄を選べます
+金額のすぐ隣に通貨が表示されます
+資産リストがすっきりしました
+
+### App Store (zh-Hans)
+
+导入截图时可自行选择对应的持仓
+金额旁边直接显示货币单位
+资产列表更清爽了
+
+### App Store (zh-Hant)
+
+匯入截圖時可自行選擇對應的持股
+金額旁直接顯示貨幣單位
+資產列表更清爽了
+
+### App Store (Spanish)
+
+Elige el activo al importar una captura
+La moneda va junto al importe
+La lista de activos se ve más limpia
+
+### App Store (German)
+
+Beim Bildimport die Position wählen
+Die Währung steht direkt beim Betrag
+Die Vermögensliste wirkt aufgeräumter
+
+### App Store (French)
+
+Import par capture : choisissez la ligne
+La devise est collée au montant
+La liste des actifs est plus claire
+
+### App Store (Italian)
+
+Scegli il titolo quando importi
+La valuta ora è accanto all’importo
+L’elenco del patrimonio è più ordinato
+
+### App Store (pt-BR)
+
+Escolha o ativo ao importar uma captura
+A moeda aparece colada ao valor
+A lista de ativos ficou mais limpa
+
+### App Store (Russian)
+
+При импорте скриншота выбирайте актив
+Валюта стоит сразу рядом с суммой
+Список активов стал аккуратнее
+
+### App Store (Thai)
+
+เลือกสินทรัพย์ได้เองตอนนำเข้าภาพ
+หน่วยเงินอยู่ติดกับจำนวนเงิน
+รายการสินทรัพย์ดูสะอาดตาขึ้น
+
+### App Store (Vietnamese)
+
+Tự chọn mã khớp khi nhập từ ảnh chụp
+Đơn vị tiền nằm ngay cạnh số tiền
+Danh sách tài sản gọn gàng hơn
+
+### App Store (Czech)
+
+Při importu snímku si vyberete položku
+Měna je hned vedle částky
+Seznam majetku je přehlednější
+
+### App Store (Danish)
+
+Vælg selv beholdning ved import
+Valutaen står lige ved beløbet
+Listen over aktiver er mere overskuelig
+
+### App Store (Greek)
+
+Επιλέξτε θέση κατά την εισαγωγή
+Το νόμισμα είναι δίπλα στο ποσό
+Η λίστα περιουσίας είναι πιο καθαρή
+
+### App Store (Finnish)
+
+Valitse omistus kuvaa tuodessa
+Valuutta näkyy heti summan vieressä
+Varojen lista on selkeämpi
+
+### App Store (Indonesian)
+
+Pilih aset sendiri saat impor gambar
+Mata uang kini menempel di jumlahnya
+Daftar aset terlihat lebih rapi
+
+### App Store (Norwegian Bokmål)
+
+Velg selv beholdning ved import
+Valutaen står rett ved beløpet
+Listen over eiendeler er ryddigere
+
+### App Store (Dutch)
+
+Kies zelf de positie bij importeren
+De valuta staat direct naast het bedrag
+Je bezittingen staan overzichtelijker
+
+### App Store (Polish)
+
+Wybierz pozycję przy imporcie zrzutu
+Waluta stoi tuż obok kwoty
+Lista aktywów jest bardziej przejrzysta
+
+### App Store (Swedish)
+
+Välj innehav när du importerar bild
+Valutan står direkt vid beloppet
+Listan över tillgångar är tydligare
+
+### App Store (Turkish)
+
+Ekran görüntüsü aktarırken varlığı seçin
+Para birimi tutarın hemen yanında
+Varlık listesi daha sade
+
+### 상세 변경 사항 (스토어 노출 안 함)
+
+- 캡처로 가져오기: 줄마다 기존 종목 매칭 또는 새 종목을 직접 선택 (7e7925d)
+- 금액 입력칸: '원' 이 숫자 옆에 붙게 fixedSize (캡처 가져오기 · 목표 · 시작하기 · 미리보기) (57be70c)
+- 자산 목록: 섹션과 중복되는 종류 색 점·이름 제거, 매도 원칙 카드·패시브 인컴 줄 정리 (146ec79, 3bd0376)
+- 긴 언어에서 줄이 쪼개지지 않게 넘치면 다음 줄로 (a20e043)
+
 ## 1.2.1
 
 ### 앱스토어 (한국어)

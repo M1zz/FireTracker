@@ -854,11 +854,9 @@ struct AssetsView: View {
         .cardStyle()
     }
 
+    // 종류 색 점·종류 이름은 섹션 머리가 이미 말해 주므로 줄에는 두지 않는다.
     private func row(_ asset: Asset) -> some View {
         HStack(spacing: 10) {
-            Circle()
-                .fill(Color(hexCode: asset.assetClass.colorHex))
-                .frame(width: 8, height: 8)
             VStack(alignment: .leading, spacing: 3) {
                 Text(asset.name.isEmpty ? asset.displayClassLabel : asset.name)
                     .font(.subheadline.weight(.semibold))
@@ -917,13 +915,10 @@ struct AssetsView: View {
     }
 
     @ViewBuilder private func rowTags(_ asset: Asset) -> some View {
+        // 부동산은 거주·임대 같은 쓰임이 종류와 다른 정보라 남긴다.
         if asset.assetClass == .realEstate {
             Text(asset.realEstateUse.label)
                 .foregroundStyle(Color(hexCode: asset.assetClass.colorHex))
-                .fixedSize()
-        } else {
-            Text(asset.displayClassLabel)
-                .foregroundStyle(Theme.textSecond)
                 .fixedSize()
         }
         if asset.liquidity == .locked {

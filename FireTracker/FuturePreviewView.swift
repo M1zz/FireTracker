@@ -583,9 +583,11 @@ struct FutureMoneyRow: View {
                           value: $value, format: .number.grouping(.automatic))
                     .keyboardType(.numberPad)
                     .font(.system(.body, design: .rounded).weight(.semibold))
+                    .fixedSize()   // '원' 이 금액 바로 옆에 붙게
                 Text("원")
                     .font(.body)
                     .foregroundStyle(Theme.textSecond)
+                Spacer(minLength: 0)
             }
             if value > 0 {
                 Text("= \(Fmt.krw(value))원")

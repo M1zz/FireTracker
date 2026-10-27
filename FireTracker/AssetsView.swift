@@ -3088,10 +3088,13 @@ struct ScreenshotImportView: View {
                     .submitLabel(.search)
                     .onSubmit { Task { await lookup([row.wrappedValue], force: true) } }
                 HStack(spacing: 6) {
+                    // 입력칸이 줄 끝까지 늘어나면 '원' 이 금액과 멀어지므로 숫자 폭에 맞춘다.
                     TextField("평가액", text: row.amountText.commaGrouped)
                         .keyboardType(.numberPad)
                         .font(.system(.subheadline, design: .rounded))
+                        .fixedSize()
                     Text("원").foregroundStyle(Theme.textSecond)
+                    Spacer(minLength: 0)
                 }
                 if let g = r.gain, let p = r.gainPct {
                     Text("손익 \(g >= 0 ? "+" : "−")\(Fmt.krw(abs(g)))원 (\(Fmt.trimNumber(p))%)")

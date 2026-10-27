@@ -285,7 +285,9 @@ struct QuickStartView: View {
                 TextField(hint, text: text.commaGrouped)
                     .keyboardType(.numberPad)
                     .font(.system(.body, design: .rounded))
+                    .fixedSize()   // '원' 이 금액 바로 옆에 붙게
                 Text("원").foregroundStyle(Theme.textSecond)
+                Spacer(minLength: 0)
             }
             .inputBox()
         }

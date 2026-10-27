@@ -1750,7 +1750,9 @@ struct WhatIfView: View {
                     TextField("예: 10,000,000", text: $amountText.commaGrouped)
                         .keyboardType(.numberPad)
                         .font(.system(.body, design: .rounded))
+                        .fixedSize()   // '원' 이 금액 바로 옆에 붙게
                     Text("원").foregroundStyle(Theme.textSecond)
+                    Spacer(minLength: 0)
                     Image(systemName: "pencil")
                         .font(.caption)
                         .foregroundStyle(Theme.accent)

@@ -2871,18 +2871,27 @@ struct ScreenshotImportView: View {
     @State private var imageCount = 0
     // 캡처에 없던 기존 종목 중 '팔았다'고 고른 것.
     @State private var soldKeys: Set<UUID> = []
+    // 사람이 직접 고른 매핑 — 줄 → 기존 종목, 또는 '새 종목'으로 못 박은 줄. 자동 매칭보다 먼저.
+    @State private var manualMatch: [UUID: UUID] = [:]
+    @State private var forcedNew: Set<UUID> = []
 
     // 맞춰 볼 기존 종목 — 주식·펀드·코인.
     private var holdings: [Asset] {
         assets.filter { $0.assetClass == .stocks || $0.assetClass == .fund || $0.assetClass == .crypto }
     }
 
-    /// 줄마다 맞는 기존 종목. 이름 앞부분이 같고(잘린 이름 대비), 같은 이름이 여럿이면
-    /// 평가액이 가장 가까운 것. 한 종목은 한 줄에만 붙는다.
+    /// 줄마다 맞는 기존 종목. 사람이 고른 매핑이 먼저이고, 나머지는 이름 앞부분이 같고
+    /// (잘린 이름 대비), 같은 이름이 여럿이면 평가액이 가장 가까운 것. 한 종목은 한 줄에만 붙는다.
     private var matches: [UUID: Asset] {
         var out: [UUID: Asset] = [:]
         var used: Set<UUID> = []
         for row in rows where row.include {
+            if let key = manualMatch[row.id], let a = holdings.first(where: { $0.key == key }) {
+                out[row.id] = a
+                used.insert(a.key)
+            }
+        }
+        for row in rows where row.include && manualMatch[row.id] == nil && !forcedNew.contains(row.id) {
             let stem = HoldingsOCR.normalized(row.name)
             guard stem.count >= 2 else { continue }
             let pick = holdings
@@ -3094,16 +3103,8 @@ struct ScreenshotImportView: View {
                         .font(.caption)
                         .foregroundStyle(g >= 0 ? Theme.positive : Theme.negative)
                 }
-                // 무엇을 할지 — 기존 종목 갱신인지, 새 종목인지.
-                if let match {
-                    Text("‘\(match.name)’ 갱신 · \(Fmt.krw(match.amount)) → \(Fmt.krw(r.amount))원")
-                        .font(.caption)
-                        .foregroundStyle(Theme.textSecond)
-                } else {
-                    Text("새 종목으로 추가")
-                        .font(.caption)
-                        .foregroundStyle(Theme.accent)
-                }
+                // 무엇을 할지 — 기존 종목 갱신인지, 새 종목인지. 눌러서 직접 맞출 수 있다.
+                matchMenu(r, match: match)
                 if needsSymbol(r, match: match) { symbolLine(r) }
                 if r.estimated {
                     Label("평가액이 가려져 손익·수익률로 계산했어요. 확인해 주세요.", systemImage: "exclamationmark.triangle")
@@ -3118,6 +3119,55 @@ struct ScreenshotImportView: View {
             }
             .opacity(r.include ? 1 : 0.4)
         }
+    }
+
+    /// 이 줄을 어느 기존 종목에 맞출지(또는 새 종목으로 넣을지) 사람이 고르는 메뉴.
+    private func matchMenu(_ r: ParsedHolding, match: Asset?) -> some View {
+        Menu {
+            Button("새 종목으로 추가") { setMatch(r, to: nil) }
+            Section("기존 종목 갱신") {
+                ForEach(holdings) { a in
+                    Button {
+                        setMatch(r, to: a)
+                    } label: {
+                        if match?.key == a.key {
+                            Label("\(a.name) · \(Fmt.krw(a.amount))원", systemImage: "checkmark")
+                        } else {
+                            Text("\(a.name) · \(Fmt.krw(a.amount))원")
+                        }
+                    }
+                }
+            }
+        } label: {
+            HStack(spacing: 4) {
+                if let match {
+                    Text("‘\(match.name)’ 갱신 · \(Fmt.krw(match.amount)) → \(Fmt.krw(r.amount))원")
+                        .foregroundStyle(Theme.textSecond)
+                } else {
+                    Text("새 종목으로 추가")
+                        .foregroundStyle(Theme.accent)
+                }
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.textSecond)
+            }
+            .font(.caption)
+            .multilineTextAlignment(.leading)
+        }
+    }
+
+    /// 매핑을 바꾼다. 한 종목은 한 줄에만 — 다른 줄이 그 종목을 잡고 있었으면 풀어 준다.
+    private func setMatch(_ r: ParsedHolding, to asset: Asset?) {
+        if let asset {
+            for (id, key) in manualMatch where key == asset.key { manualMatch[id] = nil }
+            manualMatch[r.id] = asset.key
+            forcedNew.remove(r.id)
+        } else {
+            manualMatch[r.id] = nil
+            forcedNew.insert(r.id)
+        }
+        // 새 종목이 됐거나 코드 없는 종목에 붙었으면 종목코드를 찾아 둔다.
+        Task { await lookup([r]) }
     }
 
     private func process(_ items: [PhotosPickerItem]) async {

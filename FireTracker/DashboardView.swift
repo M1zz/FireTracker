@@ -108,6 +108,7 @@ struct DashboardView: View {
 
     @State private var showingAddAsset = false
     @State private var showingQuickStart = false
+    @State private var showingSellSignals = false
     // 자주 안 보는 카드(필요 자금·지표·빚 vs 투자)는 접어 둔다. 펼친 상태는 기억.
     @AppStorage("dashboard.showMore") private var showMore = false
     @State private var totalMode: AssetTotalMode = .gross
@@ -414,6 +415,7 @@ struct DashboardView: View {
                     .scrollIndicators(.hidden)
                 }
             }
+            .navigationDestination(isPresented: $showingSellSignals) { SellSignalsView() }
             .background(Theme.bg.ignoresSafeArea())
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
@@ -914,7 +916,7 @@ struct DashboardView: View {
 
     // --- 매도 원칙 ---
     // 고점에서 빠지면 팔기 · 목표가에 팔기. 알림만으론 놓치기 쉬워 첫 화면에도 띄운다.
-    private var sellCard: some View { SellWatchCard() }
+    private var sellCard: some View { SellWatchCard(showingAll: $showingSellSignals) }
 
     // 첫 화면의 묶음 머리 — 이 묶음이 무엇에 답하는지 한 줄로 밝힌다.
     private func section<Content: View>(_ title: String, _ purpose: String,

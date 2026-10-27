@@ -31,6 +31,7 @@ struct AssetsView: View {
     @State private var pendingDelete: [Asset] = []
     @State private var showingNew = false
     @State private var showingImport = false
+    @State private var showingSellSignals = false
     @State private var showingBreakdown = false
     @State private var totalMode: AssetTotalMode = .gross
     // 자산 구성 도넛에서 탭으로 선택된 조각(각도값).
@@ -69,7 +70,6 @@ struct AssetsView: View {
         let id: String
         let name: String
         let kind: String
-        let symbol: String      // SF Symbol
         let monthly: Double
         let note: String        // 배당률·근거 설명
     }
@@ -91,7 +91,6 @@ struct AssetsView: View {
                     id: a.key.uuidString,
                     name: a.name.isEmpty ? a.displayClassLabel : a.name,
                     kind: a.incomeKind == .none ? String(localized: "현금흐름") : a.incomeKind.label,
-                    symbol: incomeIcon(a.incomeKind),
                     monthly: a.effectiveMonthlyIncome,
                     note: note
                 )
@@ -108,17 +107,6 @@ struct AssetsView: View {
             .sorted { $0.monthly > $1.monthly }
     }
 
-    private func incomeIcon(_ kind: IncomeKind) -> String {
-        switch kind {
-        case .dividend: return "chart.pie.fill"
-        case .rent:     return "house.fill"
-        case .interest: return "banknote.fill"
-        case .pension:  return "figure.walk"
-        case .staking:  return "bitcoinsign.circle.fill"
-        case .other, .none: return "wonsign.circle.fill"
-        }
-    }
-
     var body: some View {
         NavigationStack {
             Group {
@@ -128,6 +116,7 @@ struct AssetsView: View {
                     catalogList
                 }
             }
+            .navigationDestination(isPresented: $showingSellSignals) { SellSignalsView() }
             .background(Theme.bg.ignoresSafeArea())
             // 자산 탭에 들어올 때마다 최신화(15분 쓰로틀로 과도한 호출 방지).
             .task {
@@ -233,7 +222,7 @@ struct AssetsView: View {
             // 1.5) 매도 원칙 — 지금 눈여겨볼 종목이 있는지 한 줄로.
             if SellWatchCard.hasContent(assets) {
                 Section {
-                    SellWatchCard()
+                    SellWatchCard(showingAll: $showingSellSignals)
                         .listRowInsets(EdgeInsets())
                         .listRowBackground(Color.clear)
                 }
@@ -436,34 +425,24 @@ struct AssetsView: View {
 
             Divider().overlay(Theme.hairline)
 
-            // 자산별 한 줄 — 큰 금액부터.
+            // 자산별 — 큰 금액부터. 긴 ETF 이름이 좁은 칸에서 여러 줄로 쪼개지지 않게
+            // 이름은 카드 폭 전체를 쓰고, 그 아래 한 줄에 방식과 월 금액을 둔다.
+            // (연 금액은 맨 아래 '연 합계' 가 대신한다.)
             ForEach(incomeLines) { line in
-                HStack(spacing: 10) {
-                    Image(systemName: line.symbol)
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.accent)
-                        .frame(width: 22)
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(line.name)
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Theme.textPrimary)
-                            .fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(line.name)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.textPrimary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    AdaptiveRow {
                         Text(line.note.isEmpty ? line.kind : "\(line.kind) · \(line.note)")
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    Spacer()
-                    VStack(alignment: .trailing, spacing: 1) {
+                    } trailing: {
                         Text("월 \(Fmt.krw(line.monthly))원")
                             .font(.system(.subheadline, design: .rounded).weight(.semibold))
                             .foregroundStyle(Theme.positive)
-                        Text("연 \(Fmt.krw(line.monthly * 12))원")
-                            .font(.caption2)
-                            .foregroundStyle(Theme.textSecond)
                     }
-                    .fixedSize()
-                    .layoutPriority(1)
                 }
             }
 
@@ -3690,6 +3669,8 @@ struct SellActionRow: View {
 // 눈여겨볼 종목이 있으면 그 종목을, 없으면 "지금은 없어요" 를 한 줄로 먼저 말한다.
 struct SellWatchCard: View {
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
+    /// 눌렀을 때 '매도 원칙' 전체 화면을 연다. 이동은 카드를 담은 화면이 맡는다(아래 주석).
+    @Binding var showingAll: Bool
 
     private var watched: [(Asset, SellWatch.Status)] {
         assets.compactMap { a in SellWatch.status(a).map { (a, $0) } }
@@ -3713,7 +3694,10 @@ struct SellWatchCard: View {
     var body: some View {
         let list = watched
         let alerts = list.filter { $0.1.signal != .holding }
-        NavigationLink { SellSignalsView() } label: {
+        // NavigationLink 는 List 안에서 오른쪽에 화살표를 하나 더 붙여 카드 폭을 줄인다.
+        // 카드에 이미 "전체 보기 ›" 가 있으니 버튼으로 두고, navigationDestination 은
+        // List(지연 컨테이너) 밖 — 카드를 담은 화면의 NavigationStack 쪽에 둔다.
+        Button { showingAll = true } label: {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 10) {
                     Image(systemName: alerts.isEmpty ? "checkmark.shield.fill" : "exclamationmark.triangle.fill")
@@ -3763,6 +3747,7 @@ struct SellWatchCard: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }

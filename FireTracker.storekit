@@ -23,6 +23,26 @@
       "productID" : "com.devkoan.FireTracker.pro",
       "referenceName" : "FireTracker Pro (Lifetime)",
       "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "9900",
+      "familyShareable" : false,
+      "internalID" : "6740000002",
+      "localizations" : [
+        {
+          "description" : "Give FireTracker Pro to someone else with a gift code.",
+          "displayName" : "Gift FireTracker Pro",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "다른 사람에게 퇴사각 프로를 선물해요. 코드를 보내 주세요.",
+          "displayName" : "퇴사각 프로 선물",
+          "locale" : "ko"
+        }
+      ],
+      "productID" : "com.devkoan.FireTracker.gift.pro",
+      "referenceName" : "Gift FireTracker Pro",
+      "type" : "Consumable"
     }
   ],
   "settings" : {

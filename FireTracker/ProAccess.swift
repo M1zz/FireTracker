@@ -110,6 +110,10 @@ enum ProAccess {
     /// 판매 상품 — 비소모성 1회 구매.
     static let productID = "com.devkoan.FireTracker.pro"
 
+    /// 프로 선물 — 소모성 상품. 받는 사람은 `productID` 를 산 것과 같아진다(`FireTrackerSpec.monetization`).
+    /// ⚠️ `productIDs` · `entitlementIDs` 에 넣지 않는다. 넣으면 선물을 산 사람 자신이 프로가 된다.
+    static let giftProductID = "com.devkoan.FireTracker.gift.pro"
+
     /// 유료화 전 마지막 빌드 번호(CFBundleVersion). 이 빌드 이하로 처음 내려받은
     /// 사람은 원래 무료로 쓰던 기능을 그대로 쓴다(그랜드파더링).
     /// 유료화가 들어간 첫 출시 빌드는 반드시 이 값보다 커야 한다.

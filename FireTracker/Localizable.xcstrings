@@ -31480,6 +31480,155 @@
         }
       }
     },
+    "가족이나 친구에게 퇴사각 프로를 선물할 수 있어요. 받은 선물 코드도 설정에서 넣어요." : {
+      "comment" : "Roadmap item detail: gift Pro to someone",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Darujte FireTracker Pro rodině nebo přátelům. Kód dárku, který jste dostali, zadáte v Nastavení."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giv FireTracker Pro til familie eller venner. En gavekode, du har fået, indtaster du i Indstillinger."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verschenke FireTracker Pro an Familie oder Freunde. Einen erhaltenen Geschenkcode gibst du in den Einstellungen ein."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Χαρίστε το FireTracker Pro σε οικογένεια ή φίλους. Τον κωδικό δώρου που λάβατε τον βάζετε στις Ρυθμίσεις."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Give FireTracker Pro to family or friends. You can enter a gift code you received in Settings."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Give FireTracker Pro to family or friends. You can enter a gift code you've received in Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regala FireTracker Pro a tu familia o amigos. Si recibes un código de regalo, introdúcelo en Ajustes."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anna FireTracker Pro lahjaksi perheelle tai ystäville. Saamasi lahjakoodin syötät asetuksissa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offrez FireTracker Pro à vos proches. Saisissez dans les Réglages le code cadeau que vous avez reçu."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hadiahkan FireTracker Pro untuk keluarga atau teman. Kode hadiah yang Anda terima dimasukkan di Pengaturan."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regala FireTracker Pro a familiari o amici. Il codice regalo ricevuto si inserisce in Impostazioni."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "家族や友だちにFireTracker Proを贈れます。もらったギフトコードは設定で入力できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "가족이나 친구에게 퇴사각 프로를 선물할 수 있어요. 받은 선물 코드도 설정에서 넣어요."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gi FireTracker Pro til familie eller venner. En gavekode du har fått, skriver du inn i Innstillinger."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geef FireTracker Pro cadeau aan familie of vrienden. Een ontvangen cadeaucode vul je in bij Instellingen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podaruj FireTracker Pro rodzinie lub znajomym. Otrzymany kod prezentu wpiszesz w Ustawieniach."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dê o FireTracker Pro de presente para família ou amigos. O código de presente que você recebeu é inserido em Ajustes."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подарите FireTracker Pro близким или друзьям. Полученный код подарка вводится в Настройках."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ge FireTracker Pro i present till familj eller vänner. En presentkod du har fått anger du i Inställningar."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "มอบ FireTracker Pro ให้ครอบครัวหรือเพื่อนได้ ส่วนรหัสของขวัญที่ได้รับ ใส่ได้ในการตั้งค่า"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FireTracker Pro'yu ailene veya arkadaşlarına hediye et. Aldığın hediye kodunu Ayarlar'dan girebilirsin."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tặng FireTracker Pro cho gia đình hoặc bạn bè. Mã quà tặng bạn nhận được có thể nhập trong Cài đặt."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可以把 FireTracker Pro 送给家人或朋友。收到的礼物兑换码可在设置中输入。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可以把 FireTracker Pro 送給家人或朋友。收到的禮物兌換碼可在設定中輸入。"
+          }
+        }
+      }
+    },
     "각 기록 시점에 ‘내 목표’에 적어 둔 월급·지출로 계산했어요. 실제와 다르면 기록을 눌러 수입·지출을 고쳐 주세요." : {
       "comment" : "A description of how the savings rate is calculated.",
       "isCommentAutoGenerated" : true,
@@ -197628,6 +197777,155 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "FireTracker Pro · 獻給早期使用者的感謝"
+          }
+        }
+      }
+    },
+    "퇴사각 프로 선물하기" : {
+      "comment" : "Roadmap item: gift Pro to someone",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Darovat FireTracker Pro"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giv FireTracker Pro i gave"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FireTracker Pro verschenken"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Δώρο FireTracker Pro"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gift FireTracker Pro"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gift FireTracker Pro"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regalar FireTracker Pro"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anna FireTracker Pro lahjaksi"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offrir FireTracker Pro"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hadiahkan FireTracker Pro"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regala FireTracker Pro"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FireTracker Proをプレゼント"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "퇴사각 프로 선물하기"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gi FireTracker Pro i gave"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FireTracker Pro cadeau doen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podaruj FireTracker Pro"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentear FireTracker Pro"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подарить FireTracker Pro"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ge bort FireTracker Pro"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "มอบ FireTracker Pro เป็นของขวัญ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FireTracker Pro hediye et"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tặng FireTracker Pro"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "赠送 FireTracker Pro"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "贈送 FireTracker Pro"
           }
         }
       }

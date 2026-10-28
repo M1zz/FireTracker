@@ -18,7 +18,14 @@ enum FireTrackerSpec: LeeoAppSpec {
     static let monetization = LeeoMonetization.freemium(
         LeeoPurchaseConfig(
             productIDs: ["com.devkoan.FireTracker.pro"],
-            gate: ProFeature.gatePolicy
+            gate: ProFeature.gatePolicy,
+            // 프로 선물하기. 보내는 사람은 소모성 선물 상품을 사고, 받는 사람은 퇴사각 프로를 산 것과 같아진다.
+            // 선물 기록은 피드백과 같은 허브 컨테이너의 공개 DB 에 둔다. entitlements 에 이미 있다.
+            gift: LeeoGiftConfig(
+                productID: ProAccess.giftProductID,
+                grantsProductID: ProAccess.productID,
+                containerIdentifier: "iCloud.com.Ysoup.FeedbackHub"
+            )
         )
     )
 

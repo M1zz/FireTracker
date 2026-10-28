@@ -59,6 +59,12 @@ struct SettingsView: View {
             // 지금은 구매형 앱이라 '퇴사각 프로' 칸을 숨긴다. 개발자 모드에선 시험용으로 보인다.
             if ProAccess.paywallEnabled || isMasterMode {
                 proSection
+                // 선물도 같은 조건 — 페이월이 꺼져 있으면 모두가 이미 프로라 선물이 열어 줄 것이 없다.
+                // 그런 상품을 팔지 않도록 일반 사용자에게는 숨기고, 개발자 모드에서만 시험한다.
+                // paywallEnabled 를 켜면 프로 칸과 함께 저절로 나타난다.
+                if let gift = pro.gift {
+                    GiftRows(gift: gift, hasPro: pro.hasPro)
+                }
             }
             syncSection
             displaySection
@@ -531,6 +537,50 @@ struct SettingsView: View {
         }
         target.dataGoKey = dataGoKey
         context.saveReporting(String(localized: "API 키"))
+    }
+}
+
+// MARK: - 프로 선물
+
+/// 프로 선물 보내기 · 선물 코드 넣기. '퇴사각 프로' 칸 바로 아래에 선다(보이는 조건도 같다).
+/// 받는 사람은 퇴사각 프로를 산 것과 같아진다(`FireTrackerSpec.monetization` 의 `gift`).
+///
+/// ⚠️ 상품이 App Store 에서 와야 줄이 선다(`isAvailable`) — 상품을 만들기 전에 빌드가 나가도 눌러도 안 되는 줄은 없다.
+///    단, 이미 결제했거나 주고받은 선물이 있는 사람에게는 늘 보인다(코드를 다시 보거나 문의까지 갈 길이 있어야 한다).
+/// ⚠️ 문구는 LeeoKit 카탈로그(`LeeoGiftText`)에 24개 언어로 이미 있다.
+/// ⚠️ 선물 엔진은 따로 관찰한다 — 상품은 앱이 뜬 뒤에 오는데 그 변화가 `LeeoStore` 로 전해지지 않는다.
+private struct GiftRows: View {
+    @ObservedObject var gift: LeeoGiftStore
+    let hasPro: Bool
+    @State private var showSupport = false
+
+    var body: some View {
+        if gift.isAvailable || gift.pendingCount > 0 || !gift.sentGifts.isEmpty || gift.redeemed != nil {
+            Section {
+                NavigationLink {
+                    // 선물이 안 되면 결제 번호·코드를 붙여 문의하게 한다 — 막힌 사람을 놓치지 않게.
+                    LeeoGiftView<FireTrackerSpec>(gift: gift, showsRedeemLink: false,
+                                                  onContactSupport: { showSupport = true })
+                } label: {
+                    Label(LeeoGiftText.sendEntry, systemImage: "gift.fill")
+                }
+                // 이미 프로인 사람은 받을 것이 없다 — 받은 적이 있으면 그 기록을 볼 수 있게만 남긴다.
+                if !hasPro || gift.redeemed != nil {
+                    NavigationLink {
+                        LeeoGiftRedeemView<FireTrackerSpec>(gift: gift,
+                                                            onContactSupport: { showSupport = true })
+                    } label: {
+                        Label(LeeoGiftText.redeemEntry, systemImage: "giftcard")
+                    }
+                }
+            }
+            .sheet(isPresented: $showSupport) {
+                NavigationStack {
+                    LeeoFeedbackView<FireTrackerSpec>(initialType: .bug, extraInfo: gift.supportLines,
+                                                      initialCategory: .purchase)
+                }
+            }
+        }
     }
 }
 

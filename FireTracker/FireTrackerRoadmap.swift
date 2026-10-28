@@ -18,6 +18,9 @@ import LeeoKit
 extension FireTrackerSpec {
     static var roadmap: [LeeoRoadmapItem] {[
         // MARK: 다음에 만들어요
+        .init(id: "gift", status: .building,
+              title: NSLocalizedString("퇴사각 프로 선물하기", comment: "Roadmap item: gift Pro to someone"),
+              detail: NSLocalizedString("가족이나 친구에게 퇴사각 프로를 선물할 수 있어요. 받은 선물 코드도 설정에서 넣어요.", comment: "Roadmap item detail: gift Pro to someone")),
         .init(id: "a11y.voiceover", status: .planned,
               title: NSLocalizedString("VoiceOver로 더 편하게", comment: "Roadmap item: better VoiceOver support"),
               detail: NSLocalizedString("화면 읽기 기능이 단추와 숫자를 빠짐없이, 알맞은 순서로 읽어 줘요.", comment: "Roadmap item detail: better VoiceOver support")),

@@ -1,5 +1,199 @@
 # 릴리즈 노트
 
+## 1.2.3
+
+### 앱스토어 (한국어)
+
+고마울 때 개발자에게 작은 팁을 보낼 수 있어요
+친구에게 Pro를 선물할 수 있어요
+화면 읽기와 음성 명령으로도 편하게 쓸 수 있어요
+다크 모드와 고대비 화면에서도 잘 보여요
+색을 구별하기 어려워도 알아보기 쉬워졌어요
+
+### App Store (English)
+
+Thank the developer with a small tip
+You can now gift Pro to a friend
+Better with VoiceOver and Voice Control
+Clearer in Dark Mode and high contrast
+Easier to use if you're color-blind
+
+### App Store (en-GB)
+
+Thank the developer with a small tip
+You can now gift Pro to a friend
+Better with VoiceOver and Voice Control
+Clearer in Dark Mode and high contrast
+Easier to use if you're colour-blind
+
+### App Store (ja)
+
+開発者にささやかなチップを送れます
+友だちにProをプレゼントできます
+VoiceOverと音声コントロールで使いやすくなりました
+ダークモードや高コントラストでも見やすくなりました
+色の見分けが苦手でもわかりやすくなりました
+
+### App Store (zh-Hans)
+
+可以给开发者送上一点小费表达感谢
+可以把 Pro 送给朋友
+更好地支持旁白和语音控制
+深色模式和高对比度下也清晰易读
+难以分辨颜色时也更容易看清
+
+### App Store (zh-Hant)
+
+可以給開發者一點小費表達謝意
+可以把 Pro 送給朋友
+更好地支援旁白和語音控制
+深色模式和高對比下也清楚易讀
+難以分辨顏色時也更容易看清
+
+### App Store (Spanish)
+
+Deja una propina al desarrollador
+Regala Pro a un amigo
+Mejor con VoiceOver y Control por voz
+Más legible en modo oscuro y contraste
+Más fácil si confundes los colores
+
+### App Store (German)
+
+Sag Danke mit einem kleinen Trinkgeld
+Verschenke Pro an Freunde
+Besser mit VoiceOver und Sprachbefehlen
+Klarer bei Dunkelmodus und Kontrast
+Einfacher bei Farbsehschwäche
+
+### App Store (French)
+
+Offrez un pourboire au développeur
+Offrez Pro à un ami
+Mieux avec VoiceOver et Commande vocale
+Lisible en mode sombre et contrasté
+Plus simple pour les daltoniens
+
+### App Store (Italian)
+
+Offri una mancia allo sviluppatore
+Regala Pro a un amico
+Meglio con VoiceOver e Controllo vocale
+Più chiaro con tema scuro e contrasto
+Più facile se distingui male i colori
+
+### App Store (pt-BR)
+
+Mande uma gorjeta para o desenvolvedor
+Presenteie um amigo com o Pro
+Melhor com VoiceOver e Controle por Voz
+Legível no modo escuro e alto contraste
+Mais fácil para quem confunde cores
+
+### App Store (Russian)
+
+Можно отправить разработчику чаевые
+Pro теперь можно подарить другу
+Поддержка VoiceOver и голосовых команд
+Тёмная тема и контраст стали удобнее
+Понятнее, если трудно различать цвета
+
+### App Store (Thai)
+
+ส่งทิปเล็กๆ ให้นักพัฒนาเพื่อขอบคุณได้
+มอบ Pro เป็นของขวัญให้เพื่อนได้
+ใช้ VoiceOver และสั่งด้วยเสียงได้ดีขึ้น
+อ่านง่ายในโหมดมืดและคอนทราสต์สูง
+แยกแยะง่ายขึ้นแม้มองสีได้ไม่ชัด
+
+### App Store (Vietnamese)
+
+Gửi nhà phát triển chút tiền tip cảm ơn
+Tặng Pro cho bạn bè
+Dùng tốt hơn với VoiceOver và Khẩu lệnh
+Dễ đọc ở chế độ tối và tương phản cao
+Dễ nhận biết hơn nếu khó phân biệt màu
+
+### App Store (Czech)
+
+Pošlete vývojáři malé spropitné
+Darujte Pro kamarádovi
+Lepší s VoiceOverem a Ovládáním hlasem
+Čitelnější v tmavém režimu a kontrastu
+Snazší, když špatně rozlišujete barvy
+
+### App Store (Danish)
+
+Giv udvikleren lidt drikkepenge som tak
+Giv Pro i gave til en ven
+Bedre med VoiceOver og Stemmestyring
+Tydelig i mørk tilstand og høj kontrast
+Lettere, hvis du har svært ved farver
+
+### App Store (Greek)
+
+Στείλτε φιλοδώρημα στον δημιουργό
+Χαρίστε το Pro σε έναν φίλο
+Πιο εύκολο με VoiceOver και φωνή
+Καθαρό σε σκούρο θέμα και αντίθεση
+Πιο εύκολο αν μπερδεύετε τα χρώματα
+
+### App Store (Finnish)
+
+Lähetä kehittäjälle pieni tippi
+Anna Pro lahjaksi ystävälle
+Tuki VoiceOverille ja puheohjaukselle
+Selkeä tummana ja suurella kontrastilla
+Helpompi, jos värejä on vaikea erottaa
+
+### App Store (Indonesian)
+
+Kirim tip kecil untuk pengembang
+Hadiahkan Pro untuk teman
+Mendukung VoiceOver dan Kontrol Suara
+Jelas di mode gelap dan kontras tinggi
+Lebih mudah jika sulit membedakan warna
+
+### App Store (Norwegian Bokmål)
+
+Gi utvikleren litt tips som takk
+Gi Pro i gave til en venn
+Bedre med VoiceOver og Talestyring
+Tydelig i mørk modus og høy kontrast
+Enklere om du blander farger
+
+### App Store (Dutch)
+
+Geef de ontwikkelaar een kleine fooi
+Geef Pro cadeau aan een vriend
+Beter met VoiceOver en Stembediening
+Helder in donkere modus en contrast
+Makkelijker als je kleuren slecht ziet
+
+### App Store (Polish)
+
+Wyślij twórcy mały napiwek
+Podaruj Pro znajomemu
+Lepiej z VoiceOver i Sterowaniem głosem
+Wyraźne w trybie ciemnym i z kontrastem
+Łatwiej, gdy trudno rozróżnić kolory
+
+### App Store (Swedish)
+
+Ge utvecklaren lite dricks som tack
+Ge bort Pro till en vän
+Bättre med VoiceOver och Röststyrning
+Tydlig i mörkt läge och hög kontrast
+Enklare om färger är svåra att skilja
+
+### App Store (Turkish)
+
+Geliştiriciye küçük bir bahşiş gönderin
+Pro'yu bir arkadaşınıza hediye edin
+VoiceOver ve Sesle Denetim ile daha iyi
+Koyu mod ve kontrastta net görünür
+Renkleri ayırt etmek zorsa daha kolay
+
 ## 1.2.2
 
 ### 앱스토어 (한국어)

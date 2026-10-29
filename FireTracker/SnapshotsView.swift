@@ -61,7 +61,7 @@ struct SnapshotsView: View {
             Spacer()
             Text("\(Fmt.krw(s.netWorth))원")
                 .font(.system(.body, design: .rounded).weight(.semibold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
         }
         .padding(.vertical, 4)
     }
@@ -117,7 +117,7 @@ struct SnapshotDetail: View {
                     } trailing: {
                         Text("\(Fmt.krw(snapshot.netWorth))원")
                             .font(.system(.body, design: .rounded).weight(.semibold))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                     }
                 }
                 Section("수입 / 지출 (원)") {

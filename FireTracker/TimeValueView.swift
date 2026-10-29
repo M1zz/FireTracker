@@ -391,10 +391,12 @@ struct TimeSimSection: View {
                         .foregroundStyle(Theme.textSecond.opacity(0.6))
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("삭제")
             }
             HStack(spacing: 8) {
                 TextField("0", text: costBinding(idx).commaGrouped)
                     .keyboardType(.numberPad)
+                    .accessibilityLabel("가격")
                     .multilineTextAlignment(.trailing)
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
@@ -403,6 +405,7 @@ struct TimeSimSection: View {
                     .foregroundStyle(Theme.textSecond)
                 TextField("0", text: hoursBinding(idx))
                     .keyboardType(.decimalPad)
+                    .accessibilityLabel("시간")
                     .multilineTextAlignment(.trailing)
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
@@ -516,7 +519,7 @@ struct TimeSimSection: View {
                 } trailing: {
                     Text("밀도 ×\(String(format: "%.2f", density))")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
                 densityBar
                 Text("하루 24시간 + 돈으로 되찾은 \(tvHours(boughtHours))")
@@ -636,7 +639,7 @@ struct TimeSimSection: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(crossoverHeadline)
                     .font(.system(.title3, design: .rounded).weight(.bold))
-                    .foregroundStyle(g0 > annualReturn ? Theme.accent : Theme.positive)
+                    .foregroundStyle(g0 > annualReturn ? Theme.accentText : Theme.positive)
                 Text(crossoverBody)
                     .font(.subheadline)
                     .foregroundStyle(Theme.textSecond)
@@ -658,7 +661,7 @@ struct TimeSimSection: View {
         return Chart {
             ForEach(points) { p in
                 LineMark(x: .value("연차", p.year), y: .value("시급성장률", p.growth))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                     .lineStyle(StrokeStyle(lineWidth: 2.5))
             }
             RuleMark(y: .value("자산수익률", annualReturn))
@@ -767,7 +770,7 @@ struct TimeSimSection: View {
                         .foregroundStyle(Theme.textSecond)
                     Text("1시간이 \(tvWon(futureWage))짜리로 남아요")
                         .font(.system(.title3, design: .rounded).weight(.bold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                     if marginalWage > 0 {
                         Text("지금 시급의 \(String(format: "%.1f", futureWage / marginalWage))배예요. 지금 1시간의 진짜 가격은 오늘 시급이 아니라, 그 시간이 올려 줄 미래 시급이에요.")
                             .font(.caption2)

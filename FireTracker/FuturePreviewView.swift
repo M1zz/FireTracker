@@ -254,7 +254,7 @@ struct FuturePreviewView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Label("내 목표 열기", systemImage: "target")
                     .font(.body.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
@@ -267,7 +267,7 @@ struct FuturePreviewView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("\(String(c.quitYear))년, \(c.quitAge)세")
                 .font(.system(.largeTitle, design: .rounded, weight: .bold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
             Text(c.quitAge <= c.currentAge ? LocalizedStringKey("오늘 회사를 그만둔다면") : LocalizedStringKey("회사를 그만두는 날"))
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(Theme.textPrimary)
@@ -280,7 +280,7 @@ struct FuturePreviewView: View {
             } label: {
                 Label("퇴사 나이·생활비 바꾸기", systemImage: "slider.horizontal.3")
                     .font(.body.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -364,7 +364,7 @@ struct FuturePreviewView: View {
                 if c.effectiveProfile.publicPensionMonthly <= 0 {
                     Label("예상 국민연금을 넣지 않아 연금 없이 계산했어요. 매달 나가는 돈에서 넣을 수 있어요.", systemImage: "exclamationmark.circle")
                         .font(.body)
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
@@ -512,7 +512,7 @@ struct FuturePreviewView: View {
         HStack(alignment: .firstTextBaseline, spacing: 10) {
             Text("\(n)")
                 .font(.body.weight(.bold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
             Text(text)
                 .font(.body)
                 .foregroundStyle(Theme.textPrimary)
@@ -539,7 +539,7 @@ struct SurvivalChart: View {
                          yEnd: .value("좋을 때", b.p90))
                     .foregroundStyle(Theme.accent.opacity(0.18))
                 LineMark(x: .value("나이", b.age), y: .value("보통", b.p50))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                     .lineStyle(StrokeStyle(lineWidth: 2.5))
             }
             RuleMark(x: .value("퇴사", quitAge))
@@ -615,6 +615,7 @@ struct FutureNumberRow: View {
             Spacer()
             TextField("0", value: $value, format: .number)
                 .keyboardType(.decimalPad)
+                .accessibilityLabel(label)
                 .multilineTextAlignment(.trailing)
                 .font(.system(.body, design: .rounded).weight(.semibold))
                 .frame(maxWidth: 110)
@@ -877,7 +878,7 @@ struct SurvivalDetailView: View {
                     } label: {
                         Label("가정 바꾸기", systemImage: "slider.horizontal.3")
                             .font(.body.weight(.semibold))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -1085,7 +1086,7 @@ struct ScenarioCompareView: View {
                 } label: {
                     Label("시나리오 추가", systemImage: "plus.circle.fill")
                         .font(.body.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
                 Button {
                     model.scenarios = FutureScenario.defaults

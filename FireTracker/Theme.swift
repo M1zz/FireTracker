@@ -2,10 +2,13 @@ import SwiftUI
 
 // A color that resolves to a different hex in light vs dark mode, so the whole
 // app follows the system appearance.
+// lightHigh 를 주면 '대비 증가'를 켠 밝은 화면에서 그 값을 쓴다(본문 대비 4.5:1 이상).
 extension Color {
-    init(light: String, dark: String) {
+    init(light: String, dark: String, lightHigh: String? = nil) {
         self = Color(uiColor: UIColor { trait in
-            UIColor(Color(hexCode: trait.userInterfaceStyle == .dark ? dark : light))
+            let isDark = trait.userInterfaceStyle == .dark
+            let isHigh = trait.accessibilityContrast == .high
+            return UIColor(Color(hexCode: isDark ? dark : (isHigh ? lightHigh ?? light : light)))
         })
     }
 }
@@ -18,14 +21,18 @@ enum Theme {
     static let surfaceHigh = Color(light: "EDEDF0", dark: "2C2C2E")
     // Same gold in both modes so black-on-accent buttons stay legible.
     static let accent      = Color(hexCode: "E8A33D")
+    // 글자·아이콘으로 쓰는 골드. 밝은 화면에서 골드 글자는 대비가 낮아(2:1)
+    // '대비 증가'를 켜면 짙은 호박색으로 바꾼다. 면(버튼 바탕)은 그대로 accent.
+    static let accentText  = Color(light: "E8A33D", dark: "E8A33D", lightHigh: "8A5A00")
     static let accentSoft  = accent.opacity(0.15)
-    static let positive    = Color(light: "1FA05A", dark: "34C759")
-    static let negative    = Color(light: "E5484D", dark: "FF6B6B")
+    static let positive    = Color(light: "1FA05A", dark: "34C759", lightHigh: "13753F")
+    static let negative    = Color(light: "E5484D", dark: "FF6B6B", lightHigh: "B42318")
     // 금액 변화 방향(한국식): 오르면 붉은색, 내리면 푸른색.
-    static let rise        = Color(light: "D6493B", dark: "EF5350")
-    static let fall        = Color(light: "2F6FE0", dark: "4C8DFF")
+    // 색만으로 말하지 않는다 — 금액 앞에 ▲▼·+− 를 함께 붙인다.
+    static let rise        = Color(light: "D6493B", dark: "EF5350", lightHigh: "B0302A")
+    static let fall        = Color(light: "2F6FE0", dark: "4C8DFF", lightHigh: "2559C4")
     static let textPrimary = Color(light: "111113", dark: "FFFFFF")
-    static let textSecond  = Color(light: "6E6E73", dark: "98989F")
+    static let textSecond  = Color(light: "6E6E73", dark: "98989F", lightHigh: "5A5A5F")
     static let hairline    = Color(light: "111113", dark: "FFFFFF").opacity(0.08)
 
     // 화면 좌우 여백 — 카드가 화면 폭을 거의 다 쓰게 좁게 둔다.

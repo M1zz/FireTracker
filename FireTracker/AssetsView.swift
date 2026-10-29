@@ -242,7 +242,7 @@ struct AssetsView: View {
                         } label: {
                             Label("\(group.title) 종목 추가", systemImage: "plus.circle")
                                 .font(.subheadline)
-                                .foregroundStyle(Theme.accent)
+                                .foregroundStyle(Theme.accentText)
                         }
                         .listRowBackground(Theme.surface)
                     }
@@ -505,7 +505,7 @@ struct AssetsView: View {
                         }
                         Spacer()
                         Image(systemName: "plus.circle.fill")
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                     }
                     .contentShape(Rectangle())
                 }
@@ -644,7 +644,7 @@ struct AssetsView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("\(Fmt.krw(effectiveMode == .gross ? grossAssets : total))원")
                         .font(.system(.title2, design: .rounded, weight: .bold))
-                        .foregroundStyle(effectiveMode == .gross ? Theme.textPrimary : Theme.accent)
+                        .foregroundStyle(effectiveMode == .gross ? Theme.textPrimary : Theme.accentText)
 
                     // 부채 비율 — 자산 대비 빚의 크기를 한 줄 바로.
                     HStack(spacing: 8) {
@@ -680,6 +680,8 @@ struct AssetsView: View {
                 .foregroundStyle(Color(hexCode: item.assetClass.colorHex))
                 .cornerRadius(4)
                 .opacity(selSlice == nil || selSlice?.assetClass == item.assetClass ? 1 : 0.3)
+                .accessibilityLabel(item.assetClass.label)
+                .accessibilityValue("\(Fmt.krw(item.amount))원")
             }
             .chartAngleSelection(value: $selectedSlice)
             // 중앙 라벨은 차트 위(overlay)에 — 배경에 두면 긴 금액이 도넛 링에
@@ -770,6 +772,8 @@ struct AssetsView: View {
                 .background(selected ? Color(hexCode: item.assetClass.colorHex).opacity(0.14) : Color.clear)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .contentShape(Rectangle())
+                .accessibilityElement(children: .combine)
+                .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
                 .onTapGesture {
                     withAnimation(.easeInOut(duration: 0.25)) {
                         // 범례를 탭해도 선택/해제 — 도넛과 연동.
@@ -802,7 +806,7 @@ struct AssetsView: View {
             } trailing: {
                 Text("\(count)/\(total) 수집")
                     .font(.caption.weight(.semibold).monospacedDigit())
-                    .foregroundStyle(count == total ? Theme.accent : Theme.textSecond)
+                    .foregroundStyle(count == total ? Theme.accentText : Theme.textSecond)
                     .contentTransition(.numericText(value: Double(count)))
             }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 72), spacing: 8)], spacing: 8) {
@@ -833,6 +837,7 @@ struct AssetsView: View {
                     }
                     .buttonStyle(.plain)
                     .disabled(owned)
+                    .accessibilityLabel("추가")
                     // 도장 찍기 — 칸이 채워지는 순간 크게 나타나 쾅 눌리듯 안착.
                     // owned가 바뀌면 id가 바뀌어 새 뷰로 취급 → 삽입 트랜지션 실행.
                     .id("\(ac.rawValue)-\(owned)")
@@ -927,7 +932,7 @@ struct AssetsView: View {
         }
         if asset.autoPriced {
             Image(systemName: "antenna.radiowaves.left.and.right")
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
         }
         // 매도 원칙에 닿았거나 가까우면 목록에서도 바로 보이게.
         if let st = SellWatch.status(asset), st.signal != .holding {
@@ -1064,6 +1069,7 @@ struct AssetsView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityValue(collapsed ? String(localized: "접힘") : String(localized: "펼침"))
     }
 }
 
@@ -1133,6 +1139,7 @@ struct CategoryPickerSheet: View {
                         }
                         .buttonStyle(.borderless)
                         .disabled(customLabel.trimmingCharacters(in: .whitespaces).isEmpty)
+                        .accessibilityLabel("추가")
                     }
                 }
             }
@@ -1396,7 +1403,7 @@ struct AssetEditor: View {
                         } trailing: {
                             Text("\(Fmt.krw(Double(amount) ?? 0))원")
                                 .font(.system(.body, design: .rounded).weight(.semibold))
-                                .foregroundStyle(Theme.accent)
+                                .foregroundStyle(Theme.accentText)
                         }
                         if !status.isEmpty {
                             Text(status)
@@ -1728,7 +1735,7 @@ struct AssetEditor: View {
                 Label("시세 자동을 켜야 알림이 와요. 위에서 종목코드·티커를 넣어 주세요.",
                       systemImage: "exclamationmark.circle")
                     .font(.footnote)
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
         } header: {
             Text("매도 원칙")
@@ -1768,7 +1775,7 @@ struct AssetEditor: View {
                          ? "\(Fmt.trimNumber(l.quantity))\(buyUnitLabel) · 평단 \(Fmt.krw(l.avgPrice))원"
                          : "없음 (전량 매도)")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
                 AdaptiveRow {
                     Text("투자 원금")
@@ -1808,7 +1815,7 @@ struct AssetEditor: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Label("매매 원장은 프로 기능이에요", systemImage: "lock.fill")
                             .font(.body.weight(.semibold))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                         Text(ProFeature.tradeLedger.leeoDetail)
                             .font(.body)
                             .foregroundStyle(Theme.textSecond)
@@ -1824,7 +1831,7 @@ struct AssetEditor: View {
                 } label: {
                     Label("거래 추가", systemImage: "plus.circle.fill")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
             }
 
@@ -2034,7 +2041,7 @@ struct AssetEditor: View {
                             .padding(.horizontal, 12)
                             .padding(.vertical, 7)
                             .background(selected ? Theme.accent.opacity(0.2) : Theme.surfaceHigh)
-                            .foregroundStyle(selected ? Theme.accent : Theme.textPrimary)
+                            .foregroundStyle(selected ? Theme.accentText : Theme.textPrimary)
                             .clipShape(Capsule())
                             .overlay(
                                 Capsule().stroke(selected ? Theme.accent.opacity(0.6) : Theme.hairline,
@@ -2042,6 +2049,7 @@ struct AssetEditor: View {
                             )
                     }
                     .buttonStyle(.plain)
+                    .accessibilityAddTraits(selected ? .isSelected : [])
                 }
             }
             .padding(.vertical, 2)
@@ -2142,7 +2150,7 @@ struct AssetEditor: View {
                     addDetailDraft()
                 } label: {
                     Image(systemName: "plus.circle.fill")
-                        .foregroundStyle(canAddDetail ? Theme.accent : Theme.textSecond.opacity(0.4))
+                        .foregroundStyle(canAddDetail ? Theme.accentText : Theme.textSecond.opacity(0.4))
                 }
                 .buttonStyle(.borderless)
                 .disabled(!canAddDetail)
@@ -2219,7 +2227,7 @@ struct AssetEditor: View {
                 } trailing: {
                     Text("\(Fmt.krw(value))원")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
             }
         } header: {
@@ -2369,7 +2377,7 @@ struct AssetEditor: View {
     private var historyChart: some View {
         Chart(history, id: \.date) { point in
             LineMark(x: .value("월", point.date), y: .value("평가액", point.amount))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
                 .interpolationMethod(.catmullRom)
             AreaMark(x: .value("월", point.date), y: .value("평가액", point.amount))
                 .foregroundStyle(
@@ -2377,7 +2385,7 @@ struct AssetEditor: View {
                                    startPoint: .top, endPoint: .bottom)
                 )
             PointMark(x: .value("월", point.date), y: .value("평가액", point.amount))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
         }
         .chartYAxis(.hidden)
         .frame(height: 160)
@@ -2571,10 +2579,11 @@ struct AmountScrubber: View {
                             .padding(.horizontal, 10)
                             .padding(.vertical, 5)
                             .background(selected ? Theme.accent.opacity(0.2) : Theme.surfaceHigh)
-                            .foregroundStyle(selected ? Theme.accent : Theme.textPrimary)
+                            .foregroundStyle(selected ? Theme.accentText : Theme.textPrimary)
                             .clipShape(Capsule())
                     }
                     .buttonStyle(.borderless)
+                    .accessibilityAddTraits(selected ? .isSelected : [])
                 }
                 Spacer()
             }
@@ -2646,6 +2655,18 @@ struct AmountScrubber: View {
                     }
                 }
         )
+        // VoiceOver 는 위아래로 쓸어 한 단위씩 조절한다.
+        .accessibilityElement()
+        .accessibilityLabel("금액 조절")
+        .accessibilityValue("\(Fmt.krw(numeric))원")
+        .accessibilityHint("단위: \(Self.units[currentUnitIndex].label)")
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+            case .increment: apply(deltaSteps: 1)
+            case .decrement: apply(deltaSteps: -1)
+            @unknown default: break
+            }
+        }
     }
 
     // 현재 값을 단위 배수로 스냅한 뒤 스텝만큼 증감. 0 아래로는 내려가지 않는다.
@@ -2984,7 +3005,7 @@ struct ScreenshotImportView: View {
         VStack(spacing: 22) {
             Image(systemName: "text.viewfinder")
                 .font(.system(.largeTitle))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
             VStack(spacing: 8) {
                 Text("보유 종목 캡처를 고르세요")
                     .font(.title3.weight(.bold))
@@ -3053,6 +3074,7 @@ struct ScreenshotImportView: View {
                                 }
                             }
                             .listRowBackground(Theme.surface)
+                            .accessibilityAddTraits(soldKeys.contains(a.key) ? .isSelected : [])
                         }
                     } header: {
                         Text("캡처에 없는 기존 종목 \(missing.count)개")
@@ -3079,9 +3101,11 @@ struct ScreenshotImportView: View {
             Button { row.wrappedValue.include.toggle() } label: {
                 Image(systemName: r.include ? "checkmark.circle.fill" : "circle")
                     .font(.system(.title2))
-                    .foregroundStyle(r.include ? Theme.accent : Theme.textSecond)
+                    .foregroundStyle(r.include ? Theme.accentText : Theme.textSecond)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(r.name.isEmpty ? String(localized: "가져오기에 포함") : r.name)
+            .accessibilityAddTraits(r.include ? .isSelected : [])
             VStack(alignment: .leading, spacing: 6) {
                 TextField("종목명", text: row.name)
                     .font(.subheadline.weight(.semibold))
@@ -3107,12 +3131,12 @@ struct ScreenshotImportView: View {
                 if r.estimated {
                     Label("평가액이 가려져 손익·수익률로 계산했어요. 확인해 주세요.", systemImage: "exclamationmark.triangle")
                         .font(.caption)
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
                 if r.truncated && match == nil && lookups[r.id]?.chosen == nil {
                     Label("이름이 잘렸어요. 전체 이름으로 고쳐 주세요.", systemImage: "pencil")
                         .font(.caption)
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
             }
             .opacity(r.include ? 1 : 0.4)
@@ -3143,7 +3167,7 @@ struct ScreenshotImportView: View {
                         .foregroundStyle(Theme.textSecond)
                 } else {
                     Text("새 종목으로 추가")
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
                 Image(systemName: "chevron.up.chevron.down")
                     .font(.caption2)
@@ -3279,7 +3303,7 @@ struct ScreenshotImportView: View {
                     Label("비슷한 종목이 \(l.candidates.count)개예요. 맞는지 눌러서 확인해 주세요.",
                           systemImage: "exclamationmark.triangle")
                         .font(.caption)
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
             }
         }
@@ -3390,7 +3414,7 @@ struct NetWorthBreakdownView: View {
                         VStack(alignment: .trailing, spacing: 1) {
                             Text("\(Fmt.krw(netWorth))원")
                                 .font(.system(.title3, design: .rounded, weight: .bold))
-                                .foregroundStyle(netWorth >= 0 ? Theme.accent : Theme.negative)
+                                .foregroundStyle(netWorth >= 0 ? Theme.accentText : Theme.negative)
                         }
                     }
                     Text("순자산 = 총자산(\(Fmt.krw(grossAssets))원) − 부채(\(Fmt.krw(debtTotal))원)")

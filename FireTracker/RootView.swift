@@ -73,7 +73,7 @@ struct RootView: View {
                 .tabItem { Label("설정", systemImage: "gearshape.fill") }
                 .tag(4)
         }
-        .tint(Theme.accent)
+        .tint(Theme.accentText)
         // Bigger baseline text, but still scales with the system text-size
         // setting (floor at xLarge, capped before the extreme accessibility
         // sizes that would break the dense card layouts).
@@ -147,7 +147,7 @@ struct RootView: View {
         HStack(spacing: 10) {
             Image(systemName: "sparkles")
                 .font(.subheadline)
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
             VStack(alignment: .leading, spacing: 1) {
                 Text(demoActive ? "데모 데이터로 보는 중" : "처음이신가요?")
                     .font(.caption.weight(.semibold))
@@ -161,7 +161,7 @@ struct RootView: View {
             Spacer()
             Toggle("", isOn: demoToggleBinding)
                 .labelsHidden()
-                .tint(Theme.accent)
+                .tint(Theme.accentText)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
@@ -338,7 +338,7 @@ struct AppLockGate<Content: View>: View {
             VStack(spacing: 20) {
                 Image(systemName: "lock.shield.fill")
                     .font(.system(.largeTitle))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                 VStack(spacing: 6) {
                     Text("자산 정보 보호 중")
                         .font(.title3.weight(.bold))

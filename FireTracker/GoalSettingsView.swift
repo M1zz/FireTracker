@@ -99,7 +99,7 @@ struct GoalSettingsView: View {
             } trailing: {
                 Text("\(Fmt.krw(target))원")
                     .font(.system(.body, design: .rounded).weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
 
             Picker("달성률 기준", selection: $goalType) {
@@ -117,7 +117,7 @@ struct GoalSettingsView: View {
                 } trailing: {
                     Text("\(ret - cur)년")
                         .font(.system(.body, design: .rounded).weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
             }
         } header: {
@@ -177,7 +177,7 @@ struct GoalSettingsView: View {
                 } trailing: {
                     Text("\(Fmt.krw(v / 12))원")
                         .font(.system(.body, design: .rounded).weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
             }
         } header: {
@@ -262,6 +262,7 @@ private func goalAgeRow(title: String, text: Binding<String>) -> some View {
         Spacer()
         TextField("0", text: text)
             .keyboardType(.numberPad)
+            .accessibilityLabel(title)
             .multilineTextAlignment(.trailing)
             .font(.system(.body, design: .rounded))
             .frame(maxWidth: 60)
@@ -293,7 +294,7 @@ private func goalMoneyField(title: String, hint: String, text: Binding<String>) 
             Spacer(minLength: 0)
             Image(systemName: "pencil")
                 .font(.caption)
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
         }
         .inputBox()
     }
@@ -312,7 +313,7 @@ private func goalSliderRow(title: String, value: Binding<Double>,
         } trailing: {
             Text(Fmt.percent(value.wrappedValue, fraction: 1))
                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
                 .background(Theme.accentSoft)

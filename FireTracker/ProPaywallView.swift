@@ -65,7 +65,7 @@ struct ProPaywallView: View {
         VStack(spacing: 12) {
             Image(systemName: lead?.leeoIcon ?? "flame.fill")
                 .font(.system(.largeTitle, weight: .bold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
                 .frame(width: 84, height: 84)
                 .background(Theme.accentSoft)
                 .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
@@ -90,7 +90,7 @@ struct ProPaywallView: View {
                 HStack(alignment: .top, spacing: 14) {
                     Image(systemName: f.leeoIcon)
                         .font(.title3.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                         .frame(width: 36)
                     VStack(alignment: .leading, spacing: 4) {
                         Text(f.leeoTitle)
@@ -199,7 +199,7 @@ struct ProPaywallView: View {
                     } else {
                         Text("구매 복원")
                             .font(.body.weight(.semibold))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                     }
                 }
                 .disabled(store.isRestoring)

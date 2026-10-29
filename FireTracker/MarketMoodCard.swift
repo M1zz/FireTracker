@@ -137,7 +137,7 @@ struct MarketMoodCard: View {
                     Spacer()
                     Image(systemName: "chevron.right")
                 }
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
                 .padding(.top, 4)
             }
             .buttonStyle(.plain)

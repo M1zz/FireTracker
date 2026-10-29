@@ -178,14 +178,14 @@ struct ProLockedCard: View {
             HStack(spacing: 12) {
                 Image(systemName: feature.leeoIcon)
                     .font(.title2.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                     .frame(width: 48, height: 48)
                     .background(Theme.accentSoft)
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 VStack(alignment: .leading, spacing: 4) {
                     Label("프로", systemImage: "lock.fill")
                         .font(.body.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                     Text(feature.leeoTitle)
                         .font(.title3.weight(.bold))
                         .foregroundStyle(Theme.textPrimary)
@@ -240,7 +240,7 @@ struct FuturePreviewEntry: View {
         HStack(spacing: 12) {
             Image(systemName: unlocked ? "sunrise.fill" : "lock.fill")
                 .font(.title3.weight(.semibold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
                 .frame(width: 44, height: 44)
                 .background(Theme.accentSoft)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))

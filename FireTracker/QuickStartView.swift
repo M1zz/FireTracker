@@ -118,7 +118,7 @@ struct QuickStartView: View {
                 VStack(spacing: 10) {
                     Image(systemName: "flame.fill")
                         .font(.system(.largeTitle))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                     Text("지금 속도라면")
                         .font(.subheadline)
                         .foregroundStyle(Theme.textSecond)
@@ -129,7 +129,7 @@ struct QuickStartView: View {
                         Text(o.ageAtFire.map { "\(Fmt.years(o.years)) 뒤, \($0)세에 그만둘 수 있어요" }
                              ?? "\(Fmt.years(o.years)) 뒤에 그만둘 수 있어요")
                             .font(.headline)
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                             .multilineTextAlignment(.center)
                         if let gap = retireGapText(o) {
                             Text(gap)
@@ -302,6 +302,7 @@ struct QuickStartView: View {
             Spacer()
             TextField("0", text: text)
                 .keyboardType(.numberPad)
+                .accessibilityLabel(title)
                 .multilineTextAlignment(.trailing)
                 .font(.system(.body, design: .rounded))
                 .frame(maxWidth: 60)

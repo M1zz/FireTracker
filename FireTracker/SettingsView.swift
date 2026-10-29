@@ -144,7 +144,7 @@ struct SettingsView: View {
                     if !pro.gate.allows(ProFeature.iCloudSync.rawValue) {
                         Image(systemName: "lock.fill")
                             .font(.body)
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                     }
                 }
             }
@@ -155,7 +155,7 @@ struct SettingsView: View {
                      ? "앱을 완전히 닫았다가 다시 열면 동기화가 시작돼요."
                      : "앱을 완전히 닫았다가 다시 열면 이 기기에만 저장돼요.")
                     .font(.body.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             } else if SyncManager.activeThisLaunch {
                 Text(syncStatus)
                     .font(.body)
@@ -197,7 +197,7 @@ struct SettingsView: View {
                         Spacer()
                         Text("알아보기")
                             .font(.body)
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                     }
                 }
                 Button {
@@ -210,7 +210,7 @@ struct SettingsView: View {
                 } label: {
                     Text("구매 복원")
                         .font(.body)
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
                 .disabled(pro.isRestoring)
             }
@@ -334,7 +334,7 @@ struct SettingsView: View {
             Link(destination: URL(string: "https://www.data.go.kr/tcs/dss/selectDataSetList.do?keyword=%EC%95%84%ED%8C%8C%ED%8A%B8%20%EB%A7%A4%EB%A7%A4%20%EC%8B%A4%EA%B1%B0%EB%9E%98%EA%B0%80")!) {
                 Label("공공데이터포털에서 ‘아파트 매매 실거래가’ 신청하기", systemImage: "arrow.up.right.square")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
         } header: {
             Text("아파트 시세 자동 (선택)")
@@ -354,14 +354,14 @@ struct SettingsView: View {
                 exportBackup()
             } label: {
                 Label("백업 파일 내보내기", systemImage: "square.and.arrow.up")
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
 
             Button {
                 showImporter = true
             } label: {
                 Label("백업 파일에서 복원", systemImage: "square.and.arrow.down")
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
 
             NavigationLink {
@@ -490,7 +490,7 @@ struct SettingsView: View {
                     .font(.system(.footnote, design: .monospaced))
                 Image(systemName: "pencil")
                     .font(.caption)
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
             .inputBox()
         }
@@ -594,11 +594,11 @@ struct DeveloperContactSection: View {
         Section {
             Link(destination: URL(string: "mailto:leeo@kakao.com")!) {
                 Label("이메일로 문의하기", systemImage: "envelope")
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
             Link(destination: URL(string: "https://instagram.com/lee25_ios")!) {
                 Label("인스타그램 DM (@lee25_ios)", systemImage: "paperplane")
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
         } header: {
             Text("개발자에게 문의")
@@ -690,7 +690,7 @@ private struct AutoBackupListView: View {
                                 }
                                 Spacer()
                                 Image(systemName: "arrow.counterclockwise")
-                                    .foregroundStyle(Theme.accent)
+                                    .foregroundStyle(Theme.accentText)
                             }
                         }
                     }

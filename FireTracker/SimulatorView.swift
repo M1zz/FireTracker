@@ -356,6 +356,9 @@ struct SimLeverPanel<Trailing: View, Footer: View>: View {
                             if editing { onBeginEdit() }
                         }
                         .tint(Theme.accent)
+                        // 원시 숫자 대신 화면에 보이는 값(단위 포함)을 읽게 한다.
+                        .accessibilityLabel(Text(LocalizedStringKey(lv.id)))
+                        .accessibilityValue(lv.text)
                         stepButton("plus") { nudge(lv, v, 1) }
                     }
                 }
@@ -413,6 +416,7 @@ struct SimLeverPanel<Trailing: View, Footer: View>: View {
                                 .clipShape(Capsule())
                         }
                         .buttonStyle(.plain)
+                        .accessibilityAddTraits(on ? .isSelected : [])
                         .id(l.id)
                     }
                 }
@@ -433,12 +437,13 @@ struct SimLeverPanel<Trailing: View, Footer: View>: View {
                             .padding(.horizontal, 14)
                             .padding(.vertical, 7)
                             .background(o.selected ? Theme.accent.opacity(0.2) : Theme.surface)
-                            .foregroundStyle(o.selected ? Theme.accent : Theme.textPrimary)
+                            .foregroundStyle(o.selected ? Theme.accentText : Theme.textPrimary)
                             .clipShape(Capsule())
                             .overlay(Capsule().stroke(o.selected ? Theme.accent.opacity(0.6) : Theme.hairline,
                                                       lineWidth: 1))
                     }
                     .buttonStyle(.plain)
+                    .accessibilityAddTraits(o.selected ? .isSelected : [])
                 }
             }
             .padding(.vertical, 2)
@@ -1400,7 +1405,7 @@ private struct MortgageSimSection: View {
                         .lineStyle(StrokeStyle(lineWidth: 2))
                     LineMark(x: .value("개월", pt.month), y: .value("낸 이자", pt.paidInterest),
                              series: .value("선", String(localized: "낸 이자")))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                         .lineStyle(StrokeStyle(lineWidth: 2.5))
                 }
             }
@@ -1825,7 +1830,7 @@ private struct SavingsSimSection: View {
                     .annotation(position: .top, alignment: .leading) {
                         Text("목표 \(Fmt.krw(goalValue))원")
                             .font(.caption2)
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                     }
             }
         }
@@ -2072,7 +2077,7 @@ private struct InvestForecastSection: View {
                     if let last {
                         Text("\(Fmt.krw(last.mid))원")
                             .font(.system(.title2, design: .rounded, weight: .bold))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                         Text("보수적 \(Fmt.krw(last.low))원 ~ 낙관적 \(Fmt.krw(last.high))원")
                             .font(.caption)
                             .foregroundStyle(Theme.textSecond)
@@ -2149,7 +2154,7 @@ private struct InvestForecastSection: View {
                     .foregroundStyle(Theme.accent.opacity(0.14))
                     .interpolationMethod(.catmullRom)
                 LineMark(x: .value("개월", p.month), y: .value("중앙값", p.mid))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                     .interpolationMethod(.catmullRom)
                     .lineStyle(StrokeStyle(lineWidth: 2.5))
             }
@@ -2206,7 +2211,7 @@ private struct InvestForecastSection: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(Theme.accent.opacity(0.15))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                             .clipShape(Capsule())
                     }
                     Spacer()
@@ -2403,7 +2408,7 @@ private struct WageSimSection: View {
                     .foregroundStyle(Theme.textSecond)
                 Text("지금 \(country.money(only.realToday))")
                     .font(.system(.title2, design: .rounded, weight: .bold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                 Text("다른 해의 월급도 한 줄 더 넣으면 구매력 변화가 보여요.")
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
@@ -2531,7 +2536,7 @@ private struct WageSimSection: View {
                 } label: {
                     Label("추가", systemImage: "plus.circle.fill")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
                 .buttonStyle(.plain)
             }
@@ -2574,6 +2579,7 @@ private struct WageSimSection: View {
                 .frame(width: 62, alignment: .leading)
             TextField("0", text: amountBinding(idx).commaGrouped)
                 .keyboardType(.numberPad)
+                .accessibilityLabel("\(yearLabel(entries[idx].year))년")
                 .multilineTextAlignment(.trailing)
                 .font(.system(.body, design: .rounded).weight(.semibold))
                 .foregroundStyle(Theme.textPrimary)
@@ -2587,6 +2593,7 @@ private struct WageSimSection: View {
                     .foregroundStyle(Theme.textSecond.opacity(0.6))
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("삭제")
         }
     }
 
@@ -2715,11 +2722,11 @@ private struct WageSimSection: View {
             ForEach(data) { r in
                 LineMark(x: .value("연도", "\(r.year)"),
                          y: .value("실질", realValue(r)))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                     .lineStyle(StrokeStyle(lineWidth: 2.5))
                 PointMark(x: .value("연도", "\(r.year)"),
                           y: .value("실질", realValue(r)))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                     .symbolSize(50)
             }
         }
@@ -2860,7 +2867,7 @@ private struct WageSimSection: View {
                 .foregroundStyle(Theme.textSecond)
             Text("지금 \(country.money(r.realToday))")
                 .font(.system(.title2, design: .rounded, weight: .bold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
             Text("\(yearLabel(r.year))년 → \(yearLabel(baseYear))년 물가가 \(Fmt.percent(country.inflation(from: r.year, to: baseYear))) 올랐어요. 다른 해의 월급도 한 줄 더 넣으면 구매력 변화를 볼 수 있어요.")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
@@ -2907,7 +2914,7 @@ private struct ForecastAICard: View {
                         Text(failed ? "다시 시도" : "이 예측, 어떻게 읽어야 할까?")
                             .font(.subheadline.weight(.semibold))
                     }
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                 }
                 .buttonStyle(.borderless)
             }

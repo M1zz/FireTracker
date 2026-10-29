@@ -326,6 +326,7 @@ struct TrendView: View {
                         ForEach(availablePeriods) { Text(LocalizedStringKey("\($0.rawValue)간")).tag($0) }
                     }
                     .pickerStyle(.segmented)
+                    .accessibilityLabel("기간")
                     .fixedSize()
                 }
             }
@@ -340,6 +341,9 @@ struct TrendView: View {
                     )
                     .foregroundStyle(Theme.positive)
                     .cornerRadius(3)
+                    // 차트 읽기: 순번 대신 기간 이름과 원 단위 금액.
+                    .accessibilityLabel(periodLabelFull(item.point.date))
+                    .accessibilityValue("자산 \(Fmt.krw(item.point.grossAssets))원")
                     BarMark(
                         x: .value("기간", item.idx),
                         yStart: .value("기준", 0.0),
@@ -348,6 +352,8 @@ struct TrendView: View {
                     )
                     .foregroundStyle(Theme.textSecond.opacity(0.3))
                     .cornerRadius(3)
+                    .accessibilityLabel(periodLabelFull(item.point.date))
+                    .accessibilityValue("부채 \(Fmt.krw(item.point.debt))원")
                 }
                 RuleMark(y: .value("0", 0.0))
                     .foregroundStyle(Theme.hairline)
@@ -356,13 +362,16 @@ struct TrendView: View {
                         x: .value("기간", item.idx),
                         y: .value("순자산", item.point.netWorth)
                     )
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                     .interpolationMethod(.catmullRom)
                     .lineStyle(StrokeStyle(lineWidth: 2.5))
+                    .accessibilityLabel(periodLabelFull(item.point.date))
+                    .accessibilityValue("순자산 \((item.point.netWorth < 0 ? "−" : "") + Fmt.krw(abs(item.point.netWorth)))원")
                     PointMark(
                         x: .value("기간", item.idx),
                         y: .value("순자산", item.point.netWorth)
                     )
+                    .accessibilityHidden(true)
                     .symbol {
                         Circle()
                             .fill(Theme.surface)
@@ -378,7 +387,7 @@ struct TrendView: View {
                         AxisValueLabel {
                             Text(periodLabel(pts[i].point.date))
                                 .font(.caption2)
-                                .foregroundStyle(i == count - 1 ? Theme.accent : Theme.textSecond)
+                                .foregroundStyle(i == count - 1 ? Theme.accentText : Theme.textSecond)
                         }
                     }
                 }
@@ -470,7 +479,7 @@ struct TrendView: View {
                 ForEach(pts, id: \.idx) { item in
                     LineMark(x: .value("날짜", item.idx),
                              y: .value("순자산", item.point.netWorth))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                         .interpolationMethod(.catmullRom)
                         .lineStyle(StrokeStyle(lineWidth: 2.5))
                     PointMark(x: .value("날짜", item.idx),
@@ -490,7 +499,7 @@ struct TrendView: View {
                         AxisValueLabel {
                             Text(thisMonthDayLabel(pts[i].point.date))
                                 .font(.caption2)
-                                .foregroundStyle(i == count - 1 ? Theme.accent : Theme.textSecond)
+                                .foregroundStyle(i == count - 1 ? Theme.accentText : Theme.textSecond)
                         }
                     }
                 }
@@ -629,7 +638,7 @@ struct TrendView: View {
 
     private func thisMonthSummaryLine(_ s: TrendPoint) -> Text {
         var t = Text("순자산 \(s.netWorth < 0 ? "−" : "")\(Fmt.krw(abs(s.netWorth)))")
-            .foregroundStyle(Theme.accent)
+            .foregroundStyle(Theme.accentText)
         t = t + Text("  자산 \(Fmt.krw(s.grossAssets))").foregroundStyle(Theme.positive)
         if s.debt > 0 {
             t = t + Text("  부채 −\(Fmt.krw(s.debt))").foregroundStyle(Theme.textSecond)
@@ -741,7 +750,7 @@ struct TrendView: View {
                         .annotation(position: .top, alignment: .leading) {
                             Text("은퇴 후 월 생활비")
                                 .font(.caption2)
-                                .foregroundStyle(Theme.accent)
+                                .foregroundStyle(Theme.accentText)
                         }
                 }
             }
@@ -829,7 +838,7 @@ struct TrendView: View {
                             .font(.caption2).foregroundStyle(Theme.textSecond)
                         Text("순자산 \(Fmt.krw(s.netWorth))원")
                             .font(.system(.subheadline, design: .rounded).weight(.bold))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
                             .contentTransition(.numericText())
@@ -877,7 +886,7 @@ struct TrendView: View {
                         x: .value("기간", s.date, unit: period.component),
                         y: .value("순자산", s.netWorth)
                     )
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                     .interpolationMethod(.catmullRom)
                     .lineStyle(StrokeStyle(lineWidth: 2))
                     PointMark(

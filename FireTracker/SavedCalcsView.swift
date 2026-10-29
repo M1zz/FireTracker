@@ -42,7 +42,7 @@ struct CalcSaveRow: View {
             HStack(spacing: 10) {
                 Image(systemName: justSaved ? "checkmark.circle.fill" : "bookmark")
                     .font(.title3)
-                    .foregroundStyle(justSaved ? Theme.positive : Theme.accent)
+                    .foregroundStyle(justSaved ? Theme.positive : Theme.accentText)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(justSaved ? "저장했어요" : "이 계산 저장하기")
                         .font(.subheadline.weight(.semibold))
@@ -87,7 +87,7 @@ struct CalcSaveRow: View {
                       : LocalizedStringKey("무료 저장 \(ProFeature.freeSaveLimit)개를 다 썼어요. 프로는 제한 없이 저장해요."),
                       systemImage: left > 0 ? "bookmark" : "lock.fill")
                     .font(.body)
-                    .foregroundStyle(left > 0 ? Theme.textSecond : Theme.accent)
+                    .foregroundStyle(left > 0 ? Theme.textSecond : Theme.accentText)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -238,7 +238,7 @@ struct SavedCalcsView: View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: calc.kind.symbol)
                 .font(.system(size: 15))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
                 .frame(width: 26, height: 26)
                 .background(Theme.accentSoft)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))

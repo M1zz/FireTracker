@@ -350,7 +350,7 @@ struct QuarterlyReportEntry: View {
         HStack(spacing: 12) {
             Image(systemName: unlocked ? "doc.text.magnifyingglass" : "lock.fill")
                 .font(.title3.weight(.semibold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
                 .frame(width: 44, height: 44)
                 .background(Theme.accentSoft)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))

@@ -55,7 +55,7 @@ struct JourneyGoalsSection: View {
             HStack(spacing: 12) {
                 Image(systemName: "target")
                     .font(.title3)
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                 VStack(alignment: .leading, spacing: 3) {
                     Text("기간별 목표를 켜보세요")
                         .font(.subheadline.weight(.semibold))
@@ -134,7 +134,7 @@ struct JourneyGoalsSection: View {
             } trailing: {
                 Text(isAsset ? "\(Fmt.krw(target))원" : "월 \(Fmt.krw(target))원")
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
@@ -230,7 +230,7 @@ struct JourneyGoalsSection: View {
                 ForEach(mdl.actual) { p in
                     LineMark(x: .value("시점", p.date), y: .value("값", p.value),
                              series: .value("계열", String(localized: "실제")))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                         .interpolationMethod(.catmullRom)
                         .lineStyle(StrokeStyle(lineWidth: 2))
                 }
@@ -254,10 +254,10 @@ struct JourneyGoalsSection: View {
                         Text("지금").font(.caption2.weight(.semibold)).foregroundStyle(Theme.positive)
                     }
                 PointMark(x: .value("시점", mdl.end), y: .value("값", mdl.goalEnd))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                     .symbolSize(90)
                     .annotation(position: .top, spacing: 3) {
-                        Text("목표").font(.caption2.weight(.semibold)).foregroundStyle(Theme.accent)
+                        Text("목표").font(.caption2.weight(.semibold)).foregroundStyle(Theme.accentText)
                     }
             }
             .chartXScale(domain: mdl.start...mdl.end)
@@ -308,7 +308,7 @@ struct JourneyGoalsSection: View {
                }) {
                 Text("\(recordDateText(hit.date)) 기록 · \(metric == .assets ? "" : String(localized: "월 "))\(Fmt.krw(hit.value))원")
                     .font(.caption2)
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             } else if !records.isEmpty {
                 Text("옅은 점은 그 시점에 저장된 기록이에요. 점 근처를 탭하면 날짜와 값이 보여요.")
                     .font(.caption2)
@@ -406,7 +406,7 @@ struct JourneyGoalsSection: View {
             Text(label).font(.caption2).foregroundStyle(Theme.textSecond)
             Text("\(Fmt.krw(value))원")
                 .font(.system(.subheadline, design: .rounded).weight(.bold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
                 .lineLimit(1).minimumScaleFactor(0.7)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

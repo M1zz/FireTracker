@@ -45,10 +45,12 @@ struct InfoPopoverButton: View {
     var body: some View {
         Button { show.toggle() } label: {
             Image(systemName: "info.circle")
-                .font(.system(size: 15))
+                .font(.subheadline)
                 .foregroundStyle(Theme.textSecond)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel("설명 보기")
+        .accessibilityInputLabels(["설명", "정보"])
         .popover(isPresented: $show) {
             Text(text)
                 .font(.callout)
@@ -116,6 +118,7 @@ struct DashboardView: View {
     @State private var totalMode: AssetTotalMode = .gross
     // 0→1로 올라가며 막대가 0선에서 자라나게 하는 진행도.
     @State private var barAnim: Double = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private let milestoneSetupTip = MilestoneSetupTip()
     // 4단계 — 반복되는 거울: 마지막 점검 후 1년이 지나면 만족점을 다시 묻는다.
     private let reReflectTip = ReReflectTip()
@@ -445,7 +448,7 @@ struct DashboardView: View {
                 VStack(spacing: 12) {
                     Image(systemName: "flame.fill")
                         .font(.system(.largeTitle))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                     Text("언제 회사를 그만둘 수 있을까요?")
                         .font(.title3.weight(.bold))
                         .foregroundStyle(Theme.textPrimary)
@@ -504,7 +507,7 @@ struct DashboardView: View {
                     .frame(width: 36, height: 36)
                 Text("\(number)")
                     .font(.subheadline.weight(.bold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
@@ -699,7 +702,7 @@ struct DashboardView: View {
             } trailing: {
                 Text(Fmt.percent(min(progress, 1), fraction: 1))
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                    .foregroundStyle(progress >= 1 ? Theme.positive : Theme.accent)
+                    .foregroundStyle(progress >= 1 ? Theme.positive : Theme.accentText)
             }
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
@@ -759,6 +762,8 @@ struct DashboardView: View {
 
     // 막대가 0선에서 미끄러지듯 그려지게 — 0으로 리셋 후 부드럽게(글라이드) 1까지.
     private func animateChangeBars() {
+        // '동작 줄이기'면 막대를 바로 그린다.
+        guard !reduceMotion else { barAnim = 1; return }
         barAnim = 0
         withAnimation(.smooth(duration: 0.8, extraBounce: 0.05).delay(0.05)) {
             barAnim = 1
@@ -775,7 +780,7 @@ struct DashboardView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("퇴사각")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                     Text("언제 그만둘 수 있을까요?")
                         .font(.title2.weight(.bold))
                         .foregroundStyle(Theme.textPrimary)
@@ -815,14 +820,14 @@ struct DashboardView: View {
             AdaptiveRow {
                 Text("퇴사각")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             } trailing: {
                 HStack(spacing: 2) {
                     Text("내 목표")
                     Image(systemName: "chevron.right")
                 }
                 .font(.caption)
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
             }
             if let date = o.date {
                 Text(o.years ?? 0 < 1.0 / 12.0 ? String(localized: "지금 그만둬도 돼요") : QuickStartView.monthText(date))
@@ -832,7 +837,7 @@ struct DashboardView: View {
                 Text(o.ageAtFire.map { "지금 속도면 \(Fmt.years(o.years)) 뒤 · \($0)세" }
                      ?? "지금 속도면 \(Fmt.years(o.years)) 뒤")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
                 if let gap = retireGapText(o) {
                     Text(gap)
                         .font(.caption)
@@ -849,7 +854,7 @@ struct DashboardView: View {
             if o.monthlySavings <= 0 {
                 Label("월 저축을 넣으면 훨씬 정확해져요", systemImage: "exclamationmark.circle")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(Theme.accentText)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1237,7 +1242,7 @@ struct DashboardView: View {
                     } label: {
                         Label("자산 탭으로", systemImage: "arrow.right.circle")
                             .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(Theme.accentText)
                     }
                     .buttonStyle(.plain)
                 }
@@ -1270,7 +1275,7 @@ struct DashboardView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("약 \(Fmt.krw(capitalNeeded))원")
                         .font(.system(.largeTitle, design: .rounded, weight: .bold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                     Text("월 \(Fmt.krw(targetMonthlyIncome))원 패시브 인컴을 만들려면 · 현재 전략 수익률 연 \(Fmt.percent(strategyYield, fraction: 1))")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
@@ -1360,11 +1365,11 @@ struct DashboardView: View {
                     Image(systemName: "chevron.right")
                 }
                 .font(.caption)
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
             }
             Text("\(Fmt.krw(projectedYearEnd))원")
                 .font(.system(.largeTitle, design: .rounded, weight: .bold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
 
             if plannedSavings != 0 || monthlyPassiveIncome > 0 {
                 Text(String(localized: "현재 \(Fmt.krw(projectionBase))원 + (월 저축 \(Fmt.krw(plannedSavings))원")
@@ -1470,7 +1475,7 @@ struct DashboardView: View {
         HStack(spacing: 14) {
             Image(systemName: "arrow.triangle.branch")
                 .font(.system(.title3, weight: .semibold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(Theme.accentText)
                 .frame(width: 40, height: 40)
                 .background(Theme.accentSoft)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
@@ -1621,7 +1626,7 @@ struct ProjectionDetailView: View {
                         } trailing: {
                             Text("\(Fmt.krw(step.end))원")
                                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                                .foregroundStyle(Theme.accent)
+                                .foregroundStyle(Theme.accentText)
                         }
                         Text(String(localized: "시작 \(Fmt.krw(step.start)) + 저축 \(Fmt.krw(step.savings))")
                              + (step.passiveIncome >= 1 ? String(localized: " + 수입 \(Fmt.krw(step.passiveIncome))") : ""))
@@ -1764,7 +1769,7 @@ struct WhatIfView: View {
                     Spacer(minLength: 0)
                     Image(systemName: "pencil")
                         .font(.caption)
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                 }
                 .inputBox()
                 if defaultAmount > 0 {
@@ -1785,7 +1790,7 @@ struct WhatIfView: View {
                 } trailing: {
                     Text("\(yearsInt)년")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(Theme.accentText)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 4)
                         .background(Theme.accentSoft)
@@ -1824,7 +1829,7 @@ struct WhatIfView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(investWins ? "투자가 유리해요" : "빚 갚기가 유리해요")
                 .font(.title3.weight(.bold))
-                .foregroundStyle(investWins ? Theme.accent : Theme.positive)
+                .foregroundStyle(investWins ? Theme.accentText : Theme.positive)
             Text("\(yearsInt)년 후 약 \(Fmt.krw(abs(diff)))원 \(investWins ? String(localized: "더 벌 수 있어요") : String(localized: "더 아낄 수 있어요")).")
                 .font(.subheadline)
                 .foregroundStyle(Theme.textPrimary)

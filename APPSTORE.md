@@ -1343,3 +1343,15 @@ Tüm ekranları kurgusal bir kişinin varlıklarıyla gezin; kapatınca kendi ve
 Kayıtlarınız bu cihazda kalır ve hesap gerekmez. Tüm verileri dosya olarak yedekleyip geri yükleyebilirsiniz.
 
 Uygulamadaki hesaplar girdilerinize dayalı yol gösterici sonuçlardır ve yatırım tavsiyesi değildir.
+
+## 손쉬운 사용
+
+<!-- DeployBar 가 App Store Connect '앱의 손쉬운 사용' 에 올린다. 실제로 확인한 것만 적는다. -->
+
+### iPhone
+voiceOver
+voiceControl
+darkInterface
+differentiateWithoutColor
+sufficientContrast
+reducedMotion

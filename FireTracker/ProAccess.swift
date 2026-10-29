@@ -114,6 +114,14 @@ enum ProAccess {
     /// ⚠️ `productIDs` · `entitlementIDs` 에 넣지 않는다. 넣으면 선물을 산 사람 자신이 프로가 된다.
     static let giftProductID = "com.devkoan.FireTracker.gift.pro"
 
+    /// 개발자 응원하기(팁) — 소모성 세 가지, 작은 것부터. 아무것도 열지 않는다.
+    /// ⚠️ 선물처럼 `productIDs` · `entitlementIDs` 에 넣지 않는다. 넣으면 팁을 낸 사람이 프로가 된다.
+    static let tipProductIDs = [
+        "com.devkoan.FireTracker.tip.small",
+        "com.devkoan.FireTracker.tip.medium",
+        "com.devkoan.FireTracker.tip.large",
+    ]
+
     /// 유료화 전 마지막 빌드 번호(CFBundleVersion). 이 빌드 이하로 처음 내려받은
     /// 사람은 원래 무료로 쓰던 기능을 그대로 쓴다(그랜드파더링).
     /// 유료화가 들어간 첫 출시 빌드는 반드시 이 값보다 커야 한다.

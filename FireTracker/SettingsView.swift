@@ -76,6 +76,10 @@ struct SettingsView: View {
             Section {
                 LeeoSupportSection<FireTrackerSpec>()
                 NavigationLink(LeeoRoadmapText.entry) { RoadmapScreen() }
+                // 개발자 응원하기(팁). 상품이 App Store 에서 와야 선다.
+                if let tipJar = pro.tipJar {
+                    LeeoTipJarLink<FireTrackerSpec>(tipJar: tipJar)
+                }
                 if isMasterMode {
                     NavigationLink {
                         LeeoUsageStatsView<FireTrackerSpec>()

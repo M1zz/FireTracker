@@ -25,7 +25,9 @@ enum FireTrackerSpec: LeeoAppSpec {
                 productID: ProAccess.giftProductID,
                 grantsProductID: ProAccess.productID,
                 containerIdentifier: "iCloud.com.Ysoup.FeedbackHub"
-            )
+            ),
+            // 개발자 응원하기(팁). 소모성 세 가지, 기능을 열지 않는다.
+            tipJar: LeeoTipJarConfig(productIDs: ProAccess.tipProductIDs)
         )
     )
 

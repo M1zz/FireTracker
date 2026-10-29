@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import Charts
 import TipKit
+import LeeoKit
 
 // Surfaces the 기간별 목표 feature and points to where it's set up (설정).
 struct MilestoneSetupTip: Tip {
@@ -105,6 +106,7 @@ struct DashboardView: View {
     @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query private var settingsList: [FireSettings]
+    @EnvironmentObject private var pro: LeeoStore
 
     @State private var showingAddAsset = false
     @State private var showingQuickStart = false
@@ -374,6 +376,13 @@ struct DashboardView: View {
                             }
                             section(String(localized: "이번 주"), String(localized: "지난 기록과 비교해 무엇이 달라졌나")) {
                                 welcomeCard
+                            }
+                            // 오래 지켜본 사람에게만, 드물게 응원을 부탁한다. 페이월이 꺼져 있어 모두가 프로라 누구에게나.
+                            if let tipJar = pro.tipJar {
+                                LeeoTipAskSlot<FireTrackerSpec>(tipJar: tipJar,
+                                                                reached: FireTrackerTipMoments.reachedNow(snapshots: snapshots))
+                                    .leeoStyle(LeeoStyle(accent: Theme.accent, surface: Theme.surface,
+                                                         text: Theme.textPrimary, textMuted: Theme.textSecond))
                             }
                             if showLevers { leverCard }
                             section(String(localized: "내 돈의 상태"), String(localized: "자산이 벌어 오는 돈과 바로 쓸 수 있는 돈")) {

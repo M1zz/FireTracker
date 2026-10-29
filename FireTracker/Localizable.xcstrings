@@ -198523,6 +198523,419 @@
         }
       }
     },
+    "퇴사각과 함께 %lld개월째 퇴사 날짜를 지켜보고 있어요" : {
+      "comment" : "Tip ask card: months since the first net-worth record",
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Už %lld měsíc sledujete ve FireTrackeru den, kdy budete moci odejít z práce"
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Už %lld měsíce sledujete ve FireTrackeru den, kdy budete moci odejít z práce"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Už %lld měsíce sledujete ve FireTrackeru den, kdy budete moci odejít z práce"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Už %lld měsíců sledujete ve FireTrackeru den, kdy budete moci odejít z práce"
+                }
+              }
+            }
+          }
+        },
+        "da" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Du har fulgt din dag for at stoppe med at arbejde i FireTracker i %lld måned"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Du har fulgt din dag for at stoppe med at arbejde i FireTracker i %lld måneder"
+                }
+              }
+            }
+          }
+        },
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Seit %lld Monat behältst du mit FireTracker deinen Ausstiegstag im Blick"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Seit %lld Monaten behältst du mit FireTracker deinen Ausstiegstag im Blick"
+                }
+              }
+            }
+          }
+        },
+        "el" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Παρακολουθείτε με το FireTracker την ημέρα που θα αφήσετε τη δουλειά εδώ και %lld μήνα"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Παρακολουθείτε με το FireTracker την ημέρα που θα αφήσετε τη δουλειά εδώ και %lld μήνες"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "You've been tracking your quit date with FireTracker for %lld month"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "You've been tracking your quit date with FireTracker for %lld months"
+                }
+              }
+            }
+          }
+        },
+        "en-GB" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "You've been tracking your quit date with FireTracker for %lld month"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "You've been tracking your quit date with FireTracker for %lld months"
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Llevas %lld mes siguiendo con FireTracker el día en que podrás dejar el trabajo"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Llevas %lld de meses siguiendo con FireTracker el día en que podrás dejar el trabajo"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Llevas %lld meses siguiendo con FireTracker el día en que podrás dejar el trabajo"
+                }
+              }
+            }
+          }
+        },
+        "fi" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Olet seurannut FireTrackerilla työstä lähtösi päivää jo %lld kuukauden"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Olet seurannut FireTrackerilla työstä lähtösi päivää jo %lld kuukautta"
+                }
+              }
+            }
+          }
+        },
+        "fr" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Depuis %lld mois, vous suivez avec FireTracker le jour où vous pourrez arrêter"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Depuis %lld de mois, vous suivez avec FireTracker le jour où vous pourrez arrêter"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Depuis %lld mois, vous suivez avec FireTracker le jour où vous pourrez arrêter"
+                }
+              }
+            }
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudah %lld bulan Anda memantau hari bisa berhenti kerja bersama FireTracker"
+          }
+        },
+        "it" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Da %lld mese segui con FireTracker il giorno in cui potrai lasciare il lavoro"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Da %lld di mesi segui con FireTracker il giorno in cui potrai lasciare il lavoro"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Da %lld mesi segui con FireTracker il giorno in cui potrai lasciare il lavoro"
+                }
+              }
+            }
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FireTrackerで退職できる日を見守って%lldか月になりました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "퇴사각과 함께 %lld개월째 퇴사 날짜를 지켜보고 있어요"
+          }
+        },
+        "nb" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Du har fulgt dagen du kan slutte å jobbe i FireTracker i %lld måned"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Du har fulgt dagen du kan slutte å jobbe i FireTracker i %lld måneder"
+                }
+              }
+            }
+          }
+        },
+        "nl" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Je volgt al %lld maand met FireTracker de dag waarop je kunt stoppen met werken"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Je volgt al %lld maanden met FireTracker de dag waarop je kunt stoppen met werken"
+                }
+              }
+            }
+          }
+        },
+        "pl" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Od %lld miesiąca śledzisz z FireTracker dzień, w którym rzucisz pracę"
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Od %lld miesięcy śledzisz z FireTracker dzień, w którym rzucisz pracę"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Od %lld miesięcy śledzisz z FireTracker dzień, w którym rzucisz pracę"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Od %lld miesiąca śledzisz z FireTracker dzień, w którym rzucisz pracę"
+                }
+              }
+            }
+          }
+        },
+        "pt-BR" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Há %lld mês você acompanha no FireTracker o dia em que vai poder sair do emprego"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Há %lld de meses você acompanha no FireTracker o dia em que vai poder sair do emprego"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Há %lld meses você acompanha no FireTracker o dia em que vai poder sair do emprego"
+                }
+              }
+            }
+          }
+        },
+        "ru" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Вы уже %lld месяц следите с FireTracker за днём, когда сможете уйти с работы"
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Вы уже %lld месяца следите с FireTracker за днём, когда сможете уйти с работы"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Вы уже %lld месяцев следите с FireTracker за днём, когда сможете уйти с работы"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Вы уже %lld месяца следите с FireTracker за днём, когда сможете уйти с работы"
+                }
+              }
+            }
+          }
+        },
+        "sv" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Du har följt dagen du kan sluta jobba i FireTracker i %lld månad"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Du har följt dagen du kan sluta jobba i FireTracker i %lld månader"
+                }
+              }
+            }
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คุณติดตามวันที่จะลาออกได้กับ FireTracker มา %lld เดือนแล้ว"
+          }
+        },
+        "tr" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld aydır FireTracker ile işi bırakabileceğiniz günü takip ediyorsunuz"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld aydır FireTracker ile işi bırakabileceğiniz günü takip ediyorsunuz"
+                }
+              }
+            }
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn đã theo dõi ngày có thể nghỉ việc cùng FireTracker được %lld tháng"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你已经用FireTracker关注辞职日期%lld个月了"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你已經用FireTracker關注離職日期%lld個月了"
+          }
+        }
+      }
+    },
     "퇴사까지" : {
       "extractionState" : "manual",
       "localizations" : {

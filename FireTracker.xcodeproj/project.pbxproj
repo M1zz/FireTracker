@@ -44,6 +44,7 @@
 		F3808CA53E41CA8046B99C85 /* FireTrackerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE0290DA1AF556C4A919F /* FireTrackerWidget.swift */; };
 		FC4D1E8C3D32AC434F856C74 /* AppSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F01026AA4EAE9DE99CC7ED /* AppSupport.swift */; };
 		A1000030 /* ProAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000030 /* ProAccess.swift */; };
+		A1000050 /* TipMoments.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000050 /* TipMoments.swift */; };
 		A1000031 /* ProPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000031 /* ProPaywallView.swift */; };
 		A1000033 /* FutureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000033 /* FutureEngine.swift */; };
 		A1000034 /* FuturePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000034 /* FuturePreviewView.swift */; };
@@ -114,6 +115,7 @@
 		CF6903DE5951883DA07B7400 /* QuickStartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuickStartView.swift; sourceTree = "<group>"; };
 		D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireSummary.swift; sourceTree = "<group>"; };
 		B1000030 /* ProAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProAccess.swift; sourceTree = "<group>"; };
+		B1000050 /* TipMoments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipMoments.swift; sourceTree = "<group>"; };
 		B1000031 /* ProPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProPaywallView.swift; sourceTree = "<group>"; };
 		B1000033 /* FutureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureEngine.swift; sourceTree = "<group>"; };
 		B1000034 /* FuturePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuturePreviewView.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				B100000C /* AssetsView.swift */,
 				B100000D /* SimulatorView.swift */,
 				B1000030 /* ProAccess.swift */,
+				B1000050 /* TipMoments.swift */,
 				B1000031 /* ProPaywallView.swift */,
 				B1000033 /* FutureEngine.swift */,
 				B1000034 /* FuturePreviewView.swift */,
@@ -381,6 +384,7 @@
 				A100000C /* AssetsView.swift in Sources */,
 				A100000D /* SimulatorView.swift in Sources */,
 				A1000030 /* ProAccess.swift in Sources */,
+				A1000050 /* TipMoments.swift in Sources */,
 				A1000031 /* ProPaywallView.swift in Sources */,
 				A1000033 /* FutureEngine.swift in Sources */,
 				A1000034 /* FuturePreviewView.swift in Sources */,
@@ -677,7 +681,7 @@
 			repositoryURL = "https://github.com/M1zz/LeeoKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.20.0;
+				minimumVersion = 3.25.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

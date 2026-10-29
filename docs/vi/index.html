@@ -1,162 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Toesagak · Hỗ trợ</title>
-<link rel="canonical" href="https://m1zz.github.io/FireTracker/vi/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
-<meta name="description" content="Trang hỗ trợ Toesagak — ứng dụng theo dõi tài sản, giá trị tài sản ròng và mục tiêu FIRE (nghỉ hưu sớm)" />
-<style>
-  :root{
-    --bg:#0f1115; --surface:#171a21; --surface2:#1f242d; --line:#2a2f3a;
-    --text:#e9edf2; --muted:#9aa3b0; --accent:#4CAF8E; --accent2:#E8A33D;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
-       background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
-  header{padding:40px 0 40px;text-align:center}
-  .logo{width:96px;height:96px;border-radius:22px;object-fit:cover;border:1px solid var(--line);margin-bottom:18px}
-  h1{font-size:30px;margin:6px 0 6px;letter-spacing:-.4px}
-  .tag{color:var(--muted);font-size:16px;margin:0}
-  section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px;margin:18px 0}
-  h2{font-size:19px;margin:0 0 14px;letter-spacing:-.3px}
-  ul{margin:0;padding-left:20px}
-  li{margin:7px 0}
-  .feat{display:grid;grid-template-columns:1fr;gap:10px;margin:0;padding:0;list-style:none}
-  .feat li{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);
-           border-radius:12px;padding:12px 14px;margin:0}
-  .feat .ico{font-size:18px;line-height:1.5}
-  .qa{margin:14px 0}
-  .qa h3{font-size:15px;margin:0 0 4px;color:var(--text)}
-  .qa p{margin:0;color:var(--muted);font-size:15px}
-  a{color:var(--accent)}
-  .btn{display:inline-block;background:var(--accent);color:#06120d;font-weight:700;text-decoration:none;
-       padding:12px 20px;border-radius:12px;margin-top:6px}
-  .contact{font-size:17px}
-  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 60px}
-  footer a{color:var(--muted)}
-  code{background:var(--surface2);padding:2px 6px;border-radius:6px;font-size:13px}
-  .langs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:12.5px;line-height:1.5;margin:0 auto;padding:16px 0 0}
-  .langs a{color:var(--muted);text-decoration:none;white-space:nowrap}
-  .langs a:hover{color:var(--text)}
-  .langs a[aria-current]{color:var(--accent);font-weight:700}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toesagak: máy tính FIRE cho bạn biết tháng nào có thể nghỉ việc</title>
+  <meta name="description" content="Nhập chi tiêu mỗi tháng, số tiền đã tích lũy và để dành hằng tháng để biết tháng, năm bạn có thể nghỉ. Theo dõi tài sản, mục tiêu và sáu máy tính.">
+  <meta name="theme-color" content="#9A6200" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6779654854">
+  <link rel="canonical" href="https://m1zz.github.io/FireTracker/vi/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Toesagak: máy tính FIRE cho bạn biết tháng nào có thể nghỉ việc">
+  <meta property="og:description" content="Nhập chi tiêu mỗi tháng, số tiền đã tích lũy và để dành hằng tháng để biết tháng, năm bạn có thể nghỉ. Theo dõi tài sản, mục tiêu và sáu máy tính.">
+  <meta property="og:url" content="https://m1zz.github.io/FireTracker/vi/">
+  <meta property="og:image" content="https://m1zz.github.io/FireTracker/img/vi/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#9A6200}@media (prefers-color-scheme:dark){:root{--accent:#E8A33D}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<div class="wrap">
-
-  <nav class="langs" aria-label="Chọn ngôn ngữ">
-    <a href="../index.html" hreflang="ko" lang="ko">&#54620;&#44397;&#50612;</a>
-    <a href="../en/index.html" hreflang="en" lang="en">English</a>
-    <a href="../ja/index.html" hreflang="ja" lang="ja">日本語</a>
-    <a href="../zh-Hans/index.html" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
-    <a href="../zh-Hant/index.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
-    <a href="../es/index.html" hreflang="es" lang="es">Español</a>
-    <a href="../de/index.html" hreflang="de" lang="de">Deutsch</a>
-    <a href="../fr/index.html" hreflang="fr" lang="fr">Français</a>
-    <a href="../it/index.html" hreflang="it" lang="it">Italiano</a>
-    <a href="../pt-BR/index.html" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
-    <a href="../ru/index.html" hreflang="ru" lang="ru">Русский</a>
-    <a href="../th/index.html" hreflang="th" lang="th">ไทย</a>
-    <a href="../vi/index.html" hreflang="vi" lang="vi" aria-current="page">Tiếng Việt</a>
-    <a href="../cs/index.html" hreflang="cs" lang="cs">Čeština</a>
-    <a href="../da/index.html" hreflang="da" lang="da">Dansk</a>
-    <a href="../el/index.html" hreflang="el" lang="el">Ελληνικά</a>
-    <a href="../fi/index.html" hreflang="fi" lang="fi">Suomi</a>
-    <a href="../id/index.html" hreflang="id" lang="id">Bahasa Indonesia</a>
-    <a href="../nb/index.html" hreflang="nb" lang="nb">Norsk bokmål</a>
-    <a href="../nl/index.html" hreflang="nl" lang="nl">Nederlands</a>
-    <a href="../pl/index.html" hreflang="pl" lang="pl">Polski</a>
-    <a href="../sv/index.html" hreflang="sv" lang="sv">Svenska</a>
-    <a href="../tr/index.html" hreflang="tr" lang="tr">Türkçe</a>
-  </nav>
-
-  <header>
-    <img class="logo" src="../icon.png" alt="Logo Toesagak" />
-    <h1>Toesagak</h1>
-    <p class="tag">Theo dõi tài sản, tài sản ròng và mục tiêu FIRE (nghỉ hưu sớm) chỉ trong một màn hình</p>
+  <a class="skip" href="#main">Chuyển đến nội dung</a>
+  <header class="bar">
+    <a class="brand" href="../vi/"><img src="../icon.png" alt="" width="32" height="32">Toesagak</a>
+    <a class="lang-link" href="#languages">Ngôn ngữ</a>
   </header>
 
-  <section>
-    <h2>Giới thiệu</h2>
-    <p>Toesagak là ứng dụng theo dõi tài chính cá nhân. Bạn nhập những gì mình sở hữu và các khoản nợ, ứng dụng sẽ tính
-       <strong>tổng tài sản và tài sản ròng</strong>. Ghi lại mỗi tháng để thấy <strong>xu hướng thay đổi</strong>
-       và <strong>mức độ hoàn thành mục tiêu FIRE (tự do tài chính)</strong>.
-       Mọi dữ liệu <strong>chỉ được lưu trên thiết bị của bạn</strong> và không cần đăng ký tài khoản.</p>
-  </section>
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Khi nào bạn nghỉ việc được?<br>Xem bằng con số.</h1>
+        <p class="lead">Nhập số tiền bạn tiêu và số tiền đã tích lũy, bạn sẽ thấy tháng mình có thể nghỉ. Mỗi lần tài sản thay đổi, bạn biết ngay ngày đó đến gần hơn hay lùi xa hơn.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6779654854">Tải trên App Store</a><a class="try" href="#try">Tìm ngày nghỉ việc của bạn ↓</a></div>
+        <p class="muted small">Không cần tài khoản. Dữ liệu nằm trên thiết bị của bạn.</p>
+      </div>
+      <div class="phone"><img src="../img/vi/01-dashboard.jpg" alt="Khi nào bạn nghỉ việc được? Xem bằng con số." width="600" height="1303" decoding="async"></div>
+    </section>
 
-  <section>
-    <h2>Tính năng chính</h2>
-    <ul class="feat">
-      <li><span class="ico">📊</span><span>Quản lý tài sản theo danh mục (cổ phiếu, tiền mã hóa, bất động sản, tiền mặt, lương hưu, nợ…) với ghi chép chi tiết cho từng mã</span></li>
-      <li><span class="ico">📈</span><span>Biểu đồ hằng tháng về tài sản, nợ và tài sản ròng, kèm mức thay đổi so với lần ghi trước</span></li>
-      <li><span class="ico">🎯</span><span>Tiến độ FIRE dựa trên mức chi tiêu mục tiêu và tỷ lệ rút, cùng dự báo đến cuối năm nay</span></li>
-      <li><span class="ico">📡</span><span>Nhập mã chứng khoán để tự động lấy giá cổ phiếu Mỹ, cổ phiếu Hàn Quốc, tiền mã hóa và bất động sản tại Hàn Quốc</span></li>
-      <li><span class="ico">🖼️</span><span>Nhận diện ảnh chụp màn hình danh mục từ ứng dụng chứng khoán ngay trên thiết bị và thêm tất cả trong một lần</span></li>
-    </ul>
-  </section>
 
-  <section>
-    <h2>Câu hỏi thường gặp</h2>
-    <div class="qa">
-      <h3>Dữ liệu tài sản của tôi được lưu ở đâu?</h3>
-      <p>Chỉ trên thiết bị của bạn (Apple SwiftData). Không có gì được tải lên máy chủ và nhà phát triển cũng không thể xem.</p>
-    </div>
-    <div class="qa">
-      <h3>Giá không tự động cập nhật.</h3>
-      <p>Cổ phiếu Mỹ, tiền mã hóa và tỷ giá hoạt động mà không cần khóa. Giá cổ phiếu Hàn Quốc và bất động sản cần nhập khóa API tương ứng (Korea Investment &amp; Securities, Cổng dữ liệu công của Hàn Quốc) trong thẻ Cài đặt. Vui lòng kiểm tra cả kết nối mạng và mã chứng khoán đã đúng chưa.</p>
-    </div>
-    <div class="qa">
-      <h3>Làm sao để xóa dữ liệu?</h3>
-      <p>Khi bạn xóa ứng dụng, toàn bộ dữ liệu lưu trên thiết bị cũng bị xóa theo.</p>
-    </div>
-    <div class="qa">
-      <h3>Tổng tài sản và tài sản ròng khác nhau thế nào?</h3>
-      <p>Trong ứng dụng, “tổng tài sản” là tổng mọi thứ bạn sở hữu, còn “tài sản ròng” là phần còn lại sau khi trừ đi các khoản nợ (tổng tài sản − nợ).</p>
-    </div>
-  </section>
+    <section class="reveal" id="try">
+      <h2>Tìm ngày nghỉ việc của bạn</h2>
+      <p class="muted">Kéo thanh trượt. Đây chính là phép tính ứng dụng chạy ở màn hình đầu tiên.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Tìm ngày nghỉ việc của bạn&quot;, &quot;lead&quot;: &quot;Kéo thanh trượt. Đây chính là phép tính ứng dụng chạy ở màn hình đầu tiên.&quot;, &quot;spend&quot;: &quot;Chi tiêu mỗi tháng sau khi nghỉ&quot;, &quot;worth&quot;: &quot;Tài sản ròng hiện tại&quot;, &quot;save&quot;: &quot;Để dành mỗi tháng&quot;, &quot;age&quot;: &quot;Tuổi của bạn&quot;, &quot;ageUnit&quot;: &quot;{n} tuổi&quot;, &quot;money&quot;: &quot;{n}&quot;, &quot;scale&quot;: {&quot;spend&quot;: [5000000, 300000000, 1000000, 25000000], &quot;worth&quot;: [0, 30000000000, 100000000, 1000000000], &quot;save&quot;: [0, 200000000, 1000000, 10000000]}, &quot;now&quot;: &quot;Với tốc độ hiện tại&quot;, &quot;years&quot;: &quot;{n} năm&quot;, &quot;months&quot;: &quot;{n} tháng&quot;, &quot;yearsMonths&quot;: &quot;{y} {m}&quot;, &quot;quit&quot;: &quot;Bạn có thể nghỉ sau {t}, lúc {age} tuổi&quot;, &quot;done&quot;: &quot;Bạn đã đạt mục tiêu&quot;, &quot;never&quot;: &quot;Chưa thể chạm tới&quot;, &quot;neverText&quot;: &quot;Với mức để dành này, bạn sẽ không đạt mục tiêu trong 80 năm. Hãy thử để dành nhiều hơn mỗi tháng hoặc giảm chi tiêu.&quot;, &quot;target&quot;: &quot;Mục tiêu&quot;, &quot;progress&quot;: &quot;Tiến độ&quot;, &quot;note&quot;: &quot;Mục tiêu bằng chi tiêu một năm chia cho 4%. Giả định tiền tích lũy tăng 5% mỗi năm. Trong ứng dụng bạn có thể đổi cả hai giá trị. Chỉ để tham khảo, không phải lời khuyên đầu tư.&quot;}"></div>
+    </section>
 
-  <section>
-    <h2>Liên hệ</h2>
-    <p class="contact">Báo lỗi, đề xuất tính năng hay có câu hỏi, hãy gửi email cho chúng tôi.</p>
-    <p><a class="btn" href="mailto:leeo@kakao.com">leeo@kakao.com</a></p>
-  </section>
+    <section class="problem reveal">
+      <h2>Vẫn tự nhẩm trong đầu "đã nghỉ được chưa"?</h2>
+      <p>Khi tiền ngân hàng, tài khoản chứng khoán, quỹ hưu trí và tiền đặt cọc thuê nhà nằm mỗi nơi một chỗ, đến tổng tài sản cũng mơ hồ, nên ngày nghỉ việc chỉ là phỏng đoán. Toesagak gom tất cả về một màn hình và liên tục tính lại tháng bạn có thể nghỉ từ con số tổng đó.</p>
+    </section>
 
-  <section>
-    <h2>Chính sách quyền riêng tư</h2>
-    <p>Xem ứng dụng xử lý những thông tin nào (và không xử lý những gì) tại đây.</p>
-    <p><a href="./privacy.html">Xem Chính sách quyền riêng tư →</a></p>
-  </section>
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Mọi tài sản trên một màn hình</h2>
+        <p>Bất động sản, cổ phiếu, quỹ và ETF, hưu trí, tiền mặt và tiền gửi, tiền đặt cọc, tiền mã hóa và khoản vay, nhóm theo loại, kèm tổng tài sản, tài sản ròng và tỷ lệ nợ.<br>Giá cổ phiếu và tiền mã hóa được lấy về để giá trị luôn mới, và chỉ một ảnh chụp màn hình ứng dụng chứng khoán là đưa vào toàn bộ mã và giá trị.</p>
+      </div>
+      <div class="phone"><img src="../img/vi/02-assets.jpg" alt="Mọi tài sản trên một màn hình" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Mỗi ngày cần bao nhiêu để tới đích</h2>
+        <p>Xem mục tiêu tháng này, năm nay, năm năm và nghỉ hưu cùng các bản ghi trước đây trên một biểu đồ. Ứng dụng còn cho biết cần để dành bao nhiêu mỗi ngày, tuần hay tháng để đi đúng hướng.<br>Khi tài sản thay đổi, bản ghi của tuần đó tự được lưu, nên lịch sử cứ thế dày lên.</p>
+      </div>
+      <div class="phone"><img src="../img/vi/03-journey.jpg" alt="Mỗi ngày cần bao nhiêu để tới đích" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Tính trước khi quyết định lớn</h2>
+        <p>Máy tính đường tài sản trọn đời, đầu tư, trả nợ hay đầu tư, khoản vay, tiền gửi và tiết kiệm, sức mua của lương, và quy đổi tiền thành giờ làm. Kéo một giá trị là biểu đồ vẽ lại, đường cũ vẫn còn dạng nét đứt để so sánh.<br>Đặt tên và lưu các thiết lập bạn hay dùng.</p>
+      </div>
+      <div class="phone"><img src="../img/vi/04-loan.jpg" alt="Tính trước khi quyết định lớn" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Ba bước để bắt đầu</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Nhập chi tiêu và tuổi</h3><p>Số ước chừng là đủ. Ngày nghỉ việc hiện ra ngay.</p></li>
+<li class="card"><span class="n">2</span><h3>Thêm tài sản</h3><p>Chia càng chi tiết, ngày càng chính xác.</p></li>
+<li class="card"><span class="n">3</span><h3>Thỉnh thoảng ghé xem</h3><p>Bản ghi hằng tuần tự tích lại, và ứng dụng có thể nhắc bạn vào ngày 1 mỗi tháng.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Ứng dụng tính như thế nào</h2>
+      <div class="card table">
+        <dl><div><dt>Mục tiêu</dt><dd>Chi tiêu một năm sau khi nghỉ ÷ tỷ lệ rút an toàn (ở mức 4% là 25 năm chi tiêu)</dd></div><div><dt>Ngày nghỉ việc</dt><dd>Tháng mà tài sản ròng cộng số tiền để dành mỗi tháng, tăng theo lợi suất kỳ vọng, chạm mục tiêu</dd></div><div><dt>Tổng tài sản</dt><dd>Mọi thứ bạn sở hữu cộng lại</dd></div><div><dt>Tài sản ròng</dt><dd>Tổng tài sản trừ các khoản nợ như khoản vay</dd></div><div><dt>Tiến độ</dt><dd>Tài sản ròng ÷ mục tiêu. Cũng có thể theo dõi bằng thu nhập thụ động</dd></div><div><dt>Những gì bạn chỉnh được</dt><dd>Chi tiêu hằng tháng, tỷ lệ rút từ 2 đến 6%, lợi suất kỳ vọng từ 0 đến 12%, độ tuổi bạn muốn nghỉ</dd></div></dl>
+      </div>
+      <p class="muted">Mọi kết quả là phép tính tham khảo dựa trên dữ liệu bạn nhập, không phải lời khuyên đầu tư.</p>
+    </section>
+
+
+
+    <section class="reveal" id="faq">
+      <h2>Câu hỏi</h2>
+      <div class="faq"><details><summary>Dữ liệu của tôi được lưu ở đâu?</summary><p>Chỉ trên thiết bị của bạn. Không cần đăng ký và không có gì được gửi cho nhà phát triển. Bật đồng bộ iCloud trong Cài đặt để xem cùng dữ liệu trên iPhone và iPad qua tài khoản iCloud của chính bạn.</p></details>
+<details><summary>Giá không cập nhật.</summary><p>Cổ phiếu Mỹ và Hàn Quốc, tiền mã hóa và tỷ giá hoạt động mà không cần thiết lập gì. Hãy kiểm tra kết nối mạng và mã chứng khoán đã đúng chưa. Giá căn hộ dùng dữ liệu bất động sản công khai của Hàn Quốc và cần nhập khóa dịch vụ trong Cài đặt.</p></details>
+<details><summary>Tổng tài sản và tài sản ròng khác nhau thế nào?</summary><p>Tổng tài sản là mọi thứ bạn sở hữu cộng lại. Tài sản ròng là con số đó trừ đi các khoản nợ như khoản vay. Ngày nghỉ việc được tính theo tài sản ròng.</p></details>
+<details><summary>Làm sao chuyển dữ liệu sang thiết bị mới?</summary><p>Dùng Xuất trong Cài đặt để tạo tệp sao lưu, lưu vào ứng dụng Tệp, iCloud Drive hoặc email, rồi khôi phục trên thiết bị mới. Tệp sao lưu không bao giờ chứa khóa API. Ứng dụng cũng tự giữ 20 bản sao lưu gần nhất trên thiết bị.</p></details>
+<details><summary>Cảnh báo bán hoạt động thế nào?</summary><p>Với mỗi mã, đặt mức giảm tối đa từ đỉnh hoặc một giá mục tiêu. Khi giá vượt qua ngưỡng đó, bạn sẽ nhận được thông báo. Lúc giá tăng thì ứng dụng không làm phiền. Giá được kiểm tra khi bạn mở ứng dụng và khi iOS cho phép chạy nền (thường vài giờ một lần), nên đây không phải theo dõi thời gian thực.</p></details>
+<details><summary>Tôi có thể giấu các con số không?</summary><p>Bật Khóa ứng dụng trong Cài đặt để mở bằng Face ID hoặc mật mã. Khi đã khóa, lời nhắc hằng tháng cũng không hiện con số nào.</p></details>
+<details><summary>Tôi có thể xem thử trước không?</summary><p>Bật Dữ liệu mẫu trong Cài đặt để xem mọi màn hình với tài sản của một nhân vật giả định. Tắt đi là dữ liệu của bạn trở lại ngay. Không dùng được Dữ liệu mẫu khi đang bật đồng bộ iCloud.</p></details>
+<details><summary>Làm sao xóa toàn bộ dữ liệu?</summary><p>Xóa ứng dụng sẽ xóa mọi bản ghi lưu trên thiết bị. Nếu muốn giữ một bản, hãy xuất tệp sao lưu trong Cài đặt trước.</p></details>
+<details><summary>Tôi có thể đầu tư dựa vào những con số này không?</summary><p>Kết quả của Toesagak là phép tính tham khảo dựa trên dữ liệu bạn nhập và một mức lợi suất giả định. Đó không phải lời khuyên đầu tư, và kết quả thực tế tùy thuộc vào thị trường và hoàn cảnh của bạn.</p></details></div>
+      <p class="contact">Báo lỗi, góp ý hay có câu hỏi? Hãy viết cho <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Bắt đầu ghi lại hôm nay.<br>Thấy ngày bạn nghỉ việc.</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6779654854">Tải trên App Store</a>
+    </section>
+  </main>
 
   <footer>
-    <p>© 2026 Toesagak · <a href="./privacy.html">Chính sách quyền riêng tư</a></p>
+    <nav id="languages" class="langs" aria-label="Ngôn ngữ"><a href="../" hreflang="ko" lang="ko">한국어</a>
+<a href="../en/" hreflang="en" lang="en">English</a>
+<a href="../ja/" hreflang="ja" lang="ja">日本語</a>
+<a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="../es/" hreflang="es" lang="es">Español</a>
+<a href="../de/" hreflang="de" lang="de">Deutsch</a>
+<a href="../fr/" hreflang="fr" lang="fr">Français</a>
+<a href="../it/" hreflang="it" lang="it">Italiano</a>
+<a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="../ru/" hreflang="ru" lang="ru">Русский</a>
+<a href="../th/" hreflang="th" lang="th">ไทย</a>
+<a href="../vi/" hreflang="vi" lang="vi" aria-current="page">Tiếng Việt</a>
+<a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
+<a href="../da/" hreflang="da" lang="da">Dansk</a>
+<a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
+<a href="../fi/" hreflang="fi" lang="fi">Suomi</a>
+<a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
+<a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
+<a href="../pl/" hreflang="pl" lang="pl">Polski</a>
+<a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
+<a href="../tr/" hreflang="tr" lang="tr">Türkçe</a></nav>
+    <p><a href="privacy.html">Chính sách quyền riêng tư</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Toesagak</p>
   </footer>
 
-</div>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

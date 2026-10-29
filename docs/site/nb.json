@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: FIRE-kalkulatoren som viser hvilken måned du kan slutte",
+  "description": "Legg inn månedlig forbruk, hva du har spart og sparer hver måned, og se måned og år du kan gå av. Formuesoversikt, mål og seks kalkulatorer.",
+  "hero": {
+    "headline": "Når kan du slutte?\nSe det i tall.",
+    "lead": "Legg inn hva du bruker og hva du har spart, så får du måneden du kan gå. Hver gang eiendelene endrer seg, ser du om datoen kom nærmere eller gled unna.",
+    "cta": "Last ned fra App Store",
+    "note": "Ingen konto. Registreringene blir på enheten din."
+  },
+  "demo": {
+    "title": "Finn sluttdatoen din",
+    "lead": "Dra i glidebryterne. Det er samme utregning som appen gjør på første skjerm.",
+    "spend": "Månedlig forbruk etter at du slutter",
+    "worth": "Nettoformue i dag",
+    "save": "Spart hver måned",
+    "age": "Alderen din",
+    "ageUnit": "{n} år",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        5000,
+        100000,
+        500,
+        30000
+      ],
+      "worth": [
+        0,
+        15000000,
+        50000,
+        500000
+      ],
+      "save": [
+        0,
+        100000,
+        500,
+        10000
+      ]
+    },
+    "now": "I dagens tempo",
+    "years": "{n} år",
+    "months": "{n} mnd",
+    "yearsMonths": "{y} {m}",
+    "quit": "Du kan slutte om {t}, som {age}-åring",
+    "done": "Du er allerede i mål",
+    "never": "Ikke innen rekkevidde ennå",
+    "neverText": "Med denne sparingen når du ikke målet innen 80 år. Prøv å spare mer hver måned eller bruke mindre.",
+    "target": "Mål",
+    "progress": "Fremdrift",
+    "note": "Målet er ett års forbruk delt på 4 %. Sparingen antas å vokse 5 % i året. Begge deler kan endres i appen. Kun veiledende, ikke investeringsrådgivning."
+  },
+  "problem": {
+    "title": "Regner du fortsatt i hodet på om du kan slutte?",
+    "text": "Når bankkonto, aksjesparekonto, pensjon og depositum ligger hver sin plass, blir selv totalen uklar, og sluttdatoen forblir en gjetning. Toesagak samler alt på én skjerm og regner hele tiden ut på nytt hvilken måned du kan slutte."
+  },
+  "features": [
+    {
+      "title": "Alle eiendeler på én skjerm",
+      "text": "Eiendom, aksjer, fond og ETF-er, pensjon, kontanter og innskudd, depositum, krypto og lån, sortert etter type med totale eiendeler, nettoformue og gjeldsgrad.\nKurser på aksjer og krypto hentes slik at verdiene holder seg oppdatert, og et skjermbilde fra meglerappen henter inn beholdning og verdier i én operasjon.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Hvor mye om dagen som skal til",
+      "text": "Se denne måneden, dette året, fem år og pensjon som mål, sammen med tidligere registreringer, i ett diagram. Du ser også hvor mye du må spare per dag, uke eller måned for å holde kursen.\nNår eiendelene endrer seg, lagres ukens registrering automatisk, så historikken bygger seg opp av seg selv.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Regn på det før store valg",
+      "text": "Kalkulatorer for formuesutvikling gjennom livet, investering, nedbetaling av gjeld kontra investering, lån, sparing og innskudd, lønnens kjøpekraft og penger omgjort til timer. Dra i en verdi, så tegnes diagrammet på nytt, og forrige kurve blir stående stiplet til sammenligning.\nGi oppsettene du vender tilbake til et navn, og lagre dem.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Kom i gang på tre steg",
+    "items": [
+      {
+        "title": "Legg inn forbruk og alder",
+        "text": "Omtrentlige tall holder. Sluttdatoen vises med en gang."
+      },
+      {
+        "title": "Legg til eiendelene dine",
+        "text": "Jo mer du deler dem opp, desto skarpere blir datoen."
+      },
+      {
+        "title": "Ta en titt innimellom",
+        "text": "Ukentlige registreringer bygger seg opp av seg selv, og appen kan minne deg på det den 1. hver måned."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Slik regner appen",
+    "rows": [
+      [
+        "Mål",
+        "Ett års forbruk etter at du slutter ÷ trygg uttaksrate (ved 4 % tilsvarer det 25 års forbruk)"
+      ],
+      [
+        "Sluttdato",
+        "Måneden da nettoformuen din pluss det du sparer hver måned, med forventet avkastning, når målet"
+      ],
+      [
+        "Totale eiendeler",
+        "Alt du eier, lagt sammen"
+      ],
+      [
+        "Nettoformue",
+        "Totale eiendeler minus gjeld, for eksempel lån"
+      ],
+      [
+        "Fremdrift",
+        "Nettoformue ÷ mål. Du kan også følge den ut fra passiv inntekt"
+      ],
+      [
+        "Dette kan du endre",
+        "Månedlig forbruk, uttaksrate fra 2 til 6 %, forventet avkastning fra 0 til 12 %, alderen du vil slutte"
+      ]
+    ],
+    "note": "Alle resultater er veiledende beregninger basert på det du legger inn, og er ikke investeringsrådgivning."
+  },
+  "faq": {
+    "title": "Spørsmål",
+    "items": [
+      {
+        "q": "Hvor lagres registreringene mine?",
+        "a": "Bare på enheten din. Det er ingen registrering, og ingenting sendes til utvikleren. Slå på iCloud-synkronisering i Innstillinger for å se de samme registreringene på iPhone og iPad via din egen iCloud-konto."
+      },
+      {
+        "q": "Kursene oppdateres ikke.",
+        "a": "Amerikanske og koreanske aksjer, krypto og valutakurser fungerer uten oppsett. Sjekk internettforbindelsen og at tickeren eller koden er riktig. Boligpriser bruker offentlige eiendomsdata fra Korea og krever en gratis tjenestenøkkel lagt inn i Innstillinger."
+      },
+      {
+        "q": "Hva er forskjellen på totale eiendeler og nettoformue?",
+        "a": "Totale eiendeler er alt du eier, lagt sammen. Nettoformue er det samme minus gjeld, for eksempel lån. Sluttdatoen regnes ut fra nettoformuen."
+      },
+      {
+        "q": "Hvordan flytter jeg registreringene til en ny enhet?",
+        "a": "Bruk Eksporter i Innstillinger for å lage en sikkerhetskopifil, ta vare på den i Filer, iCloud Drive eller e-post, og gjenopprett den på den nye enheten. Sikkerhetskopier inneholder aldri API-nøkler. Appen beholder også de 20 nyeste sikkerhetskopiene på enheten automatisk."
+      },
+      {
+        "q": "Hvordan fungerer salgsvarsler?",
+        "a": "For hver beholdning angir du hvor mye den kan falle fra toppen, eller en målkurs. Når den krysser grensen, får du beskjed. Mens kursen stiger, er appen stille. Kursene sjekkes når du åpner appen og når iOS tillater det i bakgrunnen (vanligvis med noen timers mellomrom), så det er ikke sanntidsovervåking."
+      },
+      {
+        "q": "Kan jeg holde tallene mine private?",
+        "a": "Slå på Applås i Innstillinger for å åpne appen med Face ID eller kode. Når låsen er på, viser heller ikke den månedlige påminnelsen noen tall."
+      },
+      {
+        "q": "Kan jeg se meg rundt først?",
+        "a": "Slå på Demodata i Innstillinger for å utforske alle skjermene med eiendelene til en fiktiv person. Slå det av, så er dine egne registreringer tilbake med en gang. Demodata er ikke tilgjengelig mens iCloud-synkronisering er på."
+      },
+      {
+        "q": "Hvordan sletter jeg alle dataene mine?",
+        "a": "Sletter du appen, forsvinner alle registreringer som er lagret på enheten. Vil du beholde en kopi, eksporterer du en sikkerhetskopifil i Innstillinger først."
+      },
+      {
+        "q": "Kan jeg investere ut fra disse tallene?",
+        "a": "Resultatene i Toesagak er veiledende beregninger basert på det du legger inn og en antatt avkastning. De er ikke investeringsrådgivning, og det faktiske utfallet avhenger av markedet og situasjonen din."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Begynn å følge med i dag.\nSe sluttdatoen din.",
+    "cta": "Last ned fra App Store"
+  },
+  "ui": {
+    "skip": "Gå til innholdet",
+    "languages": "Språk",
+    "privacy": "Personvernerklæring",
+    "contact": "Feil, ideer eller spørsmål? Skriv til {email}."
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "title": "Toesagak: a calculadora FIRE que mostra o mês em que você pode largar o emprego",
+  "description": "Informe seu gasto mensal, o que já juntou e quanto poupa por mês e veja o mês e o ano em que pode parar. Patrimônio, metas e seis calculadoras.",
+  "hero": {
+    "headline": "Saiba quando largar o emprego.\nCom números, não no chute.",
+    "lead": "Informe quanto gasta e quanto já juntou, e aparece o mês em que você pode sair. Sempre que seu patrimônio muda, você vê se essa data chegou mais perto ou ficou mais longe.",
+    "cta": "Baixar na App Store",
+    "note": "Não precisa de conta. Seus registros ficam no seu aparelho."
+  },
+  "demo": {
+    "title": "Descubra sua data de saída",
+    "lead": "Arraste os controles. É a mesma conta que o app faz na primeira tela.",
+    "spend": "Gasto mensal depois de parar",
+    "worth": "Patrimônio líquido hoje",
+    "save": "Quanto você poupa por mês",
+    "age": "Sua idade",
+    "ageUnit": "{n} anos",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        1000,
+        50000,
+        250,
+        8000
+      ],
+      "worth": [
+        0,
+        5000000,
+        25000,
+        200000
+      ],
+      "save": [
+        0,
+        30000,
+        250,
+        3000
+      ]
+    },
+    "now": "No ritmo atual",
+    "years": [
+      "{n} ano",
+      "{n} anos"
+    ],
+    "months": [
+      "{n} mês",
+      "{n} meses"
+    ],
+    "yearsMonths": "{y} e {m}",
+    "quit": "Você pode parar daqui a {t}, aos {age} anos",
+    "done": "Você já chegou lá",
+    "never": "Ainda fora de alcance",
+    "neverText": "Nesse ritmo você não chega à meta em 80 anos. Tente poupar mais por mês ou reduzir os gastos.",
+    "target": "Meta",
+    "progress": "Progresso",
+    "note": "A meta é um ano de gastos dividido por 4%. O dinheiro poupado rende 5% ao ano nesta simulação. No app você pode mudar os dois valores. Apenas referência, não é recomendação de investimento."
+  },
+  "problem": {
+    "title": "Ainda fazendo de cabeça a conta do \"já dá para sair?\"",
+    "text": "Com conta no banco, corretora, previdência e caução de aluguel cada um num lugar, até o total fica nebuloso, e a data de saída vira um chute. O Toesagak junta tudo numa tela só e recalcula sem parar o mês em que você pode sair a partir desse total."
+  },
+  "features": [
+    {
+      "title": "Todo o patrimônio numa tela só",
+      "text": "Imóveis, ações, fundos e ETFs, previdência, dinheiro e depósitos, cauções, cripto e empréstimos, agrupados por tipo, com patrimônio total, patrimônio líquido e índice de endividamento.\nAs cotações de ações e cripto são buscadas para manter os valores em dia, e uma captura de tela da sua corretora traz ativos e valores de uma vez.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Quanto por dia até a meta",
+      "text": "Veja as metas do mês, do ano, de cinco anos e da aposentadoria junto com seus registros anteriores, num gráfico só. O app também diz quanto poupar por dia, semana ou mês para seguir no caminho.\nQuando o patrimônio muda, o registro da semana é salvo sozinho, e o histórico se forma sem esforço.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Faça as contas antes das grandes decisões",
+      "text": "Calculadoras de patrimônio ao longo da vida, investimento, quitar dívida ou investir, empréstimos, poupança e depósitos, poder de compra do salário e dinheiro convertido em horas. Arraste um valor e o gráfico se redesenha, com a curva anterior em pontilhado para comparar.\nDê nome às simulações que você usa sempre e salve.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Três passos para começar",
+    "items": [
+      {
+        "title": "Informe seus gastos e sua idade",
+        "text": "Números aproximados bastam. Sua data de saída aparece na hora."
+      },
+      {
+        "title": "Cadastre seus ativos",
+        "text": "Quanto mais detalhado, mais precisa fica a data."
+      },
+      {
+        "title": "Dê uma olhada de vez em quando",
+        "text": "Os registros semanais se acumulam sozinhos, e o app pode avisar todo dia 1º."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Como o app faz as contas",
+    "rows": [
+      [
+        "Meta",
+        "Um ano de gastos depois de parar ÷ taxa de retirada segura (a 4%, são 25 anos de gastos)"
+      ],
+      [
+        "Data de saída",
+        "O mês em que o patrimônio líquido, somado ao que você poupa por mês e rendendo ao retorno esperado, atinge a meta"
+      ],
+      [
+        "Patrimônio total",
+        "Tudo o que você tem, somado"
+      ],
+      [
+        "Patrimônio líquido",
+        "Patrimônio total menos dívidas, como empréstimos"
+      ],
+      [
+        "Progresso",
+        "Patrimônio líquido ÷ meta. Também dá para acompanhar pela renda passiva"
+      ],
+      [
+        "O que você pode ajustar",
+        "Gasto mensal, taxa de retirada de 2 a 6%, retorno esperado de 0 a 12%, a idade em que gostaria de parar"
+      ]
+    ],
+    "note": "Todos os resultados são cálculos de referência com base no que você informa e não são recomendação de investimento."
+  },
+  "faq": {
+    "title": "Perguntas",
+    "items": [
+      {
+        "q": "Onde ficam meus registros?",
+        "a": "Só no seu aparelho. Não há cadastro e nada é enviado ao desenvolvedor. Ative a sincronização com o iCloud nos Ajustes para ver os mesmos registros no iPhone e no iPad pela sua própria conta iCloud."
+      },
+      {
+        "q": "As cotações não atualizam.",
+        "a": "Ações dos EUA e da Coreia, cripto e câmbio funcionam sem nenhuma configuração. Confira sua conexão com a internet e se o ticker ou código está certo. Os preços de apartamentos usam dados imobiliários públicos da Coreia e exigem uma chave de serviço inserida nos Ajustes."
+      },
+      {
+        "q": "Qual a diferença entre patrimônio total e patrimônio líquido?",
+        "a": "Patrimônio total é a soma de tudo o que você tem. Patrimônio líquido é esse valor menos dívidas, como empréstimos. A data de saída é calculada pelo patrimônio líquido."
+      },
+      {
+        "q": "Como passo meus registros para um aparelho novo?",
+        "a": "Use Exportar nos Ajustes para criar um arquivo de backup, guarde no app Arquivos, no iCloud Drive ou por e-mail e restaure no aparelho novo. Os backups nunca incluem chaves de API. O app também guarda automaticamente no aparelho seus 20 backups mais recentes."
+      },
+      {
+        "q": "Como funcionam os alertas de venda?",
+        "a": "Para cada ativo, defina quanto ele pode cair a partir do pico ou um preço-alvo. Quando ele cruza essa linha, você recebe um aviso. Na alta, o app fica quieto. As cotações são verificadas quando você abre o app e quando o iOS permite em segundo plano (em geral a cada poucas horas), então não é um monitoramento em tempo real."
+      },
+      {
+        "q": "Posso manter meus números longe de olhares curiosos?",
+        "a": "Ative o Bloqueio do App nos Ajustes para abrir o app com Face ID ou código. Com o bloqueio ativo, o lembrete mensal também não mostra nenhum número."
+      },
+      {
+        "q": "Dá para conhecer o app antes?",
+        "a": "Ative os Dados de Demonstração nos Ajustes para explorar todas as telas com o patrimônio de uma pessoa fictícia. Ao desativar, seus registros voltam na hora. Os Dados de Demonstração não ficam disponíveis com a sincronização do iCloud ativa."
+      },
+      {
+        "q": "Como apago todos os meus dados?",
+        "a": "Ao apagar o app, todos os registros guardados no aparelho são apagados. Se quiser manter uma cópia, exporte antes um arquivo de backup nos Ajustes."
+      },
+      {
+        "q": "Posso investir com base nesses números?",
+        "a": "Os resultados do Toesagak são cálculos de referência baseados no que você informa e num retorno estimado. Não são recomendação de investimento, e o resultado real depende do mercado e da sua situação."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Comece a registrar hoje.\nVeja sua data de saída.",
+    "cta": "Baixar na App Store"
+  },
+  "ui": {
+    "skip": "Pular para o conteúdo",
+    "languages": "Idioma",
+    "privacy": "Política de Privacidade",
+    "contact": "Encontrou um bug, tem uma ideia ou uma dúvida? Escreva para {email}."
+  }
+}

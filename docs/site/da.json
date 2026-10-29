@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: FIRE-beregneren, der viser den måned, du kan sige dit job op",
+  "description": "Indtast dit forbrug, hvad du har sparet op, og hvad du sparer op om måneden, og se måned og år, du kan stoppe. Formue, mål og seks beregnere.",
+  "hero": {
+    "headline": "Hvornår kan du sige op?\nMed tal, ikke mavefornemmelse.",
+    "lead": "Indtast, hvad du bruger, og hvad du har sparet op, så får du den måned, hvor du kan gå. Hver gang din formue ændrer sig, ser du, om datoen er rykket tættere på eller længere væk.",
+    "cta": "Hent i App Store",
+    "note": "Ingen konto nødvendig. Dine data bliver på din enhed."
+  },
+  "demo": {
+    "title": "Find din stopdato",
+    "lead": "Træk i skyderne. Det er den samme beregning, som appen laver på første skærm.",
+    "spend": "Månedligt forbrug, når du stopper",
+    "worth": "Nettoformue i dag",
+    "save": "Opsparing pr. måned",
+    "age": "Din alder",
+    "ageUnit": "{n} år",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        5000,
+        100000,
+        500,
+        25000
+      ],
+      "worth": [
+        0,
+        10000000,
+        50000,
+        500000
+      ],
+      "save": [
+        0,
+        100000,
+        500,
+        8000
+      ]
+    },
+    "now": "I dit nuværende tempo",
+    "years": "{n} år",
+    "months": "{n} md.",
+    "yearsMonths": "{y} {m}",
+    "quit": "Du kan stoppe om {t}, som {age}-årig",
+    "done": "Du er der allerede",
+    "never": "Ikke inden for rækkevidde endnu",
+    "neverText": "Med denne opsparing når du ikke målet inden for 80 år. Prøv at spare mere op hver måned eller skære ned på forbruget.",
+    "target": "Mål",
+    "progress": "Fremdrift",
+    "note": "Målet er et års forbrug divideret med 4 %. Opsparingen antages at vokse 5 % om året. Begge dele kan ændres i appen. Kun vejledende, ikke investeringsrådgivning."
+  },
+  "problem": {
+    "title": "Regner du stadig i hovedet på, om du kan sige op nu?",
+    "text": "Når bankkonto, depot, pension og depositum ligger hver sit sted, bliver selv det samlede beløb uklart, og stopdatoen forbliver et gæt. Toesagak samler alt på én skærm og regner hele tiden måneden, hvor du kan stoppe, ud fra det samlede beløb."
+  },
+  "features": [
+    {
+      "title": "Hele din formue på én skærm",
+      "text": "Ejendom, aktier, fonde og ETF'er, pension, kontanter og indskud, depositummer, krypto og lån, samlet efter type med samlet formue, nettoformue og gældsandel.\nKurser på aktier og krypto hentes, så værdierne er opdaterede, og et skærmbillede fra din investeringsapp henter beholdninger og værdier ind på én gang.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Hvor meget om dagen til målet",
+      "text": "Se mål for denne måned, dette år, fem år og pensionen sammen med dine tidligere registreringer i ét diagram. Appen fortæller også, hvor meget du skal spare op pr. dag, uge eller måned for at holde kursen.\nNår din formue ændrer sig, gemmes ugens registrering automatisk, så din historik bygger sig selv op.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Regn på det før de store beslutninger",
+      "text": "Beregnere til formue gennem livet, investering, afbetaling af gæld kontra investering, lån, opsparing og indskud, lønnens købekraft og penge omregnet til timer. Træk i en værdi, og diagrammet tegnes om, mens den tidligere kurve bliver stående som en stiplet linje til sammenligning.\nNavngiv og gem de opsætninger, du vender tilbage til.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Tre trin til at komme i gang",
+    "items": [
+      {
+        "title": "Indtast forbrug og alder",
+        "text": "Omtrentlige tal er fine. Din stopdato vises med det samme."
+      },
+      {
+        "title": "Tilføj dine aktiver",
+        "text": "Jo mere du deler dem op, jo skarpere bliver datoen."
+      },
+      {
+        "title": "Kig forbi en gang imellem",
+        "text": "Ugentlige registreringer bygger sig selv op, og appen kan minde dig om det den 1. i hver måned."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Sådan regner appen",
+    "rows": [
+      [
+        "Mål",
+        "Et års forbrug efter stop ÷ sikker udtrækningsrate (ved 4 % svarer det til 25 års forbrug)"
+      ],
+      [
+        "Stopdato",
+        "Den måned, hvor din nettoformue plus det, du sparer op hver måned, forrentet med det forventede afkast, når målet"
+      ],
+      [
+        "Samlet formue",
+        "Alt, hvad du ejer, lagt sammen"
+      ],
+      [
+        "Nettoformue",
+        "Samlet formue minus gæld som fx lån"
+      ],
+      [
+        "Fremdrift",
+        "Nettoformue ÷ mål. Du kan også følge den ud fra passiv indkomst"
+      ],
+      [
+        "Det kan du justere",
+        "Månedligt forbrug, udtrækningsrate fra 2 til 6 %, forventet afkast fra 0 til 12 %, den alder, du gerne vil stoppe som"
+      ]
+    ],
+    "note": "Alle resultater er vejledende beregninger ud fra dine indtastninger og er ikke investeringsrådgivning."
+  },
+  "faq": {
+    "title": "Spørgsmål",
+    "items": [
+      {
+        "q": "Hvor bliver mine data gemt?",
+        "a": "Kun på din enhed. Der er ingen tilmelding, og intet sendes til udvikleren. Slå iCloud-synkronisering til under Indstillinger for at se de samme data på iPhone og iPad via din egen iCloud-konto."
+      },
+      {
+        "q": "Kurserne opdateres ikke.",
+        "a": "Amerikanske og koreanske aktier, krypto og valutakurser virker uden opsætning. Tjek din internetforbindelse, og at tickeren eller koden er korrekt. Lejlighedspriser bruger offentlige koreanske ejendomsdata og kræver en servicenøgle, som du indtaster under Indstillinger."
+      },
+      {
+        "q": "Hvad er forskellen på samlet formue og nettoformue?",
+        "a": "Samlet formue er alt, hvad du ejer, lagt sammen. Nettoformue er det beløb minus gæld som fx lån. Din stopdato beregnes ud fra nettoformuen."
+      },
+      {
+        "q": "Hvordan flytter jeg mine data til en ny enhed?",
+        "a": "Brug Eksportér under Indstillinger til at lave en backupfil, gem den i Filer, på iCloud Drive eller i en mail, og gendan den på den nye enhed. Backupfiler indeholder aldrig API-nøgler. Appen gemmer også automatisk dine 20 seneste backups på enheden."
+      },
+      {
+        "q": "Hvordan virker salgsalarmer?",
+        "a": "Angiv for hver beholdning, hvor meget den må falde fra toppen, eller en målkurs. Når kursen krydser den grænse, får du besked. På vej op holder appen sig i ro. Kurserne tjekkes, når du åbner appen, og når iOS tillader det i baggrunden (typisk med nogle timers mellemrum), så det er ikke overvågning i realtid."
+      },
+      {
+        "q": "Kan jeg holde mine tal for mig selv?",
+        "a": "Slå Applås til under Indstillinger for at åbne appen med Face ID eller din adgangskode. Når låsen er slået til, viser den månedlige påmindelse heller ingen tal."
+      },
+      {
+        "q": "Kan jeg se mig omkring først?",
+        "a": "Slå Demodata til under Indstillinger for at udforske alle skærme med en fiktiv persons formue. Slå det fra, så er dine egne data straks tilbage. Demodata er ikke tilgængelige, mens iCloud-synkronisering er slået til."
+      },
+      {
+        "q": "Hvordan sletter jeg alle mine data?",
+        "a": "Når du sletter appen, fjernes alle data, der er gemt på enheden. Vil du beholde en kopi, så eksportér en backupfil under Indstillinger først."
+      },
+      {
+        "q": "Kan jeg investere ud fra disse tal?",
+        "a": "Toesagaks resultater er vejledende beregninger ud fra dine indtastninger og et antaget afkast. De er ikke investeringsrådgivning, og det faktiske udfald afhænger af markedet og din situation."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Begynd at registrere i dag.\nSe din stopdato.",
+    "cta": "Hent i App Store"
+  },
+  "ui": {
+    "skip": "Gå til indhold",
+    "languages": "Sprog",
+    "privacy": "Privatlivspolitik",
+    "contact": "Fejl, idéer eller spørgsmål? Skriv til {email}."
+  }
+}

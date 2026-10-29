@@ -1,0 +1,173 @@
+{
+  "title": "Toesagak : le calculateur FIRE qui vous montre le mois où vous pourrez partir",
+  "description": "Indiquez vos dépenses, votre épargne et ce que vous mettez de côté chaque mois : voyez quand vous pourriez arrêter. Patrimoine, objectifs, calculs.",
+  "hero": {
+    "headline": "Quand pourrez-vous partir ?\nLa réponse en chiffres.",
+    "lead": "Indiquez vos dépenses et ce que vous avez mis de côté : vous obtenez le mois où vous pourriez tout arrêter. À chaque variation de votre patrimoine, vous voyez si cette date se rapproche ou s’éloigne.",
+    "cta": "Obtenir sur l’App Store",
+    "note": "Aucun compte requis. Vos données restent sur votre appareil."
+  },
+  "demo": {
+    "title": "Trouvez votre date de départ",
+    "lead": "Faites glisser les curseurs. C’est le même calcul que sur le premier écran de l’app.",
+    "spend": "Dépenses mensuelles après le départ",
+    "worth": "Patrimoine net actuel",
+    "save": "Épargne mensuelle",
+    "age": "Votre âge",
+    "ageUnit": "{n} ans",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        500,
+        15000,
+        100,
+        2500
+      ],
+      "worth": [
+        0,
+        1500000,
+        5000,
+        40000
+      ],
+      "save": [
+        0,
+        15000,
+        100,
+        1000
+      ]
+    },
+    "now": "À votre rythme actuel",
+    "years": [
+      "{n} an",
+      "{n} ans"
+    ],
+    "months": "{n} mois",
+    "yearsMonths": "{y} {m}",
+    "quit": "Départ possible dans {t}, à {age} ans",
+    "done": "Vous y êtes déjà",
+    "never": "Pas encore à portée",
+    "neverText": "À ce rythme d’épargne, vous n’atteindrez pas votre objectif en 80 ans. Essayez d’épargner davantage chaque mois ou de réduire vos dépenses.",
+    "target": "Objectif",
+    "progress": "Avancement",
+    "note": "Votre objectif correspond à une année de dépenses divisée par 4 %. L’épargne est supposée croître de 5 % par an. Vous pouvez modifier ces deux valeurs dans l’app. À titre indicatif, ce n’est pas un conseil en investissement."
+  },
+  "problem": {
+    "title": "Vous refaites encore de tête le calcul « est-ce que je peux partir ? »",
+    "text": "Entre le compte courant, le compte-titres, l’épargne retraite et le dépôt de garantie, chacun de son côté, même votre total devient flou, et votre date de départ reste une intuition. Toesagak rassemble tout sur un seul écran et recalcule en continu, à partir de ce total, le mois où vous pourriez arrêter."
+  },
+  "features": [
+    {
+      "title": "Tout votre patrimoine sur un écran",
+      "text": "Immobilier, actions, fonds et ETF, retraite, liquidités et dépôts, cautions, cryptos et prêts, regroupés par type, avec votre patrimoine brut, votre patrimoine net et votre taux d’endettement.\nLes cours des actions et des cryptos sont récupérés pour garder les valeurs à jour, et une capture d’écran de l’app de votre courtier importe positions et valeurs d’un coup.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Combien par jour pour y arriver",
+      "text": "Ce mois-ci, cette année, cinq ans et la retraite comme objectifs, avec vos relevés passés, sur un seul graphique. L’app vous indique aussi combien épargner par jour, semaine ou mois pour rester sur la bonne voie.\nQuand votre patrimoine change, le relevé de la semaine est enregistré automatiquement : votre historique se construit tout seul.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Faites le calcul avant de décider",
+      "text": "Des calculateurs pour l’évolution de votre patrimoine sur la vie, l’investissement, rembourser une dette ou investir, les prêts, l’épargne et les dépôts, le pouvoir d’achat de votre salaire et la conversion de l’argent en heures. Faites glisser une valeur et le graphique se redessine, l’ancienne courbe restant en pointillés pour comparer.\nNommez et enregistrez les réglages que vous réutilisez.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Trois étapes pour commencer",
+    "items": [
+      {
+        "title": "Indiquez vos dépenses et votre âge",
+        "text": "Des chiffres approximatifs suffisent. Votre date de départ s’affiche aussitôt."
+      },
+      {
+        "title": "Ajoutez votre patrimoine",
+        "text": "Plus vous détaillez, plus la date est précise."
+      },
+      {
+        "title": "Revenez de temps en temps",
+        "text": "Les relevés hebdomadaires s’accumulent tout seuls, et l’app peut vous faire signe le 1er de chaque mois."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Comment l’app calcule",
+    "rows": [
+      [
+        "Objectif",
+        "Une année de dépenses après le départ ÷ taux de retrait sûr (à 4 %, 25 années de dépenses)"
+      ],
+      [
+        "Date de départ",
+        "Le mois où votre patrimoine net, plus votre épargne mensuelle, avec le rendement attendu, atteint l’objectif"
+      ],
+      [
+        "Patrimoine brut",
+        "Tout ce que vous possédez, additionné"
+      ],
+      [
+        "Patrimoine net",
+        "Patrimoine brut moins les dettes comme les prêts"
+      ],
+      [
+        "Avancement",
+        "Patrimoine net ÷ objectif. Vous pouvez aussi le suivre en revenu passif"
+      ],
+      [
+        "Ce que vous pouvez modifier",
+        "Dépenses mensuelles, taux de retrait de 2 à 6 %, rendement attendu de 0 à 12 %, l’âge auquel vous aimeriez partir"
+      ]
+    ],
+    "note": "Tous les résultats sont des calculs indicatifs fondés sur vos saisies et ne constituent pas un conseil en investissement."
+  },
+  "faq": {
+    "title": "Questions",
+    "items": [
+      {
+        "q": "Où sont stockées mes données ?",
+        "a": "Uniquement sur votre appareil. Pas d’inscription, et rien n’est envoyé au développeur. Activez la synchronisation iCloud dans Réglages pour retrouver les mêmes données sur votre iPhone et votre iPad via votre propre compte iCloud."
+      },
+      {
+        "q": "Les cours ne se mettent pas à jour.",
+        "a": "Les actions américaines et coréennes, les cryptos et les taux de change fonctionnent sans configuration. Vérifiez votre connexion internet et l’exactitude du ticker ou du code de valeur. Les prix des appartements reposent sur les données immobilières publiques coréennes et nécessitent une clé de service gratuite à saisir dans Réglages."
+      },
+      {
+        "q": "Quelle différence entre patrimoine brut et patrimoine net ?",
+        "a": "Le patrimoine brut est la somme de tout ce que vous possédez. Le patrimoine net, c’est ce total moins les dettes comme les prêts. Votre date de départ se calcule sur le patrimoine net."
+      },
+      {
+        "q": "Comment transférer mes données sur un nouvel appareil ?",
+        "a": "Utilisez Exporter dans Réglages pour créer un fichier de sauvegarde, rangez-le dans Fichiers, iCloud Drive ou un e-mail, puis restaurez-le sur le nouvel appareil. Les sauvegardes n’incluent jamais de clés API. L’app conserve aussi automatiquement vos 20 sauvegardes les plus récentes sur l’appareil."
+      },
+      {
+        "q": "Comment fonctionnent les alertes de vente ?",
+        "a": "Pour chaque position, fixez la baisse maximale depuis son plus haut ou un cours cible. Quand cette limite est franchie, vous êtes prévenu. À la hausse, l’app reste silencieuse. Les cours sont vérifiés à l’ouverture de l’app et quand iOS l’autorise en arrière-plan (en général toutes les quelques heures) : ce n’est donc pas une surveillance en temps réel."
+      },
+      {
+        "q": "Puis-je garder mes chiffres à l’abri des regards ?",
+        "a": "Activez le verrouillage de l’app dans Réglages pour l’ouvrir avec Face ID ou votre code. Verrouillage activé, le rappel mensuel n’affiche plus aucun chiffre."
+      },
+      {
+        "q": "Puis-je d’abord faire un tour ?",
+        "a": "Activez les données de démo dans Réglages pour parcourir tous les écrans avec le patrimoine d’une personne fictive. Désactivez-les et vos propres données reviennent aussitôt. Les données de démo ne sont pas disponibles quand la synchronisation iCloud est activée."
+      },
+      {
+        "q": "Comment supprimer toutes mes données ?",
+        "a": "Supprimer l’app efface toutes les données enregistrées sur l’appareil. Pour en garder une copie, exportez d’abord un fichier de sauvegarde dans Réglages."
+      },
+      {
+        "q": "Puis-je investir en me fiant à ces chiffres ?",
+        "a": "Les résultats de Toesagak sont des calculs indicatifs fondés sur vos saisies et un rendement supposé. Ce ne sont pas des conseils en investissement, et les résultats réels dépendent du marché et de votre situation."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Notez dès aujourd’hui.\nVoyez votre date de départ.",
+    "cta": "Obtenir sur l’App Store"
+  },
+  "ui": {
+    "skip": "Aller au contenu",
+    "languages": "Langue",
+    "privacy": "Politique de confidentialité",
+    "contact": "Un bug, une idée, une question ? Écrivez à {email}."
+  }
+}

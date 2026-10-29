@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: kalkulačka FIRE, která ukáže měsíc, kdy můžete skončit v práci",
+  "description": "Zadejte měsíční výdaje, co máte našetřeno a kolik odkládáte, a uvidíte měsíc a rok, kdy můžete skončit. Přehled majetku, cíle a šest kalkulaček.",
+  "hero": {
+    "headline": "Kdy můžete skončit v práci?\nPodle čísel, ne od oka.",
+    "lead": "Zadejte, kolik utratíte a kolik máte našetřeno, a uvidíte měsíc, kdy můžete odejít. Kdykoli se váš majetek změní, hned víte, jestli se to datum přiblížilo, nebo vzdálilo.",
+    "cta": "Stáhnout v App Store",
+    "note": "Účet nepotřebujete. Záznamy zůstávají ve vašem zařízení."
+  },
+  "demo": {
+    "title": "Zjistěte své datum odchodu",
+    "lead": "Posuňte jezdce. Je to stejný výpočet, jaký aplikace dělá na první obrazovce.",
+    "spend": "Měsíční výdaje po odchodu",
+    "worth": "Čisté jmění dnes",
+    "save": "Měsíčně odložíte",
+    "age": "Váš věk",
+    "ageUnit": "{n} let",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        10000,
+        300000,
+        1000,
+        40000
+      ],
+      "worth": [
+        0,
+        30000000,
+        100000,
+        1500000
+      ],
+      "save": [
+        0,
+        200000,
+        1000,
+        15000
+      ]
+    },
+    "now": "Při současném tempu",
+    "years": "{n} r.",
+    "months": "{n} měs.",
+    "yearsMonths": "{y} {m}",
+    "quit": "Skončit můžete za {t}, ve věku {age} let",
+    "done": "Cíle už jste dosáhli",
+    "never": "Zatím mimo dosah",
+    "neverText": "Při tomto tempu spoření cíle nedosáhnete ani za 80 let. Zkuste měsíčně odkládat víc, nebo snížit výdaje.",
+    "target": "Cíl",
+    "progress": "Plnění",
+    "note": "Cíl jsou roční výdaje vydělené 4 %. Počítá se s tím, že úspory rostou o 5 % ročně. V aplikaci můžete obě hodnoty změnit. Pouze orientační výpočet, nejde o investiční poradenství."
+  },
+  "problem": {
+    "title": "Pořád si v hlavě počítáte, jestli už můžete odejít?",
+    "text": "Když máte banku, brokera, penzijní spoření a kauci na nájem každé jinde, rozmaže se i celková částka, a datum odchodu tak zůstává odhadem. Toesagak dá všechno na jednu obrazovku a z tohoto součtu průběžně přepočítává měsíc, kdy můžete skončit."
+  },
+  "features": [
+    {
+      "title": "Veškerý majetek na jedné obrazovce",
+      "text": "Nemovitosti, akcie, fondy a ETF, důchodové spoření, hotovost a vklady, kauce, kryptoměny i úvěry, seskupené podle druhu, s celkovými aktivy, čistým jměním a mírou zadlužení.\nCeny akcií a kryptoměn se stahují, aby hodnoty byly aktuální, a snímek obrazovky z brokerské aplikace přenese pozice i jejich hodnotu najednou.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Kolik denně k cíli",
+      "text": "Cíle na tento měsíc, rok, pět let i do důchodu spolu s dosavadními záznamy na jednom grafu. Aplikace vám také řekne, kolik odkládat denně, týdně nebo měsíčně, abyste zůstali na cestě.\nKdyž se majetek změní, záznam daného týdne se uloží sám, takže historie vzniká bez práce.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Spočítejte si to před velkým rozhodnutím",
+      "text": "Kalkulačky vývoje majetku během života, investic, splácení dluhu versus investování, úvěrů, vkladů a spoření, kupní síly mzdy a přepočtu peněz na hodiny. Posuňte hodnotu a graf se překreslí, přičemž předchozí křivka zůstane tečkovaně pro srovnání.\nNastavení, ke kterým se vracíte, si pojmenujte a uložte.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Tři kroky na začátek",
+    "items": [
+      {
+        "title": "Zadejte výdaje a věk",
+        "text": "Stačí přibližná čísla. Datum odchodu uvidíte hned."
+      },
+      {
+        "title": "Přidejte majetek",
+        "text": "Čím podrobněji ho rozdělíte, tím přesnější datum."
+      },
+      {
+        "title": "Občas se podívejte",
+        "text": "Týdenní záznamy přibývají samy a aplikace vám může připomenout každého 1. v měsíci."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Jak aplikace počítá",
+    "rows": [
+      [
+        "Cíl",
+        "Roční výdaje po odchodu ÷ bezpečná míra čerpání (při 4 % jde o výdaje na 25 let)"
+      ],
+      [
+        "Datum odchodu",
+        "Měsíc, kdy čisté jmění spolu s tím, co měsíčně odkládáte, zhodnocené očekávaným výnosem, dosáhne cíle"
+      ],
+      [
+        "Celková aktiva",
+        "Všechno, co vlastníte, dohromady"
+      ],
+      [
+        "Čisté jmění",
+        "Celková aktiva minus dluhy, například úvěry"
+      ],
+      [
+        "Plnění",
+        "Čisté jmění ÷ cíl. Sledovat ho jde i podle pasivního příjmu"
+      ],
+      [
+        "Co můžete změnit",
+        "Měsíční výdaje, míru čerpání od 2 do 6 %, očekávaný výnos od 0 do 12 %, věk, ve kterém chcete skončit"
+      ]
+    ],
+    "note": "Všechny výsledky jsou orientační výpočty podle vašich údajů a nejsou investičním poradenstvím."
+  },
+  "faq": {
+    "title": "Otázky",
+    "items": [
+      {
+        "q": "Kde jsou moje záznamy uložené?",
+        "a": "Jen ve vašem zařízení. Žádná registrace, vývojáři se nic neposílá. Zapněte v Nastavení synchronizaci přes iCloud a uvidíte stejné záznamy na iPhonu i iPadu díky vlastnímu účtu iCloud."
+      },
+      {
+        "q": "Ceny se neaktualizují.",
+        "a": "Americké a korejské akcie, kryptoměny a směnné kurzy fungují bez nastavování. Zkontrolujte připojení k internetu a správnost tickeru nebo kódu. Ceny bytů vycházejí z veřejných korejských dat o nemovitostech a vyžadují zadání servisního klíče v Nastavení."
+      },
+      {
+        "q": "Jaký je rozdíl mezi celkovými aktivy a čistým jměním?",
+        "a": "Celková aktiva jsou součet všeho, co vlastníte. Čisté jmění je tato částka po odečtení dluhů, například úvěrů. Datum odchodu se počítá z čistého jmění."
+      },
+      {
+        "q": "Jak přenesu záznamy do nového zařízení?",
+        "a": "V Nastavení použijte Export a vytvořte záložní soubor, uložte ho do Souborů, na iCloud Drive nebo do e-mailu a v novém zařízení ho obnovte. Záložní soubory nikdy neobsahují klíče API. Aplikace navíc sama uchovává v zařízení 20 posledních záloh."
+      },
+      {
+        "q": "Jak fungují upozornění na prodej?",
+        "a": "U každé pozice nastavte, o kolik smí klesnout od vrcholu, nebo cílovou cenu. Když cena tuto hranici překročí, dostanete upozornění. Při růstu aplikace mlčí. Ceny se kontrolují při otevření aplikace a tehdy, když to iOS dovolí na pozadí (obvykle jednou za pár hodin), takže nejde o sledování v reálném čase."
+      },
+      {
+        "q": "Můžu svá čísla skrýt před ostatními?",
+        "a": "Zapněte v Nastavení zámek aplikace a budete ji otevírat pomocí Face ID nebo kódu. Se zapnutým zámkem nezobrazuje čísla ani měsíční připomínka."
+      },
+      {
+        "q": "Můžu se nejdřív porozhlédnout?",
+        "a": "Zapněte v Nastavení ukázková data a projděte všechny obrazovky s majetkem smyšlené osoby. Po vypnutí se vaše záznamy hned vrátí. Při zapnuté synchronizaci přes iCloud nejsou ukázková data k dispozici."
+      },
+      {
+        "q": "Jak smažu všechna data?",
+        "a": "Smazáním aplikace se odstraní všechny záznamy uložené v zařízení. Pokud si chcete nechat kopii, nejdřív v Nastavení exportujte záložní soubor."
+      },
+      {
+        "q": "Můžu podle těchto čísel investovat?",
+        "a": "Výsledky Toesagaku jsou orientační výpočty podle vašich údajů a předpokládaného výnosu. Nejde o investiční poradenství a skutečný výsledek závisí na trhu a vaší situaci."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Začněte zapisovat ještě dnes.\nUvidíte datum odchodu.",
+    "cta": "Stáhnout v App Store"
+  },
+  "ui": {
+    "skip": "Přejít k obsahu",
+    "languages": "Jazyk",
+    "privacy": "Zásady ochrany soukromí",
+    "contact": "Chyby, nápady nebo dotazy? Napište na {email}."
+  }
+}

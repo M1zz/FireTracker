@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: de FIRE-calculator die laat zien in welke maand je kunt stoppen",
+  "description": "Vul je maandelijkse uitgaven, spaargeld en maandelijkse inleg in en zie in welke maand en welk jaar je kunt stoppen. Vermogen, doelen, zes rekentools.",
+  "hero": {
+    "headline": "Wanneer kun je stoppen?\nZwart op wit.",
+    "lead": "Vul in wat je uitgeeft en wat je hebt gespaard, en je ziet de maand waarin je kunt stoppen. Elke keer dat je bezittingen veranderen, zie je of die datum dichterbij komt of verder weg schuift.",
+    "cta": "Download in de App Store",
+    "note": "Geen account nodig. Je gegevens blijven op je toestel."
+  },
+  "demo": {
+    "title": "Bereken je stopdatum",
+    "lead": "Versleep de schuifjes. Het is dezelfde berekening als op het eerste scherm van de app.",
+    "spend": "Maandelijkse uitgaven na je stoppen",
+    "worth": "Nettovermogen nu",
+    "save": "Elke maand gespaard",
+    "age": "Je leeftijd",
+    "ageUnit": "{n} jaar",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        500,
+        10000,
+        50,
+        2500
+      ],
+      "worth": [
+        0,
+        1500000,
+        5000,
+        50000
+      ],
+      "save": [
+        0,
+        10000,
+        50,
+        1000
+      ]
+    },
+    "now": "In je huidige tempo",
+    "years": "{n} jaar",
+    "months": "{n} mnd",
+    "yearsMonths": "{y} en {m}",
+    "quit": "Je kunt stoppen over {t}, op je {age}e",
+    "done": "Je bent er al",
+    "never": "Nog niet binnen bereik",
+    "neverText": "Met dit spaartempo haal je je doel niet binnen 80 jaar. Probeer elke maand meer te sparen of minder uit te geven.",
+    "target": "Doel",
+    "progress": "Voortgang",
+    "note": "Je doel is een jaar aan uitgaven gedeeld door 4%. Spaargeld groeit naar verwachting 5% per jaar. Beide pas je aan in de app. Alleen ter indicatie, geen beleggingsadvies."
+  },
+  "problem": {
+    "title": "Reken je nog steeds in je hoofd uit of je al kunt stoppen?",
+    "text": "Als je bankrekening, beleggingsrekening, pensioen en borg allemaal op een andere plek staan, wordt zelfs je totaal vaag en blijft je stopdatum een gok. Toesagak zet alles op één scherm en rekent daaruit steeds opnieuw uit in welke maand je kunt stoppen."
+  },
+  "features": [
+    {
+      "title": "Al je bezittingen op één scherm",
+      "text": "Vastgoed, aandelen, fondsen en ETF's, pensioen, contant geld en deposito's, borgsommen, crypto en leningen, per soort gegroepeerd, met je totale bezittingen, nettovermogen en schuldquote.\nKoersen van aandelen en crypto worden opgehaald zodat de waarden actueel blijven, en een screenshot van je beleggingsapp zet je posities en waarden er in één keer in.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Hoeveel per dag je nodig hebt",
+      "text": "Zie deze maand, dit jaar, vijf jaar en je pensioen als doelen, samen met je eerdere registraties, in één grafiek. Je ziet ook hoeveel je per dag, week of maand moet sparen om op koers te blijven.\nVeranderen je bezittingen, dan wordt de registratie van die week automatisch bewaard, zodat je geschiedenis zichzelf opbouwt.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Reken het door vóór grote keuzes",
+      "text": "Rekenmachines voor je vermogensverloop over je leven, beleggen, aflossen of beleggen, leningen, sparen en deposito's, de koopkracht van je salaris en geld omgerekend naar uren. Versleep een waarde en de grafiek tekent zich opnieuw, met de vorige curve als stippellijn ernaast om te vergelijken.\nGeef de scenario's waar je op terugkomt een naam en bewaar ze.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "In drie stappen aan de slag",
+    "items": [
+      {
+        "title": "Vul je uitgaven en leeftijd in",
+        "text": "Ruwe getallen zijn prima. Je stopdatum verschijnt meteen."
+      },
+      {
+        "title": "Voeg je bezittingen toe",
+        "text": "Hoe preciezer je ze opsplitst, hoe scherper de datum."
+      },
+      {
+        "title": "Kijk af en toe even",
+        "text": "Wekelijkse registraties bouwen zich vanzelf op, en de app kan je elke 1e van de maand een seintje geven."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Zo rekent de app",
+    "rows": [
+      [
+        "Doel",
+        "Een jaar aan uitgaven na je stoppen ÷ veilig opnamepercentage (bij 4% is dat 25 jaar aan uitgaven)"
+      ],
+      [
+        "Stopdatum",
+        "De maand waarin je nettovermogen plus wat je maandelijks spaart, gegroeid met je verwachte rendement, je doel bereikt"
+      ],
+      [
+        "Totale bezittingen",
+        "Alles wat je bezit bij elkaar opgeteld"
+      ],
+      [
+        "Nettovermogen",
+        "Totale bezittingen min schulden zoals leningen"
+      ],
+      [
+        "Voortgang",
+        "Nettovermogen ÷ doel. Je kunt het ook volgen op basis van passief inkomen"
+      ],
+      [
+        "Wat je kunt aanpassen",
+        "Maandelijkse uitgaven, opnamepercentage van 2 tot 6%, verwacht rendement van 0 tot 12%, de leeftijd waarop je wilt stoppen"
+      ]
+    ],
+    "note": "Alle uitkomsten zijn indicatieve berekeningen op basis van je invoer en geen beleggingsadvies."
+  },
+  "faq": {
+    "title": "Vragen",
+    "items": [
+      {
+        "q": "Waar worden mijn gegevens bewaard?",
+        "a": "Alleen op je toestel. Je hoeft je niet aan te melden en er wordt niets naar de ontwikkelaar gestuurd. Zet iCloud-synchronisatie aan in Instellingen om dezelfde gegevens op je iPhone en iPad te zien via je eigen iCloud-account."
+      },
+      {
+        "q": "Koersen worden niet bijgewerkt.",
+        "a": "Amerikaanse en Koreaanse aandelen, crypto en wisselkoersen werken zonder instellingen. Controleer je internetverbinding en of de ticker of code klopt. Woningprijzen komen uit Koreaanse openbare vastgoeddata en vereisen een gratis servicesleutel die je in Instellingen invult."
+      },
+      {
+        "q": "Wat is het verschil tussen totale bezittingen en nettovermogen?",
+        "a": "Totale bezittingen is alles wat je bezit bij elkaar opgeteld. Nettovermogen is dat bedrag min schulden zoals leningen. Je stopdatum is gebaseerd op je nettovermogen."
+      },
+      {
+        "q": "Hoe zet ik mijn gegevens over naar een nieuw toestel?",
+        "a": "Maak met Exporteren in Instellingen een back-upbestand, bewaar het in Bestanden, iCloud Drive of je e-mail en zet het terug op het nieuwe toestel. Back-upbestanden bevatten nooit API-sleutels. De app bewaart ook automatisch je 20 meest recente back-ups op het toestel."
+      },
+      {
+        "q": "Hoe werken verkoopmeldingen?",
+        "a": "Stel per positie in hoeveel die mag dalen vanaf de piek, of kies een koersdoel. Gaat de koers over die grens, dan krijg je een seintje. Bij stijgende koersen blijft de app stil. Koersen worden gecontroleerd als je de app opent en wanneer iOS het op de achtergrond toestaat (meestal om de paar uur), dus het is geen realtime bewaking."
+      },
+      {
+        "q": "Kan ik mijn bedragen privé houden?",
+        "a": "Zet App-vergrendeling aan in Instellingen om de app te openen met Face ID of je toegangscode. Met de vergrendeling aan toont ook de maandelijkse herinnering geen bedragen."
+      },
+      {
+        "q": "Kan ik eerst rondkijken?",
+        "a": "Zet Demogegevens aan in Instellingen en bekijk alle schermen met de bezittingen van een fictief persoon. Zet je het uit, dan zijn je eigen gegevens meteen terug. Demogegevens zijn niet beschikbaar als iCloud-synchronisatie aan staat."
+      },
+      {
+        "q": "Hoe verwijder ik al mijn gegevens?",
+        "a": "Als je de app verwijdert, worden alle gegevens op het toestel gewist. Wil je een kopie houden, exporteer dan eerst een back-upbestand in Instellingen."
+      },
+      {
+        "q": "Kan ik op basis van deze cijfers beleggen?",
+        "a": "De uitkomsten van Toesagak zijn indicatieve berekeningen op basis van je invoer en een verondersteld rendement. Ze zijn geen beleggingsadvies, en de werkelijke uitkomst hangt af van de markt en je eigen situatie."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Begin vandaag met bijhouden.\nZie je stopdatum.",
+    "cta": "Download in de App Store"
+  },
+  "ui": {
+    "skip": "Naar de inhoud",
+    "languages": "Taal",
+    "privacy": "Privacybeleid",
+    "contact": "Fouten, ideeën of vragen? Mail naar {email}."
+  }
+}

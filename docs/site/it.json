@@ -1,0 +1,176 @@
+{
+  "title": "Toesagak: il calcolatore FIRE che ti mostra il mese in cui puoi smettere",
+  "description": "Inserisci spese mensili, risparmi e quanto metti da parte ogni mese: vedi il mese e l’anno in cui potresti smettere. Patrimonio, obiettivi, calcoli.",
+  "hero": {
+    "headline": "Quando puoi smettere?\nCon i numeri, non a occhio.",
+    "lead": "Inserisci quanto spendi e quanto hai messo da parte e ottieni il mese in cui potresti dire basta. Ogni volta che il patrimonio cambia, vedi se quella data si avvicina o si allontana.",
+    "cta": "Scarica dall’App Store",
+    "note": "Nessun account. Le tue registrazioni restano sul dispositivo."
+  },
+  "demo": {
+    "title": "Trova la tua data di uscita",
+    "lead": "Sposta i cursori. È lo stesso calcolo che l’app fa nella prima schermata.",
+    "spend": "Spesa mensile dopo aver smesso",
+    "worth": "Patrimonio netto oggi",
+    "save": "Risparmio mensile",
+    "age": "La tua età",
+    "ageUnit": "{n} anni",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        500,
+        15000,
+        100,
+        2000
+      ],
+      "worth": [
+        0,
+        1500000,
+        5000,
+        30000
+      ],
+      "save": [
+        0,
+        15000,
+        100,
+        800
+      ]
+    },
+    "now": "Al ritmo attuale",
+    "years": [
+      "{n} anno",
+      "{n} anni"
+    ],
+    "months": [
+      "{n} mese",
+      "{n} mesi"
+    ],
+    "yearsMonths": "{y} e {m}",
+    "quit": "Potresti smettere tra {t}, a {age} anni",
+    "done": "Ci sei già",
+    "never": "Non ancora a portata",
+    "neverText": "Con questo ritmo di risparmio non raggiungerai l’obiettivo entro 80 anni. Prova a risparmiare di più ogni mese o a ridurre le spese.",
+    "target": "Obiettivo",
+    "progress": "Avanzamento",
+    "note": "L’obiettivo è un anno di spese diviso per il 4%. Si ipotizza che i risparmi crescano del 5% l’anno. Puoi cambiare entrambi i valori nell’app. Solo indicativo, non è consulenza di investimento."
+  },
+  "problem": {
+    "title": "Fai ancora i conti a mente per capire se puoi smettere?",
+    "text": "Quando conto corrente, conto titoli, fondo pensione e deposito cauzionale stanno ognuno per conto suo, anche il totale diventa confuso e la data di uscita resta un’ipotesi. Toesagak riunisce tutto in una schermata e ricalcola di continuo, da quel totale, il mese in cui potresti smettere."
+  },
+  "features": [
+    {
+      "title": "Tutto il patrimonio in una schermata",
+      "text": "Immobili, azioni, fondi ed ETF, pensioni, contanti e depositi, cauzioni, cripto e prestiti, raggruppati per tipo, con patrimonio totale, patrimonio netto e rapporto di indebitamento.\nI prezzi di azioni e cripto vengono scaricati per tenere aggiornati i valori, e con uno screenshot dell’app del tuo broker importi titoli e valori in un colpo solo.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Quanto al giorno per arrivarci",
+      "text": "Questo mese, quest’anno, cinque anni e la pensione come obiettivi, insieme alle registrazioni passate, in un solo grafico. Ti dice anche quanto mettere da parte al giorno, a settimana o al mese per restare in linea.\nQuando il patrimonio cambia, la registrazione della settimana si salva da sola, così lo storico si costruisce senza sforzo.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Fai i conti prima delle grandi scelte",
+      "text": "Calcolatori per l’andamento del patrimonio nel corso della vita, investimenti, estinguere debiti o investire, prestiti, depositi e risparmio, potere d’acquisto dello stipendio e soldi trasformati in ore. Sposta un valore e il grafico si ridisegna, con la curva precedente tratteggiata per confrontare.\nDai un nome alle impostazioni che usi spesso e salvale.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Si parte in tre passi",
+    "items": [
+      {
+        "title": "Inserisci spese ed età",
+        "text": "Bastano cifre indicative. La data di uscita compare subito."
+      },
+      {
+        "title": "Aggiungi il tuo patrimonio",
+        "text": "Più lo dettagli, più la data è precisa."
+      },
+      {
+        "title": "Dai un’occhiata ogni tanto",
+        "text": "Le registrazioni settimanali si accumulano da sole e, se vuoi, l’app te lo ricorda il primo di ogni mese."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Come calcola l’app",
+    "rows": [
+      [
+        "Obiettivo",
+        "Un anno di spese dopo aver smesso ÷ tasso di prelievo sicuro (al 4%, 25 anni di spese)"
+      ],
+      [
+        "Data di uscita",
+        "Il mese in cui il patrimonio netto, più quanto risparmi ogni mese, cresciuto al rendimento atteso, raggiunge l’obiettivo"
+      ],
+      [
+        "Patrimonio totale",
+        "Tutto ciò che possiedi, sommato"
+      ],
+      [
+        "Patrimonio netto",
+        "Patrimonio totale meno debiti come i prestiti"
+      ],
+      [
+        "Avanzamento",
+        "Patrimonio netto ÷ obiettivo. Puoi seguirlo anche in base alla rendita passiva"
+      ],
+      [
+        "Cosa puoi cambiare",
+        "Spesa mensile, tasso di prelievo dal 2 al 6%, rendimento atteso dallo 0 al 12%, l’età in cui vorresti smettere"
+      ]
+    ],
+    "note": "Tutti i risultati sono calcoli indicativi basati sui dati inseriti e non costituiscono consulenza di investimento."
+  },
+  "faq": {
+    "title": "Domande",
+    "items": [
+      {
+        "q": "Dove vengono salvate le mie registrazioni?",
+        "a": "Solo sul tuo dispositivo. Non serve iscriversi e nulla viene inviato allo sviluppatore. Attiva la sincronizzazione iCloud in Impostazioni per vedere le stesse registrazioni su iPhone e iPad tramite il tuo account iCloud."
+      },
+      {
+        "q": "I prezzi non si aggiornano.",
+        "a": "Azioni statunitensi e coreane, cripto e tassi di cambio funzionano senza configurare nulla. Controlla la connessione a internet e che il ticker o il codice siano corretti. I prezzi degli appartamenti usano i dati immobiliari pubblici coreani e richiedono una chiave di servizio gratuita da inserire in Impostazioni."
+      },
+      {
+        "q": "Che differenza c’è tra patrimonio totale e patrimonio netto?",
+        "a": "Il patrimonio totale è la somma di tutto ciò che possiedi. Il patrimonio netto è quella cifra meno i debiti come i prestiti. La data di uscita si basa sul patrimonio netto."
+      },
+      {
+        "q": "Come sposto le registrazioni su un nuovo dispositivo?",
+        "a": "Usa Esporta in Impostazioni per creare un file di backup, conservalo in File, iCloud Drive o in un’email e poi ripristinalo sul nuovo dispositivo. I file di backup non contengono mai chiavi API. L’app conserva anche in automatico sul dispositivo i 20 backup più recenti."
+      },
+      {
+        "q": "Come funzionano gli avvisi di vendita?",
+        "a": "Per ogni titolo imposta quanto può scendere dal massimo oppure un prezzo obiettivo. Quando supera quella soglia, ricevi un avviso. Mentre sale, resta in silenzio. I prezzi vengono controllati quando apri l’app e quando iOS lo consente in background (di solito ogni qualche ora), quindi non è un monitoraggio in tempo reale."
+      },
+      {
+        "q": "Posso tenere i miei numeri al riparo da occhi indiscreti?",
+        "a": "Attiva il blocco app in Impostazioni per aprire l’app con Face ID o il codice. Con il blocco attivo, anche il promemoria mensile non mostra numeri."
+      },
+      {
+        "q": "Posso dare prima un’occhiata?",
+        "a": "Attiva i dati demo in Impostazioni per esplorare tutte le schermate con il patrimonio di una persona fittizia. Disattivali e le tue registrazioni tornano subito. I dati demo non sono disponibili con la sincronizzazione iCloud attiva."
+      },
+      {
+        "q": "Come cancello tutti i miei dati?",
+        "a": "Eliminando l’app si cancellano tutte le registrazioni salvate sul dispositivo. Se vuoi conservarne una copia, esporta prima un file di backup da Impostazioni."
+      },
+      {
+        "q": "Posso investire basandomi su questi numeri?",
+        "a": "I risultati di Toesagak sono calcoli indicativi basati sui dati inseriti e su un rendimento ipotizzato. Non sono consulenza di investimento e i risultati reali dipendono dal mercato e dalla tua situazione."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Inizia a registrare oggi.\nScopri quando puoi smettere.",
+    "cta": "Scarica dall’App Store"
+  },
+  "ui": {
+    "skip": "Vai al contenuto",
+    "languages": "Lingua",
+    "privacy": "Informativa sulla privacy",
+    "contact": "Bug, idee o domande? Scrivi a {email}."
+  }
+}

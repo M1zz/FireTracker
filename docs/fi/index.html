@@ -1,162 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Toesagak · Tuki</title>
-<link rel="canonical" href="https://m1zz.github.io/FireTracker/fi/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
-<meta name="description" content="Toesagakin tukisivu – sovellus varallisuuden, nettovarallisuuden ja FIRE-tavoitteen (varhaiseläke) seurantaan" />
-<style>
-  :root{
-    --bg:#0f1115; --surface:#171a21; --surface2:#1f242d; --line:#2a2f3a;
-    --text:#e9edf2; --muted:#9aa3b0; --accent:#4CAF8E; --accent2:#E8A33D;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
-       background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
-  header{padding:40px 0 40px;text-align:center}
-  .logo{width:96px;height:96px;border-radius:22px;object-fit:cover;border:1px solid var(--line);margin-bottom:18px}
-  h1{font-size:30px;margin:6px 0 6px;letter-spacing:-.4px}
-  .tag{color:var(--muted);font-size:16px;margin:0}
-  section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px;margin:18px 0}
-  h2{font-size:19px;margin:0 0 14px;letter-spacing:-.3px}
-  ul{margin:0;padding-left:20px}
-  li{margin:7px 0}
-  .feat{display:grid;grid-template-columns:1fr;gap:10px;margin:0;padding:0;list-style:none}
-  .feat li{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);
-           border-radius:12px;padding:12px 14px;margin:0}
-  .feat .ico{font-size:18px;line-height:1.5}
-  .qa{margin:14px 0}
-  .qa h3{font-size:15px;margin:0 0 4px;color:var(--text)}
-  .qa p{margin:0;color:var(--muted);font-size:15px}
-  a{color:var(--accent)}
-  .btn{display:inline-block;background:var(--accent);color:#06120d;font-weight:700;text-decoration:none;
-       padding:12px 20px;border-radius:12px;margin-top:6px}
-  .contact{font-size:17px}
-  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 60px}
-  footer a{color:var(--muted)}
-  code{background:var(--surface2);padding:2px 6px;border-radius:6px;font-size:13px}
-  .langs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:12.5px;line-height:1.5;margin:0 auto;padding:16px 0 0}
-  .langs a{color:var(--muted);text-decoration:none;white-space:nowrap}
-  .langs a:hover{color:var(--text)}
-  .langs a[aria-current]{color:var(--accent);font-weight:700}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toesagak: FIRE-laskuri, joka näyttää kuukauden, jolloin voit lopettaa</title>
+  <meta name="description" content="Syötä kuukausimenot, säästösi ja kuukausisäästö, niin näet kuukauden ja vuoden, jolloin voit jäädä eläkkeelle. Varat, tavoitteet ja kuusi laskuria.">
+  <meta name="theme-color" content="#9A6200" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6779654854">
+  <link rel="canonical" href="https://m1zz.github.io/FireTracker/fi/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Toesagak: FIRE-laskuri, joka näyttää kuukauden, jolloin voit lopettaa">
+  <meta property="og:description" content="Syötä kuukausimenot, säästösi ja kuukausisäästö, niin näet kuukauden ja vuoden, jolloin voit jäädä eläkkeelle. Varat, tavoitteet ja kuusi laskuria.">
+  <meta property="og:url" content="https://m1zz.github.io/FireTracker/fi/">
+  <meta property="og:image" content="https://m1zz.github.io/FireTracker/img/fi/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#9A6200}@media (prefers-color-scheme:dark){:root{--accent:#E8A33D}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<div class="wrap">
-
-  <nav class="langs" aria-label="Valitse kieli">
-    <a href="../index.html" hreflang="ko" lang="ko">&#54620;&#44397;&#50612;</a>
-    <a href="../en/index.html" hreflang="en" lang="en">English</a>
-    <a href="../ja/index.html" hreflang="ja" lang="ja">日本語</a>
-    <a href="../zh-Hans/index.html" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
-    <a href="../zh-Hant/index.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
-    <a href="../es/index.html" hreflang="es" lang="es">Español</a>
-    <a href="../de/index.html" hreflang="de" lang="de">Deutsch</a>
-    <a href="../fr/index.html" hreflang="fr" lang="fr">Français</a>
-    <a href="../it/index.html" hreflang="it" lang="it">Italiano</a>
-    <a href="../pt-BR/index.html" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
-    <a href="../ru/index.html" hreflang="ru" lang="ru">Русский</a>
-    <a href="../th/index.html" hreflang="th" lang="th">ไทย</a>
-    <a href="../vi/index.html" hreflang="vi" lang="vi">Tiếng Việt</a>
-    <a href="../cs/index.html" hreflang="cs" lang="cs">Čeština</a>
-    <a href="../da/index.html" hreflang="da" lang="da">Dansk</a>
-    <a href="../el/index.html" hreflang="el" lang="el">Ελληνικά</a>
-    <a href="../fi/index.html" hreflang="fi" lang="fi" aria-current="page">Suomi</a>
-    <a href="../id/index.html" hreflang="id" lang="id">Bahasa Indonesia</a>
-    <a href="../nb/index.html" hreflang="nb" lang="nb">Norsk bokmål</a>
-    <a href="../nl/index.html" hreflang="nl" lang="nl">Nederlands</a>
-    <a href="../pl/index.html" hreflang="pl" lang="pl">Polski</a>
-    <a href="../sv/index.html" hreflang="sv" lang="sv">Svenska</a>
-    <a href="../tr/index.html" hreflang="tr" lang="tr">Türkçe</a>
-  </nav>
-
-  <header>
-    <img class="logo" src="../icon.png" alt="Toesagakin logo" />
-    <h1>Toesagak</h1>
-    <p class="tag">Varallisuus, nettovarallisuus ja FIRE-tavoite (varhaiseläke) yhdellä silmäyksellä</p>
+  <a class="skip" href="#main">Siirry sisältöön</a>
+  <header class="bar">
+    <a class="brand" href="../fi/"><img src="../icon.png" alt="" width="32" height="32">Toesagak</a>
+    <a class="lang-link" href="#languages">Kieli</a>
   </header>
 
-  <section>
-    <h2>Tietoa sovelluksesta</h2>
-    <p>Toesagak on oman talouden seurantasovellus. Kirjaat, mitä omistat ja mitä olet velkaa,
-       ja sovellus laskee <strong>kokonaisvarallisuutesi ja nettovarallisuutesi</strong>. Kun tallennat tilanteen joka kuukausi, näet
-       <strong>miten se kehittyy ajan myötä</strong> ja <strong>kuinka lähellä FIRE-tavoitettasi (taloudellinen riippumattomuus) olet</strong>.
-       Kaikki tiedot <strong>tallentuvat vain laitteellesi</strong>, eikä rekisteröitymistä tarvita.</p>
-  </section>
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Milloin voit lopettaa?<br>Luvuilla, ei fiiliksellä.</h1>
+        <p class="lead">Syötä menosi ja säästösi, niin näet kuukauden, jolloin voisit jättää työt. Aina kun varasi muuttuvat, näet, siirtyikö päivä lähemmäs vai kauemmas.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6779654854">Lataa App Storesta</a><a class="try" href="#try">Laske lopetuspäiväsi ↓</a></div>
+        <p class="muted small">Tiliä ei tarvita. Merkintäsi pysyvät laitteellasi.</p>
+      </div>
+      <div class="phone"><img src="../img/fi/01-dashboard.jpg" alt="Milloin voit lopettaa? Luvuilla, ei fiiliksellä." width="600" height="1303" decoding="async"></div>
+    </section>
 
-  <section>
-    <h2>Tärkeimmät ominaisuudet</h2>
-    <ul class="feat">
-      <li><span class="ico">📊</span><span>Varallisuus luokittain (osakkeet, kryptot, kiinteistöt, käteinen, eläkkeet, velat ym.) ja tarkemmat tiedot jokaisesta omistuksesta</span></li>
-      <li><span class="ico">📈</span><span>Kuukausittaiset kaaviot varoista, veloista ja nettovarallisuudesta sekä muutos edellisestä kirjauksesta</span></li>
-      <li><span class="ico">🎯</span><span>FIRE-edistyminen tavoitekulutuksen ja nostoprosentin perusteella sekä ennuste vuoden lopulle</span></li>
-      <li><span class="ico">📡</span><span>Syötä tikkeri tai arvopaperikoodi, niin hinnat haetaan automaattisesti yhdysvaltalaisille osakkeille, korealaisille osakkeille, kryptovaluutoille ja korealaisille kiinteistöille</span></li>
-      <li><span class="ico">🖼️</span><span>Lisää omistukset kerralla sijoitussovelluksesi kuvakaappauksesta – tunnistus tehdään kokonaan laitteella</span></li>
-    </ul>
-  </section>
 
-  <section>
-    <h2>Usein kysyttyä</h2>
-    <div class="qa">
-      <h3>Mihin taloustietoni tallennetaan?</h3>
-      <p>Vain laitteellesi (Apple SwiftData). Mitään ei ladata palvelimelle, eikä kehittäjäkään näe tietoja.</p>
-    </div>
-    <div class="qa">
-      <h3>Hinnat eivät päivity automaattisesti.</h3>
-      <p>Yhdysvaltalaiset osakkeet, kryptovaluutat ja valuuttakurssit toimivat ilman avainta. Korealaisten osakkeiden ja kiinteistöjen hintoja varten Asetukset-välilehdelle on syötettävä vastaava API-avain (Korea Investment &amp; Securities tai Korean avoimen datan portaali). Tarkista myös verkkoyhteys ja että tikkeri tai arvopaperikoodi on oikein.</p>
-    </div>
-    <div class="qa">
-      <h3>Miten poistan tietoni?</h3>
-      <p>Kun poistat sovelluksen, kaikki laitteelle tallennetut tiedot poistuvat samalla.</p>
-    </div>
-    <div class="qa">
-      <h3>Mitä eroa on kokonaisvarallisuudella ja nettovarallisuudella?</h3>
-      <p>Sovelluksessa ”kokonaisvarallisuus” on kaiken omistamasi summa ja ”nettovarallisuus” se, mitä jää jäljelle, kun velat vähennetään (kokonaisvarallisuus − velat).</p>
-    </div>
-  </section>
+    <section class="reveal" id="try">
+      <h2>Laske lopetuspäiväsi</h2>
+      <p class="muted">Liikuta liukusäätimiä. Laskenta on sama kuin sovelluksen ensimmäisessä näkymässä.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Laske lopetuspäiväsi&quot;, &quot;lead&quot;: &quot;Liikuta liukusäätimiä. Laskenta on sama kuin sovelluksen ensimmäisessä näkymässä.&quot;, &quot;spend&quot;: &quot;Kuukausimenot lopettamisen jälkeen&quot;, &quot;worth&quot;: &quot;Nettovarallisuus nyt&quot;, &quot;save&quot;: &quot;Säästät kuukaudessa&quot;, &quot;age&quot;: &quot;Ikäsi&quot;, &quot;ageUnit&quot;: &quot;{n} v&quot;, &quot;money&quot;: &quot;{n}&quot;, &quot;scale&quot;: {&quot;spend&quot;: [500, 10000, 50, 2500], &quot;worth&quot;: [0, 1500000, 5000, 50000], &quot;save&quot;: [0, 10000, 50, 1000]}, &quot;now&quot;: &quot;Nykyisellä tahdilla&quot;, &quot;years&quot;: &quot;{n} v&quot;, &quot;months&quot;: &quot;{n} kk&quot;, &quot;yearsMonths&quot;: &quot;{y} {m}&quot;, &quot;quit&quot;: &quot;Voisit lopettaa {t} päästä, {age}-vuotiaana&quot;, &quot;done&quot;: &quot;Olet jo perillä&quot;, &quot;never&quot;: &quot;Ei vielä ulottuvilla&quot;, &quot;neverText&quot;: &quot;Tällä säästötahdilla tavoite ei täyty 80 vuoden kuluessa. Kokeile säästää enemmän kuukaudessa tai pienentää menoja.&quot;, &quot;target&quot;: &quot;Tavoite&quot;, &quot;progress&quot;: &quot;Eteneminen&quot;, &quot;note&quot;: &quot;Tavoite on vuoden menot jaettuna 4 %:lla. Säästöjen oletetaan kasvavan 5 % vuodessa. Molempia voi muuttaa sovelluksessa. Suuntaa-antava laskelma, ei sijoitusneuvontaa.&quot;}"></div>
+    </section>
 
-  <section>
-    <h2>Yhteystiedot</h2>
-    <p class="contact">Lähetä vikailmoitukset, ominaisuustoiveet ja kysymykset meille sähköpostilla.</p>
-    <p><a class="btn" href="mailto:leeo@kakao.com">leeo@kakao.com</a></p>
-  </section>
+    <section class="problem reveal">
+      <h2>Lasketko yhä päässäsi, voisitko jo lopettaa?</h2>
+      <p>Kun pankkitili, arvo-osuustili, eläkesäästöt ja vuokravakuus ovat kaikki eri paikoissa, edes kokonaissumma ei pysy selvänä, ja lopetuspäivä jää arvaukseksi. Toesagak kokoaa kaiken yhteen näkymään ja laskee siitä jatkuvasti uudelleen kuukauden, jolloin voisit lopettaa.</p>
+    </section>
 
-  <section>
-    <h2>Tietosuojakäytäntö</h2>
-    <p>Katso, mitä tietoja sovellus käsittelee (ja mitä ei).</p>
-    <p><a href="./privacy.html">Lue tietosuojakäytäntö →</a></p>
-  </section>
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Kaikki varat yhdessä näkymässä</h2>
+        <p>Kiinteistöt, osakkeet, rahastot ja ETF:t, eläkkeet, käteinen ja talletukset, vuokravakuudet, kryptot ja lainat tyypeittäin, kokonaisvarojen, nettovarallisuuden ja velkaantumisasteen kera.<br>Osakkeiden ja kryptojen hinnat haetaan, jotta arvot pysyvät ajan tasalla, ja kuvakaappaus välittäjäsi sovelluksesta tuo omistukset ja arvot kerralla.</p>
+      </div>
+      <div class="phone"><img src="../img/fi/02-assets.jpg" alt="Kaikki varat yhdessä näkymässä" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Paljonko päivässä riittää</h2>
+        <p>Tämä kuukausi, tämä vuosi, viisi vuotta ja eläke tavoitteina sekä aiemmat merkinnät samassa kaaviossa. Näet myös, paljonko sinun pitää säästää päivässä, viikossa tai kuukaudessa pysyäksesi aikataulussa.<br>Kun varasi muuttuvat, viikon merkintä tallentuu automaattisesti, joten historia kertyy itsestään.</p>
+      </div>
+      <div class="phone"><img src="../img/fi/03-journey.jpg" alt="Paljonko päivässä riittää" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Laske ennen isoja päätöksiä</h2>
+        <p>Laskurit: varallisuus elämänkaaren yli, sijoittaminen, lyhennys vai sijoitus, lainat, säästöt ja talletukset, palkan ostovoima sekä raha tunteina. Vedä arvoa, niin kaavio piirtyy uudelleen ja edellinen käyrä jää katkoviivaksi vertailua varten.<br>Nimeä ja tallenna asetelmat, joihin palaat.</p>
+      </div>
+      <div class="phone"><img src="../img/fi/04-loan.jpg" alt="Laske ennen isoja päätöksiä" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Aloita kolmessa vaiheessa</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Syötä menosi ja ikäsi</h3><p>Karkeat luvut riittävät. Lopetuspäivä näkyy heti.</p></li>
+<li class="card"><span class="n">2</span><h3>Lisää varasi</h3><p>Mitä tarkemmin erittelet, sitä tarkempi päivä.</p></li>
+<li class="card"><span class="n">3</span><h3>Kurkkaa silloin tällöin</h3><p>Viikoittaiset merkinnät kertyvät itsestään, ja sovellus voi muistuttaa kuun 1. päivänä.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Näin sovellus laskee</h2>
+      <div class="card table">
+        <dl><div><dt>Tavoite</dt><dd>Vuoden menot lopettamisen jälkeen ÷ turvallinen nostoaste (4 %:lla se on 25 vuoden menot)</dd></div><div><dt>Lopetuspäivä</dt><dd>Kuukausi, jolloin nettovarallisuutesi ja kuukausisäästösi odotetulla tuotolla kasvatettuina saavuttavat tavoitteen</dd></div><div><dt>Kokonaisvarat</dt><dd>Kaikki omistamasi yhteenlaskettuna</dd></div><div><dt>Nettovarallisuus</dt><dd>Kokonaisvarat miinus velat, kuten lainat</dd></div><div><dt>Eteneminen</dt><dd>Nettovarallisuus ÷ tavoite. Voit seurata sitä myös passiivisen tulon kautta</dd></div><div><dt>Mitä voit muuttaa</dt><dd>Kuukausimenot, nostoaste 2–6 %, odotettu tuotto 0–12 %, ikä, jolloin haluaisit lopettaa</dd></div></dl>
+      </div>
+      <p class="muted">Kaikki tulokset ovat syöttämiisi tietoihin perustuvia suuntaa-antavia laskelmia eivätkä ole sijoitusneuvontaa.</p>
+    </section>
+
+
+
+    <section class="reveal" id="faq">
+      <h2>Kysymyksiä</h2>
+      <div class="faq"><details><summary>Mihin merkintäni tallennetaan?</summary><p>Vain laitteellesi. Rekisteröitymistä ei ole, eikä mitään lähetetä kehittäjälle. Kun otat iCloud-synkronoinnin käyttöön asetuksista, näet samat merkinnät iPhonessa ja iPadissa oman iCloud-tilisi kautta.</p></details>
+<details><summary>Hinnat eivät päivity.</summary><p>Yhdysvaltain ja Korean osakkeet, kryptot ja valuuttakurssit toimivat ilman asetuksia. Tarkista nettiyhteys ja että tunnus tai koodi on oikein. Asuntojen hinnat tulevat Korean julkisesta kiinteistödatasta, ja niitä varten asetuksiin syötetään maksuton palveluavain.</p></details>
+<details><summary>Mitä eroa on kokonaisvaroilla ja nettovarallisuudella?</summary><p>Kokonaisvarat ovat kaikki omistamasi yhteenlaskettuna. Nettovarallisuus on sama summa miinus velat, kuten lainat. Lopetuspäivä lasketaan nettovarallisuudesta.</p></details>
+<details><summary>Miten siirrän merkinnät uuteen laitteeseen?</summary><p>Tee asetuksissa varmuuskopiotiedosto Vie-toiminnolla, säilytä se Tiedostoissa, iCloud Drivessa tai sähköpostissa ja palauta se uudessa laitteessa. Varmuuskopiot eivät koskaan sisällä API-avaimia. Sovellus säilyttää myös 20 viimeisintä varmuuskopiota laitteella automaattisesti.</p></details>
+<details><summary>Miten myyntihälytykset toimivat?</summary><p>Aseta kullekin omistukselle, kuinka paljon se saa pudota huipustaan, tai tavoitehinta. Kun raja ylittyy, saat ilmoituksen. Nousun aikana sovellus pysyy hiljaa. Hinnat tarkistetaan, kun avaat sovelluksen ja kun iOS sallii sen taustalla (yleensä muutaman tunnin välein), joten kyse ei ole reaaliaikaisesta seurannasta.</p></details>
+<details><summary>Voinko pitää lukuni omana tietonani?</summary><p>Ota asetuksista käyttöön Apin lukitus, niin sovellus avautuu Face ID:llä tai pääsykoodilla. Kun lukitus on päällä, kuukausimuistutuksessakaan ei näy lukuja.</p></details>
+<details><summary>Voinko ensin vain katsella?</summary><p>Ota asetuksista käyttöön Demotiedot ja tutki kaikkia näkymiä kuvitteellisen henkilön varoilla. Kun kytket ne pois, omat merkintäsi palaavat heti. Demotiedot eivät ole käytettävissä, kun iCloud-synkronointi on päällä.</p></details>
+<details><summary>Miten poistan kaikki tietoni?</summary><p>Sovelluksen poistaminen poistaa kaikki laitteelle tallennetut merkinnät. Jos haluat säilyttää kopion, vie ensin varmuuskopiotiedosto asetuksista.</p></details>
+<details><summary>Voinko sijoittaa näiden lukujen perusteella?</summary><p>Toesagakin tulokset ovat syöttämiisi tietoihin ja oletettuun tuottoon perustuvia suuntaa-antavia laskelmia. Ne eivät ole sijoitusneuvontaa, ja todelliset tulokset riippuvat markkinoista ja omasta tilanteestasi.</p></details></div>
+      <p class="contact">Virheitä, ideoita tai kysyttävää? Kirjoita osoitteeseen <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Aloita seuranta tänään.<br>Näe lopetuspäiväsi.</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6779654854">Lataa App Storesta</a>
+    </section>
+  </main>
 
   <footer>
-    <p>© 2026 Toesagak · <a href="./privacy.html">Tietosuoja</a></p>
+    <nav id="languages" class="langs" aria-label="Kieli"><a href="../" hreflang="ko" lang="ko">한국어</a>
+<a href="../en/" hreflang="en" lang="en">English</a>
+<a href="../ja/" hreflang="ja" lang="ja">日本語</a>
+<a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="../es/" hreflang="es" lang="es">Español</a>
+<a href="../de/" hreflang="de" lang="de">Deutsch</a>
+<a href="../fr/" hreflang="fr" lang="fr">Français</a>
+<a href="../it/" hreflang="it" lang="it">Italiano</a>
+<a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="../ru/" hreflang="ru" lang="ru">Русский</a>
+<a href="../th/" hreflang="th" lang="th">ไทย</a>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
+<a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
+<a href="../da/" hreflang="da" lang="da">Dansk</a>
+<a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
+<a href="../fi/" hreflang="fi" lang="fi" aria-current="page">Suomi</a>
+<a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
+<a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
+<a href="../pl/" hreflang="pl" lang="pl">Polski</a>
+<a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
+<a href="../tr/" hreflang="tr" lang="tr">Türkçe</a></nav>
+    <p><a href="privacy.html">Tietosuojakäytäntö</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Toesagak</p>
   </footer>
 
-</div>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

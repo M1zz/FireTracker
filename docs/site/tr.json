@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: İşi bırakabileceğiniz ayı gösteren FIRE hesaplayıcı",
+  "description": "Aylık harcamanızı, birikiminizi ve her ay ayırdığınızı girin; işi bırakabileceğiniz ayı ve yılı görün. Varlık takibi, hedefler, altı hesaplayıcı.",
+  "hero": {
+    "headline": "Ne zaman bırakabilirsiniz?\nHisle değil, rakamla.",
+    "lead": "Harcamanızı ve birikiminizi girin, işi bırakabileceğiniz ay karşınıza çıksın. Varlıklarınız her değiştiğinde o tarihin yaklaştığını mı uzaklaştığını mı hemen görürsünüz.",
+    "cta": "App Store'dan indirin",
+    "note": "Hesap gerekmez. Kayıtlarınız cihazınızda kalır."
+  },
+  "demo": {
+    "title": "Bırakma tarihinizi hesaplayın",
+    "lead": "Kaydırıcıları sürükleyin. Uygulamanın ilk ekranındaki hesabın aynısı.",
+    "spend": "Bıraktıktan sonra aylık harcama",
+    "worth": "Bugünkü net varlık",
+    "save": "Her ay biriktirilen",
+    "age": "Yaşınız",
+    "ageUnit": "{n} yaş",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        10000,
+        500000,
+        2500,
+        60000
+      ],
+      "worth": [
+        0,
+        50000000,
+        250000,
+        1000000
+      ],
+      "save": [
+        0,
+        500000,
+        2500,
+        20000
+      ]
+    },
+    "now": "Bu hızla giderseniz",
+    "years": "{n} yıl",
+    "months": "{n} ay",
+    "yearsMonths": "{y} {m}",
+    "quit": "{t} sonra, {age} yaşında bırakabilirsiniz",
+    "done": "Zaten oradasınız",
+    "never": "Henüz ulaşılamıyor",
+    "neverText": "Bu birikim hızıyla hedefe 80 yıl içinde ulaşamıyorsunuz. Her ay daha fazla biriktirmeyi ya da harcamanızı azaltmayı deneyin.",
+    "target": "Hedef",
+    "progress": "İlerleme",
+    "note": "Hedefiniz bir yıllık harcamanın %4'e bölünmesidir. Birikimin yılda %5 büyüdüğü varsayılır. İkisini de uygulamada değiştirebilirsiniz. Yalnızca fikir verir, yatırım tavsiyesi değildir."
+  },
+  "problem": {
+    "title": "\"Artık bırakabilir miyim?\" hesabını hâlâ kafanızda mı yapıyorsunuz?",
+    "text": "Banka, aracı kurum, bireysel emeklilik ve kira depozitosu ayrı ayrı yerlerde durunca toplamınız bile bulanıklaşır, bırakma tarihi de tahmin olarak kalır. Toesagak her şeyi tek ekranda toplar ve bu toplamdan işi bırakabileceğiniz ayı sürekli yeniden hesaplar."
+  },
+  "features": [
+    {
+      "title": "Tüm varlıklar tek ekranda",
+      "text": "Gayrimenkul, hisse, fon ve ETF, emeklilik, nakit ve mevduat, kira depozitosu, kripto ve krediler türe göre gruplanır; toplam varlık, net varlık ve borç oranıyla birlikte.\nHisse ve kripto fiyatları çekilerek değerler güncel tutulur, aracı kurum uygulamanızın ekran görüntüsü de pozisyonları ve değerleri tek seferde içeri aktarır.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Oraya varmak için günde ne kadar",
+      "text": "Bu ay, bu yıl, beş yıl ve emeklilik hedeflerini geçmiş kayıtlarınızla birlikte tek grafikte görün. Yolda kalmak için günde, haftada ya da ayda ne kadar biriktirmeniz gerektiğini de söyler.\nVarlıklarınız değiştiğinde o haftanın kaydı otomatik saklanır, geçmişiniz kendiliğinden oluşur.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Büyük kararlardan önce hesaplayın",
+      "text": "Yaşam boyu varlık eğrisi, yatırım, borç kapatmak mı yatırım mı, kredi, birikim ve mevduat, maaşın satın alma gücü ve parayı saate çevirme için hesaplayıcılar. Bir değeri sürükleyin, grafik yeniden çizilsin; önceki eğri karşılaştırma için kesikli çizgi olarak kalır.\nSık döndüğünüz senaryolara ad verip kaydedin.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Üç adımda başlayın",
+    "items": [
+      {
+        "title": "Harcamanızı ve yaşınızı girin",
+        "text": "Yaklaşık rakamlar yeterli. Bırakma tarihiniz hemen görünür."
+      },
+      {
+        "title": "Varlıklarınızı ekleyin",
+        "text": "Ne kadar ayrıntılı girerseniz tarih o kadar netleşir."
+      },
+      {
+        "title": "Ara sıra göz atın",
+        "text": "Haftalık kayıtlar kendiliğinden birikir, uygulama her ayın 1'inde size hatırlatabilir."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Uygulama nasıl hesaplar",
+    "rows": [
+      [
+        "Hedef",
+        "Bıraktıktan sonraki bir yıllık harcama ÷ güvenli çekim oranı (%4'te 25 yıllık harcama eder)"
+      ],
+      [
+        "Bırakma tarihi",
+        "Net varlığınızın, her ay biriktirdiğinizle birlikte beklenen getiriyle büyüyerek hedefe ulaştığı ay"
+      ],
+      [
+        "Toplam varlık",
+        "Sahip olduğunuz her şeyin toplamı"
+      ],
+      [
+        "Net varlık",
+        "Toplam varlıktan kredi gibi borçlar çıkarıldıktan sonra kalan"
+      ],
+      [
+        "İlerleme",
+        "Net varlık ÷ hedef. Pasif gelire göre de takip edebilirsiniz"
+      ],
+      [
+        "Değiştirebilecekleriniz",
+        "Aylık harcama, %2 ile %6 arası çekim oranı, %0 ile %12 arası beklenen getiri, bırakmak istediğiniz yaş"
+      ]
+    ],
+    "note": "Tüm sonuçlar girdilerinize dayalı yol gösterici hesaplardır ve yatırım tavsiyesi değildir."
+  },
+  "faq": {
+    "title": "Sorular",
+    "items": [
+      {
+        "q": "Kayıtlarım nerede saklanıyor?",
+        "a": "Yalnızca cihazınızda. Üyelik yok ve geliştiriciye hiçbir şey gönderilmez. Kendi iCloud hesabınızla iPhone ve iPad'de aynı kayıtları görmek için Ayarlar'dan iCloud eşitlemeyi açın."
+      },
+      {
+        "q": "Fiyatlar güncellenmiyor.",
+        "a": "ABD ve Kore hisseleri, kripto ve döviz kurları hiçbir ayar gerektirmeden çalışır. İnternet bağlantınızı ve sembolün ya da kodun doğru olduğunu kontrol edin. Daire fiyatları Kore'nin kamu gayrimenkul verilerini kullanır ve Ayarlar'a girilen ücretsiz bir servis anahtarı gerektirir."
+      },
+      {
+        "q": "Toplam varlık ile net varlık arasındaki fark ne?",
+        "a": "Toplam varlık, sahip olduğunuz her şeyin toplamıdır. Net varlık, bundan kredi gibi borçlar çıkarıldıktan sonra kalandır. Bırakma tarihiniz net varlığa göre hesaplanır."
+      },
+      {
+        "q": "Kayıtlarımı yeni cihaza nasıl taşırım?",
+        "a": "Ayarlar'daki Dışa aktar ile bir yedek dosyası oluşturun, Dosyalar'da, iCloud Drive'da ya da e-postada saklayın ve yeni cihazda geri yükleyin. Yedek dosyaları API anahtarlarını asla içermez. Uygulama ayrıca son 20 yedeği cihazda otomatik olarak tutar."
+      },
+      {
+        "q": "Satış uyarıları nasıl çalışır?",
+        "a": "Her pozisyon için zirvesinden ne kadar düşebileceğini ya da bir hedef fiyat belirleyin. Bu sınır aşılınca haber verilir. Yükselişte uygulama sessiz kalır. Fiyatlar uygulamayı açtığınızda ve iOS izin verdiğinde arka planda (genellikle birkaç saatte bir) kontrol edilir, yani anlık takip değildir."
+      },
+      {
+        "q": "Rakamlarımı gizli tutabilir miyim?",
+        "a": "Uygulamayı Face ID ya da parolayla açmak için Ayarlar'dan Uygulama kilidini açın. Kilit açıkken aylık hatırlatıcıda da hiçbir rakam görünmez."
+      },
+      {
+        "q": "Önce bir göz atabilir miyim?",
+        "a": "Ayarlar'dan Demo verilerini açın ve tüm ekranları kurgusal bir kişinin varlıklarıyla gezin. Kapattığınızda kendi kayıtlarınız hemen geri gelir. iCloud eşitleme açıkken Demo verileri kullanılamaz."
+      },
+      {
+        "q": "Tüm verilerimi nasıl silerim?",
+        "a": "Uygulamayı silmek cihazdaki tüm kayıtları da siler. Bir kopyasını saklamak istiyorsanız önce Ayarlar'dan bir yedek dosyası dışa aktarın."
+      },
+      {
+        "q": "Bu rakamlara göre yatırım yapabilir miyim?",
+        "a": "Toesagak'ın sonuçları girdilerinize ve varsayılan getiriye dayalı yol gösterici hesaplardır. Yatırım tavsiyesi değildir; gerçek sonuçlar piyasaya ve sizin durumunuza bağlıdır."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Bugün kaydetmeye başlayın.\nBırakma tarihinizi görün.",
+    "cta": "App Store'dan indirin"
+  },
+  "ui": {
+    "skip": "İçeriğe geç",
+    "languages": "Dil",
+    "privacy": "Gizlilik Politikası",
+    "contact": "Hata, fikir ya da soru mu var? {email} adresine yazın."
+  }
+}

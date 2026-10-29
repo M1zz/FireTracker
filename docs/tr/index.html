@@ -1,162 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Toesagak · Destek</title>
-<link rel="canonical" href="https://m1zz.github.io/FireTracker/tr/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
-<meta name="description" content="Toesagak destek sayfası — varlıklarınızı, net servetinizi ve FIRE (erken emeklilik) hedefinizi takip eden uygulama" />
-<style>
-  :root{
-    --bg:#0f1115; --surface:#171a21; --surface2:#1f242d; --line:#2a2f3a;
-    --text:#e9edf2; --muted:#9aa3b0; --accent:#4CAF8E; --accent2:#E8A33D;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
-       background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
-  header{padding:40px 0 40px;text-align:center}
-  .logo{width:96px;height:96px;border-radius:22px;object-fit:cover;border:1px solid var(--line);margin-bottom:18px}
-  h1{font-size:30px;margin:6px 0 6px;letter-spacing:-.4px}
-  .tag{color:var(--muted);font-size:16px;margin:0}
-  section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px;margin:18px 0}
-  h2{font-size:19px;margin:0 0 14px;letter-spacing:-.3px}
-  ul{margin:0;padding-left:20px}
-  li{margin:7px 0}
-  .feat{display:grid;grid-template-columns:1fr;gap:10px;margin:0;padding:0;list-style:none}
-  .feat li{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);
-           border-radius:12px;padding:12px 14px;margin:0}
-  .feat .ico{font-size:18px;line-height:1.5}
-  .qa{margin:14px 0}
-  .qa h3{font-size:15px;margin:0 0 4px;color:var(--text)}
-  .qa p{margin:0;color:var(--muted);font-size:15px}
-  a{color:var(--accent)}
-  .btn{display:inline-block;background:var(--accent);color:#06120d;font-weight:700;text-decoration:none;
-       padding:12px 20px;border-radius:12px;margin-top:6px}
-  .contact{font-size:17px}
-  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 60px}
-  footer a{color:var(--muted)}
-  code{background:var(--surface2);padding:2px 6px;border-radius:6px;font-size:13px}
-  .langs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:12.5px;line-height:1.5;margin:0 auto;padding:16px 0 0}
-  .langs a{color:var(--muted);text-decoration:none;white-space:nowrap}
-  .langs a:hover{color:var(--text)}
-  .langs a[aria-current]{color:var(--accent);font-weight:700}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toesagak: İşi bırakabileceğiniz ayı gösteren FIRE hesaplayıcı</title>
+  <meta name="description" content="Aylık harcamanızı, birikiminizi ve her ay ayırdığınızı girin; işi bırakabileceğiniz ayı ve yılı görün. Varlık takibi, hedefler, altı hesaplayıcı.">
+  <meta name="theme-color" content="#9A6200" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6779654854">
+  <link rel="canonical" href="https://m1zz.github.io/FireTracker/tr/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Toesagak: İşi bırakabileceğiniz ayı gösteren FIRE hesaplayıcı">
+  <meta property="og:description" content="Aylık harcamanızı, birikiminizi ve her ay ayırdığınızı girin; işi bırakabileceğiniz ayı ve yılı görün. Varlık takibi, hedefler, altı hesaplayıcı.">
+  <meta property="og:url" content="https://m1zz.github.io/FireTracker/tr/">
+  <meta property="og:image" content="https://m1zz.github.io/FireTracker/img/tr/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#9A6200}@media (prefers-color-scheme:dark){:root{--accent:#E8A33D}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<div class="wrap">
-
-  <nav class="langs" aria-label="Dil seçin">
-    <a href="../index.html" hreflang="ko" lang="ko">&#54620;&#44397;&#50612;</a>
-    <a href="../en/index.html" hreflang="en" lang="en">English</a>
-    <a href="../ja/index.html" hreflang="ja" lang="ja">日本語</a>
-    <a href="../zh-Hans/index.html" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
-    <a href="../zh-Hant/index.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
-    <a href="../es/index.html" hreflang="es" lang="es">Español</a>
-    <a href="../de/index.html" hreflang="de" lang="de">Deutsch</a>
-    <a href="../fr/index.html" hreflang="fr" lang="fr">Français</a>
-    <a href="../it/index.html" hreflang="it" lang="it">Italiano</a>
-    <a href="../pt-BR/index.html" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
-    <a href="../ru/index.html" hreflang="ru" lang="ru">Русский</a>
-    <a href="../th/index.html" hreflang="th" lang="th">ไทย</a>
-    <a href="../vi/index.html" hreflang="vi" lang="vi">Tiếng Việt</a>
-    <a href="../cs/index.html" hreflang="cs" lang="cs">Čeština</a>
-    <a href="../da/index.html" hreflang="da" lang="da">Dansk</a>
-    <a href="../el/index.html" hreflang="el" lang="el">Ελληνικά</a>
-    <a href="../fi/index.html" hreflang="fi" lang="fi">Suomi</a>
-    <a href="../id/index.html" hreflang="id" lang="id">Bahasa Indonesia</a>
-    <a href="../nb/index.html" hreflang="nb" lang="nb">Norsk bokmål</a>
-    <a href="../nl/index.html" hreflang="nl" lang="nl">Nederlands</a>
-    <a href="../pl/index.html" hreflang="pl" lang="pl">Polski</a>
-    <a href="../sv/index.html" hreflang="sv" lang="sv">Svenska</a>
-    <a href="../tr/index.html" hreflang="tr" lang="tr" aria-current="page">Türkçe</a>
-  </nav>
-
-  <header>
-    <img class="logo" src="../icon.png" alt="Toesagak logosu" />
-    <h1>Toesagak</h1>
-    <p class="tag">Varlıklarınız, net servetiniz ve FIRE (erken emeklilik) hedefiniz tek bakışta</p>
+  <a class="skip" href="#main">İçeriğe geç</a>
+  <header class="bar">
+    <a class="brand" href="../tr/"><img src="../icon.png" alt="" width="32" height="32">Toesagak</a>
+    <a class="lang-link" href="#languages">Dil</a>
   </header>
 
-  <section>
-    <h2>Hakkında</h2>
-    <p>Toesagak bir kişisel finans takip uygulamasıdır. Sahip olduklarınızı ve borçlarınızı girin, uygulama
-       <strong>toplam varlığınızı ve net servetinizi</strong> hesaplasın. Her ay bir kayıt ekleyerek <strong>zaman içindeki değişimi</strong>
-       ve <strong>FIRE (finansal özgürlük) hedefinize ne kadar yaklaştığınızı</strong> görün.
-       Tüm veriler <strong>yalnızca cihazınızda saklanır</strong> ve üyelik gerekmez.</p>
-  </section>
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Ne zaman bırakabilirsiniz?<br>Hisle değil, rakamla.</h1>
+        <p class="lead">Harcamanızı ve birikiminizi girin, işi bırakabileceğiniz ay karşınıza çıksın. Varlıklarınız her değiştiğinde o tarihin yaklaştığını mı uzaklaştığını mı hemen görürsünüz.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6779654854">App Store'dan indirin</a><a class="try" href="#try">Bırakma tarihinizi hesaplayın ↓</a></div>
+        <p class="muted small">Hesap gerekmez. Kayıtlarınız cihazınızda kalır.</p>
+      </div>
+      <div class="phone"><img src="../img/tr/01-dashboard.jpg" alt="Ne zaman bırakabilirsiniz? Hisle değil, rakamla." width="600" height="1303" decoding="async"></div>
+    </section>
 
-  <section>
-    <h2>Öne çıkan özellikler</h2>
-    <ul class="feat">
-      <li><span class="ico">📊</span><span>Hisse senedi, kripto, gayrimenkul, nakit, emeklilik, borç gibi kategorilere göre varlık yönetimi ve her varlık için ayrıntılı kayıt</span></li>
-      <li><span class="ico">📈</span><span>Aylık varlık, borç ve net servet grafikleri ile son kayda göre değişim</span></li>
-      <li><span class="ico">🎯</span><span>Hedef harcama ve çekim oranına göre FIRE ilerlemesi ve yıl sonu tahmini</span></li>
-      <li><span class="ico">📡</span><span>Sembol veya hisse kodunu girin; ABD hisseleri, Kore hisseleri, kripto paralar ve Kore'deki gayrimenkul fiyatları otomatik gelsin</span></li>
-      <li><span class="ico">🖼️</span><span>Aracı kurum uygulamanızın ekran görüntüsünü tamamen cihaz üzerinde tanıyarak varlıklarınızı tek seferde ekleyin</span></li>
-    </ul>
-  </section>
 
-  <section>
-    <h2>Sık sorulan sorular</h2>
-    <div class="qa">
-      <h3>Finansal verilerim nerede saklanıyor?</h3>
-      <p>Yalnızca cihazınızda (Apple SwiftData). Hiçbir sunucuya yüklenmez ve geliştirici de göremez.</p>
-    </div>
-    <div class="qa">
-      <h3>Fiyatlar otomatik güncellenmiyor.</h3>
-      <p>ABD hisseleri, kripto paralar ve döviz kurları anahtar gerektirmeden çalışır. Kore hisse ve gayrimenkul fiyatları için Ayarlar sekmesinde ilgili API anahtarını (Korea Investment &amp; Securities veya Kore Kamu Verileri Portalı) girmeniz gerekir. İnternet bağlantınızı ve sembolün ya da hisse kodunun doğru olduğunu da kontrol edin.</p>
-    </div>
-    <div class="qa">
-      <h3>Verilerimi nasıl silerim?</h3>
-      <p>Uygulamayı sildiğinizde cihazda saklanan tüm veriler de birlikte silinir.</p>
-    </div>
-    <div class="qa">
-      <h3>Toplam varlık ile net servet arasındaki fark nedir?</h3>
-      <p>Uygulamada “toplam varlık” sahip olduğunuz her şeyin toplamıdır; “net servet” ise bundan borçlarınız düşüldükten sonra kalan tutardır (toplam varlık − borçlar).</p>
-    </div>
-  </section>
+    <section class="reveal" id="try">
+      <h2>Bırakma tarihinizi hesaplayın</h2>
+      <p class="muted">Kaydırıcıları sürükleyin. Uygulamanın ilk ekranındaki hesabın aynısı.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Bırakma tarihinizi hesaplayın&quot;, &quot;lead&quot;: &quot;Kaydırıcıları sürükleyin. Uygulamanın ilk ekranındaki hesabın aynısı.&quot;, &quot;spend&quot;: &quot;Bıraktıktan sonra aylık harcama&quot;, &quot;worth&quot;: &quot;Bugünkü net varlık&quot;, &quot;save&quot;: &quot;Her ay biriktirilen&quot;, &quot;age&quot;: &quot;Yaşınız&quot;, &quot;ageUnit&quot;: &quot;{n} yaş&quot;, &quot;money&quot;: &quot;{n}&quot;, &quot;scale&quot;: {&quot;spend&quot;: [10000, 500000, 2500, 60000], &quot;worth&quot;: [0, 50000000, 250000, 1000000], &quot;save&quot;: [0, 500000, 2500, 20000]}, &quot;now&quot;: &quot;Bu hızla giderseniz&quot;, &quot;years&quot;: &quot;{n} yıl&quot;, &quot;months&quot;: &quot;{n} ay&quot;, &quot;yearsMonths&quot;: &quot;{y} {m}&quot;, &quot;quit&quot;: &quot;{t} sonra, {age} yaşında bırakabilirsiniz&quot;, &quot;done&quot;: &quot;Zaten oradasınız&quot;, &quot;never&quot;: &quot;Henüz ulaşılamıyor&quot;, &quot;neverText&quot;: &quot;Bu birikim hızıyla hedefe 80 yıl içinde ulaşamıyorsunuz. Her ay daha fazla biriktirmeyi ya da harcamanızı azaltmayı deneyin.&quot;, &quot;target&quot;: &quot;Hedef&quot;, &quot;progress&quot;: &quot;İlerleme&quot;, &quot;note&quot;: &quot;Hedefiniz bir yıllık harcamanın %4&#x27;e bölünmesidir. Birikimin yılda %5 büyüdüğü varsayılır. İkisini de uygulamada değiştirebilirsiniz. Yalnızca fikir verir, yatırım tavsiyesi değildir.&quot;}"></div>
+    </section>
 
-  <section>
-    <h2>İletişim</h2>
-    <p class="contact">Hata bildirimi, özellik önerisi veya sorularınız için bize e-posta gönderin.</p>
-    <p><a class="btn" href="mailto:leeo@kakao.com">leeo@kakao.com</a></p>
-  </section>
+    <section class="problem reveal">
+      <h2>"Artık bırakabilir miyim?" hesabını hâlâ kafanızda mı yapıyorsunuz?</h2>
+      <p>Banka, aracı kurum, bireysel emeklilik ve kira depozitosu ayrı ayrı yerlerde durunca toplamınız bile bulanıklaşır, bırakma tarihi de tahmin olarak kalır. Toesagak her şeyi tek ekranda toplar ve bu toplamdan işi bırakabileceğiniz ayı sürekli yeniden hesaplar.</p>
+    </section>
 
-  <section>
-    <h2>Gizlilik Politikası</h2>
-    <p>Uygulamanın hangi bilgileri işlediğini (ve işlemediğini) aşağıdan inceleyebilirsiniz.</p>
-    <p><a href="./privacy.html">Gizlilik Politikasını okuyun →</a></p>
-  </section>
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Tüm varlıklar tek ekranda</h2>
+        <p>Gayrimenkul, hisse, fon ve ETF, emeklilik, nakit ve mevduat, kira depozitosu, kripto ve krediler türe göre gruplanır; toplam varlık, net varlık ve borç oranıyla birlikte.<br>Hisse ve kripto fiyatları çekilerek değerler güncel tutulur, aracı kurum uygulamanızın ekran görüntüsü de pozisyonları ve değerleri tek seferde içeri aktarır.</p>
+      </div>
+      <div class="phone"><img src="../img/tr/02-assets.jpg" alt="Tüm varlıklar tek ekranda" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Oraya varmak için günde ne kadar</h2>
+        <p>Bu ay, bu yıl, beş yıl ve emeklilik hedeflerini geçmiş kayıtlarınızla birlikte tek grafikte görün. Yolda kalmak için günde, haftada ya da ayda ne kadar biriktirmeniz gerektiğini de söyler.<br>Varlıklarınız değiştiğinde o haftanın kaydı otomatik saklanır, geçmişiniz kendiliğinden oluşur.</p>
+      </div>
+      <div class="phone"><img src="../img/tr/03-journey.jpg" alt="Oraya varmak için günde ne kadar" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Büyük kararlardan önce hesaplayın</h2>
+        <p>Yaşam boyu varlık eğrisi, yatırım, borç kapatmak mı yatırım mı, kredi, birikim ve mevduat, maaşın satın alma gücü ve parayı saate çevirme için hesaplayıcılar. Bir değeri sürükleyin, grafik yeniden çizilsin; önceki eğri karşılaştırma için kesikli çizgi olarak kalır.<br>Sık döndüğünüz senaryolara ad verip kaydedin.</p>
+      </div>
+      <div class="phone"><img src="../img/tr/04-loan.jpg" alt="Büyük kararlardan önce hesaplayın" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Üç adımda başlayın</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Harcamanızı ve yaşınızı girin</h3><p>Yaklaşık rakamlar yeterli. Bırakma tarihiniz hemen görünür.</p></li>
+<li class="card"><span class="n">2</span><h3>Varlıklarınızı ekleyin</h3><p>Ne kadar ayrıntılı girerseniz tarih o kadar netleşir.</p></li>
+<li class="card"><span class="n">3</span><h3>Ara sıra göz atın</h3><p>Haftalık kayıtlar kendiliğinden birikir, uygulama her ayın 1'inde size hatırlatabilir.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Uygulama nasıl hesaplar</h2>
+      <div class="card table">
+        <dl><div><dt>Hedef</dt><dd>Bıraktıktan sonraki bir yıllık harcama ÷ güvenli çekim oranı (%4'te 25 yıllık harcama eder)</dd></div><div><dt>Bırakma tarihi</dt><dd>Net varlığınızın, her ay biriktirdiğinizle birlikte beklenen getiriyle büyüyerek hedefe ulaştığı ay</dd></div><div><dt>Toplam varlık</dt><dd>Sahip olduğunuz her şeyin toplamı</dd></div><div><dt>Net varlık</dt><dd>Toplam varlıktan kredi gibi borçlar çıkarıldıktan sonra kalan</dd></div><div><dt>İlerleme</dt><dd>Net varlık ÷ hedef. Pasif gelire göre de takip edebilirsiniz</dd></div><div><dt>Değiştirebilecekleriniz</dt><dd>Aylık harcama, %2 ile %6 arası çekim oranı, %0 ile %12 arası beklenen getiri, bırakmak istediğiniz yaş</dd></div></dl>
+      </div>
+      <p class="muted">Tüm sonuçlar girdilerinize dayalı yol gösterici hesaplardır ve yatırım tavsiyesi değildir.</p>
+    </section>
+
+
+
+    <section class="reveal" id="faq">
+      <h2>Sorular</h2>
+      <div class="faq"><details><summary>Kayıtlarım nerede saklanıyor?</summary><p>Yalnızca cihazınızda. Üyelik yok ve geliştiriciye hiçbir şey gönderilmez. Kendi iCloud hesabınızla iPhone ve iPad'de aynı kayıtları görmek için Ayarlar'dan iCloud eşitlemeyi açın.</p></details>
+<details><summary>Fiyatlar güncellenmiyor.</summary><p>ABD ve Kore hisseleri, kripto ve döviz kurları hiçbir ayar gerektirmeden çalışır. İnternet bağlantınızı ve sembolün ya da kodun doğru olduğunu kontrol edin. Daire fiyatları Kore'nin kamu gayrimenkul verilerini kullanır ve Ayarlar'a girilen ücretsiz bir servis anahtarı gerektirir.</p></details>
+<details><summary>Toplam varlık ile net varlık arasındaki fark ne?</summary><p>Toplam varlık, sahip olduğunuz her şeyin toplamıdır. Net varlık, bundan kredi gibi borçlar çıkarıldıktan sonra kalandır. Bırakma tarihiniz net varlığa göre hesaplanır.</p></details>
+<details><summary>Kayıtlarımı yeni cihaza nasıl taşırım?</summary><p>Ayarlar'daki Dışa aktar ile bir yedek dosyası oluşturun, Dosyalar'da, iCloud Drive'da ya da e-postada saklayın ve yeni cihazda geri yükleyin. Yedek dosyaları API anahtarlarını asla içermez. Uygulama ayrıca son 20 yedeği cihazda otomatik olarak tutar.</p></details>
+<details><summary>Satış uyarıları nasıl çalışır?</summary><p>Her pozisyon için zirvesinden ne kadar düşebileceğini ya da bir hedef fiyat belirleyin. Bu sınır aşılınca haber verilir. Yükselişte uygulama sessiz kalır. Fiyatlar uygulamayı açtığınızda ve iOS izin verdiğinde arka planda (genellikle birkaç saatte bir) kontrol edilir, yani anlık takip değildir.</p></details>
+<details><summary>Rakamlarımı gizli tutabilir miyim?</summary><p>Uygulamayı Face ID ya da parolayla açmak için Ayarlar'dan Uygulama kilidini açın. Kilit açıkken aylık hatırlatıcıda da hiçbir rakam görünmez.</p></details>
+<details><summary>Önce bir göz atabilir miyim?</summary><p>Ayarlar'dan Demo verilerini açın ve tüm ekranları kurgusal bir kişinin varlıklarıyla gezin. Kapattığınızda kendi kayıtlarınız hemen geri gelir. iCloud eşitleme açıkken Demo verileri kullanılamaz.</p></details>
+<details><summary>Tüm verilerimi nasıl silerim?</summary><p>Uygulamayı silmek cihazdaki tüm kayıtları da siler. Bir kopyasını saklamak istiyorsanız önce Ayarlar'dan bir yedek dosyası dışa aktarın.</p></details>
+<details><summary>Bu rakamlara göre yatırım yapabilir miyim?</summary><p>Toesagak'ın sonuçları girdilerinize ve varsayılan getiriye dayalı yol gösterici hesaplardır. Yatırım tavsiyesi değildir; gerçek sonuçlar piyasaya ve sizin durumunuza bağlıdır.</p></details></div>
+      <p class="contact">Hata, fikir ya da soru mu var? <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> adresine yazın.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Bugün kaydetmeye başlayın.<br>Bırakma tarihinizi görün.</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6779654854">App Store'dan indirin</a>
+    </section>
+  </main>
 
   <footer>
-    <p>© 2026 Toesagak · <a href="./privacy.html">Gizlilik Politikası</a></p>
+    <nav id="languages" class="langs" aria-label="Dil"><a href="../" hreflang="ko" lang="ko">한국어</a>
+<a href="../en/" hreflang="en" lang="en">English</a>
+<a href="../ja/" hreflang="ja" lang="ja">日本語</a>
+<a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="../es/" hreflang="es" lang="es">Español</a>
+<a href="../de/" hreflang="de" lang="de">Deutsch</a>
+<a href="../fr/" hreflang="fr" lang="fr">Français</a>
+<a href="../it/" hreflang="it" lang="it">Italiano</a>
+<a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="../ru/" hreflang="ru" lang="ru">Русский</a>
+<a href="../th/" hreflang="th" lang="th">ไทย</a>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
+<a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
+<a href="../da/" hreflang="da" lang="da">Dansk</a>
+<a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
+<a href="../fi/" hreflang="fi" lang="fi">Suomi</a>
+<a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
+<a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
+<a href="../pl/" hreflang="pl" lang="pl">Polski</a>
+<a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
+<a href="../tr/" hreflang="tr" lang="tr" aria-current="page">Türkçe</a></nav>
+    <p><a href="privacy.html">Gizlilik Politikası</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Toesagak</p>
   </footer>
 
-</div>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

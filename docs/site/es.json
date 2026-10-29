@@ -1,0 +1,176 @@
+{
+  "title": "Toesagak: la calculadora FIRE que te dice en qué mes puedes dejar el trabajo",
+  "description": "Con tu gasto mensual, lo ahorrado y lo que ahorras al mes, ve el mes y el año en que podrías dejar de trabajar. Activos, metas y seis calculadoras.",
+  "hero": {
+    "headline": "¿Cuándo podrás dejarlo?\nCon números, no a ojo.",
+    "lead": "Pon lo que gastas y lo que tienes ahorrado y verás el mes en que podrías decir adiós. Cada vez que cambian tus activos, ves si esa fecha se acerca o se aleja.",
+    "cta": "Descárgala en el App Store",
+    "note": "Sin cuenta. Tus registros se quedan en tu dispositivo."
+  },
+  "demo": {
+    "title": "Calcula tu fecha de salida",
+    "lead": "Mueve los controles. Es el mismo cálculo que hace la app en su primera pantalla.",
+    "spend": "Gasto mensual al dejar de trabajar",
+    "worth": "Patrimonio neto actual",
+    "save": "Ahorro mensual",
+    "age": "Tu edad",
+    "ageUnit": "{n} años",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        500,
+        15000,
+        100,
+        2000
+      ],
+      "worth": [
+        0,
+        1500000,
+        5000,
+        30000
+      ],
+      "save": [
+        0,
+        15000,
+        100,
+        800
+      ]
+    },
+    "now": "A tu ritmo actual",
+    "years": [
+      "{n} año",
+      "{n} años"
+    ],
+    "months": [
+      "{n} mes",
+      "{n} meses"
+    ],
+    "yearsMonths": "{y} y {m}",
+    "quit": "Podrías dejarlo en {t}, a los {age} años",
+    "done": "Ya lo has conseguido",
+    "never": "Todavía no está a tu alcance",
+    "neverText": "Con este ritmo de ahorro no llegarás al objetivo en 80 años. Prueba a ahorrar más cada mes o a gastar menos.",
+    "target": "Objetivo",
+    "progress": "Progreso",
+    "note": "El objetivo es un año de gastos dividido entre el 4 %. Se supone que tus ahorros crecen un 5 % al año. Puedes cambiar ambos valores en la app. Solo orientativo, no es asesoramiento de inversión."
+  },
+  "problem": {
+    "title": "¿Sigues haciendo cuentas de cabeza para ver si ya puedes dejarlo?",
+    "text": "Con el banco, el bróker, el plan de pensiones y la fianza del alquiler cada uno por su lado, hasta tu total se vuelve borroso, y tu fecha de salida se queda en una corazonada. Toesagak lo reúne todo en una pantalla y recalcula sin parar, a partir de ese total, el mes en que podrías dejarlo."
+  },
+  "features": [
+    {
+      "title": "Todos tus activos en una pantalla",
+      "text": "Inmuebles, acciones, fondos y ETF, pensiones, efectivo y depósitos, fianzas, criptomonedas y préstamos, agrupados por tipo, con tus activos totales, tu patrimonio neto y tu ratio de deuda.\nLos precios de acciones y criptomonedas se descargan para mantener los valores al día, y con una captura de la app de tu bróker importas posiciones y valores de una vez.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Cuánto al día para llegar",
+      "text": "Ve este mes, este año, cinco años y la jubilación como objetivos, junto a tus registros anteriores, en un solo gráfico. También te dice cuánto ahorrar al día, a la semana o al mes para ir por buen camino.\nCuando tus activos cambian, el registro de esa semana se guarda solo, así que tu historial se construye sin esfuerzo.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Haz números antes de decidir",
+      "text": "Calculadoras para la evolución de tu patrimonio a lo largo de la vida, inversión, amortizar deuda frente a invertir, préstamos, depósitos y ahorro, el poder adquisitivo de tu sueldo y convertir dinero en horas. Mueve un valor y el gráfico se redibuja, con la curva anterior en línea de puntos para comparar.\nPon nombre a las configuraciones que repites y guárdalas.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Empieza en tres pasos",
+    "items": [
+      {
+        "title": "Pon tu gasto y tu edad",
+        "text": "Con números aproximados basta. Tu fecha de salida aparece al momento."
+      },
+      {
+        "title": "Añade tus activos",
+        "text": "Cuanto más los desgloses, más precisa será la fecha."
+      },
+      {
+        "title": "Échale un vistazo de vez en cuando",
+        "text": "Los registros semanales se acumulan solos y puede avisarte el día 1 de cada mes."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Cómo calcula la app",
+    "rows": [
+      [
+        "Objetivo",
+        "Un año de gastos tras dejar de trabajar ÷ tasa de retirada segura (al 4 %, 25 años de gastos)"
+      ],
+      [
+        "Fecha de salida",
+        "El mes en que tu patrimonio neto, más lo que ahorras cada mes y creciendo a la rentabilidad esperada, alcanza el objetivo"
+      ],
+      [
+        "Activos totales",
+        "Todo lo que tienes, sumado"
+      ],
+      [
+        "Patrimonio neto",
+        "Activos totales menos deudas como los préstamos"
+      ],
+      [
+        "Progreso",
+        "Patrimonio neto ÷ objetivo. También puedes seguirlo por ingresos pasivos"
+      ],
+      [
+        "Lo que puedes cambiar",
+        "Gasto mensual, tasa de retirada del 2 al 6 %, rentabilidad esperada del 0 al 12 %, la edad a la que te gustaría dejarlo"
+      ]
+    ],
+    "note": "Todos los resultados son cálculos orientativos basados en tus datos y no constituyen asesoramiento de inversión."
+  },
+  "faq": {
+    "title": "Preguntas",
+    "items": [
+      {
+        "q": "¿Dónde se guardan mis registros?",
+        "a": "Solo en tu dispositivo. No hace falta registrarse y no se envía nada al desarrollador. Activa la sincronización con iCloud en Ajustes para ver los mismos registros en tu iPhone y tu iPad a través de tu propia cuenta de iCloud."
+      },
+      {
+        "q": "Los precios no se actualizan.",
+        "a": "Las acciones de EE. UU. y de Corea, las criptomonedas y los tipos de cambio funcionan sin configurar nada. Comprueba tu conexión a internet y que el ticker o el código sean correctos. Los precios de pisos usan datos inmobiliarios públicos de Corea y necesitan una clave de servicio gratuita que se introduce en Ajustes."
+      },
+      {
+        "q": "¿Qué diferencia hay entre activos totales y patrimonio neto?",
+        "a": "Los activos totales son todo lo que tienes sumado. El patrimonio neto es eso menos deudas como los préstamos. Tu fecha de salida se basa en el patrimonio neto."
+      },
+      {
+        "q": "¿Cómo paso mis registros a otro dispositivo?",
+        "a": "Usa Exportar en Ajustes para crear un archivo de copia de seguridad, guárdalo en Archivos, iCloud Drive o el correo y restáuralo en el nuevo dispositivo. Las copias nunca incluyen claves de API. La app también guarda automáticamente en el dispositivo tus 20 copias más recientes."
+      },
+      {
+        "q": "¿Cómo funcionan las alertas de venta?",
+        "a": "Para cada posición, fija cuánto puede caer desde su máximo o un precio objetivo. Cuando cruza esa línea, recibes un aviso. Mientras sube, no te molesta. Los precios se comprueban al abrir la app y cuando iOS lo permite en segundo plano (normalmente cada pocas horas), así que no es un seguimiento en tiempo real."
+      },
+      {
+        "q": "¿Puedo mantener mis cifras en privado?",
+        "a": "Activa el bloqueo de la app en Ajustes para abrirla con Face ID o tu código. Con el bloqueo activado, el recordatorio mensual tampoco muestra cifras."
+      },
+      {
+        "q": "¿Puedo echar un vistazo primero?",
+        "a": "Activa los datos de demostración en Ajustes para recorrer todas las pantallas con los activos de una persona ficticia. Al desactivarlos, tus registros vuelven tal cual. Los datos de demostración no están disponibles con la sincronización de iCloud activada."
+      },
+      {
+        "q": "¿Cómo borro todos mis datos?",
+        "a": "Al eliminar la app se borran todos los registros guardados en el dispositivo. Si quieres conservar una copia, exporta antes un archivo de copia de seguridad en Ajustes."
+      },
+      {
+        "q": "¿Puedo invertir basándome en estas cifras?",
+        "a": "Los resultados de Toesagak son cálculos orientativos basados en tus datos y en una rentabilidad supuesta. No son asesoramiento de inversión, y los resultados reales dependen del mercado y de tu situación."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Empieza a registrar hoy.\nVe tu fecha de salida.",
+    "cta": "Descárgala en el App Store"
+  },
+  "ui": {
+    "skip": "Saltar al contenido",
+    "languages": "Idioma",
+    "privacy": "Política de privacidad",
+    "contact": "¿Errores, ideas o dudas? Escribe a {email}."
+  }
+}

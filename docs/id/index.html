@@ -1,162 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Toesagak · Dukungan</title>
-<link rel="canonical" href="https://m1zz.github.io/FireTracker/id/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
-<meta name="description" content="Halaman dukungan Toesagak — aplikasi untuk memantau aset, kekayaan bersih, dan target FIRE (pensiun dini)" />
-<style>
-  :root{
-    --bg:#0f1115; --surface:#171a21; --surface2:#1f242d; --line:#2a2f3a;
-    --text:#e9edf2; --muted:#9aa3b0; --accent:#4CAF8E; --accent2:#E8A33D;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
-       background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
-  header{padding:40px 0 40px;text-align:center}
-  .logo{width:96px;height:96px;border-radius:22px;object-fit:cover;border:1px solid var(--line);margin-bottom:18px}
-  h1{font-size:30px;margin:6px 0 6px;letter-spacing:-.4px}
-  .tag{color:var(--muted);font-size:16px;margin:0}
-  section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px;margin:18px 0}
-  h2{font-size:19px;margin:0 0 14px;letter-spacing:-.3px}
-  ul{margin:0;padding-left:20px}
-  li{margin:7px 0}
-  .feat{display:grid;grid-template-columns:1fr;gap:10px;margin:0;padding:0;list-style:none}
-  .feat li{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);
-           border-radius:12px;padding:12px 14px;margin:0}
-  .feat .ico{font-size:18px;line-height:1.5}
-  .qa{margin:14px 0}
-  .qa h3{font-size:15px;margin:0 0 4px;color:var(--text)}
-  .qa p{margin:0;color:var(--muted);font-size:15px}
-  a{color:var(--accent)}
-  .btn{display:inline-block;background:var(--accent);color:#06120d;font-weight:700;text-decoration:none;
-       padding:12px 20px;border-radius:12px;margin-top:6px}
-  .contact{font-size:17px}
-  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 60px}
-  footer a{color:var(--muted)}
-  code{background:var(--surface2);padding:2px 6px;border-radius:6px;font-size:13px}
-  .langs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:12.5px;line-height:1.5;margin:0 auto;padding:16px 0 0}
-  .langs a{color:var(--muted);text-decoration:none;white-space:nowrap}
-  .langs a:hover{color:var(--text)}
-  .langs a[aria-current]{color:var(--accent);font-weight:700}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toesagak: kalkulator FIRE yang menunjukkan bulan Anda bisa berhenti kerja</title>
+  <meta name="description" content="Masukkan pengeluaran bulanan, aset terkumpul, dan tabungan per bulan, lalu lihat bulan dan tahun Anda bisa pensiun. Catat aset, target, 6 kalkulator.">
+  <meta name="theme-color" content="#9A6200" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6779654854">
+  <link rel="canonical" href="https://m1zz.github.io/FireTracker/id/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Toesagak: kalkulator FIRE yang menunjukkan bulan Anda bisa berhenti kerja">
+  <meta property="og:description" content="Masukkan pengeluaran bulanan, aset terkumpul, dan tabungan per bulan, lalu lihat bulan dan tahun Anda bisa pensiun. Catat aset, target, 6 kalkulator.">
+  <meta property="og:url" content="https://m1zz.github.io/FireTracker/id/">
+  <meta property="og:image" content="https://m1zz.github.io/FireTracker/img/id/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#9A6200}@media (prefers-color-scheme:dark){:root{--accent:#E8A33D}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<div class="wrap">
-
-  <nav class="langs" aria-label="Pilih bahasa">
-    <a href="../index.html" hreflang="ko" lang="ko">&#54620;&#44397;&#50612;</a>
-    <a href="../en/index.html" hreflang="en" lang="en">English</a>
-    <a href="../ja/index.html" hreflang="ja" lang="ja">日本語</a>
-    <a href="../zh-Hans/index.html" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
-    <a href="../zh-Hant/index.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
-    <a href="../es/index.html" hreflang="es" lang="es">Español</a>
-    <a href="../de/index.html" hreflang="de" lang="de">Deutsch</a>
-    <a href="../fr/index.html" hreflang="fr" lang="fr">Français</a>
-    <a href="../it/index.html" hreflang="it" lang="it">Italiano</a>
-    <a href="../pt-BR/index.html" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
-    <a href="../ru/index.html" hreflang="ru" lang="ru">Русский</a>
-    <a href="../th/index.html" hreflang="th" lang="th">ไทย</a>
-    <a href="../vi/index.html" hreflang="vi" lang="vi">Tiếng Việt</a>
-    <a href="../cs/index.html" hreflang="cs" lang="cs">Čeština</a>
-    <a href="../da/index.html" hreflang="da" lang="da">Dansk</a>
-    <a href="../el/index.html" hreflang="el" lang="el">Ελληνικά</a>
-    <a href="../fi/index.html" hreflang="fi" lang="fi">Suomi</a>
-    <a href="../id/index.html" hreflang="id" lang="id" aria-current="page">Bahasa Indonesia</a>
-    <a href="../nb/index.html" hreflang="nb" lang="nb">Norsk bokmål</a>
-    <a href="../nl/index.html" hreflang="nl" lang="nl">Nederlands</a>
-    <a href="../pl/index.html" hreflang="pl" lang="pl">Polski</a>
-    <a href="../sv/index.html" hreflang="sv" lang="sv">Svenska</a>
-    <a href="../tr/index.html" hreflang="tr" lang="tr">Türkçe</a>
-  </nav>
-
-  <header>
-    <img class="logo" src="../icon.png" alt="Logo Toesagak" />
-    <h1>Toesagak</h1>
-    <p class="tag">Pantau aset, kekayaan bersih, dan target FIRE (pensiun dini) dalam sekali lihat</p>
+  <a class="skip" href="#main">Langsung ke konten</a>
+  <header class="bar">
+    <a class="brand" href="../id/"><img src="../icon.png" alt="" width="32" height="32">Toesagak</a>
+    <a class="lang-link" href="#languages">Bahasa</a>
   </header>
 
-  <section>
-    <h2>Tentang</h2>
-    <p>Toesagak adalah aplikasi pencatat keuangan pribadi. Masukkan aset yang Anda miliki dan utang Anda, lalu aplikasi akan menghitung
-       <strong>total aset dan kekayaan bersih</strong>. Catat setiap bulan untuk melihat <strong>tren perubahannya</strong>
-       dan <strong>seberapa dekat Anda dengan target FIRE (kebebasan finansial)</strong>.
-       Semua data <strong>hanya disimpan di perangkat Anda</strong>, tanpa perlu mendaftar.</p>
-  </section>
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Kapan bisa berhenti kerja?<br>Lihat angkanya.</h1>
+        <p class="lead">Masukkan pengeluaran dan tabungan Anda, lalu muncul bulan saat Anda bisa berhenti kerja. Setiap kali aset berubah, Anda langsung tahu apakah tanggal itu makin dekat atau makin jauh.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6779654854">Unduh di App Store</a><a class="try" href="#try">Hitung tanggal berhenti kerja Anda ↓</a></div>
+        <p class="muted small">Tanpa akun. Catatan Anda tetap di perangkat.</p>
+      </div>
+      <div class="phone"><img src="../img/id/01-dashboard.jpg" alt="Kapan bisa berhenti kerja? Lihat angkanya." width="600" height="1303" decoding="async"></div>
+    </section>
 
-  <section>
-    <h2>Fitur utama</h2>
-    <ul class="feat">
-      <li><span class="ico">📊</span><span>Kelola aset per kategori (saham, kripto, properti, kas, dana pensiun, utang, dan lainnya) dengan catatan rinci tiap kepemilikan</span></li>
-      <li><span class="ico">📈</span><span>Grafik bulanan aset, utang, dan kekayaan bersih, serta perubahan dibanding catatan sebelumnya</span></li>
-      <li><span class="ico">🎯</span><span>Progres FIRE berdasarkan target pengeluaran dan tingkat penarikan, lengkap dengan proyeksi akhir tahun</span></li>
-      <li><span class="ico">📡</span><span>Masukkan ticker atau kode saham untuk mengambil harga saham AS, saham Korea, kripto, dan properti di Korea secara otomatis</span></li>
-      <li><span class="ico">🖼️</span><span>Kenali tangkapan layar portofolio dari aplikasi sekuritas langsung di perangkat, lalu tambahkan sekaligus</span></li>
-    </ul>
-  </section>
 
-  <section>
-    <h2>Pertanyaan umum</h2>
-    <div class="qa">
-      <h3>Di mana data aset saya disimpan?</h3>
-      <p>Hanya di perangkat Anda (Apple SwiftData). Tidak ada yang diunggah ke server, dan pengembang pun tidak bisa melihatnya.</p>
-    </div>
-    <div class="qa">
-      <h3>Harga tidak diperbarui otomatis.</h3>
-      <p>Saham AS, kripto, dan kurs berfungsi tanpa kunci apa pun. Harga saham Korea dan properti memerlukan kunci API yang sesuai (Korea Investment &amp; Securities, Portal Data Publik Korea) yang dimasukkan di tab Pengaturan. Periksa juga koneksi internet Anda dan pastikan ticker atau kode sahamnya benar.</p>
-    </div>
-    <div class="qa">
-      <h3>Bagaimana cara menghapus data?</h3>
-      <p>Jika aplikasi dihapus, semua data yang tersimpan di perangkat ikut terhapus.</p>
-    </div>
-    <div class="qa">
-      <h3>Apa bedanya total aset dan kekayaan bersih?</h3>
-      <p>Di aplikasi ini, “total aset” adalah jumlah semua yang Anda miliki, sedangkan “kekayaan bersih” adalah sisanya setelah dikurangi utang (total aset − utang).</p>
-    </div>
-  </section>
+    <section class="reveal" id="try">
+      <h2>Hitung tanggal berhenti kerja Anda</h2>
+      <p class="muted">Geser slidernya. Hitungannya sama dengan layar pertama di app.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Hitung tanggal berhenti kerja Anda&quot;, &quot;lead&quot;: &quot;Geser slidernya. Hitungannya sama dengan layar pertama di app.&quot;, &quot;spend&quot;: &quot;Pengeluaran bulanan setelah berhenti&quot;, &quot;worth&quot;: &quot;Kekayaan bersih saat ini&quot;, &quot;save&quot;: &quot;Ditabung tiap bulan&quot;, &quot;age&quot;: &quot;Usia Anda&quot;, &quot;ageUnit&quot;: &quot;{n} tahun&quot;, &quot;money&quot;: &quot;{n}&quot;, &quot;scale&quot;: {&quot;spend&quot;: [2000000, 100000000, 500000, 10000000], &quot;worth&quot;: [0, 10000000000, 50000000, 200000000], &quot;save&quot;: [0, 50000000, 250000, 3000000]}, &quot;now&quot;: &quot;Dengan laju sekarang&quot;, &quot;years&quot;: &quot;{n} thn&quot;, &quot;months&quot;: &quot;{n} bln&quot;, &quot;yearsMonths&quot;: &quot;{y} {m}&quot;, &quot;quit&quot;: &quot;Anda bisa berhenti dalam {t}, di usia {age}&quot;, &quot;done&quot;: &quot;Anda sudah sampai&quot;, &quot;never&quot;: &quot;Belum terjangkau&quot;, &quot;neverText&quot;: &quot;Dengan tabungan sebesar ini, target tidak tercapai dalam 80 tahun. Coba tabung lebih banyak tiap bulan atau kurangi pengeluaran.&quot;, &quot;target&quot;: &quot;Target&quot;, &quot;progress&quot;: &quot;Progres&quot;, &quot;note&quot;: &quot;Target adalah pengeluaran setahun dibagi 4%. Tabungan diasumsikan tumbuh 5% per tahun. Keduanya bisa diubah di app. Hanya sebagai acuan, bukan saran investasi.&quot;}"></div>
+    </section>
 
-  <section>
-    <h2>Kontak</h2>
-    <p class="contact">Untuk laporan bug, usulan fitur, atau pertanyaan lain, silakan kirim email kepada kami.</p>
-    <p><a class="btn" href="mailto:leeo@kakao.com">leeo@kakao.com</a></p>
-  </section>
+    <section class="problem reveal">
+      <h2>Masih menghitung "sudah bisa berhenti belum?" di kepala?</h2>
+      <p>Kalau rekening bank, akun saham, dana pensiun, dan uang jaminan sewa tersebar di mana-mana, totalnya saja sudah kabur, apalagi tanggal berhenti kerja. Toesagak mengumpulkan semuanya dalam satu layar dan terus menghitung ulang bulan Anda bisa berhenti dari total itu.</p>
+    </section>
 
-  <section>
-    <h2>Kebijakan Privasi</h2>
-    <p>Lihat informasi apa saja yang ditangani aplikasi (dan yang tidak) di bawah ini.</p>
-    <p><a href="./privacy.html">Baca Kebijakan Privasi →</a></p>
-  </section>
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Semua aset di satu layar</h2>
+        <p>Properti, saham, reksa dana dan ETF, pensiun, tunai dan deposito, uang jaminan sewa, kripto, hingga pinjaman, dikelompokkan menurut jenis lengkap dengan total aset, kekayaan bersih, dan rasio utang.<br>Harga saham dan kripto diambil agar nilainya selalu terbaru, dan tangkapan layar dari app sekuritas langsung memasukkan kepemilikan beserta nilainya sekaligus.</p>
+      </div>
+      <div class="phone"><img src="../img/id/02-assets.jpg" alt="Semua aset di satu layar" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Berapa per hari untuk sampai ke sana</h2>
+        <p>Lihat bulan ini, tahun ini, lima tahun, dan pensiun sebagai target, bersama catatan sebelumnya, dalam satu grafik. App juga memberi tahu berapa yang perlu ditabung per hari, minggu, atau bulan agar tetap di jalur.<br>Saat aset berubah, catatan minggu itu tersimpan otomatis, jadi riwayat Anda terbentuk sendiri.</p>
+      </div>
+      <div class="phone"><img src="../img/id/03-journey.jpg" alt="Berapa per hari untuk sampai ke sana" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Hitung dulu sebelum keputusan besar</h2>
+        <p>Kalkulator untuk kurva aset sepanjang hidup, investasi, lunasi utang atau investasi, pinjaman, tabungan dan deposito, daya beli gaji, serta mengubah uang menjadi jam kerja. Geser nilainya dan grafik langsung digambar ulang, dengan kurva sebelumnya tetap tampil sebagai garis putus-putus untuk dibandingkan.<br>Beri nama dan simpan skenario yang sering Anda buka lagi.</p>
+      </div>
+      <div class="phone"><img src="../img/id/04-loan.jpg" alt="Hitung dulu sebelum keputusan besar" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Mulai dalam tiga langkah</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Masukkan pengeluaran dan usia</h3><p>Angka kira-kira sudah cukup. Tanggal berhenti kerja langsung muncul.</p></li>
+<li class="card"><span class="n">2</span><h3>Tambahkan aset Anda</h3><p>Makin rinci, makin tepat tanggalnya.</p></li>
+<li class="card"><span class="n">3</span><h3>Cek sesekali</h3><p>Catatan mingguan terkumpul sendiri, dan app bisa mengingatkan Anda setiap tanggal 1.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Cara app menghitung</h2>
+      <div class="card table">
+        <dl><div><dt>Target</dt><dd>Pengeluaran setahun setelah berhenti ÷ laju penarikan aman (pada 4%, setara pengeluaran 25 tahun)</dd></div><div><dt>Tanggal berhenti</dt><dd>Bulan saat kekayaan bersih ditambah tabungan bulanan, yang tumbuh sesuai imbal hasil yang diharapkan, mencapai target</dd></div><div><dt>Total aset</dt><dd>Semua yang Anda miliki, dijumlahkan</dd></div><div><dt>Kekayaan bersih</dt><dd>Total aset dikurangi utang seperti pinjaman</dd></div><div><dt>Progres</dt><dd>Kekayaan bersih ÷ target. Bisa juga dipantau lewat pendapatan pasif</dd></div><div><dt>Yang bisa diubah</dt><dd>Pengeluaran bulanan, laju penarikan 2–6%, imbal hasil yang diharapkan 0–12%, usia saat ingin berhenti</dd></div></dl>
+      </div>
+      <p class="muted">Semua hasil adalah perhitungan acuan berdasarkan masukan Anda dan bukan saran investasi.</p>
+    </section>
+
+
+
+    <section class="reveal" id="faq">
+      <h2>Pertanyaan</h2>
+      <div class="faq"><details><summary>Di mana catatan saya disimpan?</summary><p>Hanya di perangkat Anda. Tidak ada pendaftaran dan tidak ada yang dikirim ke pengembang. Aktifkan Sinkronisasi iCloud di Pengaturan untuk melihat catatan yang sama di iPhone dan iPad lewat akun iCloud Anda sendiri.</p></details>
+<details><summary>Harga tidak diperbarui.</summary><p>Saham AS dan Korea, kripto, dan kurs mata uang langsung berfungsi tanpa pengaturan. Periksa koneksi internet dan pastikan ticker atau kodenya benar. Harga apartemen memakai data properti publik Korea dan butuh kunci layanan gratis yang dimasukkan di Pengaturan.</p></details>
+<details><summary>Apa beda total aset dan kekayaan bersih?</summary><p>Total aset adalah semua yang Anda miliki, dijumlahkan. Kekayaan bersih adalah total itu dikurangi utang seperti pinjaman. Tanggal berhenti kerja dihitung dari kekayaan bersih.</p></details>
+<details><summary>Bagaimana memindahkan catatan ke perangkat baru?</summary><p>Pakai Ekspor di Pengaturan untuk membuat file cadangan, simpan di Files, iCloud Drive, atau email, lalu pulihkan di perangkat baru. File cadangan tidak pernah berisi kunci API. App juga otomatis menyimpan 20 cadangan terbaru di perangkat.</p></details>
+<details><summary>Bagaimana cara kerja peringatan jual?</summary><p>Untuk tiap aset, atur seberapa jauh harganya boleh turun dari puncak, atau tetapkan harga target. Saat batas itu terlewati, Anda diberi tahu. Saat harga naik, app diam saja. Harga dicek ketika Anda membuka app dan ketika iOS mengizinkan di latar belakang (biasanya tiap beberapa jam), jadi ini bukan pemantauan real-time.</p></details>
+<details><summary>Bisakah angka saya tetap rahasia?</summary><p>Aktifkan Kunci app di Pengaturan agar app dibuka dengan Face ID atau kode sandi. Saat kunci aktif, pengingat bulanan juga tidak menampilkan angka apa pun.</p></details>
+<details><summary>Bisakah saya lihat-lihat dulu?</summary><p>Aktifkan Data demo di Pengaturan untuk menjelajahi semua layar dengan aset tokoh fiktif. Matikan lagi, dan catatan Anda langsung kembali. Data demo tidak tersedia saat Sinkronisasi iCloud aktif.</p></details>
+<details><summary>Bagaimana menghapus semua data saya?</summary><p>Menghapus app akan menghapus semua catatan yang tersimpan di perangkat. Jika ingin menyimpan salinan, ekspor file cadangan di Pengaturan terlebih dulu.</p></details>
+<details><summary>Bisakah saya berinvestasi berdasarkan angka ini?</summary><p>Hasil Toesagak adalah perhitungan acuan berdasarkan masukan Anda dan imbal hasil yang diasumsikan. Ini bukan saran investasi, dan hasil sebenarnya bergantung pada pasar dan situasi Anda.</p></details></div>
+      <p class="contact">Ada bug, ide, atau pertanyaan? Kirim email ke <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Mulai mencatat hari ini.<br>Lihat kapan Anda bisa berhenti.</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6779654854">Unduh di App Store</a>
+    </section>
+  </main>
 
   <footer>
-    <p>© 2026 Toesagak · <a href="./privacy.html">Kebijakan Privasi</a></p>
+    <nav id="languages" class="langs" aria-label="Bahasa"><a href="../" hreflang="ko" lang="ko">한국어</a>
+<a href="../en/" hreflang="en" lang="en">English</a>
+<a href="../ja/" hreflang="ja" lang="ja">日本語</a>
+<a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="../es/" hreflang="es" lang="es">Español</a>
+<a href="../de/" hreflang="de" lang="de">Deutsch</a>
+<a href="../fr/" hreflang="fr" lang="fr">Français</a>
+<a href="../it/" hreflang="it" lang="it">Italiano</a>
+<a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="../ru/" hreflang="ru" lang="ru">Русский</a>
+<a href="../th/" hreflang="th" lang="th">ไทย</a>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
+<a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
+<a href="../da/" hreflang="da" lang="da">Dansk</a>
+<a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
+<a href="../fi/" hreflang="fi" lang="fi">Suomi</a>
+<a href="../id/" hreflang="id" lang="id" aria-current="page">Bahasa Indonesia</a>
+<a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
+<a href="../pl/" hreflang="pl" lang="pl">Polski</a>
+<a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
+<a href="../tr/" hreflang="tr" lang="tr">Türkçe</a></nav>
+    <p><a href="privacy.html">Kebijakan Privasi</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Toesagak</p>
   </footer>
 
-</div>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

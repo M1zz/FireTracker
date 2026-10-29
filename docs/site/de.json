@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: der FIRE-Rechner, der dir den Monat für deinen Ausstieg zeigt",
+  "description": "Gib Ausgaben, Erspartes und Sparrate ein und sieh, in welchem Monat und Jahr du aufhören könntest. Vermögen, Ziele und sechs Rechner. Ohne Konto.",
+  "hero": {
+    "headline": "Wann kannst du kündigen?\nDie Zahlen sagen es dir.",
+    "lead": "Trag ein, was du ausgibst und was du gespart hast, und du siehst den Monat, in dem du gehen könntest. Bei jeder Änderung deines Vermögens erkennst du, ob dieses Datum näher rückt oder sich entfernt.",
+    "cta": "Im App Store laden",
+    "note": "Kein Konto nötig. Deine Einträge bleiben auf deinem Gerät."
+  },
+  "demo": {
+    "title": "Finde dein Ausstiegsdatum",
+    "lead": "Verschieb die Regler. Es ist dieselbe Rechnung wie auf dem ersten Bildschirm der App.",
+    "spend": "Monatliche Ausgaben nach dem Ausstieg",
+    "worth": "Nettovermögen heute",
+    "save": "Monatliche Sparrate",
+    "age": "Dein Alter",
+    "ageUnit": "{n} Jahre",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        500,
+        15000,
+        100,
+        3000
+      ],
+      "worth": [
+        0,
+        1500000,
+        5000,
+        50000
+      ],
+      "save": [
+        0,
+        15000,
+        100,
+        1500
+      ]
+    },
+    "now": "In deinem jetzigen Tempo",
+    "years": "{n} J.",
+    "months": "{n} Mon.",
+    "yearsMonths": "{y} {m}",
+    "quit": "Ausstieg in {t}, mit {age} Jahren",
+    "done": "Du hast es schon geschafft",
+    "never": "Noch nicht in Reichweite",
+    "neverText": "Mit dieser Sparrate erreichst du dein Ziel nicht innerhalb von 80 Jahren. Spar mehr pro Monat oder senke deine Ausgaben.",
+    "target": "Ziel",
+    "progress": "Fortschritt",
+    "note": "Dein Ziel sind die Ausgaben eines Jahres geteilt durch 4 %. Angenommen wird, dass dein Erspartes jährlich um 5 % wächst. Beides kannst du in der App ändern. Nur zur Orientierung, keine Anlageberatung."
+  },
+  "problem": {
+    "title": "Rechnest du immer noch im Kopf, ob du endlich kündigen kannst?",
+    "text": "Wenn Girokonto, Depot, Altersvorsorge und Mietkaution an verschiedenen Orten liegen, verschwimmt schon die Gesamtsumme, und dein Ausstiegsdatum bleibt geraten. Toesagak holt alles auf einen Bildschirm und berechnet aus dieser Summe laufend neu, in welchem Monat du aufhören könntest."
+  },
+  "features": [
+    {
+      "title": "Dein ganzes Vermögen auf einem Bildschirm",
+      "text": "Immobilien, Aktien, Fonds und ETFs, Altersvorsorge, Bargeld und Guthaben, Kautionen, Krypto und Kredite, nach Art gruppiert, mit Gesamtvermögen, Nettovermögen und Schuldenquote.\nKurse für Aktien und Krypto werden abgerufen, damit die Werte aktuell bleiben, und ein Screenshot deiner Broker-App übernimmt Positionen und Werte in einem Schritt.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Wie viel pro Tag bis zum Ziel",
+      "text": "Dieser Monat, dieses Jahr, fünf Jahre und der Ruhestand als Ziele, zusammen mit deinen bisherigen Einträgen in einem Diagramm. Dazu siehst du, wie viel du pro Tag, Woche oder Monat sparen musst, um auf Kurs zu bleiben.\nÄndert sich dein Vermögen, wird der Eintrag der Woche automatisch gespeichert. So entsteht dein Verlauf von selbst.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Erst rechnen, dann entscheiden",
+      "text": "Rechner für deinen Vermögensverlauf übers Leben, Geldanlage, Schulden tilgen oder investieren, Kredite, Einlagen und Sparpläne, die Kaufkraft deines Gehalts und Geld in Arbeitsstunden. Verschieb einen Wert und das Diagramm zeichnet sich neu, die vorherige Kurve bleibt gepunktet zum Vergleich.\nBenenne und speichere Einstellungen, die du öfter brauchst.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "In drei Schritten loslegen",
+    "items": [
+      {
+        "title": "Ausgaben und Alter eintragen",
+        "text": "Grobe Zahlen reichen. Dein Ausstiegsdatum erscheint sofort."
+      },
+      {
+        "title": "Vermögen hinzufügen",
+        "text": "Je genauer du aufteilst, desto präziser das Datum."
+      },
+      {
+        "title": "Ab und zu reinschauen",
+        "text": "Wöchentliche Einträge sammeln sich von selbst, und auf Wunsch erinnert dich die App am 1. jedes Monats."
+      }
+    ]
+  },
+  "reference": {
+    "title": "So rechnet die App",
+    "rows": [
+      [
+        "Ziel",
+        "Jahresausgaben nach dem Ausstieg ÷ sichere Entnahmerate (bei 4 % sind das 25 Jahresausgaben)"
+      ],
+      [
+        "Ausstiegsdatum",
+        "Der Monat, in dem dein Nettovermögen plus monatliche Sparrate, verzinst mit der erwarteten Rendite, das Ziel erreicht"
+      ],
+      [
+        "Gesamtvermögen",
+        "Alles, was du besitzt, zusammengerechnet"
+      ],
+      [
+        "Nettovermögen",
+        "Gesamtvermögen minus Schulden wie Kredite"
+      ],
+      [
+        "Fortschritt",
+        "Nettovermögen ÷ Ziel. Lässt sich auch nach passivem Einkommen verfolgen"
+      ],
+      [
+        "Was du anpassen kannst",
+        "Monatliche Ausgaben, Entnahmerate von 2 bis 6 %, erwartete Rendite von 0 bis 12 %, dein Wunschalter für den Ausstieg"
+      ]
+    ],
+    "note": "Alle Ergebnisse sind Orientierungswerte auf Basis deiner Eingaben und keine Anlageberatung."
+  },
+  "faq": {
+    "title": "Fragen",
+    "items": [
+      {
+        "q": "Wo werden meine Einträge gespeichert?",
+        "a": "Nur auf deinem Gerät. Es gibt keine Registrierung, und nichts wird an den Entwickler gesendet. Aktiviere in den Einstellungen die iCloud-Synchronisierung, um über dein eigenes iCloud-Konto dieselben Einträge auf iPhone und iPad zu sehen."
+      },
+      {
+        "q": "Die Kurse werden nicht aktualisiert.",
+        "a": "US-amerikanische und koreanische Aktien, Krypto und Wechselkurse funktionieren ohne Einrichtung. Prüfe deine Internetverbindung und ob Ticker oder Wertpapiercode stimmen. Wohnungspreise stammen aus öffentlichen Immobiliendaten Koreas und brauchen einen kostenlosen Serviceschlüssel, den du in den Einstellungen einträgst."
+      },
+      {
+        "q": "Was ist der Unterschied zwischen Gesamtvermögen und Nettovermögen?",
+        "a": "Das Gesamtvermögen ist alles, was du besitzt, zusammengerechnet. Das Nettovermögen ist dieser Betrag minus Schulden wie Kredite. Dein Ausstiegsdatum basiert auf dem Nettovermögen."
+      },
+      {
+        "q": "Wie übertrage ich meine Einträge auf ein neues Gerät?",
+        "a": "Erstelle in den Einstellungen mit Exportieren eine Sicherungsdatei, leg sie in Dateien, iCloud Drive oder einer E-Mail ab und stell sie auf dem neuen Gerät wieder her. Sicherungsdateien enthalten nie API-Schlüssel. Außerdem bewahrt die App deine 20 neuesten Sicherungen automatisch auf dem Gerät auf."
+      },
+      {
+        "q": "Wie funktionieren Verkaufsalarme?",
+        "a": "Leg für jede Position fest, wie weit sie vom Höchststand fallen darf, oder einen Zielkurs. Wird diese Linie überschritten, bekommst du einen Hinweis. Bei steigenden Kursen bleibt es still. Kurse werden geprüft, wenn du die App öffnest und wenn iOS es im Hintergrund zulässt (meist alle paar Stunden). Es ist also keine Echtzeitüberwachung."
+      },
+      {
+        "q": "Kann ich meine Zahlen vor anderen schützen?",
+        "a": "Aktiviere in den Einstellungen die App-Sperre, dann öffnet sich die App nur mit Face ID oder deinem Code. Bei aktiver Sperre zeigt auch die monatliche Erinnerung keine Zahlen."
+      },
+      {
+        "q": "Kann ich mich erst umsehen?",
+        "a": "Aktiviere in den Einstellungen die Demodaten, um alle Bildschirme mit dem Vermögen einer fiktiven Person auszuprobieren. Schaltest du sie aus, sind deine eigenen Einträge sofort wieder da. Bei aktiver iCloud-Synchronisierung sind Demodaten nicht verfügbar."
+      },
+      {
+        "q": "Wie lösche ich alle meine Daten?",
+        "a": "Wenn du die App löschst, werden alle auf dem Gerät gespeicherten Einträge entfernt. Möchtest du eine Kopie behalten, exportiere vorher in den Einstellungen eine Sicherungsdatei."
+      },
+      {
+        "q": "Kann ich auf Basis dieser Zahlen investieren?",
+        "a": "Die Ergebnisse von Toesagak sind Orientierungswerte auf Basis deiner Eingaben und einer angenommenen Rendite. Sie sind keine Anlageberatung, und die tatsächliche Entwicklung hängt vom Markt und deiner Situation ab."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Heute eintragen.\nAusstiegsdatum sehen.",
+    "cta": "Im App Store laden"
+  },
+  "ui": {
+    "skip": "Zum Inhalt springen",
+    "languages": "Sprache",
+    "privacy": "Datenschutzerklärung",
+    "contact": "Fehler, Ideen oder Fragen? Schreib an {email}."
+  }
+}

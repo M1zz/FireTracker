@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: FIRE-kalkylatorn som visar vilken månad du kan sluta",
+  "description": "Ange månadsutgifter, vad du har sparat och sparar varje månad, och se månad och år du kan gå i pension. Tillgångar, mål och sex räknare. Inget konto.",
+  "hero": {
+    "headline": "När kan du sluta?\nSe det i siffror.",
+    "lead": "Ange vad du gör av med och vad du har sparat, så får du månaden du kan gå. Varje gång dina tillgångar ändras ser du om datumet flyttats närmare eller längre bort.",
+    "cta": "Hämta i App Store",
+    "note": "Inget konto behövs. Dina registreringar stannar på enheten."
+  },
+  "demo": {
+    "title": "Räkna ut ditt slutdatum",
+    "lead": "Dra i reglagen. Det är samma uträkning som appen gör på första skärmen.",
+    "spend": "Månadsutgifter när du har slutat",
+    "worth": "Nettoförmögenhet i dag",
+    "save": "Sparar varje månad",
+    "age": "Din ålder",
+    "ageUnit": "{n} år",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        5000,
+        100000,
+        500,
+        30000
+      ],
+      "worth": [
+        0,
+        15000000,
+        50000,
+        500000
+      ],
+      "save": [
+        0,
+        100000,
+        500,
+        10000
+      ]
+    },
+    "now": "I nuvarande takt",
+    "years": "{n} år",
+    "months": "{n} mån",
+    "yearsMonths": "{y} {m}",
+    "quit": "Du kan sluta om {t}, när du är {age}",
+    "done": "Du är redan där",
+    "never": "Inte inom räckhåll än",
+    "neverText": "Med det här sparandet når du inte målet inom 80 år. Prova att spara mer varje månad eller sänka dina utgifter.",
+    "target": "Mål",
+    "progress": "Framsteg",
+    "note": "Målet är ett års utgifter delat med 4 %. Sparandet antas växa 5 % per år. Båda kan ändras i appen. Endast vägledande, inte investeringsrådgivning."
+  },
+  "problem": {
+    "title": "Räknar du fortfarande i huvudet på om du kan sluta?",
+    "text": "När bankkonto, ISK, pension och deposition ligger på olika ställen blir till och med totalen luddig, och slutdatumet förblir en gissning. Toesagak samlar allt på en skärm och räknar hela tiden om vilken månad du kan sluta."
+  },
+  "features": [
+    {
+      "title": "Alla tillgångar på en skärm",
+      "text": "Fastigheter, aktier, fonder och ETF:er, pensioner, kontanter och insättningar, depositioner, krypto och lån, sorterade efter typ med totala tillgångar, nettoförmögenhet och skuldkvot.\nKurser på aktier och krypto hämtas så att värdena hålls aktuella, och en skärmbild från din mäklarapp läser in innehav och värden i ett svep.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Hur mycket per dag som krävs",
+      "text": "Se den här månaden, det här året, fem år och pension som mål, tillsammans med tidigare registreringar, i ett och samma diagram. Du ser också hur mycket du behöver spara per dag, vecka eller månad för att hålla kursen.\nNär dina tillgångar ändras sparas veckans registrering automatiskt, så historiken byggs upp av sig själv.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Räkna på det före stora beslut",
+      "text": "Räknare för förmögenhetsutveckling genom livet, investering, amortera eller investera, lån, sparande och insättningar, lönens köpkraft och pengar omräknade till timmar. Dra i ett värde så ritas diagrammet om, och föregående kurva ligger kvar streckad för jämförelse.\nNamnge och spara de upplägg du återkommer till.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Kom igång i tre steg",
+    "items": [
+      {
+        "title": "Ange utgifter och ålder",
+        "text": "Ungefärliga siffror räcker. Slutdatumet syns direkt."
+      },
+      {
+        "title": "Lägg till dina tillgångar",
+        "text": "Ju mer du delar upp dem, desto skarpare blir datumet."
+      },
+      {
+        "title": "Titta in då och då",
+        "text": "Veckovisa registreringar byggs upp av sig själva, och appen kan påminna dig den 1:a varje månad."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Så räknar appen",
+    "rows": [
+      [
+        "Mål",
+        "Ett års utgifter efter att du slutat ÷ säker uttagstakt (vid 4 % motsvarar det 25 års utgifter)"
+      ],
+      [
+        "Slutdatum",
+        "Månaden då din nettoförmögenhet plus det du sparar varje månad, med förväntad avkastning, når målet"
+      ],
+      [
+        "Totala tillgångar",
+        "Allt du äger, sammanlagt"
+      ],
+      [
+        "Nettoförmögenhet",
+        "Totala tillgångar minus skulder, till exempel lån"
+      ],
+      [
+        "Framsteg",
+        "Nettoförmögenhet ÷ mål. Du kan också följa det utifrån passiv inkomst"
+      ],
+      [
+        "Det här kan du ändra",
+        "Månadsutgifter, uttagstakt 2 till 6 %, förväntad avkastning 0 till 12 %, åldern du vill sluta vid"
+      ]
+    ],
+    "note": "Alla resultat är vägledande beräkningar baserade på det du anger och är inte investeringsrådgivning."
+  },
+  "faq": {
+    "title": "Frågor",
+    "items": [
+      {
+        "q": "Var lagras mina registreringar?",
+        "a": "Bara på din enhet. Det finns ingen registrering och inget skickas till utvecklaren. Slå på iCloud-synkronisering i Inställningar för att se samma registreringar på iPhone och iPad via ditt eget iCloud-konto."
+      },
+      {
+        "q": "Kurserna uppdateras inte.",
+        "a": "Amerikanska och koreanska aktier, krypto och valutakurser fungerar utan inställningar. Kontrollera internetanslutningen och att tickern eller koden stämmer. Bostadspriser använder Koreas offentliga fastighetsdata och kräver en gratis tjänstenyckel som anges i Inställningar."
+      },
+      {
+        "q": "Vad är skillnaden mellan totala tillgångar och nettoförmögenhet?",
+        "a": "Totala tillgångar är allt du äger, sammanlagt. Nettoförmögenhet är samma summa minus skulder, till exempel lån. Slutdatumet räknas på nettoförmögenheten."
+      },
+      {
+        "q": "Hur flyttar jag mina registreringar till en ny enhet?",
+        "a": "Använd Exportera i Inställningar för att skapa en säkerhetskopia, spara den i Filer, iCloud Drive eller e-post och återställ den på den nya enheten. Säkerhetskopior innehåller aldrig API-nycklar. Appen sparar också automatiskt de 20 senaste säkerhetskopiorna på enheten."
+      },
+      {
+        "q": "Hur fungerar säljlarm?",
+        "a": "För varje innehav anger du hur mycket det får falla från toppen, eller en målkurs. När gränsen passeras får du en signal. När kursen stiger håller appen tyst. Kurserna kontrolleras när du öppnar appen och när iOS tillåter det i bakgrunden (oftast med några timmars mellanrum), så det är ingen bevakning i realtid."
+      },
+      {
+        "q": "Kan jag hålla mina siffror privata?",
+        "a": "Slå på Applås i Inställningar för att öppna appen med Face ID eller lösenkod. När låset är på visar inte heller den månatliga påminnelsen några siffror."
+      },
+      {
+        "q": "Kan jag titta runt först?",
+        "a": "Slå på Demodata i Inställningar för att utforska alla skärmar med en fiktiv persons tillgångar. Slå av det, så är dina egna registreringar tillbaka direkt. Demodata går inte att använda medan iCloud-synkronisering är på."
+      },
+      {
+        "q": "Hur raderar jag alla mina data?",
+        "a": "Raderar du appen försvinner alla registreringar som är sparade på enheten. Vill du behålla en kopia exporterar du först en säkerhetskopia i Inställningar."
+      },
+      {
+        "q": "Kan jag investera utifrån de här siffrorna?",
+        "a": "Resultaten i Toesagak är vägledande beräkningar baserade på det du anger och en antagen avkastning. De är inte investeringsrådgivning, och det faktiska utfallet beror på marknaden och din situation."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Börja följa upp i dag.\nSe ditt slutdatum.",
+    "cta": "Hämta i App Store"
+  },
+  "ui": {
+    "skip": "Hoppa till innehållet",
+    "languages": "Språk",
+    "privacy": "Integritetspolicy",
+    "contact": "Buggar, idéer eller frågor? Skriv till {email}."
+  }
+}

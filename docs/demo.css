@@ -1,0 +1,37 @@
+/* 퇴사각 웹 데모. 결과 칸은 앱의 첫 계산 결과(지금 속도라면 · 년월 · 몇 년 뒤)를 따른다. */
+.demo-card { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s6); align-items: center; }
+
+.fire-inputs { display: grid; gap: var(--s5); }
+.fire-field { display: grid; gap: var(--s2); }
+.fire-label { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); font-weight: 600; }
+.fire-label output { color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.fire-field input { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; margin: 0;
+                    background: transparent; cursor: pointer; --fill: 50%; }
+.fire-field input::-webkit-slider-runnable-track {
+  height: 8px; border-radius: 999px;
+  background: linear-gradient(to right, var(--accent) var(--fill), var(--line) var(--fill)); }
+.fire-field input::-moz-range-track { height: 8px; border-radius: 999px; background: var(--line); }
+.fire-field input::-moz-range-progress { height: 8px; border-radius: 999px; background: var(--accent); }
+.fire-field input::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; margin-top: -10px;
+  border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgb(0 0 0 / .3); transition: transform .15s var(--ease); }
+.fire-field input::-moz-range-thumb { width: 28px; height: 28px; border: 0; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 4px rgb(0 0 0 / .3); }
+.fire-field input:active::-webkit-slider-thumb { transform: scale(1.12); }
+
+.fire-result { background: var(--bg); border-radius: var(--r-inner); padding: var(--s6) var(--s5); text-align: center; }
+.fire-now { margin: 0; color: var(--muted); }
+.fire-date { margin: var(--s1) 0 0; font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 800; letter-spacing: -0.03em;
+             line-height: 1.15; font-variant-numeric: tabular-nums; }
+.fire-when { margin: var(--s2) 0 0; min-height: 1.6em; color: var(--accent); font-weight: 600; }
+.never .fire-when { color: var(--muted); font-weight: 400; }
+.fire-bar { height: 10px; margin: var(--s5) 0 var(--s4); border-radius: 999px; background: var(--line); overflow: hidden; }
+.fire-bar i { display: block; height: 100%; border-radius: inherit; background: var(--accent); transition: width .3s var(--ease); }
+.fire-rows { margin: 0; display: grid; gap: var(--s2); }
+.fire-rows div { display: flex; justify-content: space-between; gap: var(--s3); }
+.fire-rows dt { color: var(--muted); }
+.fire-rows dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fire-note { margin: var(--s4) 0 0; text-align: left; }
+
+@media (prefers-reduced-motion: reduce) { .fire-bar i, .fire-field input::-webkit-slider-thumb { transition: none; } }
+@media (max-width: 760px) { .demo-card { grid-template-columns: 1fr; } }

@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: FIRE-laskuri, joka näyttää kuukauden, jolloin voit lopettaa",
+  "description": "Syötä kuukausimenot, säästösi ja kuukausisäästö, niin näet kuukauden ja vuoden, jolloin voit jäädä eläkkeelle. Varat, tavoitteet ja kuusi laskuria.",
+  "hero": {
+    "headline": "Milloin voit lopettaa?\nLuvuilla, ei fiiliksellä.",
+    "lead": "Syötä menosi ja säästösi, niin näet kuukauden, jolloin voisit jättää työt. Aina kun varasi muuttuvat, näet, siirtyikö päivä lähemmäs vai kauemmas.",
+    "cta": "Lataa App Storesta",
+    "note": "Tiliä ei tarvita. Merkintäsi pysyvät laitteellasi."
+  },
+  "demo": {
+    "title": "Laske lopetuspäiväsi",
+    "lead": "Liikuta liukusäätimiä. Laskenta on sama kuin sovelluksen ensimmäisessä näkymässä.",
+    "spend": "Kuukausimenot lopettamisen jälkeen",
+    "worth": "Nettovarallisuus nyt",
+    "save": "Säästät kuukaudessa",
+    "age": "Ikäsi",
+    "ageUnit": "{n} v",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        500,
+        10000,
+        50,
+        2500
+      ],
+      "worth": [
+        0,
+        1500000,
+        5000,
+        50000
+      ],
+      "save": [
+        0,
+        10000,
+        50,
+        1000
+      ]
+    },
+    "now": "Nykyisellä tahdilla",
+    "years": "{n} v",
+    "months": "{n} kk",
+    "yearsMonths": "{y} {m}",
+    "quit": "Voisit lopettaa {t} päästä, {age}-vuotiaana",
+    "done": "Olet jo perillä",
+    "never": "Ei vielä ulottuvilla",
+    "neverText": "Tällä säästötahdilla tavoite ei täyty 80 vuoden kuluessa. Kokeile säästää enemmän kuukaudessa tai pienentää menoja.",
+    "target": "Tavoite",
+    "progress": "Eteneminen",
+    "note": "Tavoite on vuoden menot jaettuna 4 %:lla. Säästöjen oletetaan kasvavan 5 % vuodessa. Molempia voi muuttaa sovelluksessa. Suuntaa-antava laskelma, ei sijoitusneuvontaa."
+  },
+  "problem": {
+    "title": "Lasketko yhä päässäsi, voisitko jo lopettaa?",
+    "text": "Kun pankkitili, arvo-osuustili, eläkesäästöt ja vuokravakuus ovat kaikki eri paikoissa, edes kokonaissumma ei pysy selvänä, ja lopetuspäivä jää arvaukseksi. Toesagak kokoaa kaiken yhteen näkymään ja laskee siitä jatkuvasti uudelleen kuukauden, jolloin voisit lopettaa."
+  },
+  "features": [
+    {
+      "title": "Kaikki varat yhdessä näkymässä",
+      "text": "Kiinteistöt, osakkeet, rahastot ja ETF:t, eläkkeet, käteinen ja talletukset, vuokravakuudet, kryptot ja lainat tyypeittäin, kokonaisvarojen, nettovarallisuuden ja velkaantumisasteen kera.\nOsakkeiden ja kryptojen hinnat haetaan, jotta arvot pysyvät ajan tasalla, ja kuvakaappaus välittäjäsi sovelluksesta tuo omistukset ja arvot kerralla.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Paljonko päivässä riittää",
+      "text": "Tämä kuukausi, tämä vuosi, viisi vuotta ja eläke tavoitteina sekä aiemmat merkinnät samassa kaaviossa. Näet myös, paljonko sinun pitää säästää päivässä, viikossa tai kuukaudessa pysyäksesi aikataulussa.\nKun varasi muuttuvat, viikon merkintä tallentuu automaattisesti, joten historia kertyy itsestään.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Laske ennen isoja päätöksiä",
+      "text": "Laskurit: varallisuus elämänkaaren yli, sijoittaminen, lyhennys vai sijoitus, lainat, säästöt ja talletukset, palkan ostovoima sekä raha tunteina. Vedä arvoa, niin kaavio piirtyy uudelleen ja edellinen käyrä jää katkoviivaksi vertailua varten.\nNimeä ja tallenna asetelmat, joihin palaat.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Aloita kolmessa vaiheessa",
+    "items": [
+      {
+        "title": "Syötä menosi ja ikäsi",
+        "text": "Karkeat luvut riittävät. Lopetuspäivä näkyy heti."
+      },
+      {
+        "title": "Lisää varasi",
+        "text": "Mitä tarkemmin erittelet, sitä tarkempi päivä."
+      },
+      {
+        "title": "Kurkkaa silloin tällöin",
+        "text": "Viikoittaiset merkinnät kertyvät itsestään, ja sovellus voi muistuttaa kuun 1. päivänä."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Näin sovellus laskee",
+    "rows": [
+      [
+        "Tavoite",
+        "Vuoden menot lopettamisen jälkeen ÷ turvallinen nostoaste (4 %:lla se on 25 vuoden menot)"
+      ],
+      [
+        "Lopetuspäivä",
+        "Kuukausi, jolloin nettovarallisuutesi ja kuukausisäästösi odotetulla tuotolla kasvatettuina saavuttavat tavoitteen"
+      ],
+      [
+        "Kokonaisvarat",
+        "Kaikki omistamasi yhteenlaskettuna"
+      ],
+      [
+        "Nettovarallisuus",
+        "Kokonaisvarat miinus velat, kuten lainat"
+      ],
+      [
+        "Eteneminen",
+        "Nettovarallisuus ÷ tavoite. Voit seurata sitä myös passiivisen tulon kautta"
+      ],
+      [
+        "Mitä voit muuttaa",
+        "Kuukausimenot, nostoaste 2–6 %, odotettu tuotto 0–12 %, ikä, jolloin haluaisit lopettaa"
+      ]
+    ],
+    "note": "Kaikki tulokset ovat syöttämiisi tietoihin perustuvia suuntaa-antavia laskelmia eivätkä ole sijoitusneuvontaa."
+  },
+  "faq": {
+    "title": "Kysymyksiä",
+    "items": [
+      {
+        "q": "Mihin merkintäni tallennetaan?",
+        "a": "Vain laitteellesi. Rekisteröitymistä ei ole, eikä mitään lähetetä kehittäjälle. Kun otat iCloud-synkronoinnin käyttöön asetuksista, näet samat merkinnät iPhonessa ja iPadissa oman iCloud-tilisi kautta."
+      },
+      {
+        "q": "Hinnat eivät päivity.",
+        "a": "Yhdysvaltain ja Korean osakkeet, kryptot ja valuuttakurssit toimivat ilman asetuksia. Tarkista nettiyhteys ja että tunnus tai koodi on oikein. Asuntojen hinnat tulevat Korean julkisesta kiinteistödatasta, ja niitä varten asetuksiin syötetään maksuton palveluavain."
+      },
+      {
+        "q": "Mitä eroa on kokonaisvaroilla ja nettovarallisuudella?",
+        "a": "Kokonaisvarat ovat kaikki omistamasi yhteenlaskettuna. Nettovarallisuus on sama summa miinus velat, kuten lainat. Lopetuspäivä lasketaan nettovarallisuudesta."
+      },
+      {
+        "q": "Miten siirrän merkinnät uuteen laitteeseen?",
+        "a": "Tee asetuksissa varmuuskopiotiedosto Vie-toiminnolla, säilytä se Tiedostoissa, iCloud Drivessa tai sähköpostissa ja palauta se uudessa laitteessa. Varmuuskopiot eivät koskaan sisällä API-avaimia. Sovellus säilyttää myös 20 viimeisintä varmuuskopiota laitteella automaattisesti."
+      },
+      {
+        "q": "Miten myyntihälytykset toimivat?",
+        "a": "Aseta kullekin omistukselle, kuinka paljon se saa pudota huipustaan, tai tavoitehinta. Kun raja ylittyy, saat ilmoituksen. Nousun aikana sovellus pysyy hiljaa. Hinnat tarkistetaan, kun avaat sovelluksen ja kun iOS sallii sen taustalla (yleensä muutaman tunnin välein), joten kyse ei ole reaaliaikaisesta seurannasta."
+      },
+      {
+        "q": "Voinko pitää lukuni omana tietonani?",
+        "a": "Ota asetuksista käyttöön Apin lukitus, niin sovellus avautuu Face ID:llä tai pääsykoodilla. Kun lukitus on päällä, kuukausimuistutuksessakaan ei näy lukuja."
+      },
+      {
+        "q": "Voinko ensin vain katsella?",
+        "a": "Ota asetuksista käyttöön Demotiedot ja tutki kaikkia näkymiä kuvitteellisen henkilön varoilla. Kun kytket ne pois, omat merkintäsi palaavat heti. Demotiedot eivät ole käytettävissä, kun iCloud-synkronointi on päällä."
+      },
+      {
+        "q": "Miten poistan kaikki tietoni?",
+        "a": "Sovelluksen poistaminen poistaa kaikki laitteelle tallennetut merkinnät. Jos haluat säilyttää kopion, vie ensin varmuuskopiotiedosto asetuksista."
+      },
+      {
+        "q": "Voinko sijoittaa näiden lukujen perusteella?",
+        "a": "Toesagakin tulokset ovat syöttämiisi tietoihin ja oletettuun tuottoon perustuvia suuntaa-antavia laskelmia. Ne eivät ole sijoitusneuvontaa, ja todelliset tulokset riippuvat markkinoista ja omasta tilanteestasi."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Aloita seuranta tänään.\nNäe lopetuspäiväsi.",
+    "cta": "Lataa App Storesta"
+  },
+  "ui": {
+    "skip": "Siirry sisältöön",
+    "languages": "Kieli",
+    "privacy": "Tietosuojakäytäntö",
+    "contact": "Virheitä, ideoita tai kysyttävää? Kirjoita osoitteeseen {email}."
+  }
+}

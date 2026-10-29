@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: máy tính FIRE cho bạn biết tháng nào có thể nghỉ việc",
+  "description": "Nhập chi tiêu mỗi tháng, số tiền đã tích lũy và để dành hằng tháng để biết tháng, năm bạn có thể nghỉ. Theo dõi tài sản, mục tiêu và sáu máy tính.",
+  "hero": {
+    "headline": "Khi nào bạn nghỉ việc được?\nXem bằng con số.",
+    "lead": "Nhập số tiền bạn tiêu và số tiền đã tích lũy, bạn sẽ thấy tháng mình có thể nghỉ. Mỗi lần tài sản thay đổi, bạn biết ngay ngày đó đến gần hơn hay lùi xa hơn.",
+    "cta": "Tải trên App Store",
+    "note": "Không cần tài khoản. Dữ liệu nằm trên thiết bị của bạn."
+  },
+  "demo": {
+    "title": "Tìm ngày nghỉ việc của bạn",
+    "lead": "Kéo thanh trượt. Đây chính là phép tính ứng dụng chạy ở màn hình đầu tiên.",
+    "spend": "Chi tiêu mỗi tháng sau khi nghỉ",
+    "worth": "Tài sản ròng hiện tại",
+    "save": "Để dành mỗi tháng",
+    "age": "Tuổi của bạn",
+    "ageUnit": "{n} tuổi",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        5000000,
+        300000000,
+        1000000,
+        25000000
+      ],
+      "worth": [
+        0,
+        30000000000,
+        100000000,
+        1000000000
+      ],
+      "save": [
+        0,
+        200000000,
+        1000000,
+        10000000
+      ]
+    },
+    "now": "Với tốc độ hiện tại",
+    "years": "{n} năm",
+    "months": "{n} tháng",
+    "yearsMonths": "{y} {m}",
+    "quit": "Bạn có thể nghỉ sau {t}, lúc {age} tuổi",
+    "done": "Bạn đã đạt mục tiêu",
+    "never": "Chưa thể chạm tới",
+    "neverText": "Với mức để dành này, bạn sẽ không đạt mục tiêu trong 80 năm. Hãy thử để dành nhiều hơn mỗi tháng hoặc giảm chi tiêu.",
+    "target": "Mục tiêu",
+    "progress": "Tiến độ",
+    "note": "Mục tiêu bằng chi tiêu một năm chia cho 4%. Giả định tiền tích lũy tăng 5% mỗi năm. Trong ứng dụng bạn có thể đổi cả hai giá trị. Chỉ để tham khảo, không phải lời khuyên đầu tư."
+  },
+  "problem": {
+    "title": "Vẫn tự nhẩm trong đầu \"đã nghỉ được chưa\"?",
+    "text": "Khi tiền ngân hàng, tài khoản chứng khoán, quỹ hưu trí và tiền đặt cọc thuê nhà nằm mỗi nơi một chỗ, đến tổng tài sản cũng mơ hồ, nên ngày nghỉ việc chỉ là phỏng đoán. Toesagak gom tất cả về một màn hình và liên tục tính lại tháng bạn có thể nghỉ từ con số tổng đó."
+  },
+  "features": [
+    {
+      "title": "Mọi tài sản trên một màn hình",
+      "text": "Bất động sản, cổ phiếu, quỹ và ETF, hưu trí, tiền mặt và tiền gửi, tiền đặt cọc, tiền mã hóa và khoản vay, nhóm theo loại, kèm tổng tài sản, tài sản ròng và tỷ lệ nợ.\nGiá cổ phiếu và tiền mã hóa được lấy về để giá trị luôn mới, và chỉ một ảnh chụp màn hình ứng dụng chứng khoán là đưa vào toàn bộ mã và giá trị.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Mỗi ngày cần bao nhiêu để tới đích",
+      "text": "Xem mục tiêu tháng này, năm nay, năm năm và nghỉ hưu cùng các bản ghi trước đây trên một biểu đồ. Ứng dụng còn cho biết cần để dành bao nhiêu mỗi ngày, tuần hay tháng để đi đúng hướng.\nKhi tài sản thay đổi, bản ghi của tuần đó tự được lưu, nên lịch sử cứ thế dày lên.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Tính trước khi quyết định lớn",
+      "text": "Máy tính đường tài sản trọn đời, đầu tư, trả nợ hay đầu tư, khoản vay, tiền gửi và tiết kiệm, sức mua của lương, và quy đổi tiền thành giờ làm. Kéo một giá trị là biểu đồ vẽ lại, đường cũ vẫn còn dạng nét đứt để so sánh.\nĐặt tên và lưu các thiết lập bạn hay dùng.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Ba bước để bắt đầu",
+    "items": [
+      {
+        "title": "Nhập chi tiêu và tuổi",
+        "text": "Số ước chừng là đủ. Ngày nghỉ việc hiện ra ngay."
+      },
+      {
+        "title": "Thêm tài sản",
+        "text": "Chia càng chi tiết, ngày càng chính xác."
+      },
+      {
+        "title": "Thỉnh thoảng ghé xem",
+        "text": "Bản ghi hằng tuần tự tích lại, và ứng dụng có thể nhắc bạn vào ngày 1 mỗi tháng."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Ứng dụng tính như thế nào",
+    "rows": [
+      [
+        "Mục tiêu",
+        "Chi tiêu một năm sau khi nghỉ ÷ tỷ lệ rút an toàn (ở mức 4% là 25 năm chi tiêu)"
+      ],
+      [
+        "Ngày nghỉ việc",
+        "Tháng mà tài sản ròng cộng số tiền để dành mỗi tháng, tăng theo lợi suất kỳ vọng, chạm mục tiêu"
+      ],
+      [
+        "Tổng tài sản",
+        "Mọi thứ bạn sở hữu cộng lại"
+      ],
+      [
+        "Tài sản ròng",
+        "Tổng tài sản trừ các khoản nợ như khoản vay"
+      ],
+      [
+        "Tiến độ",
+        "Tài sản ròng ÷ mục tiêu. Cũng có thể theo dõi bằng thu nhập thụ động"
+      ],
+      [
+        "Những gì bạn chỉnh được",
+        "Chi tiêu hằng tháng, tỷ lệ rút từ 2 đến 6%, lợi suất kỳ vọng từ 0 đến 12%, độ tuổi bạn muốn nghỉ"
+      ]
+    ],
+    "note": "Mọi kết quả là phép tính tham khảo dựa trên dữ liệu bạn nhập, không phải lời khuyên đầu tư."
+  },
+  "faq": {
+    "title": "Câu hỏi",
+    "items": [
+      {
+        "q": "Dữ liệu của tôi được lưu ở đâu?",
+        "a": "Chỉ trên thiết bị của bạn. Không cần đăng ký và không có gì được gửi cho nhà phát triển. Bật đồng bộ iCloud trong Cài đặt để xem cùng dữ liệu trên iPhone và iPad qua tài khoản iCloud của chính bạn."
+      },
+      {
+        "q": "Giá không cập nhật.",
+        "a": "Cổ phiếu Mỹ và Hàn Quốc, tiền mã hóa và tỷ giá hoạt động mà không cần thiết lập gì. Hãy kiểm tra kết nối mạng và mã chứng khoán đã đúng chưa. Giá căn hộ dùng dữ liệu bất động sản công khai của Hàn Quốc và cần nhập khóa dịch vụ trong Cài đặt."
+      },
+      {
+        "q": "Tổng tài sản và tài sản ròng khác nhau thế nào?",
+        "a": "Tổng tài sản là mọi thứ bạn sở hữu cộng lại. Tài sản ròng là con số đó trừ đi các khoản nợ như khoản vay. Ngày nghỉ việc được tính theo tài sản ròng."
+      },
+      {
+        "q": "Làm sao chuyển dữ liệu sang thiết bị mới?",
+        "a": "Dùng Xuất trong Cài đặt để tạo tệp sao lưu, lưu vào ứng dụng Tệp, iCloud Drive hoặc email, rồi khôi phục trên thiết bị mới. Tệp sao lưu không bao giờ chứa khóa API. Ứng dụng cũng tự giữ 20 bản sao lưu gần nhất trên thiết bị."
+      },
+      {
+        "q": "Cảnh báo bán hoạt động thế nào?",
+        "a": "Với mỗi mã, đặt mức giảm tối đa từ đỉnh hoặc một giá mục tiêu. Khi giá vượt qua ngưỡng đó, bạn sẽ nhận được thông báo. Lúc giá tăng thì ứng dụng không làm phiền. Giá được kiểm tra khi bạn mở ứng dụng và khi iOS cho phép chạy nền (thường vài giờ một lần), nên đây không phải theo dõi thời gian thực."
+      },
+      {
+        "q": "Tôi có thể giấu các con số không?",
+        "a": "Bật Khóa ứng dụng trong Cài đặt để mở bằng Face ID hoặc mật mã. Khi đã khóa, lời nhắc hằng tháng cũng không hiện con số nào."
+      },
+      {
+        "q": "Tôi có thể xem thử trước không?",
+        "a": "Bật Dữ liệu mẫu trong Cài đặt để xem mọi màn hình với tài sản của một nhân vật giả định. Tắt đi là dữ liệu của bạn trở lại ngay. Không dùng được Dữ liệu mẫu khi đang bật đồng bộ iCloud."
+      },
+      {
+        "q": "Làm sao xóa toàn bộ dữ liệu?",
+        "a": "Xóa ứng dụng sẽ xóa mọi bản ghi lưu trên thiết bị. Nếu muốn giữ một bản, hãy xuất tệp sao lưu trong Cài đặt trước."
+      },
+      {
+        "q": "Tôi có thể đầu tư dựa vào những con số này không?",
+        "a": "Kết quả của Toesagak là phép tính tham khảo dựa trên dữ liệu bạn nhập và một mức lợi suất giả định. Đó không phải lời khuyên đầu tư, và kết quả thực tế tùy thuộc vào thị trường và hoàn cảnh của bạn."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Bắt đầu ghi lại hôm nay.\nThấy ngày bạn nghỉ việc.",
+    "cta": "Tải trên App Store"
+  },
+  "ui": {
+    "skip": "Chuyển đến nội dung",
+    "languages": "Ngôn ngữ",
+    "privacy": "Chính sách quyền riêng tư",
+    "contact": "Báo lỗi, góp ý hay có câu hỏi? Hãy viết cho {email}."
+  }
+}

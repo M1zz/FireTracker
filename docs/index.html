@@ -1,161 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>퇴사각 · 지원</title>
-<link rel="canonical" href="https://m1zz.github.io/FireTracker/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
-<meta name="description" content="퇴사각 지원 페이지 — 자산·순자산·FIRE(조기은퇴) 목표 추적 앱" />
-<style>
-  :root{
-    --bg:#0f1115; --surface:#171a21; --surface2:#1f242d; --line:#2a2f3a;
-    --text:#e9edf2; --muted:#9aa3b0; --accent:#4CAF8E; --accent2:#E8A33D;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
-       background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
-  header{padding:40px 0 40px;text-align:center}
-  .logo{width:96px;height:96px;border-radius:22px;object-fit:cover;border:1px solid var(--line);margin-bottom:18px}
-  h1{font-size:30px;margin:6px 0 6px;letter-spacing:-.4px}
-  .tag{color:var(--muted);font-size:16px;margin:0}
-  section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px;margin:18px 0}
-  h2{font-size:19px;margin:0 0 14px;letter-spacing:-.3px}
-  ul{margin:0;padding-left:20px}
-  li{margin:7px 0}
-  .feat{display:grid;grid-template-columns:1fr;gap:10px;margin:0;padding:0;list-style:none}
-  .feat li{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);
-           border-radius:12px;padding:12px 14px;margin:0}
-  .feat .ico{font-size:18px;line-height:1.5}
-  .qa{margin:14px 0}
-  .qa h3{font-size:15px;margin:0 0 4px;color:var(--text)}
-  .qa p{margin:0;color:var(--muted);font-size:15px}
-  a{color:var(--accent)}
-  .btn{display:inline-block;background:var(--accent);color:#06120d;font-weight:700;text-decoration:none;
-       padding:12px 20px;border-radius:12px;margin-top:6px}
-  .contact{font-size:17px}
-  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 60px}
-  footer a{color:var(--muted)}
-  code{background:var(--surface2);padding:2px 6px;border-radius:6px;font-size:13px}
-  .langs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:12.5px;line-height:1.5;margin:0 auto;padding:16px 0 0}
-  .langs a{color:var(--muted);text-decoration:none;white-space:nowrap}
-  .langs a:hover{color:var(--text)}
-  .langs a[aria-current]{color:var(--accent);font-weight:700}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>퇴사각: 회사를 그만둘 수 있는 날을 숫자로 보여 주는 FIRE 계산기</title>
+  <meta name="description" content="한 달 생활비와 모은 돈, 매달 모으는 돈을 넣으면 언제 그만둘 수 있는지 연도와 달로 보여 줘요. 자산 기록, 기간별 목표, 여러 계산기까지. 계정 없이 이 기기에 저장해요.">
+  <meta name="theme-color" content="#9A6200" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6779654854">
+  <link rel="canonical" href="https://m1zz.github.io/FireTracker/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="퇴사각: 회사를 그만둘 수 있는 날을 숫자로 보여 주는 FIRE 계산기">
+  <meta property="og:description" content="한 달 생활비와 모은 돈, 매달 모으는 돈을 넣으면 언제 그만둘 수 있는지 연도와 달로 보여 줘요. 자산 기록, 기간별 목표, 여러 계산기까지. 계정 없이 이 기기에 저장해요.">
+  <meta property="og:url" content="https://m1zz.github.io/FireTracker/">
+  <meta property="og:image" content="https://m1zz.github.io/FireTracker/img/ko/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="sitegen.css">
+  <link rel="stylesheet" href="demo.css">
+  <style>:root{--accent:#9A6200}@media (prefers-color-scheme:dark){:root{--accent:#E8A33D}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<div class="wrap">
-
-  <nav class="langs" aria-label="언어 선택">
-    <a href="./index.html" hreflang="ko" lang="ko" aria-current="page">한국어</a>
-    <a href="./en/index.html" hreflang="en" lang="en">English</a>
-    <a href="./ja/index.html" hreflang="ja" lang="ja">日本語</a>
-    <a href="./zh-Hans/index.html" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
-    <a href="./zh-Hant/index.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
-    <a href="./es/index.html" hreflang="es" lang="es">Español</a>
-    <a href="./de/index.html" hreflang="de" lang="de">Deutsch</a>
-    <a href="./fr/index.html" hreflang="fr" lang="fr">Français</a>
-    <a href="./it/index.html" hreflang="it" lang="it">Italiano</a>
-    <a href="./pt-BR/index.html" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
-    <a href="./ru/index.html" hreflang="ru" lang="ru">Русский</a>
-    <a href="./th/index.html" hreflang="th" lang="th">ไทย</a>
-    <a href="./vi/index.html" hreflang="vi" lang="vi">Tiếng Việt</a>
-    <a href="./cs/index.html" hreflang="cs" lang="cs">Čeština</a>
-    <a href="./da/index.html" hreflang="da" lang="da">Dansk</a>
-    <a href="./el/index.html" hreflang="el" lang="el">Ελληνικά</a>
-    <a href="./fi/index.html" hreflang="fi" lang="fi">Suomi</a>
-    <a href="./id/index.html" hreflang="id" lang="id">Bahasa Indonesia</a>
-    <a href="./nb/index.html" hreflang="nb" lang="nb">Norsk bokmål</a>
-    <a href="./nl/index.html" hreflang="nl" lang="nl">Nederlands</a>
-    <a href="./pl/index.html" hreflang="pl" lang="pl">Polski</a>
-    <a href="./sv/index.html" hreflang="sv" lang="sv">Svenska</a>
-    <a href="./tr/index.html" hreflang="tr" lang="tr">Türkçe</a>
-  </nav>
-
-  <header>
-    <img class="logo" src="./icon.png" alt="퇴사각 로고" />
-    <h1>퇴사각</h1>
-    <p class="tag">자산 · 순자산 · FIRE(조기은퇴) 목표를 한눈에 추적하는 앱</p>
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+  <header class="bar">
+    <a class="brand" href=""><img src="icon.png" alt="" width="32" height="32">퇴사각</a>
+    <a class="lang-link" href="#languages">언어</a>
   </header>
 
-  <section>
-    <h2>소개</h2>
-    <p>퇴사각은 보유한 자산과 부채를 등록해 <strong>순자산과 총자산</strong>을 계산하고,
-       매달 기록을 쌓아 <strong>변화 추이</strong>와 <strong>FIRE(경제적 자유) 목표 달성률</strong>을 보여주는
-       개인 재무 추적 앱입니다. 모든 데이터는 <strong>사용자 기기에만 저장</strong>되며 별도의 회원가입이 없습니다.</p>
-  </section>
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>언제 그만둘 수 있는지<br>감 말고 숫자로</h1>
+        <p class="lead">생활비와 모은 돈만 적으면 퇴사할 수 있는 달이 나와요. 자산이 바뀔 때마다 그 날짜가 당겨지는지 밀리는지 바로 보여요.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6779654854">App Store에서 받기</a><a class="try" href="#try">내 퇴사일 계산해 보기 ↓</a></div>
+        <p class="muted small">계정 없이 시작해요. 기록은 이 기기에 저장돼요.</p>
+      </div>
+      <div class="phone"><img src="img/ko/01-dashboard.jpg" alt="언제 그만둘 수 있는지 감 말고 숫자로" width="600" height="1303" decoding="async"></div>
+    </section>
 
-  <section>
-    <h2>주요 기능</h2>
-    <ul class="feat">
-      <li><span class="ico">📊</span><span>주식·코인·부동산·현금·연금·부채 등 카테고리별 자산 관리와 종목별 세부 기록</span></li>
-      <li><span class="ico">📈</span><span>월별 자산·부채·순자산 추이 그래프와 지난 기록 대비 변화</span></li>
-      <li><span class="ico">🎯</span><span>목표 지출·인출률 기반 FIRE 달성률과 올해 말 예측</span></li>
-      <li><span class="ico">📡</span><span>티커·종목코드를 넣으면 미국 주식·국내 주식·암호화폐·부동산 시세 자동 조회</span></li>
-      <li><span class="ico">🖼️</span><span>증권사 보유종목 스크린샷을 기기 내부에서 인식해 한 번에 추가</span></li>
-    </ul>
-  </section>
 
-  <section>
-    <h2>자주 묻는 질문</h2>
-    <div class="qa">
-      <h3>내 자산 데이터는 어디에 저장되나요?</h3>
-      <p>모두 사용자의 기기 안(Apple SwiftData)에만 저장됩니다. 서버로 업로드되지 않으며 개발자도 볼 수 없습니다.</p>
-    </div>
-    <div class="qa">
-      <h3>시세가 자동으로 안 불러와져요.</h3>
-      <p>미국 주식·암호화폐·환율은 키 없이 동작합니다. 국내 주식·부동산 시세는 설정 탭에서 해당 API 키(한국투자증권·공공데이터포털)를 입력해야 합니다. 네트워크 연결과 올바른 티커/종목코드도 확인해주세요.</p>
-    </div>
-    <div class="qa">
-      <h3>데이터를 삭제하려면?</h3>
-      <p>앱을 삭제하면 기기에 저장된 모든 데이터가 함께 삭제됩니다.</p>
-    </div>
-    <div class="qa">
-      <h3>총자산과 순자산의 차이가 뭔가요?</h3>
-      <p>앱에서 ‘총자산’은 보유 자산의 합, ‘순자산’은 거기서 부채를 뺀 값(총자산 − 부채)입니다.</p>
-    </div>
-  </section>
+    <section class="reveal" id="try">
+      <h2>내 퇴사일 계산해 보기</h2>
+      <p class="muted">막대를 밀어 보세요. 앱의 첫 화면과 같은 방식으로 바로 계산해요.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;내 퇴사일 계산해 보기&quot;, &quot;lead&quot;: &quot;막대를 밀어 보세요. 앱의 첫 화면과 같은 방식으로 바로 계산해요.&quot;, &quot;spend&quot;: &quot;은퇴 후 한 달 생활비&quot;, &quot;worth&quot;: &quot;지금 순자산&quot;, &quot;save&quot;: &quot;매달 모으는 돈&quot;, &quot;age&quot;: &quot;지금 나이&quot;, &quot;ageUnit&quot;: &quot;{n}세&quot;, &quot;money&quot;: &quot;{n}원&quot;, &quot;scale&quot;: {&quot;spend&quot;: [1000000, 10000000, 100000, 3000000], &quot;worth&quot;: [0, 1000000000, 5000000, 50000000], &quot;save&quot;: [0, 10000000, 100000, 1500000]}, &quot;now&quot;: &quot;지금 속도라면&quot;, &quot;years&quot;: &quot;{n}년&quot;, &quot;months&quot;: &quot;{n}개월&quot;, &quot;yearsMonths&quot;: &quot;{y} {m}&quot;, &quot;quit&quot;: &quot;{t} 뒤, {age}세에 그만둘 수 있어요&quot;, &quot;done&quot;: &quot;이미 목표에 닿았어요&quot;, &quot;never&quot;: &quot;아직 닿지 않아요&quot;, &quot;neverText&quot;: &quot;지금 모으는 속도로는 80년 안에 목표에 닿지 않아요. 매달 모으는 돈을 늘리거나 생활비를 줄여 보세요.&quot;, &quot;target&quot;: &quot;목표 금액&quot;, &quot;progress&quot;: &quot;지금 달성률&quot;, &quot;note&quot;: &quot;목표 금액은 한 해 생활비를 4%로 나눈 값이에요. 모은 돈은 연 5%로 불어난다고 가정했어요. 앱에서는 두 값을 직접 바꿀 수 있어요. 참고용 계산이며 투자 권유가 아니에요.&quot;}"></div>
+    </section>
 
-  <section>
-    <h2>문의</h2>
-    <p class="contact">버그 제보·기능 제안·문의는 이메일로 보내주세요.</p>
-    <p><a class="btn" href="mailto:leeo@kakao.com">leeo@kakao.com</a></p>
-  </section>
+    <section class="problem reveal">
+      <h2>"이제 그만둬도 되나?" 매번 계산기를 다시 두드리나요?</h2>
+      <p>통장, 증권 앱, 연금, 전세 보증금이 다 따로 있으면 내가 얼마를 가졌는지부터 흐려져요. 그러니 언제 그만둘 수 있는지는 늘 감으로 남아요. 퇴사각은 흩어진 자산을 한 화면에 모으고, 그 합계로 퇴사할 수 있는 달을 계속 다시 계산해요.</p>
+    </section>
 
-  <section>
-    <h2>개인정보처리방침</h2>
-    <p>앱이 어떤 정보를 다루는지(그리고 다루지 않는지)는 아래에서 확인하세요.</p>
-    <p><a href="./privacy.html">개인정보처리방침 보기 →</a></p>
-  </section>
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>흩어진 자산이 한 화면에</h2>
+        <p>부동산, 주식, 펀드와 ETF, 연금, 현금과 예금, 보증금, 암호화폐, 대출까지 종류별로 모아 총자산과 순자산, 부채 비율을 보여 줘요.<br>국내·미국 주식과 코인은 시세를 불러와 평가액을 고쳐 주고, 증권사 앱 화면을 캡처하면 종목과 평가액을 한 번에 가져와요.</p>
+      </div>
+      <div class="phone"><img src="img/ko/02-assets.jpg" alt="흩어진 자산이 한 화면에" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>목표까지 하루에 얼마인지</h2>
+        <p>이번 달, 올해, 5년, 은퇴까지 기간별 목표와 지나온 기록을 그래프 한 장에서 봐요. 목표에 닿으려면 하루, 한 주, 한 달에 얼마를 모아야 하는지도 알려 줘요.<br>자산이 바뀌면 그 주의 기록이 저절로 남아서, 따로 정리하지 않아도 추이가 쌓여요.</p>
+      </div>
+      <div class="phone"><img src="img/ko/03-journey.jpg" alt="목표까지 하루에 얼마인지" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>큰 결정은 계산해 보고</h2>
+        <p>생애주기, 투자, 빚 갚기와 투자 비교, 대출, 예금과 적금, 월급의 구매력, 돈을 시간으로 바꿔 보는 계산기가 들어 있어요. 값을 밀면 그래프가 바로 바뀌고, 바꾸기 전 곡선이 점선으로 남아 비교가 쉬워요.<br>자주 보는 조건은 이름을 붙여 저장해 두고 다시 불러올 수 있어요.</p>
+      </div>
+      <div class="phone"><img src="img/ko/04-loan.jpg" alt="큰 결정은 계산해 보고" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>시작은 세 단계면 돼요</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>생활비와 나이를 적어요</h3><p>대략적인 숫자면 충분해요. 바로 내 퇴사일이 나와요.</p></li>
+<li class="card"><span class="n">2</span><h3>자산을 하나씩 적어요</h3><p>종류별로 나눠 적을수록 날짜가 정확해져요.</p></li>
+<li class="card"><span class="n">3</span><h3>가끔 열어 확인해요</h3><p>매주 기록이 저절로 쌓이고, 원하면 매달 1일에 알려 줘요.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>앱이 계산하는 방식</h2>
+      <div class="card table">
+        <dl><div><dt>목표 금액</dt><dd>은퇴 후 한 해 생활비 ÷ 안전 인출률 (4%면 생활비의 25년 치)</dd></div><div><dt>퇴사 시점</dt><dd>지금 순자산에 매달 모으는 돈을 더하고 예상 수익률로 불려, 목표에 닿는 달</dd></div><div><dt>총자산</dt><dd>가진 자산을 모두 더한 값</dd></div><div><dt>순자산</dt><dd>총자산에서 대출 같은 부채를 뺀 값</dd></div><div><dt>달성률</dt><dd>순자산 ÷ 목표 금액. 패시브 인컴 기준으로도 볼 수 있어요</dd></div><div><dt>바꿀 수 있는 값</dt><dd>한 달 생활비, 안전 인출률 2~6%, 예상 연 수익률 0~12%, 그만두고 싶은 나이</dd></div></dl>
+      </div>
+      <p class="muted">모든 결과는 입력한 값을 바탕으로 한 참고용 계산이며 투자 권유가 아니에요.</p>
+    </section>
+
+
+
+    <section class="reveal" id="faq">
+      <h2>자주 묻는 질문</h2>
+      <div class="faq"><details><summary>내 자산 기록은 어디에 저장되나요?</summary><p>이 기기 안에만 저장돼요. 회원가입이 없고, 개발자에게 보내지 않아요. 설정에서 iCloud 동기화를 켜면 내 iCloud 계정으로 아이폰과 아이패드에 같은 기록이 보여요.</p></details>
+<details><summary>시세가 자동으로 안 불러와져요.</summary><p>국내·미국 주식, 암호화폐, 환율은 아무것도 넣지 않아도 시세를 불러와요. 아파트 시세는 설정에 공공데이터포털 서비스키(아파트 매매 실거래가, 무료)를 넣어야 해요. 인터넷 연결과 종목코드나 티커가 맞는지도 확인해 주세요.</p></details>
+<details><summary>총자산과 순자산은 뭐가 다른가요?</summary><p>총자산은 가진 자산을 모두 더한 값이고, 순자산은 거기서 대출 같은 부채를 뺀 값이에요. 퇴사 시점은 순자산으로 계산해요.</p></details>
+<details><summary>기기를 바꾸면 기록은 어떻게 옮기나요?</summary><p>설정의 내보내기로 백업 파일을 만들어 파일 앱, iCloud Drive, 메일에 저장해 두고 새 기기에서 복원하면 돼요. 백업 파일에는 API 키가 들어가지 않아요. 앱은 켜질 때마다 최근 백업 20개를 기기에 자동으로 보관해요.</p></details>
+<details><summary>매도 원칙 알림은 어떻게 동작하나요?</summary><p>종목마다 고점에서 얼마나 빠지면 팔지, 목표가가 얼마인지 정해 두면 그 선에 닿았을 때 알려 줘요. 오를 때는 알리지 않아요. 앱을 열 때와, 앱이 쉬는 동안 iOS가 허락할 때(보통 몇 시간 간격) 시세를 확인해서 실시간 감시는 아니에요.</p></details>
+<details><summary>숫자를 남이 보지 않게 할 수 있나요?</summary><p>설정에서 앱 잠금을 켜면 Face ID나 암호로 열어요. 잠금을 켜 두면 매달 오는 알림에도 숫자를 보여 주지 않아요.</p></details>
+<details><summary>먼저 둘러보고 싶어요.</summary><p>설정의 데모 데이터를 켜면 가상 인물의 자산으로 모든 화면을 미리 볼 수 있어요. 끄면 내 기록으로 그대로 돌아와요. iCloud 동기화 중에는 데모 데이터를 켤 수 없어요.</p></details>
+<details><summary>데이터를 모두 지우려면요?</summary><p>앱을 지우면 기기에 저장된 모든 기록이 함께 지워져요. 지우기 전에 남겨 두고 싶다면 설정의 내보내기로 백업 파일을 먼저 만들어 두세요.</p></details>
+<details><summary>이 계산을 믿고 투자해도 되나요?</summary><p>퇴사각의 계산은 입력한 값과 가정한 수익률을 바탕으로 한 참고용 결과예요. 투자 권유가 아니고, 실제 결과는 시장과 상황에 따라 달라요.</p></details></div>
+      <p class="contact">버그 제보, 기능 제안, 궁금한 점은 <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>로 보내 주세요.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>오늘 기록하면<br>내 퇴사일이 보여요</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6779654854">App Store에서 받기</a>
+    </section>
+  </main>
 
   <footer>
-    <p>© 2026 퇴사각 · <a href="./privacy.html">개인정보처리방침</a></p>
+    <nav id="languages" class="langs" aria-label="언어"><a href="" hreflang="ko" lang="ko" aria-current="page">한국어</a>
+<a href="en/" hreflang="en" lang="en">English</a>
+<a href="ja/" hreflang="ja" lang="ja">日本語</a>
+<a href="zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="es/" hreflang="es" lang="es">Español</a>
+<a href="de/" hreflang="de" lang="de">Deutsch</a>
+<a href="fr/" hreflang="fr" lang="fr">Français</a>
+<a href="it/" hreflang="it" lang="it">Italiano</a>
+<a href="pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="ru/" hreflang="ru" lang="ru">Русский</a>
+<a href="th/" hreflang="th" lang="th">ไทย</a>
+<a href="vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
+<a href="cs/" hreflang="cs" lang="cs">Čeština</a>
+<a href="da/" hreflang="da" lang="da">Dansk</a>
+<a href="el/" hreflang="el" lang="el">Ελληνικά</a>
+<a href="fi/" hreflang="fi" lang="fi">Suomi</a>
+<a href="id/" hreflang="id" lang="id">Bahasa Indonesia</a>
+<a href="nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="nl/" hreflang="nl" lang="nl">Nederlands</a>
+<a href="pl/" hreflang="pl" lang="pl">Polski</a>
+<a href="sv/" hreflang="sv" lang="sv">Svenska</a>
+<a href="tr/" hreflang="tr" lang="tr">Türkçe</a></nav>
+    <p><a href="privacy.html">개인정보처리방침</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Toesagak</p>
   </footer>
 
-</div>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="demo.js"></script>
 </body>
 </html>

@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: kalkulator FIRE, który pokazuje, w którym miesiącu możesz odejść z pracy",
+  "description": "Wpisz miesięczne wydatki, oszczędności i to, co odkładasz co miesiąc, a zobaczysz miesiąc i rok odejścia z pracy. Aktywa, cele i sześć kalkulatorów.",
+  "hero": {
+    "headline": "Kiedy rzucisz pracę?\nPolicz, nie zgaduj.",
+    "lead": "Wpisz, ile wydajesz i ile masz odłożone, a zobaczysz miesiąc, w którym możesz odejść. Przy każdej zmianie aktywów widzisz, czy ta data się przybliżyła, czy oddaliła.",
+    "cta": "Pobierz z App Store",
+    "note": "Bez konta. Twoje zapisy zostają na urządzeniu."
+  },
+  "demo": {
+    "title": "Policz swoją datę odejścia",
+    "lead": "Przesuń suwaki. To te same obliczenia, które aplikacja robi na pierwszym ekranie.",
+    "spend": "Miesięczne wydatki po odejściu",
+    "worth": "Obecna wartość netto",
+    "save": "Odkładane co miesiąc",
+    "age": "Twój wiek",
+    "ageUnit": "{n} l.",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        2000,
+        50000,
+        250,
+        8000
+      ],
+      "worth": [
+        0,
+        5000000,
+        25000,
+        200000
+      ],
+      "save": [
+        0,
+        50000,
+        250,
+        3000
+      ]
+    },
+    "now": "W obecnym tempie",
+    "years": "{n} l.",
+    "months": "{n} mies.",
+    "yearsMonths": "{y} {m}",
+    "quit": "Możesz odejść za {t}, w wieku {age} l.",
+    "done": "Już jesteś u celu",
+    "never": "Jeszcze poza zasięgiem",
+    "neverText": "Przy takim tempie oszczędzania nie osiągniesz celu w ciągu 80 lat. Spróbuj odkładać więcej co miesiąc albo ograniczyć wydatki.",
+    "target": "Cel",
+    "progress": "Postęp",
+    "note": "Cel to roczne wydatki podzielone przez 4%. Zakładamy, że oszczędności rosną o 5% rocznie. Obie wartości zmienisz w aplikacji. Wynik poglądowy, nie porada inwestycyjna."
+  },
+  "problem": {
+    "title": "Wciąż liczysz w głowie, czy możesz już odejść?",
+    "text": "Gdy konto w banku, rachunek maklerski, oszczędności emerytalne i kaucja za mieszkanie leżą w różnych miejscach, nawet suma robi się niejasna, a data odejścia zostaje zgadywanką. Toesagak zbiera wszystko na jednym ekranie i na bieżąco przelicza z tej sumy miesiąc, w którym możesz odejść."
+  },
+  "features": [
+    {
+      "title": "Wszystkie aktywa na jednym ekranie",
+      "text": "Nieruchomości, akcje, fundusze i ETF-y, emerytura, gotówka i lokaty, kaucje, kryptowaluty i kredyty, pogrupowane według rodzaju, z łącznymi aktywami, wartością netto i wskaźnikiem zadłużenia.\nCeny akcji i kryptowalut są pobierane, aby wartości były aktualne, a zrzut ekranu z aplikacji maklerskiej od razu wczytuje posiadane papiery i ich wartość.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "Ile dziennie, żeby tam dojść",
+      "text": "Ten miesiąc, ten rok, pięć lat i emerytura jako cele, razem z dotychczasowymi zapisami, na jednym wykresie. Zobaczysz też, ile odkładać dziennie, tygodniowo lub miesięcznie, żeby trzymać się planu.\nGdy aktywa się zmieniają, zapis z danego tygodnia zapisuje się sam, więc historia buduje się bez twojego udziału.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Przelicz przed ważną decyzją",
+      "text": "Kalkulatory: majątek w cyklu życia, inwestowanie, spłata długu czy inwestowanie, kredyty, oszczędności i lokaty, siła nabywcza pensji oraz pieniądze zamienione na godziny pracy. Przesuń wartość, a wykres narysuje się od nowa, z poprzednią krzywą jako linią przerywaną do porównania.\nNazwij i zapisz ustawienia, do których wracasz.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Trzy kroki na start",
+    "items": [
+      {
+        "title": "Wpisz wydatki i wiek",
+        "text": "Przybliżone liczby wystarczą. Data odejścia pojawi się od razu."
+      },
+      {
+        "title": "Dodaj swoje aktywa",
+        "text": "Im dokładniej je rozpiszesz, tym precyzyjniejsza data."
+      },
+      {
+        "title": "Zaglądaj od czasu do czasu",
+        "text": "Cotygodniowe zapisy zbierają się same, a aplikacja może przypomnieć ci o sobie 1. dnia każdego miesiąca."
+      }
+    ]
+  },
+  "reference": {
+    "title": "Jak liczy aplikacja",
+    "rows": [
+      [
+        "Cel",
+        "Roczne wydatki po odejściu ÷ bezpieczna stopa wypłat (przy 4% to wydatki na 25 lat)"
+      ],
+      [
+        "Data odejścia",
+        "Miesiąc, w którym wartość netto plus to, co odkładasz co miesiąc, pomnażane według oczekiwanego zwrotu, osiąga cel"
+      ],
+      [
+        "Aktywa łącznie",
+        "Wszystko, co posiadasz, razem"
+      ],
+      [
+        "Wartość netto",
+        "Aktywa łącznie minus długi, np. kredyty"
+      ],
+      [
+        "Postęp",
+        "Wartość netto ÷ cel. Możesz go też śledzić według dochodu pasywnego"
+      ],
+      [
+        "Co możesz zmienić",
+        "Miesięczne wydatki, stopę wypłat od 2 do 6%, oczekiwany zwrot od 0 do 12%, wiek, w którym chcesz odejść"
+      ]
+    ],
+    "note": "Wszystkie wyniki to obliczenia poglądowe oparte na wpisanych danych i nie stanowią porady inwestycyjnej."
+  },
+  "faq": {
+    "title": "Pytania",
+    "items": [
+      {
+        "q": "Gdzie są przechowywane moje zapisy?",
+        "a": "Tylko na twoim urządzeniu. Nie ma rejestracji i nic nie trafia do twórcy aplikacji. Włącz Synchronizację iCloud w Ustawieniach, aby widzieć te same zapisy na iPhonie i iPadzie przez własne konto iCloud."
+      },
+      {
+        "q": "Ceny się nie aktualizują.",
+        "a": "Akcje amerykańskie i koreańskie, kryptowaluty i kursy walut działają bez konfiguracji. Sprawdź połączenie z internetem oraz poprawność tickera lub kodu. Ceny mieszkań pochodzą z publicznych danych o nieruchomościach w Korei i wymagają bezpłatnego klucza usługi wpisanego w Ustawieniach."
+      },
+      {
+        "q": "Czym różnią się aktywa łącznie od wartości netto?",
+        "a": "Aktywa łącznie to wszystko, co posiadasz, razem. Wartość netto to ta suma minus długi, np. kredyty. Data odejścia jest liczona od wartości netto."
+      },
+      {
+        "q": "Jak przenieść zapisy na nowe urządzenie?",
+        "a": "W Ustawieniach użyj opcji Eksportuj, aby utworzyć plik kopii zapasowej, zachowaj go w Plikach, na iCloud Drive lub w poczcie e-mail, a potem przywróć go na nowym urządzeniu. Kopie zapasowe nigdy nie zawierają kluczy API. Aplikacja automatycznie przechowuje też na urządzeniu 20 ostatnich kopii."
+      },
+      {
+        "q": "Jak działają alerty sprzedaży?",
+        "a": "Dla każdej pozycji ustaw, o ile może spaść od szczytu, albo cenę docelową. Gdy przekroczy tę granicę, dostaniesz powiadomienie. Przy wzrostach aplikacja milczy. Ceny są sprawdzane, gdy otwierasz aplikację i gdy iOS pozwala na to w tle (zwykle co kilka godzin), więc to nie jest monitorowanie w czasie rzeczywistym."
+      },
+      {
+        "q": "Czy mogę ukryć swoje liczby?",
+        "a": "Włącz Blokadę aplikacji w Ustawieniach, aby otwierać ją za pomocą Face ID lub kodu. Przy włączonej blokadzie także comiesięczne przypomnienie nie pokazuje żadnych kwot."
+      },
+      {
+        "q": "Czy mogę najpierw się rozejrzeć?",
+        "a": "Włącz Dane demonstracyjne w Ustawieniach i przejrzyj wszystkie ekrany na aktywach fikcyjnej osoby. Po wyłączeniu twoje zapisy od razu wracają. Dane demonstracyjne nie są dostępne, gdy włączona jest Synchronizacja iCloud."
+      },
+      {
+        "q": "Jak usunąć wszystkie moje dane?",
+        "a": "Usunięcie aplikacji kasuje wszystkie zapisy przechowywane na urządzeniu. Jeśli chcesz zachować kopię, najpierw wyeksportuj plik kopii zapasowej w Ustawieniach."
+      },
+      {
+        "q": "Czy mogę inwestować na podstawie tych liczb?",
+        "a": "Wyniki Toesagak to obliczenia poglądowe oparte na wpisanych danych i założonym zwrocie. Nie stanowią porady inwestycyjnej, a rzeczywiste wyniki zależą od rynku i twojej sytuacji."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Zacznij liczyć już dziś.\nZobacz datę odejścia.",
+    "cta": "Pobierz z App Store"
+  },
+  "ui": {
+    "skip": "Przejdź do treści",
+    "languages": "Język",
+    "privacy": "Polityka prywatności",
+    "contact": "Błędy, pomysły albo pytania? Napisz na {email}."
+  }
+}

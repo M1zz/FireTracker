@@ -1,162 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Toesagak · Ondersteuning</title>
-<link rel="canonical" href="https://m1zz.github.io/FireTracker/nl/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
-<meta name="description" content="Ondersteuningspagina van Toesagak – de app om je vermogen, nettovermogen en FIRE-doel (vroeg met pensioen) bij te houden" />
-<style>
-  :root{
-    --bg:#0f1115; --surface:#171a21; --surface2:#1f242d; --line:#2a2f3a;
-    --text:#e9edf2; --muted:#9aa3b0; --accent:#4CAF8E; --accent2:#E8A33D;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
-       background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
-  header{padding:40px 0 40px;text-align:center}
-  .logo{width:96px;height:96px;border-radius:22px;object-fit:cover;border:1px solid var(--line);margin-bottom:18px}
-  h1{font-size:30px;margin:6px 0 6px;letter-spacing:-.4px}
-  .tag{color:var(--muted);font-size:16px;margin:0}
-  section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px;margin:18px 0}
-  h2{font-size:19px;margin:0 0 14px;letter-spacing:-.3px}
-  ul{margin:0;padding-left:20px}
-  li{margin:7px 0}
-  .feat{display:grid;grid-template-columns:1fr;gap:10px;margin:0;padding:0;list-style:none}
-  .feat li{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);
-           border-radius:12px;padding:12px 14px;margin:0}
-  .feat .ico{font-size:18px;line-height:1.5}
-  .qa{margin:14px 0}
-  .qa h3{font-size:15px;margin:0 0 4px;color:var(--text)}
-  .qa p{margin:0;color:var(--muted);font-size:15px}
-  a{color:var(--accent)}
-  .btn{display:inline-block;background:var(--accent);color:#06120d;font-weight:700;text-decoration:none;
-       padding:12px 20px;border-radius:12px;margin-top:6px}
-  .contact{font-size:17px}
-  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 60px}
-  footer a{color:var(--muted)}
-  code{background:var(--surface2);padding:2px 6px;border-radius:6px;font-size:13px}
-  .langs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:12.5px;line-height:1.5;margin:0 auto;padding:16px 0 0}
-  .langs a{color:var(--muted);text-decoration:none;white-space:nowrap}
-  .langs a:hover{color:var(--text)}
-  .langs a[aria-current]{color:var(--accent);font-weight:700}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toesagak: de FIRE-calculator die laat zien in welke maand je kunt stoppen</title>
+  <meta name="description" content="Vul je maandelijkse uitgaven, spaargeld en maandelijkse inleg in en zie in welke maand en welk jaar je kunt stoppen. Vermogen, doelen, zes rekentools.">
+  <meta name="theme-color" content="#9A6200" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6779654854">
+  <link rel="canonical" href="https://m1zz.github.io/FireTracker/nl/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Toesagak: de FIRE-calculator die laat zien in welke maand je kunt stoppen">
+  <meta property="og:description" content="Vul je maandelijkse uitgaven, spaargeld en maandelijkse inleg in en zie in welke maand en welk jaar je kunt stoppen. Vermogen, doelen, zes rekentools.">
+  <meta property="og:url" content="https://m1zz.github.io/FireTracker/nl/">
+  <meta property="og:image" content="https://m1zz.github.io/FireTracker/img/nl/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#9A6200}@media (prefers-color-scheme:dark){:root{--accent:#E8A33D}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<div class="wrap">
-
-  <nav class="langs" aria-label="Kies taal">
-    <a href="../index.html" hreflang="ko" lang="ko">&#54620;&#44397;&#50612;</a>
-    <a href="../en/index.html" hreflang="en" lang="en">English</a>
-    <a href="../ja/index.html" hreflang="ja" lang="ja">日本語</a>
-    <a href="../zh-Hans/index.html" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
-    <a href="../zh-Hant/index.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
-    <a href="../es/index.html" hreflang="es" lang="es">Español</a>
-    <a href="../de/index.html" hreflang="de" lang="de">Deutsch</a>
-    <a href="../fr/index.html" hreflang="fr" lang="fr">Français</a>
-    <a href="../it/index.html" hreflang="it" lang="it">Italiano</a>
-    <a href="../pt-BR/index.html" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
-    <a href="../ru/index.html" hreflang="ru" lang="ru">Русский</a>
-    <a href="../th/index.html" hreflang="th" lang="th">ไทย</a>
-    <a href="../vi/index.html" hreflang="vi" lang="vi">Tiếng Việt</a>
-    <a href="../cs/index.html" hreflang="cs" lang="cs">Čeština</a>
-    <a href="../da/index.html" hreflang="da" lang="da">Dansk</a>
-    <a href="../el/index.html" hreflang="el" lang="el">Ελληνικά</a>
-    <a href="../fi/index.html" hreflang="fi" lang="fi">Suomi</a>
-    <a href="../id/index.html" hreflang="id" lang="id">Bahasa Indonesia</a>
-    <a href="../nb/index.html" hreflang="nb" lang="nb">Norsk bokmål</a>
-    <a href="../nl/index.html" hreflang="nl" lang="nl" aria-current="page">Nederlands</a>
-    <a href="../pl/index.html" hreflang="pl" lang="pl">Polski</a>
-    <a href="../sv/index.html" hreflang="sv" lang="sv">Svenska</a>
-    <a href="../tr/index.html" hreflang="tr" lang="tr">Türkçe</a>
-  </nav>
-
-  <header>
-    <img class="logo" src="../icon.png" alt="Toesagak-logo" />
-    <h1>Toesagak</h1>
-    <p class="tag">Je vermogen, nettovermogen en FIRE-doel (vroeg met pensioen) in één oogopslag</p>
+  <a class="skip" href="#main">Naar de inhoud</a>
+  <header class="bar">
+    <a class="brand" href="../nl/"><img src="../icon.png" alt="" width="32" height="32">Toesagak</a>
+    <a class="lang-link" href="#languages">Taal</a>
   </header>
 
-  <section>
-    <h2>Over de app</h2>
-    <p>Toesagak is een app voor je persoonlijke financiën. Voer in wat je bezit en wat je schuldig bent,
-       en de app berekent je <strong>totale vermogen en nettovermogen</strong>. Leg elke maand een stand vast en zie
-       <strong>hoe die zich ontwikkelt</strong> en <strong>hoe dicht je bij je FIRE-doel (financiële onafhankelijkheid) bent</strong>.
-       Alle gegevens worden <strong>alleen op je apparaat opgeslagen</strong> en je hoeft geen account aan te maken.</p>
-  </section>
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Wanneer kun je stoppen?<br>Zwart op wit.</h1>
+        <p class="lead">Vul in wat je uitgeeft en wat je hebt gespaard, en je ziet de maand waarin je kunt stoppen. Elke keer dat je bezittingen veranderen, zie je of die datum dichterbij komt of verder weg schuift.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6779654854">Download in de App Store</a><a class="try" href="#try">Bereken je stopdatum ↓</a></div>
+        <p class="muted small">Geen account nodig. Je gegevens blijven op je toestel.</p>
+      </div>
+      <div class="phone"><img src="../img/nl/01-dashboard.jpg" alt="Wanneer kun je stoppen? Zwart op wit." width="600" height="1303" decoding="async"></div>
+    </section>
 
-  <section>
-    <h2>Belangrijkste functies</h2>
-    <ul class="feat">
-      <li><span class="ico">📊</span><span>Vermogen per categorie beheren (aandelen, crypto, vastgoed, contant geld, pensioen, schulden en meer) met details per positie</span></li>
-      <li><span class="ico">📈</span><span>Maandgrafieken van bezittingen, schulden en nettovermogen, plus de verandering sinds je vorige stand</span></li>
-      <li><span class="ico">🎯</span><span>FIRE-voortgang op basis van je beoogde uitgaven en opnamepercentage, met een prognose voor het einde van het jaar</span></li>
-      <li><span class="ico">📡</span><span>Vul een ticker of effectencode in en koersen worden automatisch opgehaald voor Amerikaanse aandelen, Koreaanse aandelen, crypto en Koreaans vastgoed</span></li>
-      <li><span class="ico">🖼️</span><span>Posities in één keer toevoegen vanaf een screenshot van je beleggingsapp, volledig op je apparaat herkend</span></li>
-    </ul>
-  </section>
 
-  <section>
-    <h2>Veelgestelde vragen</h2>
-    <div class="qa">
-      <h3>Waar worden mijn financiële gegevens opgeslagen?</h3>
-      <p>Alleen op je eigen apparaat (Apple SwiftData). Er wordt niets naar een server geüpload en ook de ontwikkelaar kan het niet zien.</p>
-    </div>
-    <div class="qa">
-      <h3>Koersen worden niet automatisch opgehaald.</h3>
-      <p>Amerikaanse aandelen, crypto en wisselkoersen werken zonder sleutel. Voor Koreaanse aandelen- en vastgoedprijzen moet je op het tabblad Instellingen de bijbehorende API-sleutel invullen (Korea Investment &amp; Securities of het Koreaanse open-dataportaal). Controleer ook je internetverbinding en of de ticker of effectencode klopt.</p>
-    </div>
-    <div class="qa">
-      <h3>Hoe verwijder ik mijn gegevens?</h3>
-      <p>Als je de app verwijdert, worden alle gegevens op je apparaat meteen mee verwijderd.</p>
-    </div>
-    <div class="qa">
-      <h3>Wat is het verschil tussen totaal vermogen en nettovermogen?</h3>
-      <p>In de app is het ‘totale vermogen’ de som van alles wat je bezit, en het ‘nettovermogen’ wat er overblijft na aftrek van je schulden (totaal vermogen − schulden).</p>
-    </div>
-  </section>
+    <section class="reveal" id="try">
+      <h2>Bereken je stopdatum</h2>
+      <p class="muted">Versleep de schuifjes. Het is dezelfde berekening als op het eerste scherm van de app.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Bereken je stopdatum&quot;, &quot;lead&quot;: &quot;Versleep de schuifjes. Het is dezelfde berekening als op het eerste scherm van de app.&quot;, &quot;spend&quot;: &quot;Maandelijkse uitgaven na je stoppen&quot;, &quot;worth&quot;: &quot;Nettovermogen nu&quot;, &quot;save&quot;: &quot;Elke maand gespaard&quot;, &quot;age&quot;: &quot;Je leeftijd&quot;, &quot;ageUnit&quot;: &quot;{n} jaar&quot;, &quot;money&quot;: &quot;{n}&quot;, &quot;scale&quot;: {&quot;spend&quot;: [500, 10000, 50, 2500], &quot;worth&quot;: [0, 1500000, 5000, 50000], &quot;save&quot;: [0, 10000, 50, 1000]}, &quot;now&quot;: &quot;In je huidige tempo&quot;, &quot;years&quot;: &quot;{n} jaar&quot;, &quot;months&quot;: &quot;{n} mnd&quot;, &quot;yearsMonths&quot;: &quot;{y} en {m}&quot;, &quot;quit&quot;: &quot;Je kunt stoppen over {t}, op je {age}e&quot;, &quot;done&quot;: &quot;Je bent er al&quot;, &quot;never&quot;: &quot;Nog niet binnen bereik&quot;, &quot;neverText&quot;: &quot;Met dit spaartempo haal je je doel niet binnen 80 jaar. Probeer elke maand meer te sparen of minder uit te geven.&quot;, &quot;target&quot;: &quot;Doel&quot;, &quot;progress&quot;: &quot;Voortgang&quot;, &quot;note&quot;: &quot;Je doel is een jaar aan uitgaven gedeeld door 4%. Spaargeld groeit naar verwachting 5% per jaar. Beide pas je aan in de app. Alleen ter indicatie, geen beleggingsadvies.&quot;}"></div>
+    </section>
 
-  <section>
-    <h2>Contact</h2>
-    <p class="contact">Stuur bugmeldingen, ideeën voor functies of andere vragen gerust per e-mail.</p>
-    <p><a class="btn" href="mailto:leeo@kakao.com">leeo@kakao.com</a></p>
-  </section>
+    <section class="problem reveal">
+      <h2>Reken je nog steeds in je hoofd uit of je al kunt stoppen?</h2>
+      <p>Als je bankrekening, beleggingsrekening, pensioen en borg allemaal op een andere plek staan, wordt zelfs je totaal vaag en blijft je stopdatum een gok. Toesagak zet alles op één scherm en rekent daaruit steeds opnieuw uit in welke maand je kunt stoppen.</p>
+    </section>
 
-  <section>
-    <h2>Privacybeleid</h2>
-    <p>Lees hier welke gegevens de app verwerkt (en welke niet).</p>
-    <p><a href="./privacy.html">Privacybeleid bekijken →</a></p>
-  </section>
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Al je bezittingen op één scherm</h2>
+        <p>Vastgoed, aandelen, fondsen en ETF's, pensioen, contant geld en deposito's, borgsommen, crypto en leningen, per soort gegroepeerd, met je totale bezittingen, nettovermogen en schuldquote.<br>Koersen van aandelen en crypto worden opgehaald zodat de waarden actueel blijven, en een screenshot van je beleggingsapp zet je posities en waarden er in één keer in.</p>
+      </div>
+      <div class="phone"><img src="../img/nl/02-assets.jpg" alt="Al je bezittingen op één scherm" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Hoeveel per dag je nodig hebt</h2>
+        <p>Zie deze maand, dit jaar, vijf jaar en je pensioen als doelen, samen met je eerdere registraties, in één grafiek. Je ziet ook hoeveel je per dag, week of maand moet sparen om op koers te blijven.<br>Veranderen je bezittingen, dan wordt de registratie van die week automatisch bewaard, zodat je geschiedenis zichzelf opbouwt.</p>
+      </div>
+      <div class="phone"><img src="../img/nl/03-journey.jpg" alt="Hoeveel per dag je nodig hebt" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Reken het door vóór grote keuzes</h2>
+        <p>Rekenmachines voor je vermogensverloop over je leven, beleggen, aflossen of beleggen, leningen, sparen en deposito's, de koopkracht van je salaris en geld omgerekend naar uren. Versleep een waarde en de grafiek tekent zich opnieuw, met de vorige curve als stippellijn ernaast om te vergelijken.<br>Geef de scenario's waar je op terugkomt een naam en bewaar ze.</p>
+      </div>
+      <div class="phone"><img src="../img/nl/04-loan.jpg" alt="Reken het door vóór grote keuzes" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>In drie stappen aan de slag</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Vul je uitgaven en leeftijd in</h3><p>Ruwe getallen zijn prima. Je stopdatum verschijnt meteen.</p></li>
+<li class="card"><span class="n">2</span><h3>Voeg je bezittingen toe</h3><p>Hoe preciezer je ze opsplitst, hoe scherper de datum.</p></li>
+<li class="card"><span class="n">3</span><h3>Kijk af en toe even</h3><p>Wekelijkse registraties bouwen zich vanzelf op, en de app kan je elke 1e van de maand een seintje geven.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>Zo rekent de app</h2>
+      <div class="card table">
+        <dl><div><dt>Doel</dt><dd>Een jaar aan uitgaven na je stoppen ÷ veilig opnamepercentage (bij 4% is dat 25 jaar aan uitgaven)</dd></div><div><dt>Stopdatum</dt><dd>De maand waarin je nettovermogen plus wat je maandelijks spaart, gegroeid met je verwachte rendement, je doel bereikt</dd></div><div><dt>Totale bezittingen</dt><dd>Alles wat je bezit bij elkaar opgeteld</dd></div><div><dt>Nettovermogen</dt><dd>Totale bezittingen min schulden zoals leningen</dd></div><div><dt>Voortgang</dt><dd>Nettovermogen ÷ doel. Je kunt het ook volgen op basis van passief inkomen</dd></div><div><dt>Wat je kunt aanpassen</dt><dd>Maandelijkse uitgaven, opnamepercentage van 2 tot 6%, verwacht rendement van 0 tot 12%, de leeftijd waarop je wilt stoppen</dd></div></dl>
+      </div>
+      <p class="muted">Alle uitkomsten zijn indicatieve berekeningen op basis van je invoer en geen beleggingsadvies.</p>
+    </section>
+
+
+
+    <section class="reveal" id="faq">
+      <h2>Vragen</h2>
+      <div class="faq"><details><summary>Waar worden mijn gegevens bewaard?</summary><p>Alleen op je toestel. Je hoeft je niet aan te melden en er wordt niets naar de ontwikkelaar gestuurd. Zet iCloud-synchronisatie aan in Instellingen om dezelfde gegevens op je iPhone en iPad te zien via je eigen iCloud-account.</p></details>
+<details><summary>Koersen worden niet bijgewerkt.</summary><p>Amerikaanse en Koreaanse aandelen, crypto en wisselkoersen werken zonder instellingen. Controleer je internetverbinding en of de ticker of code klopt. Woningprijzen komen uit Koreaanse openbare vastgoeddata en vereisen een gratis servicesleutel die je in Instellingen invult.</p></details>
+<details><summary>Wat is het verschil tussen totale bezittingen en nettovermogen?</summary><p>Totale bezittingen is alles wat je bezit bij elkaar opgeteld. Nettovermogen is dat bedrag min schulden zoals leningen. Je stopdatum is gebaseerd op je nettovermogen.</p></details>
+<details><summary>Hoe zet ik mijn gegevens over naar een nieuw toestel?</summary><p>Maak met Exporteren in Instellingen een back-upbestand, bewaar het in Bestanden, iCloud Drive of je e-mail en zet het terug op het nieuwe toestel. Back-upbestanden bevatten nooit API-sleutels. De app bewaart ook automatisch je 20 meest recente back-ups op het toestel.</p></details>
+<details><summary>Hoe werken verkoopmeldingen?</summary><p>Stel per positie in hoeveel die mag dalen vanaf de piek, of kies een koersdoel. Gaat de koers over die grens, dan krijg je een seintje. Bij stijgende koersen blijft de app stil. Koersen worden gecontroleerd als je de app opent en wanneer iOS het op de achtergrond toestaat (meestal om de paar uur), dus het is geen realtime bewaking.</p></details>
+<details><summary>Kan ik mijn bedragen privé houden?</summary><p>Zet App-vergrendeling aan in Instellingen om de app te openen met Face ID of je toegangscode. Met de vergrendeling aan toont ook de maandelijkse herinnering geen bedragen.</p></details>
+<details><summary>Kan ik eerst rondkijken?</summary><p>Zet Demogegevens aan in Instellingen en bekijk alle schermen met de bezittingen van een fictief persoon. Zet je het uit, dan zijn je eigen gegevens meteen terug. Demogegevens zijn niet beschikbaar als iCloud-synchronisatie aan staat.</p></details>
+<details><summary>Hoe verwijder ik al mijn gegevens?</summary><p>Als je de app verwijdert, worden alle gegevens op het toestel gewist. Wil je een kopie houden, exporteer dan eerst een back-upbestand in Instellingen.</p></details>
+<details><summary>Kan ik op basis van deze cijfers beleggen?</summary><p>De uitkomsten van Toesagak zijn indicatieve berekeningen op basis van je invoer en een verondersteld rendement. Ze zijn geen beleggingsadvies, en de werkelijke uitkomst hangt af van de markt en je eigen situatie.</p></details></div>
+      <p class="contact">Fouten, ideeën of vragen? Mail naar <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Begin vandaag met bijhouden.<br>Zie je stopdatum.</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6779654854">Download in de App Store</a>
+    </section>
+  </main>
 
   <footer>
-    <p>© 2026 Toesagak · <a href="./privacy.html">Privacybeleid</a></p>
+    <nav id="languages" class="langs" aria-label="Taal"><a href="../" hreflang="ko" lang="ko">한국어</a>
+<a href="../en/" hreflang="en" lang="en">English</a>
+<a href="../ja/" hreflang="ja" lang="ja">日本語</a>
+<a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="../es/" hreflang="es" lang="es">Español</a>
+<a href="../de/" hreflang="de" lang="de">Deutsch</a>
+<a href="../fr/" hreflang="fr" lang="fr">Français</a>
+<a href="../it/" hreflang="it" lang="it">Italiano</a>
+<a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="../ru/" hreflang="ru" lang="ru">Русский</a>
+<a href="../th/" hreflang="th" lang="th">ไทย</a>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
+<a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
+<a href="../da/" hreflang="da" lang="da">Dansk</a>
+<a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
+<a href="../fi/" hreflang="fi" lang="fi">Suomi</a>
+<a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
+<a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="../nl/" hreflang="nl" lang="nl" aria-current="page">Nederlands</a>
+<a href="../pl/" hreflang="pl" lang="pl">Polski</a>
+<a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
+<a href="../tr/" hreflang="tr" lang="tr">Türkçe</a></nav>
+    <p><a href="privacy.html">Privacybeleid</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Toesagak</p>
   </footer>
 
-</div>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

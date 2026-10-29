@@ -1,161 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Toesagak · サポート</title>
-<link rel="canonical" href="https://m1zz.github.io/FireTracker/ja/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
-<meta name="description" content="Toesagak サポートページ — 資産・純資産・FIRE(早期リタイア)目標をまとめて管理するアプリ" />
-<style>
-  :root{
-    --bg:#0f1115; --surface:#171a21; --surface2:#1f242d; --line:#2a2f3a;
-    --text:#e9edf2; --muted:#9aa3b0; --accent:#4CAF8E; --accent2:#E8A33D;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
-       background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
-  header{padding:40px 0 40px;text-align:center}
-  .logo{width:96px;height:96px;border-radius:22px;object-fit:cover;border:1px solid var(--line);margin-bottom:18px}
-  h1{font-size:30px;margin:6px 0 6px;letter-spacing:-.4px}
-  .tag{color:var(--muted);font-size:16px;margin:0}
-  section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px;margin:18px 0}
-  h2{font-size:19px;margin:0 0 14px;letter-spacing:-.3px}
-  ul{margin:0;padding-left:20px}
-  li{margin:7px 0}
-  .feat{display:grid;grid-template-columns:1fr;gap:10px;margin:0;padding:0;list-style:none}
-  .feat li{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);
-           border-radius:12px;padding:12px 14px;margin:0}
-  .feat .ico{font-size:18px;line-height:1.5}
-  .qa{margin:14px 0}
-  .qa h3{font-size:15px;margin:0 0 4px;color:var(--text)}
-  .qa p{margin:0;color:var(--muted);font-size:15px}
-  a{color:var(--accent)}
-  .btn{display:inline-block;background:var(--accent);color:#06120d;font-weight:700;text-decoration:none;
-       padding:12px 20px;border-radius:12px;margin-top:6px}
-  .contact{font-size:17px}
-  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 60px}
-  footer a{color:var(--muted)}
-  code{background:var(--surface2);padding:2px 6px;border-radius:6px;font-size:13px}
-  .langs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:12.5px;line-height:1.5;margin:0 auto;padding:16px 0 0}
-  .langs a{color:var(--muted);text-decoration:none;white-space:nowrap}
-  .langs a:hover{color:var(--text)}
-  .langs a[aria-current]{color:var(--accent);font-weight:700}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toesagak：会社を辞められる月がわかるFIRE計算アプリ</title>
+  <meta name="description" content="毎月の生活費、今ある資産、毎月の積立額を入れるだけで、退職できる年と月がわかります。資産の記録、目標、6つの計算機。アカウント不要。">
+  <meta name="theme-color" content="#9A6200" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6779654854">
+  <link rel="canonical" href="https://m1zz.github.io/FireTracker/ja/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Toesagak：会社を辞められる月がわかるFIRE計算アプリ">
+  <meta property="og:description" content="毎月の生活費、今ある資産、毎月の積立額を入れるだけで、退職できる年と月がわかります。資産の記録、目標、6つの計算機。アカウント不要。">
+  <meta property="og:url" content="https://m1zz.github.io/FireTracker/ja/">
+  <meta property="og:image" content="https://m1zz.github.io/FireTracker/img/ja/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#9A6200}@media (prefers-color-scheme:dark){:root{--accent:#E8A33D}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<div class="wrap">
-
-  <nav class="langs" aria-label="言語を選択">
-    <a href="../index.html" hreflang="ko" lang="ko">&#54620;&#44397;&#50612;</a>
-    <a href="../en/index.html" hreflang="en" lang="en">English</a>
-    <a href="../ja/index.html" hreflang="ja" lang="ja" aria-current="page">日本語</a>
-    <a href="../zh-Hans/index.html" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
-    <a href="../zh-Hant/index.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
-    <a href="../es/index.html" hreflang="es" lang="es">Español</a>
-    <a href="../de/index.html" hreflang="de" lang="de">Deutsch</a>
-    <a href="../fr/index.html" hreflang="fr" lang="fr">Français</a>
-    <a href="../it/index.html" hreflang="it" lang="it">Italiano</a>
-    <a href="../pt-BR/index.html" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
-    <a href="../ru/index.html" hreflang="ru" lang="ru">Русский</a>
-    <a href="../th/index.html" hreflang="th" lang="th">ไทย</a>
-    <a href="../vi/index.html" hreflang="vi" lang="vi">Tiếng Việt</a>
-    <a href="../cs/index.html" hreflang="cs" lang="cs">Čeština</a>
-    <a href="../da/index.html" hreflang="da" lang="da">Dansk</a>
-    <a href="../el/index.html" hreflang="el" lang="el">Ελληνικά</a>
-    <a href="../fi/index.html" hreflang="fi" lang="fi">Suomi</a>
-    <a href="../id/index.html" hreflang="id" lang="id">Bahasa Indonesia</a>
-    <a href="../nb/index.html" hreflang="nb" lang="nb">Norsk bokmål</a>
-    <a href="../nl/index.html" hreflang="nl" lang="nl">Nederlands</a>
-    <a href="../pl/index.html" hreflang="pl" lang="pl">Polski</a>
-    <a href="../sv/index.html" hreflang="sv" lang="sv">Svenska</a>
-    <a href="../tr/index.html" hreflang="tr" lang="tr">Türkçe</a>
-  </nav>
-
-  <header>
-    <img class="logo" src="../icon.png" alt="Toesagak ロゴ" />
-    <h1>Toesagak</h1>
-    <p class="tag">資産・純資産・FIRE(早期リタイア)目標をひと目で管理するアプリ</p>
+  <a class="skip" href="#main">本文へスキップ</a>
+  <header class="bar">
+    <a class="brand" href="../ja/"><img src="../icon.png" alt="" width="32" height="32">Toesagak</a>
+    <a class="lang-link" href="#languages">言語</a>
   </header>
 
-  <section>
-    <h2>はじめに</h2>
-    <p>Toesagak は、持っている資産と負債を登録するだけで<strong>総資産と純資産</strong>を計算し、
-       毎月の記録から<strong>資産の推移</strong>と<strong>FIRE(経済的自立)目標の達成率</strong>を確認できる
-       個人向けの資産管理アプリです。データはすべて<strong>お使いの端末内にのみ保存</strong>され、会員登録も不要です。</p>
-  </section>
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>いつ辞められるか<br>勘ではなく数字で</h1>
+        <p class="lead">生活費と貯めたお金を入れるだけで、会社を辞められる月がわかります。資産が動くたびに、その日が近づいたのか遠のいたのかがすぐに見えます。</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6779654854">App Storeで入手</a><a class="try" href="#try">退職日を計算してみる ↓</a></div>
+        <p class="muted small">アカウント不要。記録はこのデバイスに保存されます。</p>
+      </div>
+      <div class="phone"><img src="../img/ja/01-dashboard.jpg" alt="いつ辞められるか 勘ではなく数字で" width="600" height="1303" decoding="async"></div>
+    </section>
 
-  <section>
-    <h2>主な機能</h2>
-    <ul class="feat">
-      <li><span class="ico">📊</span><span>株式・暗号資産・不動産・現金・年金・負債などをカテゴリ別に管理し、銘柄ごとに詳しく記録</span></li>
-      <li><span class="ico">📈</span><span>資産・負債・純資産の月別推移グラフと、前回の記録からの増減</span></li>
-      <li><span class="ico">🎯</span><span>目標支出額と取り崩し率にもとづく FIRE 達成率と、年末時点の予測</span></li>
-      <li><span class="ico">📡</span><span>ティッカーや銘柄コードを入力するだけで、米国株・韓国株・暗号資産・韓国の不動産の相場を自動取得</span></li>
-      <li><span class="ico">🖼️</span><span>証券アプリの保有銘柄スクリーンショットを端末内で読み取り、まとめて追加</span></li>
-    </ul>
-  </section>
 
-  <section>
-    <h2>よくある質問</h2>
-    <div class="qa">
-      <h3>資産データはどこに保存されますか?</h3>
-      <p>すべてお使いの端末内(Apple SwiftData)にのみ保存されます。サーバーにアップロードされることはなく、開発者が見ることもできません。</p>
-    </div>
-    <div class="qa">
-      <h3>相場が自動で取得されません。</h3>
-      <p>米国株・暗号資産・為替レートはキーなしで利用できます。韓国株と不動産の相場は、設定タブで対応する API キー(韓国投資証券、韓国の公共データポータル)を入力する必要があります。ネットワーク接続と、ティッカー/銘柄コードが正しいかもあわせてご確認ください。</p>
-    </div>
-    <div class="qa">
-      <h3>データを削除するには?</h3>
-      <p>アプリを削除すると、端末に保存されたデータもすべて削除されます。</p>
-    </div>
-    <div class="qa">
-      <h3>総資産と純資産の違いは何ですか?</h3>
-      <p>アプリでは「総資産」は保有している資産の合計、「純資産」はそこから負債を差し引いた額(総資産 − 負債)です。</p>
-    </div>
-  </section>
+    <section class="reveal" id="try">
+      <h2>退職日を計算してみる</h2>
+      <p class="muted">スライダーを動かしてみてください。アプリの最初の画面と同じ計算です。</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;退職日を計算してみる&quot;, &quot;lead&quot;: &quot;スライダーを動かしてみてください。アプリの最初の画面と同じ計算です。&quot;, &quot;spend&quot;: &quot;退職後の毎月の生活費&quot;, &quot;worth&quot;: &quot;今の純資産&quot;, &quot;save&quot;: &quot;毎月の積立額&quot;, &quot;age&quot;: &quot;今の年齢&quot;, &quot;ageUnit&quot;: &quot;{n}歳&quot;, &quot;money&quot;: &quot;{n}&quot;, &quot;scale&quot;: {&quot;spend&quot;: [50000, 1500000, 10000, 250000], &quot;worth&quot;: [0, 150000000, 500000, 5000000], &quot;save&quot;: [0, 1500000, 10000, 150000]}, &quot;now&quot;: &quot;今のペースなら&quot;, &quot;years&quot;: &quot;{n}年&quot;, &quot;months&quot;: &quot;{n}か月&quot;, &quot;yearsMonths&quot;: &quot;{y}{m}&quot;, &quot;quit&quot;: &quot;{t}後、{age}歳で辞められます&quot;, &quot;done&quot;: &quot;すでに目標に届いています&quot;, &quot;never&quot;: &quot;まだ届きません&quot;, &quot;neverText&quot;: &quot;今の積立ペースでは80年以内に目標に届きません。毎月の積立額を増やすか、生活費を見直してみてください。&quot;, &quot;target&quot;: &quot;目標金額&quot;, &quot;progress&quot;: &quot;達成率&quot;, &quot;note&quot;: &quot;目標金額は1年分の生活費を4%で割った額です。資産は年5%で増えると仮定しています。どちらもアプリで変更できます。参考用の計算であり、投資の勧誘ではありません。&quot;}"></div>
+    </section>
 
-  <section>
-    <h2>お問い合わせ</h2>
-    <p class="contact">不具合の報告、機能のご要望、その他のお問い合わせはメールでお送りください。</p>
-    <p><a class="btn" href="mailto:leeo@kakao.com">leeo@kakao.com</a></p>
-  </section>
+    <section class="problem reveal">
+      <h2>「もう辞めてもいいかな」と、毎回電卓をたたいていませんか？</h2>
+      <p>銀行、証券口座、年金、保証金がばらばらだと、自分がいくら持っているかさえあいまいになります。だから辞められる時期も、いつまでも勘のまま。Toesagakは散らばった資産を1つの画面に集め、その合計から退職できる月を計算し続けます。</p>
+    </section>
 
-  <section>
-    <h2>プライバシーポリシー</h2>
-    <p>アプリが扱う情報(と扱わない情報)については、こちらをご覧ください。</p>
-    <p><a href="./privacy.html">プライバシーポリシーを見る →</a></p>
-  </section>
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>散らばった資産を1つの画面に</h2>
+        <p>不動産、株式、ファンドやETF、年金、現金と預金、保証金、暗号資産、ローンまで種類別にまとめ、総資産と純資産、負債比率を表示します。<br>株式と暗号資産は価格を取得して評価額を最新に保ち、証券アプリのスクリーンショットから銘柄と評価額をまとめて取り込めます。</p>
+      </div>
+      <div class="phone"><img src="../img/ja/02-assets.jpg" alt="散らばった資産を1つの画面に" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>目標まで、1日いくら？</h2>
+        <p>今月、今年、5年後、リタイアまでの目標とこれまでの記録を1つのグラフで確認できます。目標に届くには1日、1週間、1か月にいくら貯めればよいかも教えてくれます。<br>資産が変わるとその週の記録が自動で残るので、何もしなくても推移が積み上がります。</p>
+      </div>
+      <div class="phone"><img src="../img/ja/03-journey.jpg" alt="目標まで、1日いくら？" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>大きな決断の前に計算を</h2>
+        <p>ライフサイクルの資産推移、投資、返済と投資の比較、ローン、預金と積立、給料の購買力、お金を時間に換える計算機を搭載。値を動かすとグラフがすぐに描き直され、変更前の曲線が点線で残るので比べやすくなっています。<br>よく使う条件は名前を付けて保存し、いつでも呼び出せます。</p>
+      </div>
+      <div class="phone"><img src="../img/ja/04-loan.jpg" alt="大きな決断の前に計算を" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>はじめ方は3ステップ</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>生活費と年齢を入れる</h3><p>ざっくりで大丈夫。すぐに退職日が表示されます。</p></li>
+<li class="card"><span class="n">2</span><h3>資産を登録する</h3><p>種類ごとに分けて入れるほど、日付が正確になります。</p></li>
+<li class="card"><span class="n">3</span><h3>ときどき開いて確認する</h3><p>毎週の記録は自動で積み上がり、毎月1日にお知らせすることもできます。</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>アプリの計算方法</h2>
+      <div class="card table">
+        <dl><div><dt>目標金額</dt><dd>退職後1年分の生活費 ÷ 安全取り崩し率（4%なら生活費の25年分）</dd></div><div><dt>退職時期</dt><dd>今の純資産に毎月の積立額を加え、期待リターンで増やしたときに目標に届く月</dd></div><div><dt>総資産</dt><dd>持っている資産をすべて足した額</dd></div><div><dt>純資産</dt><dd>総資産からローンなどの負債を引いた額</dd></div><div><dt>達成率</dt><dd>純資産 ÷ 目標金額。パッシブインカム基準でも確認できます</dd></div><div><dt>変更できる値</dt><dd>毎月の生活費、安全取り崩し率2〜6%、期待リターン0〜12%、辞めたい年齢</dd></div></dl>
+      </div>
+      <p class="muted">すべての結果は入力値にもとづく参考用の計算であり、投資の勧誘ではありません。</p>
+    </section>
+
+
+
+    <section class="reveal" id="faq">
+      <h2>よくある質問</h2>
+      <div class="faq"><details><summary>記録はどこに保存されますか？</summary><p>このデバイスの中だけです。会員登録はなく、開発者に送られることもありません。設定でiCloud同期をオンにすると、ご自身のiCloudアカウントを通じてiPhoneとiPadで同じ記録を見られます。</p></details>
+<details><summary>価格が更新されません。</summary><p>米国株、韓国株、暗号資産、為替レートは設定なしで取得できます。インターネット接続と、ティッカーや銘柄コードが正しいかをご確認ください。マンション価格は韓国の公的な不動産データを使うため、設定で無料のサービスキーを入力する必要があります。</p></details>
+<details><summary>総資産と純資産の違いは？</summary><p>総資産は持っている資産の合計、純資産はそこからローンなどの負債を引いた額です。退職時期は純資産をもとに計算します。</p></details>
+<details><summary>機種変更のとき、記録はどう移せますか？</summary><p>設定の書き出しでバックアップファイルを作り、ファイルアプリやiCloud Drive、メールに保存してから、新しいデバイスで復元してください。バックアップファイルにAPIキーは含まれません。アプリは最新20件のバックアップもデバイスに自動で保管します。</p></details>
+<details><summary>売りどきアラートはどう動きますか？</summary><p>銘柄ごとに、高値からどこまで下がったら知らせるか、または目標価格を決めておくと、その線を越えたときにお知らせします。上がっているときは通知しません。価格の確認はアプリを開いたときと、iOSがバックグラウンドで許可したとき（通常は数時間おき）に行うため、リアルタイムの監視ではありません。</p></details>
+<details><summary>数字を人に見られたくありません。</summary><p>設定でアプリロックをオンにすると、Face IDまたはパスコードで開くようになります。ロック中は毎月のお知らせにも数字を表示しません。</p></details>
+<details><summary>先に中を見てみたいです。</summary><p>設定のデモデータをオンにすると、架空の人物の資産ですべての画面を試せます。オフにすれば自分の記録にそのまま戻ります。iCloud同期中はデモデータを使えません。</p></details>
+<details><summary>データをすべて削除するには？</summary><p>アプリを削除すると、デバイスに保存された記録もすべて削除されます。残しておきたい場合は、先に設定でバックアップファイルを書き出してください。</p></details>
+<details><summary>この数字を頼りに投資してもいいですか？</summary><p>Toesagakの結果は、入力値と想定リターンにもとづく参考用の計算です。投資の勧誘ではなく、実際の結果は市場やご自身の状況によって変わります。</p></details></div>
+      <p class="contact">不具合の報告、ご要望、ご質問は<a href="mailto:leeo@kakao.com">leeo@kakao.com</a>までお送りください。</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>今日から記録すれば<br>退職日が見えてくる</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6779654854">App Storeで入手</a>
+    </section>
+  </main>
 
   <footer>
-    <p>© 2026 Toesagak · <a href="./privacy.html">プライバシーポリシー</a></p>
+    <nav id="languages" class="langs" aria-label="言語"><a href="../" hreflang="ko" lang="ko">한국어</a>
+<a href="../en/" hreflang="en" lang="en">English</a>
+<a href="../ja/" hreflang="ja" lang="ja" aria-current="page">日本語</a>
+<a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="../es/" hreflang="es" lang="es">Español</a>
+<a href="../de/" hreflang="de" lang="de">Deutsch</a>
+<a href="../fr/" hreflang="fr" lang="fr">Français</a>
+<a href="../it/" hreflang="it" lang="it">Italiano</a>
+<a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="../ru/" hreflang="ru" lang="ru">Русский</a>
+<a href="../th/" hreflang="th" lang="th">ไทย</a>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
+<a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
+<a href="../da/" hreflang="da" lang="da">Dansk</a>
+<a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
+<a href="../fi/" hreflang="fi" lang="fi">Suomi</a>
+<a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
+<a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
+<a href="../pl/" hreflang="pl" lang="pl">Polski</a>
+<a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
+<a href="../tr/" hreflang="tr" lang="tr">Türkçe</a></nav>
+    <p><a href="privacy.html">プライバシーポリシー</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Toesagak</p>
   </footer>
 
-</div>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

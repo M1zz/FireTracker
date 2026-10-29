@@ -1,0 +1,170 @@
+{
+  "title": "Toesagak: the FIRE calculator that shows the month you can quit",
+  "description": "Enter what you spend, what you've saved and what you save each month, and see the month you could quit. Asset tracking, goals and calculators.",
+  "hero": {
+    "headline": "Know when you can quit.\nBy the numbers.",
+    "lead": "Enter what you spend and what you've saved, and you get the month you could walk away. Every time your assets change, you see whether that date moved closer or further.",
+    "cta": "Get it on the App Store",
+    "note": "No account needed. Your records stay on your device."
+  },
+  "demo": {
+    "title": "Find your quit date",
+    "lead": "Drag the sliders. It's the same math the app runs on its first screen.",
+    "spend": "Monthly spending after you quit",
+    "worth": "Net worth today",
+    "save": "Saved each month",
+    "age": "Your age",
+    "ageUnit": "{n}",
+    "money": "{n}",
+    "scale": {
+      "spend": [
+        500,
+        15000,
+        100,
+        3000
+      ],
+      "worth": [
+        0,
+        1500000,
+        5000,
+        50000
+      ],
+      "save": [
+        0,
+        15000,
+        100,
+        1500
+      ]
+    },
+    "now": "At your current pace",
+    "years": "{n} yr",
+    "months": "{n} mo",
+    "yearsMonths": "{y} {m}",
+    "quit": "You could quit in {t}, at {age}",
+    "done": "You're already there",
+    "never": "Not within reach yet",
+    "neverText": "At this savings rate you won't reach your target within 80 years. Try saving more each month or lowering your spending.",
+    "target": "Target",
+    "progress": "Progress",
+    "note": "Your target is a year of spending divided by 4%. Savings are assumed to grow 5% a year. You can change both in the app. For reference only, not investment advice."
+  },
+  "problem": {
+    "title": "Still running the \"can I quit yet?\" math in your head?",
+    "text": "When your bank, brokerage, pension and rental deposit all live in different places, even your total gets fuzzy, so your quit date stays a guess. Toesagak pulls everything onto one screen and keeps recalculating the month you could quit from that total."
+  },
+  "features": [
+    {
+      "title": "Every asset on one screen",
+      "text": "Property, stocks, funds and ETFs, pensions, cash and deposits, rental deposits, crypto and loans, grouped by type with your total assets, net worth and debt ratio.\nStock and crypto prices are fetched to keep values current, and a screenshot of your brokerage app brings in holdings and values in one go.",
+      "shot": "02-assets"
+    },
+    {
+      "title": "How much a day gets you there",
+      "text": "See this month, this year, five years and retirement as goals, alongside your past records, on a single chart. It also tells you how much to save per day, week or month to stay on track.\nWhen your assets change, that week's record is saved automatically, so your history builds itself.",
+      "shot": "03-journey"
+    },
+    {
+      "title": "Run the numbers before big decisions",
+      "text": "Calculators for your lifetime asset curve, investing, paying off debt versus investing, loans, savings and deposits, the buying power of your salary, and turning money into hours. Drag a value and the chart redraws, with the previous curve left as a dotted line to compare.\nName and save the setups you come back to.",
+      "shot": "04-loan"
+    }
+  ],
+  "steps": {
+    "title": "Three steps to start",
+    "items": [
+      {
+        "title": "Enter your spending and age",
+        "text": "Rough numbers are fine. Your quit date shows up right away."
+      },
+      {
+        "title": "Add your assets",
+        "text": "The more you break them down, the sharper the date."
+      },
+      {
+        "title": "Check in now and then",
+        "text": "Weekly records build up on their own, and it can remind you on the 1st of each month."
+      }
+    ]
+  },
+  "reference": {
+    "title": "How the app does the math",
+    "rows": [
+      [
+        "Target",
+        "A year of spending after you quit ÷ safe withdrawal rate (at 4%, that's 25 years of spending)"
+      ],
+      [
+        "Quit date",
+        "The month your net worth, plus what you save each month, grown at your expected return, reaches the target"
+      ],
+      [
+        "Total assets",
+        "Everything you own, added up"
+      ],
+      [
+        "Net worth",
+        "Total assets minus debts such as loans"
+      ],
+      [
+        "Progress",
+        "Net worth ÷ target. You can also track it by passive income"
+      ],
+      [
+        "What you can change",
+        "Monthly spending, withdrawal rate from 2 to 6%, expected return from 0 to 12%, the age you'd like to quit"
+      ]
+    ],
+    "note": "Every result is a reference calculation based on your inputs and is not investment advice."
+  },
+  "faq": {
+    "title": "Questions",
+    "items": [
+      {
+        "q": "Where are my records stored?",
+        "a": "Only on your device. There's no sign-up and nothing is sent to the developer. Turn on iCloud sync in Settings to see the same records on your iPhone and iPad through your own iCloud account."
+      },
+      {
+        "q": "Prices aren't updating.",
+        "a": "US and Korean stocks, crypto and exchange rates work without any setup. Check your internet connection and that the ticker or code is correct. Apartment prices use Korea's public real estate data and need a free service key entered in Settings."
+      },
+      {
+        "q": "What's the difference between total assets and net worth?",
+        "a": "Total assets is everything you own added up. Net worth is that minus debts such as loans. Your quit date is based on net worth."
+      },
+      {
+        "q": "How do I move my records to a new device?",
+        "a": "Use Export in Settings to make a backup file, keep it in Files, iCloud Drive or email, then restore it on the new device. Backup files never include API keys. The app also keeps your 20 most recent backups on the device automatically."
+      },
+      {
+        "q": "How do sell alerts work?",
+        "a": "For each holding, set how far it can fall from its peak or a target price. When it crosses that line, you get a heads-up. It stays quiet on the way up. Prices are checked when you open the app and when iOS allows it in the background (usually every few hours), so it isn't real-time monitoring."
+      },
+      {
+        "q": "Can I keep my numbers private?",
+        "a": "Turn on App Lock in Settings to open the app with Face ID or your passcode. With the lock on, the monthly reminder doesn't show any numbers either."
+      },
+      {
+        "q": "Can I look around first?",
+        "a": "Turn on Demo Data in Settings to explore every screen with a fictional person's assets. Turn it off and your own records come right back. Demo Data isn't available while iCloud sync is on."
+      },
+      {
+        "q": "How do I delete all my data?",
+        "a": "Deleting the app removes every record stored on the device. If you want to keep a copy, export a backup file in Settings first."
+      },
+      {
+        "q": "Can I invest based on these numbers?",
+        "a": "Toesagak's results are reference calculations based on your inputs and an assumed return. They aren't investment advice, and real outcomes depend on the market and your situation."
+      }
+    ]
+  },
+  "closing": {
+    "headline": "Start tracking today.\nSee your quit date.",
+    "cta": "Get it on the App Store"
+  },
+  "ui": {
+    "skip": "Skip to content",
+    "languages": "Language",
+    "privacy": "Privacy Policy",
+    "contact": "Bug reports, ideas or questions? Write to {email}."
+  }
+}

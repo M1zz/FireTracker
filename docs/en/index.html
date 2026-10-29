@@ -1,162 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Toesagak · Support</title>
-<link rel="canonical" href="https://m1zz.github.io/FireTracker/en/">
-<link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
-<link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
-<link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
-<link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
-<link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
-<link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
-<link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
-<link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
-<link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
-<link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
-<link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
-<link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
-<link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
-<link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
-<link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
-<link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
-<link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
-<link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
-<link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
-<link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
-<link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
-<link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
-<link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
-<link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
-<meta name="description" content="Toesagak support page — an app for tracking your assets, net worth and FIRE (early retirement) goal" />
-<style>
-  :root{
-    --bg:#0f1115; --surface:#171a21; --surface2:#1f242d; --line:#2a2f3a;
-    --text:#e9edf2; --muted:#9aa3b0; --accent:#4CAF8E; --accent2:#E8A33D;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
-       background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
-  header{padding:40px 0 40px;text-align:center}
-  .logo{width:96px;height:96px;border-radius:22px;object-fit:cover;border:1px solid var(--line);margin-bottom:18px}
-  h1{font-size:30px;margin:6px 0 6px;letter-spacing:-.4px}
-  .tag{color:var(--muted);font-size:16px;margin:0}
-  section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px;margin:18px 0}
-  h2{font-size:19px;margin:0 0 14px;letter-spacing:-.3px}
-  ul{margin:0;padding-left:20px}
-  li{margin:7px 0}
-  .feat{display:grid;grid-template-columns:1fr;gap:10px;margin:0;padding:0;list-style:none}
-  .feat li{display:flex;gap:12px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);
-           border-radius:12px;padding:12px 14px;margin:0}
-  .feat .ico{font-size:18px;line-height:1.5}
-  .qa{margin:14px 0}
-  .qa h3{font-size:15px;margin:0 0 4px;color:var(--text)}
-  .qa p{margin:0;color:var(--muted);font-size:15px}
-  a{color:var(--accent)}
-  .btn{display:inline-block;background:var(--accent);color:#06120d;font-weight:700;text-decoration:none;
-       padding:12px 20px;border-radius:12px;margin-top:6px}
-  .contact{font-size:17px}
-  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 60px}
-  footer a{color:var(--muted)}
-  code{background:var(--surface2);padding:2px 6px;border-radius:6px;font-size:13px}
-  .langs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:12.5px;line-height:1.5;margin:0 auto;padding:16px 0 0}
-  .langs a{color:var(--muted);text-decoration:none;white-space:nowrap}
-  .langs a:hover{color:var(--text)}
-  .langs a[aria-current]{color:var(--accent);font-weight:700}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toesagak: the FIRE calculator that shows the month you can quit</title>
+  <meta name="description" content="Enter what you spend, what you&#x27;ve saved and what you save each month, and see the month you could quit. Asset tracking, goals and calculators.">
+  <meta name="theme-color" content="#9A6200" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-itunes-app" content="app-id=6779654854">
+  <link rel="canonical" href="https://m1zz.github.io/FireTracker/en/">
+  <link rel="alternate" hreflang="ko" href="https://m1zz.github.io/FireTracker/">
+  <link rel="alternate" hreflang="en" href="https://m1zz.github.io/FireTracker/en/">
+  <link rel="alternate" hreflang="ja" href="https://m1zz.github.io/FireTracker/ja/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://m1zz.github.io/FireTracker/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://m1zz.github.io/FireTracker/zh-Hant/">
+  <link rel="alternate" hreflang="es" href="https://m1zz.github.io/FireTracker/es/">
+  <link rel="alternate" hreflang="de" href="https://m1zz.github.io/FireTracker/de/">
+  <link rel="alternate" hreflang="fr" href="https://m1zz.github.io/FireTracker/fr/">
+  <link rel="alternate" hreflang="it" href="https://m1zz.github.io/FireTracker/it/">
+  <link rel="alternate" hreflang="pt-BR" href="https://m1zz.github.io/FireTracker/pt-BR/">
+  <link rel="alternate" hreflang="ru" href="https://m1zz.github.io/FireTracker/ru/">
+  <link rel="alternate" hreflang="th" href="https://m1zz.github.io/FireTracker/th/">
+  <link rel="alternate" hreflang="vi" href="https://m1zz.github.io/FireTracker/vi/">
+  <link rel="alternate" hreflang="cs" href="https://m1zz.github.io/FireTracker/cs/">
+  <link rel="alternate" hreflang="da" href="https://m1zz.github.io/FireTracker/da/">
+  <link rel="alternate" hreflang="el" href="https://m1zz.github.io/FireTracker/el/">
+  <link rel="alternate" hreflang="fi" href="https://m1zz.github.io/FireTracker/fi/">
+  <link rel="alternate" hreflang="id" href="https://m1zz.github.io/FireTracker/id/">
+  <link rel="alternate" hreflang="nb" href="https://m1zz.github.io/FireTracker/nb/">
+  <link rel="alternate" hreflang="nl" href="https://m1zz.github.io/FireTracker/nl/">
+  <link rel="alternate" hreflang="pl" href="https://m1zz.github.io/FireTracker/pl/">
+  <link rel="alternate" hreflang="sv" href="https://m1zz.github.io/FireTracker/sv/">
+  <link rel="alternate" hreflang="tr" href="https://m1zz.github.io/FireTracker/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://m1zz.github.io/FireTracker/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Toesagak: the FIRE calculator that shows the month you can quit">
+  <meta property="og:description" content="Enter what you spend, what you&#x27;ve saved and what you save each month, and see the month you could quit. Asset tracking, goals and calculators.">
+  <meta property="og:url" content="https://m1zz.github.io/FireTracker/en/">
+  <meta property="og:image" content="https://m1zz.github.io/FireTracker/img/en/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../icon.png">
+  <link rel="apple-touch-icon" href="../icon.png">
+  <link rel="stylesheet" href="../sitegen.css">
+  <link rel="stylesheet" href="../demo.css">
+  <style>:root{--accent:#9A6200}@media (prefers-color-scheme:dark){:root{--accent:#E8A33D}}</style>
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<div class="wrap">
-
-  <nav class="langs" aria-label="Choose language">
-    <a href="../index.html" hreflang="ko" lang="ko">&#54620;&#44397;&#50612;</a>
-    <a href="../en/index.html" hreflang="en" lang="en" aria-current="page">English</a>
-    <a href="../ja/index.html" hreflang="ja" lang="ja">日本語</a>
-    <a href="../zh-Hans/index.html" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
-    <a href="../zh-Hant/index.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
-    <a href="../es/index.html" hreflang="es" lang="es">Español</a>
-    <a href="../de/index.html" hreflang="de" lang="de">Deutsch</a>
-    <a href="../fr/index.html" hreflang="fr" lang="fr">Français</a>
-    <a href="../it/index.html" hreflang="it" lang="it">Italiano</a>
-    <a href="../pt-BR/index.html" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
-    <a href="../ru/index.html" hreflang="ru" lang="ru">Русский</a>
-    <a href="../th/index.html" hreflang="th" lang="th">ไทย</a>
-    <a href="../vi/index.html" hreflang="vi" lang="vi">Tiếng Việt</a>
-    <a href="../cs/index.html" hreflang="cs" lang="cs">Čeština</a>
-    <a href="../da/index.html" hreflang="da" lang="da">Dansk</a>
-    <a href="../el/index.html" hreflang="el" lang="el">Ελληνικά</a>
-    <a href="../fi/index.html" hreflang="fi" lang="fi">Suomi</a>
-    <a href="../id/index.html" hreflang="id" lang="id">Bahasa Indonesia</a>
-    <a href="../nb/index.html" hreflang="nb" lang="nb">Norsk bokmål</a>
-    <a href="../nl/index.html" hreflang="nl" lang="nl">Nederlands</a>
-    <a href="../pl/index.html" hreflang="pl" lang="pl">Polski</a>
-    <a href="../sv/index.html" hreflang="sv" lang="sv">Svenska</a>
-    <a href="../tr/index.html" hreflang="tr" lang="tr">Türkçe</a>
-  </nav>
-
-  <header>
-    <img class="logo" src="../icon.png" alt="Toesagak logo" />
-    <h1>Toesagak</h1>
-    <p class="tag">Track your assets, net worth and FIRE (early retirement) goal at a glance</p>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="bar">
+    <a class="brand" href="../en/"><img src="../icon.png" alt="" width="32" height="32">Toesagak</a>
+    <a class="lang-link" href="#languages">Language</a>
   </header>
 
-  <section>
-    <h2>About</h2>
-    <p>Toesagak is a personal finance tracker. Add what you own and what you owe, and it works out your
-       <strong>total assets and net worth</strong>. Log a snapshot each month to see <strong>how things change over time</strong>
-       and <strong>how close you are to your FIRE (financial independence) goal</strong>.
-       All data is <strong>stored only on your device</strong>, and there is no sign-up.</p>
-  </section>
+  <main id="main">
+    <section class="hero">
+      <div class="copy">
+        <h1>Know when you can quit.<br>By the numbers.</h1>
+        <p class="lead">Enter what you spend and what you've saved, and you get the month you could walk away. Every time your assets change, you see whether that date moved closer or further.</p>
+        <div class="actions"><a class="cta" href="https://apps.apple.com/app/id6779654854">Get it on the App Store</a><a class="try" href="#try">Find your quit date ↓</a></div>
+        <p class="muted small">No account needed. Your records stay on your device.</p>
+      </div>
+      <div class="phone"><img src="../img/en/01-dashboard.jpg" alt="Know when you can quit. By the numbers." width="600" height="1303" decoding="async"></div>
+    </section>
 
-  <section>
-    <h2>Key features</h2>
-    <ul class="feat">
-      <li><span class="ico">📊</span><span>Track assets by category (stocks, crypto, real estate, cash, pensions, debts and more) with details for each holding</span></li>
-      <li><span class="ico">📈</span><span>Monthly charts of assets, debts and net worth, plus the change since your last snapshot</span></li>
-      <li><span class="ico">🎯</span><span>FIRE progress based on your target spending and withdrawal rate, with a year-end projection</span></li>
-      <li><span class="ico">📡</span><span>Enter a ticker or stock code to fetch prices automatically for US stocks, Korean stocks, crypto and Korean real estate</span></li>
-      <li><span class="ico">🖼️</span><span>Add holdings in one go from a screenshot of your brokerage app, recognized entirely on your device</span></li>
-    </ul>
-  </section>
 
-  <section>
-    <h2>FAQ</h2>
-    <div class="qa">
-      <h3>Where is my financial data stored?</h3>
-      <p>Only on your device (Apple SwiftData). Nothing is uploaded to a server, and the developer can’t see it.</p>
-    </div>
-    <div class="qa">
-      <h3>Prices aren’t updating automatically.</h3>
-      <p>US stocks, crypto and exchange rates work without any key. Korean stock and real estate prices need the matching API key (Korea Investment &amp; Securities, or Korea’s Public Data Portal) entered in the Settings tab. Please also check your network connection and that the ticker or stock code is correct.</p>
-    </div>
-    <div class="qa">
-      <h3>How do I delete my data?</h3>
-      <p>Deleting the app deletes all data stored on your device along with it.</p>
-    </div>
-    <div class="qa">
-      <h3>What’s the difference between total assets and net worth?</h3>
-      <p>In the app, “total assets” is the sum of everything you own, and “net worth” is what’s left after subtracting your debts (total assets − debts).</p>
-    </div>
-  </section>
+    <section class="reveal" id="try">
+      <h2>Find your quit date</h2>
+      <p class="muted">Drag the sliders. It's the same math the app runs on its first screen.</p>
+      <div id="demo" class="card demo-card" data-text="{&quot;title&quot;: &quot;Find your quit date&quot;, &quot;lead&quot;: &quot;Drag the sliders. It&#x27;s the same math the app runs on its first screen.&quot;, &quot;spend&quot;: &quot;Monthly spending after you quit&quot;, &quot;worth&quot;: &quot;Net worth today&quot;, &quot;save&quot;: &quot;Saved each month&quot;, &quot;age&quot;: &quot;Your age&quot;, &quot;ageUnit&quot;: &quot;{n}&quot;, &quot;money&quot;: &quot;{n}&quot;, &quot;scale&quot;: {&quot;spend&quot;: [500, 15000, 100, 3000], &quot;worth&quot;: [0, 1500000, 5000, 50000], &quot;save&quot;: [0, 15000, 100, 1500]}, &quot;now&quot;: &quot;At your current pace&quot;, &quot;years&quot;: &quot;{n} yr&quot;, &quot;months&quot;: &quot;{n} mo&quot;, &quot;yearsMonths&quot;: &quot;{y} {m}&quot;, &quot;quit&quot;: &quot;You could quit in {t}, at {age}&quot;, &quot;done&quot;: &quot;You&#x27;re already there&quot;, &quot;never&quot;: &quot;Not within reach yet&quot;, &quot;neverText&quot;: &quot;At this savings rate you won&#x27;t reach your target within 80 years. Try saving more each month or lowering your spending.&quot;, &quot;target&quot;: &quot;Target&quot;, &quot;progress&quot;: &quot;Progress&quot;, &quot;note&quot;: &quot;Your target is a year of spending divided by 4%. Savings are assumed to grow 5% a year. You can change both in the app. For reference only, not investment advice.&quot;}"></div>
+    </section>
 
-  <section>
-    <h2>Contact</h2>
-    <p class="contact">For bug reports, feature ideas or any questions, please email us.</p>
-    <p><a class="btn" href="mailto:leeo@kakao.com">leeo@kakao.com</a></p>
-  </section>
+    <section class="problem reveal">
+      <h2>Still running the "can I quit yet?" math in your head?</h2>
+      <p>When your bank, brokerage, pension and rental deposit all live in different places, even your total gets fuzzy, so your quit date stays a guess. Toesagak pulls everything onto one screen and keeps recalculating the month you could quit from that total.</p>
+    </section>
 
-  <section>
-    <h2>Privacy Policy</h2>
-    <p>See what information the app handles (and what it doesn’t).</p>
-    <p><a href="./privacy.html">Read the Privacy Policy →</a></p>
-  </section>
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Every asset on one screen</h2>
+        <p>Property, stocks, funds and ETFs, pensions, cash and deposits, rental deposits, crypto and loans, grouped by type with your total assets, net worth and debt ratio.<br>Stock and crypto prices are fetched to keep values current, and a screenshot of your brokerage app brings in holdings and values in one go.</p>
+      </div>
+      <div class="phone"><img src="../img/en/02-assets.jpg" alt="Every asset on one screen" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>How much a day gets you there</h2>
+        <p>See this month, this year, five years and retirement as goals, alongside your past records, on a single chart. It also tells you how much to save per day, week or month to stay on track.<br>When your assets change, that week's record is saved automatically, so your history builds itself.</p>
+      </div>
+      <div class="phone"><img src="../img/en/03-journey.jpg" alt="How much a day gets you there" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="feature reveal">
+      <div class="copy">
+        <h2>Run the numbers before big decisions</h2>
+        <p>Calculators for your lifetime asset curve, investing, paying off debt versus investing, loans, savings and deposits, the buying power of your salary, and turning money into hours. Drag a value and the chart redraws, with the previous curve left as a dotted line to compare.<br>Name and save the setups you come back to.</p>
+      </div>
+      <div class="phone"><img src="../img/en/04-loan.jpg" alt="Run the numbers before big decisions" width="600" height="1303" loading="lazy" decoding="async"></div>
+    </section>
+
+    <section class="reveal">
+      <h2>Three steps to start</h2>
+      <ol class="steps"><li class="card"><span class="n">1</span><h3>Enter your spending and age</h3><p>Rough numbers are fine. Your quit date shows up right away.</p></li>
+<li class="card"><span class="n">2</span><h3>Add your assets</h3><p>The more you break them down, the sharper the date.</p></li>
+<li class="card"><span class="n">3</span><h3>Check in now and then</h3><p>Weekly records build up on their own, and it can remind you on the 1st of each month.</p></li></ol>
+    </section>
+
+    <section class="reveal" id="commands">
+      <h2>How the app does the math</h2>
+      <div class="card table">
+        <dl><div><dt>Target</dt><dd>A year of spending after you quit ÷ safe withdrawal rate (at 4%, that's 25 years of spending)</dd></div><div><dt>Quit date</dt><dd>The month your net worth, plus what you save each month, grown at your expected return, reaches the target</dd></div><div><dt>Total assets</dt><dd>Everything you own, added up</dd></div><div><dt>Net worth</dt><dd>Total assets minus debts such as loans</dd></div><div><dt>Progress</dt><dd>Net worth ÷ target. You can also track it by passive income</dd></div><div><dt>What you can change</dt><dd>Monthly spending, withdrawal rate from 2 to 6%, expected return from 0 to 12%, the age you'd like to quit</dd></div></dl>
+      </div>
+      <p class="muted">Every result is a reference calculation based on your inputs and is not investment advice.</p>
+    </section>
+
+
+
+    <section class="reveal" id="faq">
+      <h2>Questions</h2>
+      <div class="faq"><details><summary>Where are my records stored?</summary><p>Only on your device. There's no sign-up and nothing is sent to the developer. Turn on iCloud sync in Settings to see the same records on your iPhone and iPad through your own iCloud account.</p></details>
+<details><summary>Prices aren't updating.</summary><p>US and Korean stocks, crypto and exchange rates work without any setup. Check your internet connection and that the ticker or code is correct. Apartment prices use Korea's public real estate data and need a free service key entered in Settings.</p></details>
+<details><summary>What's the difference between total assets and net worth?</summary><p>Total assets is everything you own added up. Net worth is that minus debts such as loans. Your quit date is based on net worth.</p></details>
+<details><summary>How do I move my records to a new device?</summary><p>Use Export in Settings to make a backup file, keep it in Files, iCloud Drive or email, then restore it on the new device. Backup files never include API keys. The app also keeps your 20 most recent backups on the device automatically.</p></details>
+<details><summary>How do sell alerts work?</summary><p>For each holding, set how far it can fall from its peak or a target price. When it crosses that line, you get a heads-up. It stays quiet on the way up. Prices are checked when you open the app and when iOS allows it in the background (usually every few hours), so it isn't real-time monitoring.</p></details>
+<details><summary>Can I keep my numbers private?</summary><p>Turn on App Lock in Settings to open the app with Face ID or your passcode. With the lock on, the monthly reminder doesn't show any numbers either.</p></details>
+<details><summary>Can I look around first?</summary><p>Turn on Demo Data in Settings to explore every screen with a fictional person's assets. Turn it off and your own records come right back. Demo Data isn't available while iCloud sync is on.</p></details>
+<details><summary>How do I delete all my data?</summary><p>Deleting the app removes every record stored on the device. If you want to keep a copy, export a backup file in Settings first.</p></details>
+<details><summary>Can I invest based on these numbers?</summary><p>Toesagak's results are reference calculations based on your inputs and an assumed return. They aren't investment advice, and real outcomes depend on the market and your situation.</p></details></div>
+      <p class="contact">Bug reports, ideas or questions? Write to <a href="mailto:leeo@kakao.com">leeo@kakao.com</a>.</p>
+    </section>
+
+    <section class="closing reveal">
+      <h2>Start tracking today.<br>See your quit date.</h2>
+      <a class="cta" href="https://apps.apple.com/app/id6779654854">Get it on the App Store</a>
+    </section>
+  </main>
 
   <footer>
-    <p>© 2026 Toesagak · <a href="./privacy.html">Privacy Policy</a></p>
+    <nav id="languages" class="langs" aria-label="Language"><a href="../" hreflang="ko" lang="ko">한국어</a>
+<a href="../en/" hreflang="en" lang="en" aria-current="page">English</a>
+<a href="../ja/" hreflang="ja" lang="ja">日本語</a>
+<a href="../zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+<a href="../zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+<a href="../es/" hreflang="es" lang="es">Español</a>
+<a href="../de/" hreflang="de" lang="de">Deutsch</a>
+<a href="../fr/" hreflang="fr" lang="fr">Français</a>
+<a href="../it/" hreflang="it" lang="it">Italiano</a>
+<a href="../pt-BR/" hreflang="pt-BR" lang="pt-BR">Português (Brasil)</a>
+<a href="../ru/" hreflang="ru" lang="ru">Русский</a>
+<a href="../th/" hreflang="th" lang="th">ไทย</a>
+<a href="../vi/" hreflang="vi" lang="vi">Tiếng Việt</a>
+<a href="../cs/" hreflang="cs" lang="cs">Čeština</a>
+<a href="../da/" hreflang="da" lang="da">Dansk</a>
+<a href="../el/" hreflang="el" lang="el">Ελληνικά</a>
+<a href="../fi/" hreflang="fi" lang="fi">Suomi</a>
+<a href="../id/" hreflang="id" lang="id">Bahasa Indonesia</a>
+<a href="../nb/" hreflang="nb" lang="nb">Norsk bokmål</a>
+<a href="../nl/" hreflang="nl" lang="nl">Nederlands</a>
+<a href="../pl/" hreflang="pl" lang="pl">Polski</a>
+<a href="../sv/" hreflang="sv" lang="sv">Svenska</a>
+<a href="../tr/" hreflang="tr" lang="tr">Türkçe</a></nav>
+    <p><a href="privacy.html">Privacy Policy</a> · <a href="mailto:leeo@kakao.com">leeo@kakao.com</a> · © 2026 Toesagak</p>
   </footer>
 
-</div>
+  <script>
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target) }
+    }), { rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  </script>
+  <script src="../demo.js"></script>
 </body>
 </html>

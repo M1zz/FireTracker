@@ -29,6 +29,7 @@ struct AssetsView: View {
     @State private var editing: Asset?
     // 스와이프로 지우기 전에 한 번 묻는다 — 지운 자산은 되돌릴 수 없다.
     @State private var pendingDelete: [Asset] = []
+    @State private var editMode: EditMode = .inactive
     @State private var showingNew = false
     @State private var showingImport = false
     @State private var showingSellSignals = false
@@ -290,7 +291,16 @@ struct AssetsView: View {
         }
         .scrollContentBackground(.hidden)
         .scrollIndicators(.hidden)
-        .toolbar { ToolbarItem(placement: .topBarTrailing) { EditButton() } }
+        .environment(\.editMode, $editMode)
+        .toolbar {
+            // 글자만 있는 EditButton 은 세로로 서는 툴바(아이폰 듀오)에서 사라진다. 아이콘을 붙인다.
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(editMode.isEditing ? LocalizedStringKey("완료") : LocalizedStringKey("편집"),
+                       systemImage: editMode.isEditing ? "checkmark" : "pencil") {
+                    withAnimation { editMode = editMode.isEditing ? .inactive : .active }
+                }
+            }
+        }
     }
 
     private var totalCard: some View {

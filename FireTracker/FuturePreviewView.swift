@@ -1157,10 +1157,10 @@ struct ScenarioEditor: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("취소") { dismiss() }
+                    Button("취소", systemImage: "xmark") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("저장") { onSave(scenario); dismiss() }
+                    Button("저장", systemImage: "checkmark") { onSave(scenario); dismiss() }
                 }
             }
         }

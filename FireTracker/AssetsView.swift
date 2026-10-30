@@ -1147,7 +1147,7 @@ struct CategoryPickerSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .scrollIndicators(.hidden)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) { Button("취소", systemImage: "xmark") { dismiss() } }
             }
         }
     }
@@ -1504,8 +1504,8 @@ struct AssetEditor: View {
             .task { await autofillDividendIfNeeded() }
             .proPaywall($paywallFeature)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) { Button("저장") { save() } }
+                ToolbarItem(placement: .cancellationAction) { Button("취소", systemImage: "xmark") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) { Button("저장", systemImage: "checkmark") { save() } }
             }
         }
     }
@@ -2971,10 +2971,10 @@ struct ScreenshotImportView: View {
             .navigationTitle("캡처로 가져오기")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) { Button("취소", systemImage: "xmark") { dismiss() } }
                 if didProcess, !rows.isEmpty {
                     ToolbarItem(placement: .confirmationAction) {
-                        Button(applyLabel) { Task { await apply() } }
+                        Button(applyLabel, systemImage: "checkmark") { Task { await apply() } }
                             .disabled((selected.isEmpty && soldKeys.isEmpty) || applyProgress != nil)
                     }
                 }
@@ -3454,7 +3454,7 @@ struct NetWorthBreakdownView: View {
             .navigationTitle("순자산 내역")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) { Button("닫기") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) { Button("닫기", systemImage: "xmark") { dismiss() } }
             }
         }
     }
@@ -3665,7 +3665,7 @@ struct SellSignalsView: View {
         .toolbar {
             if asSheet {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("닫기") { dismiss() }
+                    Button("닫기", systemImage: "xmark") { dismiss() }
                 }
             }
         }

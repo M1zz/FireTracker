@@ -184,8 +184,8 @@ struct SnapshotDetail: View {
             .scrollIndicators(.hidden)
             .keyboardDismissable()
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("닫기") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) { Button("저장") { save() } }
+                ToolbarItem(placement: .cancellationAction) { Button("닫기", systemImage: "xmark") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) { Button("저장", systemImage: "checkmark") { save() } }
             }
             .onAppear(perform: load)
         }

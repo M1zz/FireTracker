@@ -18,6 +18,7 @@ struct RootView: View {
     // 시트·카드에서도 탭을 옮길 수 있게 공용 라우터에 둔다.
     @Bindable private var router = AppRouter.shared
     @Bindable private var alerts = AppAlerts.shared
+    @Environment(\.foldLayout) private var fold
 
     // 온보딩 대신 — 아무 데이터도 없는 첫 사용자거나, 데모를 보는 중일 때만
     // 최상단에 데모 토글 배너를 띄운다.
@@ -51,29 +52,41 @@ struct RootView: View {
         let _ = (Fmt.numbersOnly = amountNumbersOnly)
         AppLockGate {
             VStack(spacing: 0) {
-            if showDemoBanner { demoBanner }
+            if showDemoBanner {
+                demoBanner
+                    // 가로로 펴면 접힌 선을 넘지 않게 왼쪽 판 폭까지만.
+                    .frame(maxWidth: fold.posture == .innerLandscape ? fold.leadEnd : .infinity,
+                           alignment: .leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
             TabView(selection: $router.selectedTab) {
             DashboardView()
                 .tabItem { Label("대시보드", systemImage: "flame.fill") }
                 .tag(0)
 
-            AssetsView()
+            // 아이폰 듀오를 펴면 왼쪽(세로면 아래)에 이 탭, 오른쪽(위)에 대시보드가 선다.
+            // 접혀 있거나 보통 아이폰이면 `FoldTab` 은 이 탭만 그린다. 지금 화면 그대로.
+            FoldTab { AssetsView() }
                 .tabItem { Label("자산", systemImage: "wonsign.circle.fill") }
                 .tag(1)
 
-            TrendView()
+            FoldTab { TrendView() }
                 .tabItem { Label("여정", systemImage: "chart.xyaxis.line") }
                 .tag(2)
 
-            SimulatorView()
+            FoldTab { SimulatorView() }
                 .tabItem { Label("계산", systemImage: "plus.forwardslash.minus") }
                 .tag(3)
 
-            SettingsView()
+            FoldTab { SettingsView() }
                 .tabItem { Label("설정", systemImage: "gearshape.fill") }
                 .tag(4)
         }
         .tint(Theme.accentText)
+        // 펴면 시스템 탭바 대신 고르는 쪽 판 바닥에 막대가 선다. 대시보드는 늘 오른쪽 판에 있다.
+        .foldTabBar(items: FoldTab<EmptyView>.items,
+                    selected: router.selectedTab == 0 ? 1 : router.selectedTab) { router.selectedTab = $0 }
+        .foldDashboardRedirect(selectedTab: $router.selectedTab)
         // Bigger baseline text, but still scales with the system text-size
         // setting (floor at xLarge, capped before the extreme accessibility
         // sizes that would break the dense card layouts).
@@ -275,7 +288,8 @@ struct AppLockGate<Content: View>: View {
                 .allowsHitTesting(!covered)
 
             if covered {
-                lockScreen
+                // 펼친 화면에서는 고르는 쪽 판에만 선다(접힌 선 위에 자물쇠가 걸치지 않게).
+                lockScreen.foldConfined()
             }
         }
         .onAppear(perform: syncLockState)
@@ -367,6 +381,60 @@ struct AppLockGate<Content: View>: View {
             }
             .padding(40)
         }
+    }
+}
+
+// MARK: - 아이폰 듀오
+
+/// 펼친 화면의 탭 한 장: 왼쪽(세로면 아래) 고른 탭 | 오른쪽(위) 대시보드.
+/// 대시보드는 "언제 그만둘 수 있나"의 답이라, 자산을 고치고 계산을 돌리는 동안 옆에서 바로 바뀐다.
+/// 고르는 쪽은 `FoldSplitView` 가 같은 뷰로 두므로 펴고 접어도 보던 화면이 이어진다.
+struct FoldTab<Choose: View>: View {
+    @ViewBuilder let choose: () -> Choose
+
+    var body: some View {
+        FoldSplitView {
+            choose()
+        } result: {
+            DashboardView()
+                // 오른쪽 판 안에서는 접히지 않은 화면처럼 선다.
+                .environment(\.foldLayout, .single)
+        }
+        .foldTabBarRoom()
+    }
+}
+
+extension FoldTab where Choose == EmptyView {
+    /// 펼쳤을 때 고르는 쪽 판 바닥에 서는 칸. 대시보드(0)는 늘 오른쪽 판에 있으므로 빠진다.
+    @MainActor static var items: [FoldTabBar<Int>.Item] {
+        [
+            .init(value: AppRouter.Tab.assets, title: String(localized: "자산"), symbol: "wonsign.circle.fill"),
+            .init(value: AppRouter.Tab.journey, title: String(localized: "여정"), symbol: "chart.xyaxis.line"),
+            .init(value: AppRouter.Tab.calc, title: String(localized: "계산"), symbol: "plus.forwardslash.minus"),
+            .init(value: AppRouter.Tab.settings, title: String(localized: "설정"), symbol: "gearshape.fill"),
+        ]
+    }
+}
+
+extension View {
+    /// 펼친 화면에서 대시보드 탭에 있으면 자산 탭으로 옮긴다. 대시보드는 그 오른쪽 판에 그대로 서 있다.
+    func foldDashboardRedirect(selectedTab: Binding<Int>) -> some View {
+        modifier(FoldDashboardRedirect(selectedTab: selectedTab))
+    }
+}
+
+private struct FoldDashboardRedirect: ViewModifier {
+    @Environment(\.foldLayout) private var fold
+    @Binding var selectedTab: Int
+
+    func body(content: Content) -> some View {
+        content
+            .onChange(of: fold.isUnfolded, initial: true) { _, _ in redirect() }
+            .onChange(of: selectedTab) { _, _ in redirect() }
+    }
+
+    private func redirect() {
+        if fold.isUnfolded, selectedTab == AppRouter.Tab.dashboard { selectedTab = AppRouter.Tab.assets }
     }
 }
 

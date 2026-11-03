@@ -4,6 +4,8 @@ import LeeoKit
 enum FireTrackerSpec: LeeoAppSpec {
     static let appName = "퇴사각"
     static let developerEmail = "leeo@kakao.com"
+    /// 위젯과 나눠 쓰는 기록 — 백업 금고가 함께 떠 둔다.
+    static let appGroups = ["group.com.devkoan.FireTracker"]
     static let feedback = LeeoFeedbackConfig(containerIdentifier: "iCloud.com.Ysoup.FeedbackHub", appIdentifier: "com.devkoan.FireTracker")
 
     /// 개인정보·지원 링크. 레포의 docs/ 를 GitHub Pages 로 올린 페이지들이다.

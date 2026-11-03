@@ -20,12 +20,17 @@ struct FireTrackerApp: App {
         UNUserNotificationCenter.current().delegate = ForegroundNotificationPresenter.shared
         // 세그먼트 폭을 글자 길이에 맞춰 나눈다 — 긴 언어에서 한 칸만 '…'로 잘리지 않게.
         UISegmentedControl.appearance().apportionsSegmentWidthsByContent = true
+        // 저장소는 bootstrap(백업 금고: 예약된 복원 · 업데이트 직전 백업) 뒤에 연다.
+        // 프로퍼티 초기값으로 두면 init 보다 먼저 열린다.
+        sharedModelContainer = Self.makeModelContainer()
         // Siri 인텐트가 같은 저장소를 읽게 한다 (→ FireIntents.swift)
         let container = sharedModelContainer
         AppDependencyManager.shared.add(dependency: container)
     }
 
-    var sharedModelContainer: ModelContainer = {
+    let sharedModelContainer: ModelContainer
+
+    private static func makeModelContainer() -> ModelContainer {
         let schema = Schema([
             FireSettings.self,
             NetWorthSnapshot.self,
@@ -38,7 +43,7 @@ struct FireTrackerApp: App {
         // 기기 저장소가 기본이고, 퇴사각 프로의 iCloud 동기화를 켜면 앱 전용 CloudKit 컨테이너로
         // 미러링한다. 실패하면 기기 저장소로 돌아가 앱이 죽지 않는다(SyncManager).
         return SyncManager.makeContainer(schema: schema)
-    }()
+    }
 
     var body: some Scene {
         WindowGroup {

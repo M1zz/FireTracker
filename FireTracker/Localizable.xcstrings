@@ -218108,6 +218108,1006 @@
           }
         }
       }
+    },
+    "퇴사까지 남은 기간" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odpočet do FIRE"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedtælling til FIRE"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE-Countdown"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αντίστροφη μέτρηση FIRE"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE Countdown"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE Countdown"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuenta atrás FIRE"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE-laskuri"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compte à rebours FIRE"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hitung mundur FIRE"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conto alla rovescia FIRE"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIREまで"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedtelling til FIRE"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE-aftelling"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odliczanie do FIRE"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contagem para o FIRE"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "До финансовой свободы"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedräkning till FIRE"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "นับถอยหลังสู่ FIRE"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE geri sayımı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đếm ngược FIRE"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "距离财务自由"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "距離財務自由"
+          }
+        }
+      }
+    },
+    "목표 자산까지 남은 기간과 지금 얼마나 다가왔는지 알려 줍니다." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Řekne, jak dlouho zbývá do cíle a jak blízko jste."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortæller, hvor længe der er til målet, og hvor tæt du er."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sagt dir, wie lange es bis zum Ziel dauert und wie nah du bist."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Σας λέει πόσο απέχετε από τον στόχο και πόσο κοντά είστε."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tells you how long until your target and how close you are now."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tells you how long until your target and how close you are now."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Te dice cuánto falta para tu meta y lo cerca que estás."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kertoo, kauanko tavoitteeseen on ja kuinka lähellä olet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indique le temps restant avant votre objectif et où vous en êtes."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memberi tahu sisa waktu menuju target dan seberapa dekat Anda."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ti dice quanto manca all’obiettivo e quanto sei vicino."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目標資産まであとどれくらいか、今どこまで来たかを教えます。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forteller hvor lenge det er til målet og hvor nær du er."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertelt hoe lang het nog duurt tot je doel en hoe dichtbij je bent."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mówi, ile zostało do celu i jak blisko jesteś."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostra quanto falta para a meta e o quão perto você está."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подскажет, сколько осталось до цели и насколько вы близко."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berättar hur länge det är kvar till målet och hur nära du är."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บอกเวลาที่เหลือถึงเป้าหมายและตอนนี้ใกล้แค่ไหน"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hedefe ne kadar kaldığını ve ne kadar yaklaştığını söyler."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cho biết còn bao lâu đến mục tiêu và bạn đã gần đến đâu."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "告诉你离目标资产还要多久，以及现在走了多远。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "告訴你離目標資產還要多久，以及現在走了多遠。"
+          }
+        }
+      }
+    },
+    "먼저 앱에서 목표를 정해 주세요." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejdřív si v aplikaci nastavte cíl."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sæt først dit mål i appen."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lege zuerst dein Ziel in der App fest."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ορίστε πρώτα τον στόχο στην εφαρμογή."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set your goal in the app first."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set your goal in the app first."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Define primero tu meta en la app."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aseta ensin tavoite sovelluksessa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Définissez d’abord votre objectif dans l’app."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tetapkan target di aplikasi terlebih dahulu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imposta prima l’obiettivo nell’app."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "先にアプリで目標を決めてください。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sett målet ditt i appen først."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stel eerst je doel in de app in."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Najpierw ustaw cel w aplikacji."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Defina primeiro sua meta no app."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сначала задайте цель в приложении."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ställ in ditt mål i appen först."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตั้งเป้าหมายในแอปก่อน"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önce uygulamada hedefini belirle."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hãy đặt mục tiêu trong ứng dụng trước."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请先在应用里设定目标。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請先在 App 裡設定目標。"
+          }
+        }
+      }
+    },
+    "목표에 닿았어요. 언제든 퇴사할 수 있어요." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cíl splněn. Můžete odejít, kdykoli budete chtít."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Målet er nået. Du kan sige op, når du vil."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ziel erreicht. Du kannst kündigen, wann du willst."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Φτάσατε στον στόχο. Μπορείτε να παραιτηθείτε όποτε θέλετε."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’ve reached your goal. You can quit whenever you like."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’ve reached your goal. You can quit whenever you like."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Llegaste a tu meta. Puedes dejar el trabajo cuando quieras."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tavoite saavutettu. Voit irtisanoutua milloin haluat."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objectif atteint. Vous pouvez partir quand vous voulez."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Target tercapai. Anda bisa berhenti kapan saja."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obiettivo raggiunto. Puoi lasciare quando vuoi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目標に到達しました。いつでも退職できます。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Målet er nådd. Du kan si opp når du vil."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doel bereikt. Je kunt stoppen wanneer je wilt."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cel osiągnięty. Możesz odejść, kiedy chcesz."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meta alcançada. Você pode sair quando quiser."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цель достигнута. Можно уходить, когда захотите."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Målet är nått. Du kan sluta när du vill."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถึงเป้าหมายแล้ว ลาออกได้ทุกเมื่อ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hedefe ulaştın. İstediğin zaman ayrılabilirsin."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã đạt mục tiêu. Bạn có thể nghỉ việc bất cứ lúc nào."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已经达到目标，随时可以辞职。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已經達到目標，隨時可以辭職。"
+          }
+        }
+      }
+    },
+    "지금 저축으로는 목표에 닿지 않아요. 목표의 %lld%%까지 왔어요." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se současným spořením cíle nedosáhnete. Jste na %lld%%."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Med din nuværende opsparing når du ikke målet. Du er nået %lld%%."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit deinem jetzigen Sparen erreichst du das Ziel nicht. Du bist bei %lld%%."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Με τις τωρινές αποταμιεύσεις δεν θα φτάσετε τον στόχο. Είστε στο %lld%%."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At your current savings you won’t reach the goal. You’re %lld%% of the way."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At your current savings you won’t reach the goal. You’re %lld%% of the way."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con tu ahorro actual no llegarás a la meta. Vas por el %lld%%."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nykyisellä säästämisellä et saavuta tavoitetta. Olet %lld%%:ssa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avec votre épargne actuelle, l’objectif n’est pas atteignable. Vous en êtes à %lld%%."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dengan tabungan sekarang target tidak tercapai. Sudah %lld%%."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con i risparmi attuali non raggiungerai l’obiettivo. Sei al %lld%%."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今の貯蓄では目標に届きません。目標の%lld%%まで来ています。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Med nåværende sparing når du ikke målet. Du er på %lld%%."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Met je huidige spaargeld haal je het doel niet. Je bent op %lld%%."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przy obecnych oszczędnościach nie osiągniesz celu. Jesteś na %lld%%."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Com a poupança atual você não chega à meta. Você está em %lld%%."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "При нынешних сбережениях цель не достичь. Пройдено %lld%%."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Med ditt nuvarande sparande når du inte målet. Du är på %lld%%."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ด้วยเงินออมตอนนี้จะไปไม่ถึงเป้า ตอนนี้มาได้ %lld%%"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mevcut birikimle hedefe ulaşamazsın. Yolun %%%lld kadarındasın."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Với mức tiết kiệm hiện tại bạn sẽ không đạt mục tiêu. Đã đi được %lld%%."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按现在的储蓄达不到目标。已完成目标的 %lld%%。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "照現在的儲蓄達不到目標。已完成目標的 %lld%%。"
+          }
+        }
+      }
+    },
+    "퇴사까지 %@ 남았어요. 목표의 %lld%%까지 왔어요." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do odchodu zbývá %1$@. Jste na %2$lld%%."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ til du kan sige op. Du er nået %2$lld%%."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch %1$@ bis zur Kündigung. Du bist bei %2$lld%%."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Απομένουν %1$@ ως την παραίτηση. Είστε στο %2$lld%%."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ until you can quit. You’re %2$lld%% of the way."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ until you can quit. You’re %2$lld%% of the way."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faltan %1$@ para dejar el trabajo. Vas por el %2$lld%%."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Irtisanoutumiseen on %1$@. Olet %2$lld%%:ssa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encore %1$@ avant de partir. Vous en êtes à %2$lld%%."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ lagi sampai bisa berhenti. Sudah %2$lld%%."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mancano %1$@ per lasciare il lavoro. Sei al %2$lld%%."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退職まであと%1$@。目標の%2$lld%%まで来ています。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ til du kan si opp. Du er på %2$lld%%."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nog %1$@ tot je kunt stoppen. Je bent op %2$lld%%."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do odejścia zostało %1$@. Jesteś na %2$lld%%."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faltam %1$@ para sair. Você está em %2$lld%%."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "До ухода с работы %1$@. Пройдено %2$lld%%."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ kvar tills du kan sluta. Du är på %2$lld%%."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เหลืออีก %1$@ ก่อนลาออก ตอนนี้มาได้ %2$lld%%"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayrılmana %1$@ kaldı. Yolun %%%2$lld kadarındasın."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Còn %1$@ nữa là nghỉ việc. Đã đi được %2$lld%%."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "距离辞职还有%1$@。已完成目标的 %2$lld%%。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "距離辭職還有%1$@。已完成目標的 %2$lld%%。"
+          }
+        }
+      }
+    },
+    "FIRE Countdown" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odpočet do FIRE"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedtælling til FIRE"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE-Countdown"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αντίστροφη μέτρηση FIRE"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE Countdown"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE Countdown"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuenta atrás FIRE"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE-laskuri"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compte à rebours FIRE"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hitung mundur FIRE"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conto alla rovescia FIRE"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIREまで"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "퇴사까지 남은 기간"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedtelling til FIRE"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE-aftelling"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odliczanie do FIRE"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contagem para o FIRE"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "До финансовой свободы"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedräkning till FIRE"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "นับถอยหลังสู่ FIRE"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FIRE geri sayımı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đếm ngược FIRE"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "距离财务自由"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "距離財務自由"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		38E33F7EB564676F8FCC2BE8 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */; };
-		7A1C0E5B9D2F4A6B8C3E1D07 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */; };
 		0AD91CF5213402C3FF4D8D9E /* FireSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */; };
+		22C5E01C005F45C18E285102 /* FireTrackerRoadmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93817F759D0640138E251F93 /* FireTrackerRoadmap.swift */; };
+		26E3C379EC0E6B701F33EE88 /* FireIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55AF5C1C6F36BF4EE0CFD4AE /* FireIntents.swift */; };
+		38E33F7EB564676F8FCC2BE8 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */; };
 		555219EE5C66ADE4C6892A72 /* FireSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */; };
 		66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1565B7348B6849C756363468 /* FireTrackerSpec.swift */; };
-		22C5E01C005F45C18E285102 /* FireTrackerRoadmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93817F759D0640138E251F93 /* FireTrackerRoadmap.swift */; };
 		70D4108E965ED61702D4DF1E /* FireTrackerWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7A1C0E5B9D2F4A6B8C3E1D07 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */; };
 		A1000001 /* FireTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* FireTrackerApp.swift */; };
 		A1000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000002 /* Models.swift */; };
 		A1000003 /* FireEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000003 /* FireEngine.swift */; };
@@ -38,19 +39,20 @@
 		A1000016 /* JourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000016 /* JourneyView.swift */; };
 		A1000020 /* CPIData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000020 /* CPIData.swift */; };
 		A1000021 /* TimeValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* TimeValueView.swift */; };
-		B80435CC7F315916A1F7D98D /* QuickStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6903DE5951883DA07B7400 /* QuickStartView.swift */; };
-		E462C9CD9739025E4BA75C3C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B092EFA29A5C377CBE44FBED /* Foundation.framework */; };
-		EE2A5530FE505FB7D9D0AFE6 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2FA7A0D0A2BBD3B0B029E932 /* LeeoKit */; };
-		F3808CA53E41CA8046B99C85 /* FireTrackerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE0290DA1AF556C4A919F /* FireTrackerWidget.swift */; };
-		FC4D1E8C3D32AC434F856C74 /* AppSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F01026AA4EAE9DE99CC7ED /* AppSupport.swift */; };
 		A1000030 /* ProAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000030 /* ProAccess.swift */; };
-		A1000050 /* TipMoments.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000050 /* TipMoments.swift */; };
 		A1000031 /* ProPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000031 /* ProPaywallView.swift */; };
 		A1000033 /* FutureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000033 /* FutureEngine.swift */; };
 		A1000034 /* FuturePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000034 /* FuturePreviewView.swift */; };
 		A1000035 /* QuarterlyReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000035 /* QuarterlyReport.swift */; };
 		A1000037 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000037 /* SyncManager.swift */; };
 		A1000040 /* MarketMoodCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000040 /* MarketMoodCard.swift */; };
+		A1000050 /* TipMoments.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000050 /* TipMoments.swift */; };
+		B80435CC7F315916A1F7D98D /* QuickStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6903DE5951883DA07B7400 /* QuickStartView.swift */; };
+		C01278F18EF876C76971B987 /* AppShortcuts.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9021D0A850C59C99866517D2 /* AppShortcuts.xcstrings */; };
+		E462C9CD9739025E4BA75C3C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B092EFA29A5C377CBE44FBED /* Foundation.framework */; };
+		EE2A5530FE505FB7D9D0AFE6 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2FA7A0D0A2BBD3B0B029E932 /* LeeoKit */; };
+		F3808CA53E41CA8046B99C85 /* FireTrackerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE0290DA1AF556C4A919F /* FireTrackerWidget.swift */; };
+		FC4D1E8C3D32AC434F856C74 /* AppSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F01026AA4EAE9DE99CC7ED /* AppSupport.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,12 +80,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		07F01026AA4EAE9DE99CC7ED /* AppSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppSupport.swift; sourceTree = "<group>"; };
 		1565B7348B6849C756363468 /* FireTrackerSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerSpec.swift; sourceTree = "<group>"; };
-		93817F759D0640138E251F93 /* FireTrackerRoadmap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerRoadmap.swift; sourceTree = "<group>"; };
+		25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		54AFE0290DA1AF556C4A919F /* FireTrackerWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerWidget.swift; sourceTree = "<group>"; };
+		55AF5C1C6F36BF4EE0CFD4AE /* FireIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireIntents.swift; sourceTree = "<group>"; };
 		665BD2C273815DDB4FFF7F44 /* FireTrackerWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = FireTrackerWidget.entitlements; sourceTree = "<group>"; };
+		9021D0A850C59C99866517D2 /* AppShortcuts.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; path = AppShortcuts.xcstrings; sourceTree = "<group>"; };
+		93817F759D0640138E251F93 /* FireTrackerRoadmap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerRoadmap.swift; sourceTree = "<group>"; };
 		B0000000 /* FireTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FireTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B092EFA29A5C377CBE44FBED /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B1000001 /* FireTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireTrackerApp.swift; sourceTree = "<group>"; };
@@ -110,18 +114,18 @@
 		B1000016 /* JourneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyView.swift; sourceTree = "<group>"; };
 		B1000020 /* CPIData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPIData.swift; sourceTree = "<group>"; };
 		B1000021 /* TimeValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeValueView.swift; sourceTree = "<group>"; };
-		BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FireTrackerWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE7662F98AA42C069C0106DF /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CF6903DE5951883DA07B7400 /* QuickStartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuickStartView.swift; sourceTree = "<group>"; };
-		D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireSummary.swift; sourceTree = "<group>"; };
 		B1000030 /* ProAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProAccess.swift; sourceTree = "<group>"; };
-		B1000050 /* TipMoments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipMoments.swift; sourceTree = "<group>"; };
 		B1000031 /* ProPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProPaywallView.swift; sourceTree = "<group>"; };
 		B1000033 /* FutureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureEngine.swift; sourceTree = "<group>"; };
 		B1000034 /* FuturePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuturePreviewView.swift; sourceTree = "<group>"; };
 		B1000035 /* QuarterlyReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuarterlyReport.swift; sourceTree = "<group>"; };
 		B1000037 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		B1000040 /* MarketMoodCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketMoodCard.swift; sourceTree = "<group>"; };
+		B1000050 /* TipMoments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipMoments.swift; sourceTree = "<group>"; };
+		BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FireTrackerWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE7662F98AA42C069C0106DF /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF6903DE5951883DA07B7400 /* QuickStartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuickStartView.swift; sourceTree = "<group>"; };
+		D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireSummary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -222,6 +226,8 @@
 				D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */,
 				CF6903DE5951883DA07B7400 /* QuickStartView.swift */,
 				25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */,
+				55AF5C1C6F36BF4EE0CFD4AE /* FireIntents.swift */,
+				9021D0A850C59C99866517D2 /* AppShortcuts.xcstrings */,
 			);
 			path = FireTracker;
 			sourceTree = "<group>";
@@ -352,6 +358,7 @@
 			files = (
 				A100000A /* Assets.xcassets in Resources */,
 				38E33F7EB564676F8FCC2BE8 /* Localizable.xcstrings in Resources */,
+				C01278F18EF876C76971B987 /* AppShortcuts.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +414,7 @@
 				FC4D1E8C3D32AC434F856C74 /* AppSupport.swift in Sources */,
 				0AD91CF5213402C3FF4D8D9E /* FireSummary.swift in Sources */,
 				B80435CC7F315916A1F7D98D /* QuickStartView.swift in Sources */,
+				26E3C379EC0E6B701F33EE88 /* FireIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,11 +597,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = FireTracker/FireTracker.entitlements;
-				INFOPLIST_FILE = FireTracker/Info.plist;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 11;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FireTracker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "퇴사각";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "자산 정보를 보호하기 위해 Face ID로 잠금을 해제합니다.";
@@ -619,11 +627,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = FireTracker/FireTracker.entitlements;
-				INFOPLIST_FILE = FireTracker/Info.plist;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 11;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FireTracker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "퇴사각";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "자산 정보를 보호하기 위해 Face ID로 잠금을 해제합니다.";

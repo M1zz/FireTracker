@@ -1,0 +1,290 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "How long until I can quit in ${applicationName}" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Za jak dlouho můžu odejít v ${applicationName}"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvor længe til jeg kan sige op i ${applicationName}"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie lange noch bis zur Kündigung in ${applicationName}"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Σε πόσο καιρό μπορώ να παραιτηθώ στο ${applicationName}"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How long until I can quit in ${applicationName}"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cuánto me falta para dejar el trabajo en ${applicationName}"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kauanko kunnes voin irtisanoutua ${applicationName}issa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dans combien de temps puis-je partir dans ${applicationName}"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berapa lama lagi saya bisa berhenti di ${applicationName}"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quanto manca per lasciare il lavoro in ${applicationName}"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName}であとどれくらいで退職できる？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} 퇴사까지 얼마나 남았어"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hvor lenge til jeg kan si opp i ${applicationName}"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoe lang tot ik kan stoppen in ${applicationName}"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ile zostało do odejścia w ${applicationName}"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quanto falta para eu sair no ${applicationName}"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сколько до ухода с работы в ${applicationName}"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hur länge tills jag kan sluta i ${applicationName}"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อีกนานแค่ไหนจะลาออกได้ใน ${applicationName}"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} ayrılmama ne kadar kaldı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Còn bao lâu nữa tôi nghỉ việc được trong ${applicationName}"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName}我还要多久才能辞职"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName}我還要多久才能辭職"
+          }
+        }
+      }
+    },
+    "${applicationName} countdown" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} odpočet"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} nedtælling"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} Countdown"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} αντίστροφη μέτρηση"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} countdown"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} cuenta atrás"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} laskuri"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} compte à rebours"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} hitung mundur"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} conto alla rovescia"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName}カウントダウン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} 카운트다운"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} nedtelling"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} aftelling"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} odliczanie"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} contagem regressiva"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} обратный отсчёт"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} nedräkning"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} นับถอยหลัง"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} geri sayım"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName} đếm ngược"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName}倒计时"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName}倒數計時"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

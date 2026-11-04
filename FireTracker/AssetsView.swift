@@ -126,6 +126,12 @@ struct AssetsView: View {
                     maxAge: RefreshManager.tabThrottle
                 )
             }
+            // Siri · Spotlight 에서 고른 자산을 연다.
+            .onChange(of: AppRouter.shared.openAsset, initial: true) { _, key in
+                guard let key else { return }
+                editing = assets.first { $0.key == key }
+                AppRouter.shared.openAsset = nil
+            }
             // 자산 변동 자동 기록은 RootView가 앱 전역에서 감지한다.
             .navigationTitle("자산")
             .toolbar {

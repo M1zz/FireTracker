@@ -53,6 +53,8 @@ final class AppRouter {
     // 매도 알림을 눌러 들어오면 그 종목을 맨 위에 둔 '지금 할 일' 화면을 바로 띄운다.
     var sellFocus: UUID?
     var showSellSignals = false
+    // Siri · Spotlight 에서 고른 자산 — 자산 탭이 그 자산을 열고 비운다 (→ FireIntents.swift)
+    var openAsset: UUID?
 
     enum Tab { static let dashboard = 0, assets = 1, journey = 2, calc = 3, settings = 4 }
 }

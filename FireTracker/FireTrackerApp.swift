@@ -82,6 +82,8 @@ struct FireTrackerApp: App {
             }
             // 쉬는 동안에도 확인하도록 다음 백그라운드 갱신을 부탁해 둔다.
             if phase == .background { SellWatch.scheduleBackgroundCheck() }
+            // 열 때와 뒤로 보낼 때 Spotlight 의 자산을 지금 것에 맞춘다.
+            if phase != .inactive { Task { await AssetLibrary.reindex(sharedModelContainer) } }
         }
         // iOS 가 깨워 주면 시세를 확인하고, 다음 번을 다시 부탁한다.
         .backgroundTask(.appRefresh(SellWatch.taskID)) {

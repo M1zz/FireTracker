@@ -440,7 +440,7 @@ private struct FoldDashboardRedirect: ViewModifier {
 
 #if DEBUG
 // 스토어 스크린샷용 — `-shotMode YES -shotTab 2` 로 띄우면 데모 데이터를 넣고 그 탭을 연다(배너는 숨김).
-// `-shotSheet sell|future|mood` 를 더하면 그 화면을 시트로 바로 띄우고, `-shotScroll 0.5` 면
+// `-shotSheet sell|future|mood|import` 를 더하면 그 화면을 시트로 바로 띄우고, `-shotScroll 0.5` 면
 // 스크롤 화면을 그 높이(0 위 ~ 1 아래)에서 연다(언어별 레이아웃 점검용).
 enum ShotMode {
     static var isOn: Bool { UserDefaults.standard.bool(forKey: "shotMode") }
@@ -458,13 +458,17 @@ enum ShotMode {
 }
 
 private struct ShotSheet: ViewModifier {
-    @State private var shown = ShotMode.sheet == "future" || ShotMode.sheet == "mood"
+    @State private var shown = ["future", "mood", "import"].contains(ShotMode.sheet ?? "")
     private let scroll = UserDefaults.standard.double(forKey: "shotScroll")
     func body(content: Content) -> some View {
         content.defaultScrollAnchor(ShotMode.isOn ? UnitPoint(x: 0.5, y: scroll) : nil)
         .sheet(isPresented: $shown) {
-            NavigationStack {
-                if ShotMode.sheet == "future" { FuturePreviewView() } else { FearGreedView() }
+            if ShotMode.sheet == "import" {
+                ScreenshotImportView(startingSortOrder: 0)
+            } else {
+                NavigationStack {
+                    if ShotMode.sheet == "future" { FuturePreviewView() } else { FearGreedView() }
+                }
             }
         }
     }

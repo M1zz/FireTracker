@@ -341,6 +341,16 @@
   - 참고: 빌드하면 Xcode가 Localizable.xcstrings를 " : " 형식으로 다시 쓰거나 번역 없는 키를 대량 추가함 → 커밋 전 diff 확인
   - 확인: 데모 데이터로 대시보드 위·가운데·아래 렌더링, 빌드 성공
 
+- [x] 자산 가져오기 — CSV·붙여넣기·한국투자증권 잔고 (2026-11-05)
+  - '캡처로 가져오기' 화면을 '가져오기'로 넓힘: 캡처 / CSV 파일 / 붙여넣기(PasteButton) / 한국투자증권. 검토·맞추기·적용은 같은 흐름
+  - `HoldingsImport.swift`: 표 파서(CSV·TSV·세미콜론·HTML로 된 .xls, UTF-8·CP949, 칸 이름 자동 인식, 칸 이름 없으면 '종목, 수량, 평단'),
+    KIS 잔고(국내 TTTC8434R + 미국 TTTS3012R/NASD, 연속조회), 달러 금액 → 원 환산, 키·계좌 입력 시트
+  - 종목코드를 아는 줄은 코드로 기존 종목에 맞추고, 수량은 그대로 쓴다(평가액으로 거꾸로 셈하지 않음)
+  - `FireSettings.kisAccount` 추가. 키·계좌는 처음 불러올 때 저장
+  - 세 갈래 모두 프로(기존 `assets.screenshotImport` 게이트). 페이월 문구를 '보유 종목 한 번에 가져오기'로
+  - DEBUG `-shotSheet import` 로 화면 바로 띄우기. 로드맵 `import.broker` .building. 새 문구 21개 24개 언어
+  - 남은 확인: 실제 한투 계좌로 잔고 조회(키 필요), 증권사별 실제 CSV 몇 종
+
 ## 출시 전 할 일 (유료화)
 - [ ] App Store Connect에 비소모성 상품 `com.devkoan.FireTracker.pro` 등록(가격·현지화·심사용 스크린샷)
 - [ ] 유료화 포함 첫 출시는 빌드 번호 6 이상 (lastFreeBuild = 5 기준 그랜드파더링)

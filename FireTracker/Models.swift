@@ -762,6 +762,8 @@ final class FireSettings {
     // 한국투자증권 KIS OpenAPI — 국내 주식 시세.
     var kisAppKey: String = ""
     var kisAppSecret: String = ""
+    // 한국투자증권 계좌번호(예: 12345678-01) — 잔고를 가져올 때만 쓴다.
+    var kisAccount: String = ""
     // 공공데이터포털 서비스키(Decoding) — 국토부 아파트 실거래가.
     var dataGoKey: String = ""
 

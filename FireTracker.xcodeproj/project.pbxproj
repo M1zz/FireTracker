@@ -46,6 +46,7 @@
 		A1000035 /* QuarterlyReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000035 /* QuarterlyReport.swift */; };
 		A1000037 /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000037 /* SyncManager.swift */; };
 		A1000040 /* MarketMoodCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000040 /* MarketMoodCard.swift */; };
+		A1000060 /* HoldingsImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000060 /* HoldingsImport.swift */; };
 		A1000050 /* TipMoments.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000050 /* TipMoments.swift */; };
 		B80435CC7F315916A1F7D98D /* QuickStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6903DE5951883DA07B7400 /* QuickStartView.swift */; };
 		C01278F18EF876C76971B987 /* AppShortcuts.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9021D0A850C59C99866517D2 /* AppShortcuts.xcstrings */; };
@@ -121,6 +122,7 @@
 		B1000035 /* QuarterlyReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuarterlyReport.swift; sourceTree = "<group>"; };
 		B1000037 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		B1000040 /* MarketMoodCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketMoodCard.swift; sourceTree = "<group>"; };
+		B1000060 /* HoldingsImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingsImport.swift; sourceTree = "<group>"; };
 		B1000050 /* TipMoments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipMoments.swift; sourceTree = "<group>"; };
 		BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FireTrackerWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE7662F98AA42C069C0106DF /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				B1000035 /* QuarterlyReport.swift */,
 				B1000037 /* SyncManager.swift */,
 				B1000040 /* MarketMoodCard.swift */,
+				B1000060 /* HoldingsImport.swift */,
 				B1000020 /* CPIData.swift */,
 				B1000021 /* TimeValueView.swift */,
 				B100000E /* RefreshManager.swift */,
@@ -398,6 +401,7 @@
 				A1000035 /* QuarterlyReport.swift in Sources */,
 				A1000037 /* SyncManager.swift in Sources */,
 				A1000040 /* MarketMoodCard.swift in Sources */,
+				A1000060 /* HoldingsImport.swift in Sources */,
 				A1000020 /* CPIData.swift in Sources */,
 				A1000021 /* TimeValueView.swift in Sources */,
 				A100000E /* RefreshManager.swift in Sources */,

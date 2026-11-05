@@ -18,6 +18,9 @@ import LeeoKit
 extension FireTrackerSpec {
     static var roadmap: [LeeoRoadmapItem] {[
         // MARK: 다음에 만들어요
+        .init(id: "import.broker", status: .building,
+              title: NSLocalizedString("증권사에서 종목 가져오기", comment: "Roadmap item: import holdings from a brokerage"),
+              detail: NSLocalizedString("증권사에서 내려받은 표나 한국투자증권 계좌로 보유 종목과 수량을 한 번에 가져와요.", comment: "Roadmap item detail: import holdings from a brokerage")),
         .init(id: "gift", status: .building,
               title: NSLocalizedString("퇴사각 프로 선물하기", comment: "Roadmap item: gift Pro to someone"),
               detail: NSLocalizedString("가족이나 친구에게 퇴사각 프로를 선물할 수 있어요. 받은 선물 코드도 설정에서 넣어요.", comment: "Roadmap item detail: gift Pro to someone")),

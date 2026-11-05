@@ -46,7 +46,7 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
         case .timeValue:        return String(localized: "돈과 시간")
         case .unlimitedSaves:   return String(localized: "계산 무제한 저장")
         case .tradeLedger:      return String(localized: "매매 원장")
-        case .screenshotImport: return String(localized: "스크린샷으로 한 번에 추가")
+        case .screenshotImport: return String(localized: "보유 종목 한 번에 가져오기")
         }
     }
 
@@ -71,7 +71,7 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
         case .tradeLedger:
             return String(localized: "언제 몇 주를 얼마에 샀는지 남기면 평단과 실현 손익이 자동으로 계산돼요.")
         case .screenshotImport:
-            return String(localized: "증권사 앱 화면을 캡처하면 종목과 평가액을 한 번에 불러와요.")
+            return String(localized: "증권사 앱 캡처, CSV 파일이나 복사한 표, 한국투자증권 계좌로 종목과 수량을 한 번에 불러와요.")
         }
     }
 

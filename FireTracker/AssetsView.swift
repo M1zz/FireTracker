@@ -4,6 +4,7 @@ import Charts
 import TipKit
 import PhotosUI
 import Vision
+import UniformTypeIdentifiers
 import LeeoKit
 
 // Occasional nudge to capture assets the user may have forgotten.
@@ -162,7 +163,7 @@ struct AssetsView: View {
                                 paywallFeature = .screenshotImport
                             }
                         } label: {
-                            Label("캡처로 가져오기·맞추기",
+                            Label("가져오기·맞추기",
                                   systemImage: pro.gate.allows(ProFeature.screenshotImport.rawValue)
                                       ? "text.viewfinder" : "lock.fill")
                         }
@@ -2706,6 +2707,13 @@ struct ParsedHolding: Identifiable {
     // 평가액이 가려져 손익·수익률로 거꾸로 계산했다.
     var estimated = false
     var include: Bool = true
+    // 표·증권사에서 온 줄은 종목코드·수량·매입금액을 안다 — 이름으로 찾거나 평가액으로 거꾸로 셈하지 않는다.
+    var symbol = ""
+    var isUS = false
+    var quantity: Double? = nil
+    var cost: Double? = nil
+    // 금액이 달러다 — 화면에 내기 전에 원으로 바꾼다(HoldingsFile.toKRW).
+    var inUSD = false
 
     var amount: Double { Double(amountText) ?? 0 }
 }
@@ -2901,6 +2909,8 @@ struct ScreenshotImportView: View {
     @State private var didProcess = false
     @State private var loadError: String?
     @State private var imageCount = 0
+    @State private var showingFile = false
+    @State private var showingKIS = false
     // 캡처에 없던 기존 종목 중 '팔았다'고 고른 것.
     @State private var soldKeys: Set<UUID> = []
     // 사람이 직접 고른 매핑 — 줄 → 기존 종목, 또는 '새 종목'으로 못 박은 줄. 자동 매칭보다 먼저.
@@ -2923,7 +2933,15 @@ struct ScreenshotImportView: View {
                 used.insert(a.key)
             }
         }
-        for row in rows where row.include && manualMatch[row.id] == nil && !forcedNew.contains(row.id) {
+        // 종목코드를 아는 줄은 같은 코드의 종목에 붙인다.
+        for row in rows where row.include && !row.symbol.isEmpty && out[row.id] == nil && !forcedNew.contains(row.id) {
+            let code = PriceService.krCode(row.symbol)
+            if let a = holdings.first(where: { !used.contains($0.key) && PriceService.krCode($0.symbol) == code }) {
+                out[row.id] = a
+                used.insert(a.key)
+            }
+        }
+        for row in rows where row.include && out[row.id] == nil && !forcedNew.contains(row.id) {
             let stem = HoldingsOCR.normalized(row.name)
             guard stem.count >= 2 else { continue }
             let pick = holdings
@@ -2984,7 +3002,7 @@ struct ScreenshotImportView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Theme.bg.ignoresSafeArea())
-            .navigationTitle("캡처로 가져오기")
+            .navigationTitle("가져오기")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("취소", systemImage: "xmark") { dismiss() } }
@@ -3000,6 +3018,59 @@ struct ScreenshotImportView: View {
             guard !items.isEmpty else { return }
             Task { await process(items) }
         }
+        .fileImporter(isPresented: $showingFile, allowedContentTypes: Self.tableTypes) { result in
+            guard case .success(let url) = result else { return }
+            let scoped = url.startAccessingSecurityScopedResource()
+            defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+            Task { await ingestTable((try? Data(contentsOf: url)).flatMap(HoldingsFile.text)) }
+        }
+        .sheet(isPresented: $showingKIS) {
+            KISImportSheet { new in Task { await ingest(new) } }
+        }
+    }
+
+    // 증권사가 내주는 표 — CSV·TSV·글자, 그리고 'HTML 로 된 .xls'.
+    private static let tableTypes: [UTType] = [.commaSeparatedText, .tabSeparatedText, .plainText, .html]
+        + [UTType(filenameExtension: "xls")].compactMap { $0 }
+
+    /// 캡처 말고 가져오는 길 — 표 파일, 복사한 표 붙여넣기, 한국투자증권.
+    private var otherSources: some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 10) {
+                Button { showingFile = true } label: {
+                    Label("CSV 파일", systemImage: "doc.text").frame(maxWidth: .infinity)
+                }
+                PasteButton(payloadType: String.self) { texts in
+                    Task { await ingestTable(texts.first) }
+                }
+                .labelStyle(.titleAndIcon)
+            }
+            Button { showingKIS = true } label: {
+                Label("한국투자증권에서 불러오기", systemImage: "building.columns").frame(maxWidth: .infinity)
+            }
+        }
+        .buttonStyle(.bordered)
+        .controlSize(.large)
+        .tint(Theme.accentText)
+        .buttonBorderShape(.capsule)
+        .font(.subheadline.weight(.semibold))
+    }
+
+    private func ingestTable(_ text: String?) async {
+        let new = text.map(HoldingsFile.rows) ?? []
+        guard !new.isEmpty else {
+            loadError = String(localized: "표에서 종목을 찾지 못했어요. 종목코드(또는 종목명)·수량·평균단가 칸이 있는지 확인해 주세요. 엑셀 파일이면 CSV로 저장해서 골라 주세요.")
+            return
+        }
+        await ingest(new)
+    }
+
+    /// 어느 길로 왔든 같은 검토 화면으로 — 달러는 원으로 바꾸고, 이미 읽은 줄 뒤에 붙인다.
+    private func ingest(_ new: [ParsedHolding]) async {
+        loadError = nil
+        rows = HoldingsOCR.merge([rows, await HoldingsFile.toKRW(new)])
+        didProcess = true
+        await lookup(rows)
     }
 
     private var picker: some View {
@@ -3023,15 +3094,16 @@ struct ScreenshotImportView: View {
                 .font(.system(.largeTitle))
                 .foregroundStyle(Theme.accentText)
             VStack(spacing: 8) {
-                Text("보유 종목 캡처를 고르세요")
+                Text("보유 종목을 가져오세요")
                     .font(.title3.weight(.bold))
                     .foregroundStyle(Theme.textPrimary)
-                Text("뱅크샐러드·증권사 앱의 자산 목록을 스크롤하며 여러 장 캡처해 한 번에 고르면, 종목명·평가액·손익을 읽어 맞춥니다. 이미 있는 종목은 갱신하고 없는 것만 더해요. 이미지는 기기에서만 처리되고, 종목코드를 찾을 때 종목 이름만 네이버 증권에 물어봐요.")
+                Text("증권사 앱 캡처, 증권사에서 내려받은 CSV나 복사한 표, 한국투자증권 계좌 중 편한 길로 가져오세요. 이미 있는 종목은 갱신하고 없는 것만 더해요. 캡처와 표는 기기에서만 읽고, 종목코드를 찾을 때 종목 이름만 네이버 증권에 물어봐요.")
                     .multilineTextAlignment(.center)
                     .font(.subheadline)
                     .foregroundStyle(Theme.textSecond)
             }
             picker
+            otherSources
             if let loadError {
                 Text(loadError)
                     .font(.caption)
@@ -3067,7 +3139,11 @@ struct ScreenshotImportView: View {
                             .listRowBackground(Theme.surface)
                     }
                 } header: {
-                    Text("캡처 \(imageCount)장에서 \(rows.count)개 읽음 · 잘못된 건 끄거나 고치세요")
+                    if imageCount > 0 {
+                        Text("캡처 \(imageCount)장에서 \(rows.count)개 읽음 · 잘못된 건 끄거나 고치세요")
+                    } else {
+                        Text("\(rows.count)개 읽음 · 잘못된 건 끄거나 고치세요")
+                    }
                 } footer: {
                     Text("갱신은 평가액과 투자 원금(평가액 − 손익)을 바꿔요. 종목코드를 찾은 종목은 시세를 받아 수량을 평가액에 맞추고, 시세 자동과 매도 알림(고점 대비 10%)이 켜져요. 코드를 못 찾으면 평가액만 수동값으로 들어가요.")
                         .font(.caption)
@@ -3093,17 +3169,25 @@ struct ScreenshotImportView: View {
                             .accessibilityAddTraits(soldKeys.contains(a.key) ? .isSelected : [])
                         }
                     } header: {
-                        Text("캡처에 없는 기존 종목 \(missing.count)개")
+                        Text("가져온 목록에 없는 기존 종목 \(missing.count)개")
                     } footer: {
-                        Text("판 종목만 골라 주세요 — 고른 것은 자산에서 지워요. 캡처를 덜 찍어서 빠진 거라면 그대로 두면 됩니다.")
+                        Text("판 종목만 골라 주세요 — 고른 것은 자산에서 지워요. 다른 계좌에 있거나 덜 가져와서 빠진 거라면 그대로 두면 됩니다.")
                             .font(.caption)
                     }
                 }
 
                 Section {
-                    picker
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
+                    VStack(spacing: 10) {
+                        picker
+                        otherSources
+                        if let loadError {
+                            Text(loadError)
+                                .font(.caption)
+                                .foregroundStyle(Theme.negative)
+                        }
+                    }
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
                 }
             }
             .scrollContentBackground(.hidden)
@@ -3135,6 +3219,16 @@ struct ScreenshotImportView: View {
                         .fixedSize()
                     Text("원").foregroundStyle(Theme.textSecond)
                     Spacer(minLength: 0)
+                }
+                if let q = r.quantity {
+                    // 자산 목록의 보유 수량 줄과 같은 문구.
+                    let unit = String(localized: "shares.unit", defaultValue: "주")
+                    let avg = (r.cost ?? 0) / q
+                    Text(avg > 0
+                         ? "\(Fmt.trimNumber(q))\(unit) · 평단 \(Fmt.krw(avg))원"
+                         : "\(Fmt.trimNumber(q))\(unit)")
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
                 }
                 if let g = r.gain, let p = r.gainPct {
                     Text("손익 \(g >= 0 ? "+" : "−")\(Fmt.krw(abs(g)))원 (\(Fmt.trimNumber(p))%)")
@@ -3251,7 +3345,19 @@ struct ScreenshotImportView: View {
                 let name = r.name
                 let value = r.amount
                 let truncated = r.truncated
+                let symbol = r.symbol
+                let isUS = r.isUS
                 group.addTask {
+                    // 코드를 아는 줄 — 그 코드 그대로. 이름이 없으면 코드로 찾아 이름만 채운다.
+                    if !symbol.isEmpty {
+                        let known = PriceService.SymbolCandidate(code: symbol, name: name.isEmpty ? symbol : name,
+                                                                 market: isUS ? "US" : "KRX", isUS: isUS)
+                        var pick = known
+                        if name.isEmpty, let hit = await PriceService.searchSymbols(symbol).first(where: {
+                            PriceService.krCode($0.code) == PriceService.krCode(symbol) && $0.isUS == isUS
+                        }) { pick = hit }
+                        return (r.id, SymbolLookup(candidates: [pick], chosen: pick, loading: false))
+                    }
                     let cands = await PriceService.searchSymbols(name)
                     var best = PriceService.bestSymbol(for: name, in: cands, truncated: truncated)
                     if best.ambiguous, let byShares = await Self.pickByWholeShares(name: name, value: value, in: cands) {
@@ -3336,7 +3442,7 @@ struct ScreenshotImportView: View {
         applyProgress = (0, work.count)
         for row in work {
             let value = row.amount
-            let cost = row.gain.map { value - $0 }
+            let cost = row.cost ?? row.gain.map { value - $0 }
             let pick = needsSymbol(row, match: m[row.id]) ? lookups[row.id]?.chosen : nil
             let target: Asset
             if let a = m[row.id] {
@@ -3355,6 +3461,8 @@ struct ScreenshotImportView: View {
             let ledgerOwned = target.hasTrades
             if !ledgerOwned, let cost, cost > 0 { target.costBasis = cost.rounded() }
 
+            if !ledgerOwned, let q = row.quantity { target.quantity = q }
+
             // 새로 찾은 코드를 붙이고 시세를 켠다.
             if let pick {
                 target.symbol = pick.code
@@ -3363,7 +3471,7 @@ struct ScreenshotImportView: View {
             // 코드가 있으면 지금 시세로 수량을 평가액에 맞춘다 — 그래야 다음 시세 갱신이
             // 평가액을 엉뚱하게 덮어쓰지 않고, 매도 알림도 1주 가격을 안다.
             if !target.symbol.trimmingCharacters(in: .whitespaces).isEmpty,
-               pick != nil || target.autoPriced,
+               pick != nil || target.autoPriced || row.quantity != nil,
                let unit = try? await PriceService.autoValue(
                    assetClass: target.assetClass, symbol: target.symbol, name: target.name,
                    quantity: 1, currency: target.currency, date: Date(),
@@ -3373,7 +3481,9 @@ struct ScreenshotImportView: View {
                 target.autoPriced = true
                 target.unitPriceKRW = unit
                 target.lastPriced = Date()
-                if !ledgerOwned {
+                if !ledgerOwned, let q = row.quantity {
+                    target.amount = q * unit
+                } else if !ledgerOwned {
                     let q = value / unit
                     // 국내 주식은 1주 단위, 미국 주식·코인은 소수점 매수가 있어 넷째 자리까지.
                     target.quantity = target.currency == "KRW" && target.assetClass != .crypto

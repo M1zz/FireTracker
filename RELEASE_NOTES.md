@@ -1,5 +1,175 @@
 # 릴리즈 노트
 
+## 1.2.4
+
+### 앱스토어 (한국어)
+
+CSV 파일, 붙여넣기, 한국투자증권 잔고로 종목을 가져와요
+Siri에게 퇴사까지 얼마나 남았는지 물어보세요
+iPhone 검색에서 내 자산을 찾아 바로 열 수 있어요
+매일 자동으로 백업되고 iCloud나 파일로 되살릴 수 있어요
+
+### App Store (English)
+
+Import holdings from a CSV file or by pasting
+Ask Siri how long until you can quit
+Find your assets in iPhone search and open them
+Daily automatic backups, restore from iCloud or a file
+
+### App Store (en-GB)
+
+Import holdings from a CSV file or by pasting
+Ask Siri how long until you can quit
+Find your assets in iPhone search and open them
+Daily automatic backups, restore from iCloud or a file
+
+### App Store (ja)
+
+CSVファイルや貼り付けで保有銘柄を取り込めます
+退職まであとどれくらいかSiriに聞けます
+iPhoneの検索で資産を見つけてすぐ開けます
+毎日自動でバックアップ、iCloudやファイルから復元できます
+
+### App Store (zh-Hans)
+
+可通过 CSV 文件或粘贴导入持仓
+可以问 Siri 离辞职还有多久
+在 iPhone 搜索中找到资产并直接打开
+每天自动备份，可从 iCloud 或文件恢复
+
+### App Store (zh-Hant)
+
+可透過 CSV 檔案或貼上匯入持股
+可以問 Siri 離辭職還有多久
+在 iPhone 搜尋中找到資產並直接打開
+每天自動備份，可從 iCloud 或檔案還原
+
+### App Store (Spanish)
+
+Importa tus inversiones desde un CSV o pegándolas
+Pregúntale a Siri cuánto falta para renunciar
+Busca tus activos en el iPhone y ábrelos al instante
+Respaldo diario automático, restaura desde iCloud o un archivo
+
+### App Store (German)
+
+Depotwerte per CSV-Datei oder Einfügen importieren
+Frag Siri, wie lange es noch bis zur Kündigung dauert
+Finde deine Anlagen in der iPhone-Suche und öffne sie
+Tägliche Backups, wiederherstellbar aus iCloud oder Datei
+
+### App Store (French)
+
+Importez vos titres par fichier CSV ou par collage
+Demandez à Siri combien de temps avant de démissionner
+Trouvez vos actifs dans la recherche de l’iPhone
+Sauvegarde quotidienne, restauration via iCloud ou fichier
+
+### App Store (Italian)
+
+Importa i titoli da un file CSV o incollandoli
+Chiedi a Siri quanto manca alle dimissioni
+Trova i tuoi asset nella ricerca di iPhone e aprili
+Backup giornaliero, ripristino da iCloud o da file
+
+### App Store (pt-BR)
+
+Importe seus ativos de um arquivo CSV ou colando
+Pergunte à Siri quanto falta para pedir demissão
+Ache seus ativos na busca do iPhone e abra na hora
+Backup diário automático, restaure do iCloud ou arquivo
+
+### App Store (Russian)
+
+Импорт активов из CSV-файла или вставкой
+Спросите Siri, сколько осталось до увольнения
+Ищите активы в поиске iPhone и сразу открывайте
+Ежедневная копия, восстановление из iCloud или файла
+
+### App Store (Thai)
+
+นำเข้าหุ้นที่ถือจากไฟล์ CSV หรือการวาง
+ถาม Siri ได้ว่าอีกนานแค่ไหนจะลาออกได้
+ค้นหาสินทรัพย์ในการค้นหาของ iPhone แล้วเปิดได้ทันที
+สำรองข้อมูลอัตโนมัติทุกวัน กู้คืนจาก iCloud หรือไฟล์ได้
+
+### App Store (Vietnamese)
+
+Nhập danh mục từ tệp CSV hoặc bằng cách dán
+Hỏi Siri còn bao lâu nữa thì nghỉ việc được
+Tìm tài sản trong tìm kiếm của iPhone và mở ngay
+Tự sao lưu mỗi ngày, khôi phục từ iCloud hoặc tệp
+
+### App Store (Czech)
+
+Importujte investice ze souboru CSV nebo vložením
+Zeptejte se Siri, jak dlouho zbývá do výpovědi
+Najděte svůj majetek ve vyhledávání na iPhonu
+Denní zálohy, obnova z iCloudu nebo ze souboru
+
+### App Store (Danish)
+
+Importér beholdninger fra en CSV-fil eller ved at indsætte
+Spørg Siri, hvor længe der er til du kan sige op
+Find dine aktiver i iPhone-søgning og åbn dem
+Daglig backup, gendan fra iCloud eller en fil
+
+### App Store (Greek)
+
+Εισαγωγή επενδύσεων από αρχείο CSV ή με επικόλληση
+Ρωτήστε τη Siri πόσο μένει μέχρι την παραίτηση
+Βρείτε τα στοιχεία σας στην αναζήτηση του iPhone
+Καθημερινό αντίγραφο, επαναφορά από iCloud ή αρχείο
+
+### App Store (Finnish)
+
+Tuo omistukset CSV-tiedostosta tai liittämällä
+Kysy Siriltä, kauanko irtisanoutumiseen on
+Löydä varasi iPhonen haulla ja avaa ne heti
+Päivittäinen varmuuskopio, palautus iCloudista tai tiedostosta
+
+### App Store (Indonesian)
+
+Impor aset dari file CSV atau dengan menempel
+Tanya Siri berapa lama lagi kamu bisa resign
+Temukan aset di pencarian iPhone dan langsung buka
+Cadangan harian otomatis, pulihkan dari iCloud atau file
+
+### App Store (Norwegian Bokmål)
+
+Importer beholdninger fra en CSV-fil eller ved å lime inn
+Spør Siri hvor lenge det er til du kan si opp
+Finn eiendelene dine i iPhone-søk og åpne dem
+Daglig sikkerhetskopi, gjenopprett fra iCloud eller fil
+
+### App Store (Dutch)
+
+Importeer je bezit uit een CSV-bestand of door te plakken
+Vraag Siri hoe lang het nog duurt tot je kunt stoppen
+Vind je bezittingen via zoeken op iPhone en open ze
+Dagelijkse back-up, terugzetten via iCloud of bestand
+
+### App Store (Polish)
+
+Importuj aktywa z pliku CSV lub przez wklejenie
+Zapytaj Siri, ile zostało do odejścia z pracy
+Znajdź swoje aktywa w wyszukiwaniu iPhone’a
+Codzienna kopia, przywracanie z iCloud lub pliku
+
+### App Store (Swedish)
+
+Importera innehav från en CSV-fil eller genom att klistra in
+Fråga Siri hur länge det är kvar tills du kan säga upp dig
+Hitta dina tillgångar i iPhone-sökningen och öppna dem
+Daglig säkerhetskopia, återställ från iCloud eller fil
+
+### App Store (Turkish)
+
+Varlıklarınızı CSV dosyasından ya da yapıştırarak alın
+Siri'ye istifaya ne kadar kaldığını sorun
+Varlıklarınızı iPhone aramasında bulup hemen açın
+Günlük yedekleme, iCloud'dan veya dosyadan geri yükleyin
+
 ## 1.2.3
 
 ### 앱스토어 (한국어)

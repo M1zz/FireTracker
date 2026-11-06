@@ -56,6 +56,11 @@ https://m1zz.github.io/FireTracker/
 
 이 앱의 계산은 입력값을 바탕으로 한 참고용 결과이며 투자 권유가 아닙니다.
 
+구독 안내
+퇴사각 Plus와 Pro 구독은 자동 갱신 구독입니다. 갱신일 24시간 전까지 해지하지 않으면 Apple 계정으로 자동 결제되며, 설정의 구독 관리에서 언제든 해지할 수 있습니다.
+이용약관(EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+개인정보처리방침: https://m1zz.github.io/FireTracker/privacy.html
+
 ## en
 ### 지원 URL
 
@@ -111,6 +116,11 @@ Explore every screen with a fictional person's assets. Turn it off and your own 
 Your records stay on this device and no account is needed. You can back up and restore all your data as a file.
 
 Calculations in this app are reference results based on your inputs and are not investment advice.
+
+Subscriptions
+Toesagak Plus and Pro subscriptions renew automatically. Payment is charged to your Apple Account, and a subscription renews unless canceled at least 24 hours before the end of the current period. Manage or cancel anytime in Settings.
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://m1zz.github.io/FireTracker/en/privacy.html
 
 ## en-GB
 ### 지원 URL
@@ -168,6 +178,11 @@ Your records stay on this device and no account is needed. You can back up and r
 
 Calculations in this app are reference results based on your inputs and are not investment advice.
 
+Subscriptions
+Toesagak Plus and Pro subscriptions renew automatically. Payment is charged to your Apple Account, and a subscription renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel at any time in Settings.
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://m1zz.github.io/FireTracker/en/privacy.html
+
 ## ja
 ### 지원 URL
 
@@ -223,6 +238,11 @@ Toesagakは、資産を記録すると、経済的自立（FIRE）の目標ま�
 記録はこのデバイスに保存され、アカウントは不要です。すべてのデータをファイルでバックアップ・復元できます。
 
 このアプリの計算は入力値に基づく参考結果であり、投資の勧誘ではありません。
+
+サブスクリプションについて
+Toesagak PlusとProのサブスクリプションは自動更新です。期間終了の24時間前までに解約しない限り、Apple Accountに自動で請求され更新されます。設定のサブスクリプション管理からいつでも解約できます。
+利用規約（EULA）: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+プライバシーポリシー: https://m1zz.github.io/FireTracker/ja/privacy.html
 
 ## zh-Hans
 ### 지원 URL
@@ -280,6 +300,11 @@ Toesagak是一款退休计算器：记录资产后，会显示距离财务自由
 
 本App的计算是基于输入值的参考结果，不构成投资建议。
 
+订阅说明
+Toesagak Plus 和 Pro 订阅均为自动续期订阅。费用从你的 Apple 账户扣除，除非在当期结束前至少 24 小时取消，否则将自动续期。可随时在“设置”中管理或取消。
+使用条款（EULA）: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+隐私政策: https://m1zz.github.io/FireTracker/zh-Hans/privacy.html
+
 ## zh-Hant
 ### 지원 URL
 
@@ -335,6 +360,11 @@ Toesagak是一款退休計算器：記錄資產後，會顯示距離財務自由
 記錄儲存在此裝置上，無需帳號。所有資料都可以備份成檔案並還原。
 
 本App的計算是基於輸入值的參考結果，不構成投資建議。
+
+訂閱說明
+Toesagak Plus 與 Pro 訂閱皆為自動續訂訂閱。費用會從你的 Apple 帳號扣款，除非在當期結束前至少 24 小時取消，否則將自動續訂。可隨時在「設定」中管理或取消。
+使用條款（EULA）: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+隱私權政策: https://m1zz.github.io/FireTracker/zh-Hant/privacy.html
 
 ## es
 ### 지원 URL
@@ -392,6 +422,11 @@ Tus registros se guardan en este dispositivo y no hace falta cuenta. Puedes hace
 
 Los cálculos de esta app son resultados orientativos basados en lo que introduces y no constituyen asesoramiento de inversión.
 
+Suscripciones
+Las suscripciones a Toesagak Plus y Pro se renuevan automáticamente. El cargo se realiza en tu cuenta de Apple y la suscripción se renueva salvo que la canceles al menos 24 horas antes de que termine el periodo. Puedes gestionarla o cancelarla cuando quieras en Ajustes.
+Términos de uso (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Política de privacidad: https://m1zz.github.io/FireTracker/es/privacy.html
+
 ## de
 ### 지원 URL
 
@@ -447,6 +482,11 @@ Sieh dir alle Bildschirme mit dem Vermögen einer fiktiven Person an. Schaltest 
 Deine Einträge bleiben auf diesem Gerät, ein Konto ist nicht nötig. Alle Daten lassen sich als Datei sichern und wiederherstellen.
 
 Die Berechnungen dieser App sind Orientierungswerte auf Basis deiner Eingaben und keine Anlageberatung.
+
+Abos
+Die Abos von Toesagak Plus und Pro verlängern sich automatisch. Die Zahlung erfolgt über deinen Apple Account. Das Abo verlängert sich, sofern du nicht mindestens 24 Stunden vor Ablauf des Zeitraums kündigst. Verwalten oder kündigen kannst du jederzeit in den Einstellungen.
+Nutzungsbedingungen (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Datenschutzerklärung: https://m1zz.github.io/FireTracker/de/privacy.html
 
 ## fr
 ### 지원 URL
@@ -504,6 +544,11 @@ Vos enregistrements restent sur cet appareil et aucun compte n’est nécessaire
 
 Les calculs de cette app sont des résultats indicatifs fondés sur vos saisies et ne constituent pas un conseil en investissement.
 
+Abonnements
+Les abonnements Toesagak Plus et Pro se renouvellent automatiquement. Le paiement est débité sur votre compte Apple, et l'abonnement est reconduit sauf résiliation au moins 24 heures avant la fin de la période en cours. Gérez-le ou résiliez-le à tout moment dans Réglages.
+Conditions d'utilisation (EULA) : https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Politique de confidentialité : https://m1zz.github.io/FireTracker/fr/privacy.html
+
 ## it
 ### 지원 URL
 
@@ -559,6 +604,11 @@ Esplora tutte le schermate con il patrimonio di una persona fittizia; disattivan
 Le registrazioni restano su questo dispositivo e non serve alcun account. Puoi fare il backup di tutti i dati in un file e ripristinarlo.
 
 I calcoli di questa app sono risultati indicativi basati sui dati inseriti e non costituiscono consulenza di investimento.
+
+Abbonamenti
+Gli abbonamenti Toesagak Plus e Pro si rinnovano automaticamente. Il pagamento viene addebitato sul tuo Account Apple e l'abbonamento si rinnova se non lo disdici almeno 24 ore prima della fine del periodo. Puoi gestirlo o disdirlo in qualsiasi momento in Impostazioni.
+Condizioni d'uso (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Informativa sulla privacy: https://m1zz.github.io/FireTracker/it/privacy.html
 
 ## pt-BR
 ### 지원 URL
@@ -616,6 +666,11 @@ Seus registros ficam neste aparelho e não é preciso conta. Você pode fazer ba
 
 Os cálculos deste app são resultados de referência baseados no que você informa e não são recomendação de investimento.
 
+Assinaturas
+As assinaturas Toesagak Plus e Pro são renovadas automaticamente. A cobrança é feita na sua Conta Apple e a assinatura é renovada, a menos que você cancele pelo menos 24 horas antes do fim do período. Gerencie ou cancele quando quiser em Ajustes.
+Termos de Uso (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Política de Privacidade: https://m1zz.github.io/FireTracker/pt-BR/privacy.html
+
 ## ru
 ### 지원 URL
 
@@ -671,6 +726,11 @@ Toesagak — калькулятор выхода на пенсию: по зап�
 Записи хранятся на этом устройстве, учётная запись не нужна. Все данные можно сохранить в файл и восстановить.
 
 Расчёты в приложении — справочные результаты на основе введённых вами данных, а не инвестиционная рекомендация.
+
+Подписки
+Toesagak Plus и Pro — подписки с автопродлением. Оплата списывается с вашего аккаунта Apple, и подписка продлевается, если не отменить её минимум за 24 часа до конца периода. Управлять подпиской и отменить её можно в Настройках.
+Условия использования (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Политика конфиденциальности: https://m1zz.github.io/FireTracker/ru/privacy.html
 
 ## th
 ### 지원 URL
@@ -728,6 +788,11 @@ Toesagak เป็นเครื่องคิดเลขเกษียณ �
 
 การคำนวณในแอปนี้เป็นผลลัพธ์เพื่อการอ้างอิงจากข้อมูลที่คุณกรอก ไม่ใช่คำแนะนำการลงทุน
 
+การสมัครสมาชิก
+Toesagak Plus และ Pro เป็นการสมัครสมาชิกที่ต่ออายุอัตโนมัติ ระบบจะเรียกเก็บเงินจากบัญชี Apple ของคุณและต่ออายุ เว้นแต่จะยกเลิกอย่างน้อย 24 ชั่วโมงก่อนสิ้นสุดรอบ จัดการหรือยกเลิกได้ทุกเมื่อในการตั้งค่า
+ข้อกำหนดการใช้งาน (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+นโยบายความเป็นส่วนตัว: https://m1zz.github.io/FireTracker/th/privacy.html
+
 ## vi
 ### 지원 URL
 
@@ -783,6 +848,11 @@ Xem mọi màn hình với tài sản của một nhân vật giả định; t�
 Bản ghi lưu trên thiết bị này và không cần tài khoản. Bạn có thể sao lưu và khôi phục toàn bộ dữ liệu bằng một tệp.
 
 Các phép tính trong ứng dụng là kết quả tham khảo dựa trên dữ liệu bạn nhập, không phải lời khuyên đầu tư.
+
+Gói đăng ký
+Toesagak Plus và Pro là các gói đăng ký tự động gia hạn. Phí được tính vào Tài khoản Apple của bạn và tự gia hạn trừ khi bạn hủy ít nhất 24 giờ trước khi kỳ hạn kết thúc. Bạn có thể quản lý hoặc hủy bất cứ lúc nào trong Cài đặt.
+Điều khoản sử dụng (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Chính sách quyền riêng tư: https://m1zz.github.io/FireTracker/vi/privacy.html
 
 ## cs
 ### 지원 URL
@@ -840,6 +910,11 @@ Záznamy zůstávají v tomto zařízení a nepotřebujete účet. Všechna data
 
 Výpočty v aplikaci jsou orientační výsledky podle vašich údajů a nejsou investičním poradenstvím.
 
+Předplatné
+Toesagak Plus a Pro jsou automaticky obnovovaná předplatná. Platba se strhává z vašeho účtu Apple a předplatné se obnoví, pokud ho nezrušíte alespoň 24 hodin před koncem období. Spravovat nebo zrušit ho můžete kdykoli v Nastavení.
+Podmínky použití (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Zásady ochrany osobních údajů: https://m1zz.github.io/FireTracker/cs/privacy.html
+
 ## da
 ### 지원 URL
 
@@ -895,6 +970,11 @@ Gennemgå alle skærme med en fiktiv persons aktiver, og slår du det fra, er di
 Dine registreringer ligger på denne enhed, og du behøver ingen konto. Du kan sikkerhedskopiere og gendanne alle data som en fil.
 
 Beregningerne i denne app er vejledende resultater baseret på det, du indtaster, og er ikke investeringsrådgivning.
+
+Abonnementer
+Toesagak Plus og Pro er abonnementer, der fornyes automatisk. Betalingen trækkes på din Apple-konto, og abonnementet fornyes, medmindre du opsiger det mindst 24 timer før perioden slutter. Administrer eller opsig når som helst i Indstillinger.
+Brugsvilkår (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privatlivspolitik: https://m1zz.github.io/FireTracker/da/privacy.html
 
 ## el
 ### 지원 URL
@@ -952,6 +1032,11 @@ Toesagak: Υπολογιστής FIRE
 
 Οι υπολογισμοί της εφαρμογής είναι ενδεικτικά αποτελέσματα με βάση όσα εισαγάγετε και δεν αποτελούν επενδυτική συμβουλή.
 
+Συνδρομές
+Τα Toesagak Plus και Pro είναι συνδρομές με αυτόματη ανανέωση. Η χρέωση γίνεται στον λογαριασμό Apple σας και η συνδρομή ανανεώνεται, εκτός αν την ακυρώσετε τουλάχιστον 24 ώρες πριν λήξει η περίοδος. Μπορείτε να τη διαχειριστείτε ή να την ακυρώσετε οποτεδήποτε από τις Ρυθμίσεις.
+Όροι χρήσης (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Πολιτική απορρήτου: https://m1zz.github.io/FireTracker/el/privacy.html
+
 ## fi
 ### 지원 URL
 
@@ -1007,6 +1092,11 @@ Käy läpi kaikki näkymät kuvitteellisen henkilön varoilla; kun kytket demon 
 Merkintäsi pysyvät tällä laitteella, eikä tiliä tarvita. Voit varmuuskopioida kaikki tiedot tiedostoon ja palauttaa ne.
 
 Apin laskelmat ovat syöttämiisi tietoihin perustuvia suuntaa-antavia tuloksia, eivätkä ne ole sijoitusneuvontaa.
+
+Tilaukset
+Toesagak Plus ja Pro ovat automaattisesti uusiutuvia tilauksia. Maksu veloitetaan Apple-tililtäsi, ja tilaus uusiutuu, ellei sitä peruta vähintään 24 tuntia ennen jakson päättymistä. Hallitse tai peru milloin tahansa Asetuksissa.
+Käyttöehdot (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Tietosuojakäytäntö: https://m1zz.github.io/FireTracker/fi/privacy.html
 
 ## id
 ### 지원 URL
@@ -1064,6 +1154,11 @@ Catatan Anda tersimpan di perangkat ini dan tidak perlu akun. Anda bisa mencadan
 
 Perhitungan di app ini adalah hasil acuan berdasarkan masukan Anda dan bukan saran investasi.
 
+Langganan
+Toesagak Plus dan Pro adalah langganan yang diperpanjang otomatis. Pembayaran ditagihkan ke Akun Apple Anda dan langganan diperpanjang kecuali dibatalkan paling lambat 24 jam sebelum periode berakhir. Kelola atau batalkan kapan saja di Pengaturan.
+Ketentuan Penggunaan (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Kebijakan Privasi: https://m1zz.github.io/FireTracker/id/privacy.html
+
 ## nb
 ### 지원 URL
 
@@ -1119,6 +1214,11 @@ Gå gjennom alle skjermene med eiendelene til en fiktiv person, og slår du det 
 Registreringene dine ligger på denne enheten, og du trenger ingen konto. Du kan sikkerhetskopiere og gjenopprette alle data som en fil.
 
 Beregningene i denne appen er veiledende resultater basert på det du skriver inn, og er ikke investeringsrådgivning.
+
+Abonnementer
+Toesagak Plus og Pro er abonnementer som fornyes automatisk. Betalingen belastes Apple-kontoen din, og abonnementet fornyes med mindre du sier det opp minst 24 timer før perioden er over. Administrer eller si opp når som helst i Innstillinger.
+Bruksvilkår (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Personvernerklæring: https://m1zz.github.io/FireTracker/nb/privacy.html
 
 ## nl
 ### 지원 URL
@@ -1176,6 +1276,11 @@ Je registraties blijven op dit toestel en je hebt geen account nodig. Je kunt al
 
 De berekeningen in deze app zijn richtinggevende resultaten op basis van je invoer en geen beleggingsadvies.
 
+Abonnementen
+Toesagak Plus en Pro zijn automatisch verlengende abonnementen. De betaling loopt via je Apple Account en het abonnement wordt verlengd tenzij je minstens 24 uur voor het einde van de periode opzegt. Beheer of zeg op wanneer je wilt in Instellingen.
+Gebruiksvoorwaarden (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacybeleid: https://m1zz.github.io/FireTracker/nl/privacy.html
+
 ## pl
 ### 지원 URL
 
@@ -1231,6 +1336,11 @@ Przejrzyj wszystkie ekrany na aktywach fikcyjnej osoby; po wyłączeniu twoje da
 Zapisy zostają na tym urządzeniu i nie potrzeba konta. Wszystkie dane możesz zapisać w pliku kopii zapasowej i przywrócić.
 
 Obliczenia w aplikacji są poglądowymi wynikami opartymi na wpisanych danych i nie stanowią porady inwestycyjnej.
+
+Subskrypcje
+Toesagak Plus i Pro to subskrypcje odnawiane automatycznie. Opłata jest pobierana z Twojego konta Apple, a subskrypcja odnawia się, jeśli nie anulujesz jej co najmniej 24 godziny przed końcem okresu. Zarządzaj nią lub anuluj ją w dowolnej chwili w Ustawieniach.
+Warunki korzystania (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Polityka prywatności: https://m1zz.github.io/FireTracker/pl/privacy.html
 
 ## sv
 ### 지원 URL
@@ -1288,6 +1398,11 @@ Dina registreringar ligger kvar på den här enheten och inget konto behövs. Du
 
 Beräkningarna i appen är vägledande resultat baserade på det du anger och är inte investeringsrådgivning.
 
+Prenumerationer
+Toesagak Plus och Pro är prenumerationer som förnyas automatiskt. Betalningen dras från ditt Apple-konto och prenumerationen förnyas om du inte avslutar den minst 24 timmar innan perioden slutar. Hantera eller avsluta när som helst i Inställningar.
+Användarvillkor (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Integritetspolicy: https://m1zz.github.io/FireTracker/sv/privacy.html
+
 ## tr
 ### 지원 URL
 
@@ -1343,6 +1458,11 @@ Tüm ekranları kurgusal bir kişinin varlıklarıyla gezin; kapatınca kendi ve
 Kayıtlarınız bu cihazda kalır ve hesap gerekmez. Tüm verileri dosya olarak yedekleyip geri yükleyebilirsiniz.
 
 Uygulamadaki hesaplar girdilerinize dayalı yol gösterici sonuçlardır ve yatırım tavsiyesi değildir.
+
+Abonelikler
+Toesagak Plus ve Pro otomatik yenilenen aboneliklerdir. Ödeme Apple Hesabınızdan alınır ve abonelik, dönem bitmeden en az 24 saat önce iptal edilmezse yenilenir. Ayarlar'dan istediğiniz zaman yönetebilir veya iptal edebilirsiniz.
+Kullanım Koşulları (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Gizlilik Politikası: https://m1zz.github.io/FireTracker/tr/privacy.html
 
 ## 손쉬운 사용
 

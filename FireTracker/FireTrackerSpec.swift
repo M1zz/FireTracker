@@ -15,17 +15,18 @@ enum FireTrackerSpec: LeeoAppSpec {
         supportURL: URL(string: "https://m1zz.github.io/FireTracker/")!
     )
 
-    /// 수익모델 — 부분 유료(퇴사각 프로, 1회 구매·평생).
-    /// "언제 퇴사할 수 있나"에 답하는 기능은 전부 무료이고, 무엇을 잠그는지는 ProFeature 가 정한다.
-    static let monetization = LeeoMonetization.freemium(
-        LeeoPurchaseConfig(
-            productIDs: ["com.devkoan.FireTracker.pro"],
+    /// 수익모델 — 부분 유료(무료 · 퇴사각 Plus · 퇴사각 Pro, 칸마다 주 · 월 · 연 구독과 평생).
+    /// "언제 퇴사할 수 있나"에 답하는 기능은 전부 무료이고, 어느 칸이 무엇을 여는지는 ProFeature 가 정한다.
+    static let monetization = LeeoMonetization.freemiumSubscription(
+        LeeoSubscriptionConfig(
+            productIDs: ProAccess.saleProductIDs,
+            termsURL: ProAccess.termsURL,
             gate: ProFeature.gatePolicy,
-            // 프로 선물하기. 보내는 사람은 소모성 선물 상품을 사고, 받는 사람은 퇴사각 프로를 산 것과 같아진다.
+            // 프로 선물하기. 보내는 사람은 소모성 선물 상품을 사고, 받는 사람은 Pro 평생을 산 것과 같아진다.
             // 선물 기록은 피드백과 같은 허브 컨테이너의 공개 DB 에 둔다. entitlements 에 이미 있다.
             gift: LeeoGiftConfig(
                 productID: ProAccess.giftProductID,
-                grantsProductID: ProAccess.productID,
+                grantsProductID: ProTier.pro.lifetimeID,
                 containerIdentifier: "iCloud.com.Ysoup.FeedbackHub"
             ),
             // 개발자 응원하기(팁). 소모성 세 가지, 기능을 열지 않는다.

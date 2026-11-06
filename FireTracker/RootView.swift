@@ -120,6 +120,8 @@ struct RootView: View {
         // 목표가 바뀌어도 위젯·알림 문구를 새 숫자로.
         .onChange(of: settingsFingerprint) { _, _ in publishSummary() }
         .onChange(of: lockEnabled) { _, _ in publishSummary() }
+        // 칸이 바뀌면(구매 · 만료 · 복원) 위젯을 열거나 닫는다.
+        .onChange(of: pro.access.allows(ProFeature.widget.rawValue)) { _, _ in publishSummary() }
         .alert("저장하지 못했어요",
                isPresented: Binding(get: { alerts.message != nil },
                                     set: { if !$0 { alerts.message = nil } })) {
@@ -219,7 +221,8 @@ struct RootView: View {
             ? (snapshots.last?.netWorth ?? 0)
             : assets.reduce(0) { $0 + $1.netValue }
         let summary = FireOutlook(netWorth: net, settings: s)
-            .summary(goalConfigured: s.goalConfigured, locked: lockEnabled)
+            .summary(goalConfigured: s.goalConfigured, locked: lockEnabled,
+                     widgetLocked: !pro.access.allows(ProFeature.widget.rawValue))
         FireSummary.publish(summary)
         MonthlyReminder.reschedule(summary: summary)
     }
@@ -440,7 +443,7 @@ private struct FoldDashboardRedirect: ViewModifier {
 
 #if DEBUG
 // 스토어 스크린샷용 — `-shotMode YES -shotTab 2` 로 띄우면 데모 데이터를 넣고 그 탭을 연다(배너는 숨김).
-// `-shotSheet sell|future|mood|import` 를 더하면 그 화면을 시트로 바로 띄우고, `-shotScroll 0.5` 면
+// `-shotSheet sell|future|mood|import|paywall` 를 더하면 그 화면을 시트로 바로 띄우고, `-shotScroll 0.5` 면
 // 스크롤 화면을 그 높이(0 위 ~ 1 아래)에서 연다(언어별 레이아웃 점검용).
 enum ShotMode {
     static var isOn: Bool { UserDefaults.standard.bool(forKey: "shotMode") }
@@ -458,13 +461,15 @@ enum ShotMode {
 }
 
 private struct ShotSheet: ViewModifier {
-    @State private var shown = ["future", "mood", "import"].contains(ShotMode.sheet ?? "")
+    @State private var shown = ["future", "mood", "import", "paywall"].contains(ShotMode.sheet ?? "")
     private let scroll = UserDefaults.standard.double(forKey: "shotScroll")
     func body(content: Content) -> some View {
         content.defaultScrollAnchor(ShotMode.isOn ? UnitPoint(x: 0.5, y: scroll) : nil)
         .sheet(isPresented: $shown) {
             if ShotMode.sheet == "import" {
                 ScreenshotImportView(startingSortOrder: 0)
+            } else if ShotMode.sheet == "paywall" {
+                ProPaywallView(lead: .investForecast)
             } else {
                 NavigationStack {
                     if ShotMode.sheet == "future" { FuturePreviewView() } else { FearGreedView() }

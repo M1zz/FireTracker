@@ -117,9 +117,10 @@ struct FireOutlook {
         return currentAge + Int(years)
     }
 
-    func summary(goalConfigured: Bool, locked: Bool) -> FireSummary {
+    func summary(goalConfigured: Bool, locked: Bool, widgetLocked: Bool = false) -> FireSummary {
         FireSummary(fireDate: date, ageAtFire: ageAtFire, progress: progress,
-                    goalConfigured: goalConfigured, locked: locked, updatedAt: Date())
+                    goalConfigured: goalConfigured, locked: locked, updatedAt: Date(),
+                    widgetLocked: widgetLocked)
     }
 }
 

@@ -11,6 +11,11 @@ import SwiftUI
 
 private let accent = Color(red: 232 / 255, green: 163 / 255, blue: 61 / 255)
 
+/// 앱의 `ProLink.widget` 과 같은 주소.
+private enum ProWidgetLink {
+    static let url = URL(string: "firetracker://pro/widget")!
+}
+
 struct FireEntry: TimelineEntry {
     let date: Date
     let summary: FireSummary?
@@ -44,7 +49,9 @@ struct FireWidgetView: View {
 
     @ViewBuilder
     private var content: some View {
-        if let s = entry.summary, s.goalConfigured, !s.locked {
+        if entry.summary?.widgetLocked == true, entry.summary?.locked != true {
+            proPlaceholder
+        } else if let s = entry.summary, s.goalConfigured, !s.locked {
             switch family {
             case .accessoryRectangular: rectangular(s)
             case .accessoryCircular: circular(s)
@@ -108,6 +115,38 @@ struct FireWidgetView: View {
             Text(locked ? "앱 잠금 중이라 숫자를 가렸어요" : "앱에서 목표를 정하면 여기에 퇴사일이 떠요")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+        }
+    }
+
+    /// 위젯은 퇴사각 Pro 에서 열린다. 누르면 앱이 그 페이월을 연다.
+    @ViewBuilder
+    private var proPlaceholder: some View {
+        switch family {
+        case .accessoryCircular:
+            Image(systemName: "lock.fill")
+                .widgetURL(ProWidgetLink.url)
+        case .accessoryRectangular:
+            VStack(alignment: .leading, spacing: 2) {
+                Label("퇴사각", systemImage: "lock.fill")
+                    .font(.caption2.weight(.semibold))
+                Text("Pro로 열기")
+                    .font(.headline)
+            }
+            .widgetURL(ProWidgetLink.url)
+        default:
+            VStack(alignment: .leading, spacing: 6) {
+                Label("퇴사각", systemImage: "lock.fill")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(accent)
+                Spacer(minLength: 0)
+                Text("위젯은 퇴사각 Pro에서 열려요")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text("Pro로 열기")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(accent)
+            }
+            .widgetURL(ProWidgetLink.url)
         }
     }
 

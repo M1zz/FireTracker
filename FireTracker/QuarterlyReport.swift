@@ -329,7 +329,7 @@ struct QuarterlyReportEntry: View {
     @EnvironmentObject private var pro: LeeoStore
     @State private var paywallFeature: ProFeature?
 
-    private var unlocked: Bool { pro.gate.allows(ProFeature.quarterlyReport.rawValue) }
+    private var unlocked: Bool { pro.access.allows(ProFeature.quarterlyReport.rawValue) }
 
     var body: some View {
         Group {

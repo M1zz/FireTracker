@@ -30,7 +30,7 @@ struct CalcSaveRow: View {
 
     /// 무료 저장 한도에 대한 판정 — 저장한 계산 전체 개수 기준.
     private var saveDecision: LeeoGateDecision {
-        pro.gate.evaluate(ProFeature.unlimitedSaves.rawValue, current: saved.count)
+        pro.access.evaluate(ProFeature.unlimitedSaves.rawValue, current: saved.count)
     }
 
     private var mine: [SavedCalc] {
@@ -81,10 +81,10 @@ struct CalcSaveRow: View {
                     .font(.body)
                     .foregroundStyle(Theme.textSecond)
             }
-            if let left = pro.gate.remaining(ProFeature.unlimitedSaves.rawValue, current: saved.count) {
+            if let left = pro.access.remaining(ProFeature.unlimitedSaves.rawValue, current: saved.count) {
                 Label(left > 0
                       ? LocalizedStringKey("무료로 \(left)개 더 저장할 수 있어요")
-                      : LocalizedStringKey("무료 저장 \(ProFeature.freeSaveLimit)개를 다 썼어요. 프로는 제한 없이 저장해요."),
+                      : LocalizedStringKey("무료 저장 \(ProFeature.freeSaveLimit)개를 다 썼어요. Plus부터 제한 없이 저장해요."),
                       systemImage: left > 0 ? "bookmark" : "lock.fill")
                     .font(.body)
                     .foregroundStyle(left > 0 ? Theme.textSecond : Theme.accentText)

@@ -8,7 +8,7 @@
 //  적어도 주 1회 저절로 쌓이므로 새로 세는 것이 없다. 데모 데이터를 보는 중에는 묻지 않는다.
 //  얼마나 드물게: LeeoKit 의 규칙(`LeeoTipAskPolicy`). 물으면 60일 쉬고, 낸 사람은 180일, '다음에' 세 번이면 끝.
 //
-//  ⚠️ 페이월이 꺼져 있어 모두가 이미 프로다(`ProAccess.paywallEnabled`) — 그래서 누구에게나 묻는다.
+//  ⚠️ 이미 Pro 를 가진 사람에게만 묻는다(DashboardView). 팁은 아무것도 열지 않는다.
 //
 
 import Foundation

@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import LocalAuthentication
+import StoreKit
 import UniformTypeIdentifiers
 import LeeoKit
 
@@ -39,9 +40,11 @@ struct SettingsView: View {
     /// 켜져 있을 때만 사용 통계 진입점이 보인다. 키 이름은 LeeoKit 과 같아야 한다.
     @AppStorage("dev.masterMode") private var isMasterMode = false
 
-    // 퇴사각 프로
+    // 퇴사각 Plus · Pro
     @EnvironmentObject private var pro: LeeoStore
     @State private var showPaywall = false
+    @State private var showGraduation = false
+    @State private var showManageSubscription = false
     /// 개발자 모드 전용 — 권한 강제("unlock"/"lock"), 빈 값이면 정상 판정.
     @AppStorage(ProAccess.overrideKey) private var proOverride = ""
     @AppStorage(SyncManager.enabledKey) private var syncEnabled = false
@@ -56,15 +59,10 @@ struct SettingsView: View {
 
     private var settingsForm: some View {
         Form {
-            // 지금은 구매형 앱이라 '퇴사각 프로' 칸을 숨긴다. 개발자 모드에선 시험용으로 보인다.
-            if ProAccess.paywallEnabled || isMasterMode {
-                proSection
-                // 선물도 같은 조건 — 페이월이 꺼져 있으면 모두가 이미 프로라 선물이 열어 줄 것이 없다.
-                // 그런 상품을 팔지 않도록 일반 사용자에게는 숨기고, 개발자 모드에서만 시험한다.
-                // paywallEnabled 를 켜면 프로 칸과 함께 저절로 나타난다.
-                if let gift = pro.gift {
-                    GiftRows(gift: gift, hasPro: pro.hasPro)
-                }
+            proSection
+            // 선물은 Pro 평생을 연다. 상품이 App Store 에서 와야 줄이 선다.
+            if let gift = pro.gift {
+                GiftRows(gift: gift, hasPro: pro.ownedTier == .pro)
             }
             syncSection
             displaySection
@@ -130,7 +128,7 @@ struct SettingsView: View {
             Toggle(isOn: Binding(
                 get: { syncEnabled },
                 set: { on in
-                    if on && !pro.gate.allows(ProFeature.iCloudSync.rawValue) {
+                    if on && !pro.access.allows(ProFeature.iCloudSync.rawValue) {
                         AppUsage.log(.paywallShown)
                         syncPaywall = .iCloudSync
                         return
@@ -141,7 +139,7 @@ struct SettingsView: View {
                 HStack(spacing: 6) {
                     Label("iCloud 동기화", systemImage: "icloud.fill")
                         .font(.body)
-                    if !pro.gate.allows(ProFeature.iCloudSync.rawValue) {
+                    if !pro.access.allows(ProFeature.iCloudSync.rawValue) {
                         Image(systemName: "lock.fill")
                             .font(.body)
                             .foregroundStyle(Theme.accentText)
@@ -177,21 +175,52 @@ struct SettingsView: View {
         .proPaywall($syncPaywall)
     }
 
-    // MARK: - 퇴사각 프로
+    // MARK: - 퇴사각 Plus · Pro
 
     private var proSection: some View {
         Section {
-            if pro.hasPro {
+            if let owned = pro.ownedTier {
                 Label(pro.isGrandfathered
-                      ? LocalizedStringKey("퇴사각 프로 · 먼저 써 주신 분께 드리는 혜택")
-                      : LocalizedStringKey("퇴사각 프로를 쓰고 있어요"),
+                      ? LocalizedStringKey("퇴사각 Pro · 먼저 사 주신 분께 평생")
+                      : (owned == .pro ? LocalizedStringKey("퇴사각 Pro를 쓰고 있어요")
+                                       : LocalizedStringKey("퇴사각 Plus를 쓰고 있어요")),
                       systemImage: "checkmark.seal.fill")
                     .font(.body.weight(.semibold))
                     .foregroundStyle(Theme.positive)
+                if owned == .plus {
+                    Button { showPaywall = true } label: {
+                        Text("Pro로 올리기")
+                            .font(.body)
+                            .foregroundStyle(Theme.accentText)
+                    }
+                }
+                // 구독 중인 사람: 구독 관리 아래에 '평생으로 바꾸기'를 늘 둔다.
+                if pro.subscribedOnly {
+                    Button { showManageSubscription = true } label: {
+                        Text("구독 관리")
+                            .font(.body)
+                            .foregroundStyle(Theme.accentText)
+                    }
+                    Button {
+                        Task {
+                            let yearly = await LeeoGraduation.currentSubscription(among: ProAccess.yearlyIDs)
+                            // 연 구독은 졸업가로, 주 · 월 구독은 페이월의 평생으로.
+                            if yearly != nil, pro.product(ProAccess.graduateID) != nil {
+                                showGraduation = true
+                            } else {
+                                showPaywall = true
+                            }
+                        }
+                    } label: {
+                        Text(LeeoLadderText.switchToLifetimeEntry)
+                            .font(.body)
+                            .foregroundStyle(Theme.accentText)
+                    }
+                }
             } else {
                 Button { showPaywall = true } label: {
                     HStack {
-                        Label("퇴사각 프로", systemImage: "flame.fill")
+                        Label("퇴사각 Plus · Pro", systemImage: "flame.fill")
                             .font(.body.weight(.semibold))
                             .foregroundStyle(Theme.textPrimary)
                         Spacer()
@@ -203,7 +232,7 @@ struct SettingsView: View {
                 Button {
                     Task {
                         await pro.restore()
-                        show(message: pro.hasPro
+                        show(message: pro.ownedTier != nil
                              ? String(localized: "구매를 복원했어요.")
                              : String(localized: "복원할 구매가 없어요."))
                     }
@@ -224,10 +253,10 @@ struct SettingsView: View {
                 .onChange(of: proOverride) { _, _ in pro.objectWillChange.send() }
             }
         } header: {
-            Text("퇴사각 프로")
+            Text("퇴사각 Plus · Pro")
         } footer: {
-            if !pro.hasPro {
-                Text("한 번 결제로 평생 쓰는 상품이에요. 자산 기록과 퇴사 계산의 핵심 기능은 계속 무료예요.")
+            if pro.ownedTier == nil {
+                Text("내 퇴사 날짜는 무료로. 더 깊이 파고들 도구를 연 구독이나 평생으로 고르세요.")
                     .font(.body)
                     .foregroundStyle(Theme.textSecond)
             }
@@ -236,6 +265,14 @@ struct SettingsView: View {
             ProPaywallView(lead: nil)
                 .environmentObject(pro)
         }
+        .sheet(isPresented: $showGraduation) {
+            LeeoGraduationOfferView(graduate: pro.product(ProAccess.graduateID)) {
+                await pro.refreshEntitlements()
+            }
+            .leeoStyle(ProAccess.style)
+            .onAppear { LeeoGraduation.markOffered() }
+        }
+        .manageSubscriptionsSheet(isPresented: $showManageSubscription)
     }
 
     @ViewBuilder

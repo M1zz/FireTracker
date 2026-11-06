@@ -380,8 +380,8 @@ struct DashboardView: View {
                             section(String(localized: "이번 주"), String(localized: "지난 기록과 비교해 무엇이 달라졌나")) {
                                 welcomeCard
                             }
-                            // 오래 지켜본 사람에게만, 드물게 응원을 부탁한다. 페이월이 꺼져 있어 모두가 프로라 누구에게나.
-                            if let tipJar = pro.tipJar {
+                            // 오래 지켜본 Pro 에게만, 드물게 응원을 부탁한다.
+                            if let tipJar = pro.tipJar, pro.ownedTier == .pro {
                                 LeeoTipAskSlot<FireTrackerSpec>(tipJar: tipJar,
                                                                 reached: FireTrackerTipMoments.reachedNow(snapshots: snapshots))
                                     .leeoStyle(LeeoStyle(accent: Theme.accent, surface: Theme.surface,

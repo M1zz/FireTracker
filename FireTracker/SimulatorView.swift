@@ -86,7 +86,7 @@ struct SimulatorView: View {
 
     /// 지금 모드가 잠겨 있으면 그 기능.
     private func lockedFeature(_ m: SimMode) -> ProFeature? {
-        guard let f = m.proFeature, !pro.gate.allows(f.rawValue) else { return nil }
+        guard let f = m.proFeature, !pro.access.allows(f.rawValue) else { return nil }
         return f
     }
 

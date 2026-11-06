@@ -156,7 +156,7 @@ struct AssetsView: View {
                             Label("직접 추가", systemImage: "square.and.pencil")
                         }
                         Button {
-                            if pro.gate.allows(ProFeature.screenshotImport.rawValue) {
+                            if pro.access.allows(ProFeature.screenshotImport.rawValue) {
                                 showingImport = true
                             } else {
                                 AppUsage.log(.paywallShown)
@@ -164,7 +164,7 @@ struct AssetsView: View {
                             }
                         } label: {
                             Label("가져오기·맞추기",
-                                  systemImage: pro.gate.allows(ProFeature.screenshotImport.rawValue)
+                                  systemImage: pro.access.allows(ProFeature.screenshotImport.rawValue)
                                       ? "text.viewfinder" : "lock.fill")
                         }
                     } label: { Image(systemName: "plus") }
@@ -1823,14 +1823,14 @@ struct AssetEditor: View {
                     }
             }
 
-            if !pro.gate.allows(ProFeature.tradeLedger.rawValue) {
-                // 무료 — 이미 적힌 거래는 보고 지울 수 있지만, 새 거래는 프로에서.
+            if !pro.access.allows(ProFeature.tradeLedger.rawValue) {
+                // 무료 — 이미 적힌 거래는 보고 지울 수 있지만, 새 거래는 Plus 에서.
                 Button {
                     AppUsage.log(.paywallShown)
                     paywallFeature = .tradeLedger
                 } label: {
                     VStack(alignment: .leading, spacing: 4) {
-                        Label("매매 원장은 프로 기능이에요", systemImage: "lock.fill")
+                        Label("매매 원장은 Plus 기능이에요", systemImage: "lock.fill")
                             .font(.body.weight(.semibold))
                             .foregroundStyle(Theme.accentText)
                         Text(ProFeature.tradeLedger.leeoDetail)
@@ -1853,7 +1853,7 @@ struct AssetEditor: View {
             }
 
             // 원장을 처음 쓰기 시작할 때 — 이미 들고 있던 몫을 한 줄로 옮겨 담는다.
-            if pro.gate.allows(ProFeature.tradeLedger.rawValue),
+            if pro.access.allows(ProFeature.tradeLedger.rawValue),
                !hasTrades, openingQuantity > 0 || openingCost > 0 {
                 Button {
                     seedOpeningTrade()

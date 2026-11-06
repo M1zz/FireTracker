@@ -8,7 +8,7 @@ import UserNotifications
 @main
 struct FireTrackerApp: App {
     @Environment(\.scenePhase) private var scenePhase
-    // 퇴사각 프로 권한 — 앱 전역에서 하나. 구매·복원·환불이 어느 화면에서든 바로 반영된다.
+    // 퇴사각 Plus · Pro 권한 — 앱 전역에서 하나. 구매·복원·환불이 어느 화면에서든 바로 반영된다.
     @StateObject private var proStore = ProAccess.makeStore()
 
     init() {
@@ -23,6 +23,8 @@ struct FireTrackerApp: App {
         // 저장소는 bootstrap(백업 금고: 예약된 복원 · 업데이트 직전 백업) 뒤에 연다.
         // 프로퍼티 초기값으로 두면 init 보다 먼저 열린다.
         sharedModelContainer = Self.makeModelContainer()
+        // 무료 전환 빌드를 처음 켤 때 이미 자산이 있었는지 — 오프라인에서 앱값을 낸 분을 알아보는 길.
+        ProAccess.noteExistingData(sharedModelContainer)
         // Siri 인텐트가 같은 저장소를 읽게 한다 (→ FireIntents.swift)
         let container = sharedModelContainer
         AppDependencyManager.shared.add(dependency: container)
@@ -64,6 +66,7 @@ struct FireTrackerApp: App {
                     BackupManager.autoBackup(context: sharedModelContainer.mainContext)
                 }
                 .leeoSatisfactionCheck(FireTrackerSpec.self)
+                .proMoments()
                 .environmentObject(proStore)
         }
         .modelContainer(sharedModelContainer)

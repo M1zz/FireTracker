@@ -2,29 +2,96 @@
 //  ProAccess.swift
 //  FireTracker
 //
-//  부분 유료화 — 퇴사각 프로 (1회 구매, 평생).
+//  부분 유료화 — 무료 · 퇴사각 Plus · 퇴사각 Pro.
 //
 //  원칙: "언제 퇴사할 수 있나"라는 앱의 질문에 답하는 데 필요한 것은 전부 무료다.
 //  자산 기록·여정·대시보드·생애주기 계산·백업·앱 잠금은 잠그지 않는다. 자산 개수도
 //  제한하지 않는다 — 자산을 다 못 넣으면 답 자체가 틀려지기 때문이다.
-//  프로는 그 답을 더 깊이 파고드는 도구다: 더 정교한 계산기, 계산 무제한 저장,
-//  매매 원장, 스크린샷 일괄 입력.
+//   · Plus: 날짜를 본 다음 "어떻게 당기지"를 계산하는 도구 (계산기 넷, 계산 무제한 저장, 매매 원장)
+//   · Pro : 퇴사 그날을 미리 살아 보고, 기록이 알아서 따라오게 (미리보기, 분기 리포트, 동기화, 가져오기, 위젯)
+//  칸마다 주 · 월 · 연 자동 갱신 구독(한 구독 그룹, Pro 가 위 단계)과 평생을 판다.
 //
-//  결제 코어(상품 로드·구매·복원·권한 캐시)는 LeeoKit 의 LeeoStore 가 맡고,
-//  여기서는 "무엇을 잠그나"와 "기존 사용자 보호"만 정한다.
+//  결제 코어(상품 로드·구매·복원·권한 캐시·칸 판정)는 LeeoKit 의 LeeoStore 가 맡고,
+//  여기서는 "무엇을 어느 칸에 두나"와 "이미 산 사람 보호"만 정한다.
 //
 
 import SwiftUI
+import SwiftData
 import StoreKit
+import Security
 import LeeoKit
 
-// MARK: - 프로 기능
+// MARK: - 칸
 
-/// 프로로 열리는 기능. rawValue 는 LeeoGatePolicy 의 기능 키다.
+/// 유료 칸. 위 칸은 아래 칸 기능을 모두 연다. rawValue 는 `LeeoGatePolicy.tiers` 의 순번이다.
+enum ProTier: Int, CaseIterable, Comparable, Identifiable {
+    case plus
+    case pro
+
+    var id: Int { rawValue }
+    static func < (a: ProTier, b: ProTier) -> Bool { a.rawValue < b.rawValue }
+
+    /// 칸 이름 — 모든 언어에서 그대로 쓴다.
+    var name: String {
+        switch self {
+        case .plus: return "Plus"
+        case .pro:  return "Pro"
+        }
+    }
+
+    var fullName: String {
+        switch self {
+        case .plus: return String(localized: "퇴사각 Plus")
+        case .pro:  return String(localized: "퇴사각 Pro")
+        }
+    }
+
+    var tagline: String {
+        switch self {
+        case .plus: return String(localized: "날짜를 본 다음, 어떻게 당길지 계산하기")
+        case .pro:  return String(localized: "퇴사 그날을 미리 살아 보고, 기록은 알아서 따라오게")
+        }
+    }
+
+    var weeklyID: String { "\(ProAccess.bundleID).\(slug).weekly" }
+    var monthlyID: String { "\(ProAccess.bundleID).\(slug).monthly" }
+    var yearlyID: String { "\(ProAccess.bundleID).\(slug).yearly" }
+    /// 평생. Pro 평생은 유료 다운로드 시절부터 있던 `…FireTracker.pro` 를 그대로 쓴다.
+    var lifetimeID: String { "\(ProAccess.bundleID).\(slug)" }
+
+    /// 이 칸을 여는 상품 전부. Pro 는 올리기 · 졸업도 Pro 평생이다.
+    var productIDs: [String] {
+        let base = [yearlyID, lifetimeID, monthlyID, weeklyID]
+        return self == .pro ? base + [ProAccess.upgradeID, ProAccess.graduateID] : base
+    }
+
+    var features: [ProFeature] { ProFeature.allCases.filter { $0.tier == self } }
+
+    private var slug: String { self == .plus ? "plus" : "pro" }
+}
+
+/// 유료 칸을 사는 길. 연이 기본이고 주 · 월은 펼쳐 보인다.
+enum ProTerm: CaseIterable {
+    case yearly, lifetime, monthly, weekly
+
+    func productID(_ tier: ProTier) -> String {
+        switch self {
+        case .yearly:   return tier.yearlyID
+        case .lifetime: return tier.lifetimeID
+        case .monthly:  return tier.monthlyID
+        case .weekly:   return tier.weeklyID
+        }
+    }
+}
+
+// MARK: - 잠긴 기능
+
+/// 칸으로 열리는 기능. rawValue 는 LeeoGatePolicy 의 기능 키다.
 enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
     case futurePreview    = "future.preview"
     case quarterlyReport  = "future.quarterlyReport"
     case iCloudSync       = "sync.iCloud"
+    case widget           = "widget"
     case investForecast   = "calc.invest"
     case debtVsInvest     = "calc.debtVsInvest"
     case purchasingPower  = "calc.wage"
@@ -35,11 +102,22 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
 
     var id: String { rawValue }
 
+    /// 이 기능을 여는 가장 낮은 칸.
+    var tier: ProTier {
+        switch self {
+        case .investForecast, .debtVsInvest, .purchasingPower, .timeValue, .unlimitedSaves, .tradeLedger:
+            return .plus
+        case .futurePreview, .quarterlyReport, .iCloudSync, .widget, .screenshotImport:
+            return .pro
+        }
+    }
+
     var leeoTitle: String {
         switch self {
         case .futurePreview:    return String(localized: "퇴사 그날 미리보기")
         case .quarterlyReport:  return String(localized: "분기 퇴사각 리포트")
         case .iCloudSync:       return String(localized: "iCloud 동기화")
+        case .widget:           return String(localized: "홈 화면 · 잠금화면 위젯")
         case .investForecast:   return String(localized: "투자 예측")
         case .debtVsInvest:     return String(localized: "빚 갚기 vs 투자하기")
         case .purchasingPower:  return String(localized: "월급 구매력")
@@ -58,6 +136,8 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
             return String(localized: "석 달마다 퇴사 날짜가 얼마나 당겨졌는지, 무엇이 움직였는지 정리해 알려줘요.")
         case .iCloudSync:
             return String(localized: "아이폰과 아이패드에서 같은 자산과 기록을 봐요.")
+        case .widget:
+            return String(localized: "예상 퇴사 시점과 달성률을 앱을 열지 않고 홈 화면과 잠금화면에서 봐요.")
         case .investForecast:
             return String(localized: "지금 자산이 앞으로 어디까지 갈지 좋을 때와 나쁠 때의 범위로 보여줘요.")
         case .debtVsInvest:
@@ -67,7 +147,7 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
         case .timeValue:
             return String(localized: "내 시급으로 돈을 시간으로 바꿔 보고, 저축이 시급을 넘는 시점을 찾아요.")
         case .unlimitedSaves:
-            return String(localized: "무료로는 3개까지 저장할 수 있어요. 프로는 제한 없이 저장해요.")
+            return String(localized: "무료로는 3개까지 저장할 수 있어요. Plus부터 제한 없이 저장해요.")
         case .tradeLedger:
             return String(localized: "언제 몇 주를 얼마에 샀는지 남기면 평단과 실현 손익이 자동으로 계산돼요.")
         case .screenshotImport:
@@ -80,6 +160,7 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
         case .futurePreview:    return "sunrise.fill"
         case .quarterlyReport:  return "doc.text.magnifyingglass"
         case .iCloudSync:       return "icloud.fill"
+        case .widget:           return "rectangle.on.rectangle"
         case .investForecast:   return "chart.line.uptrend.xyaxis"
         case .debtVsInvest:     return "arrow.triangle.branch"
         case .purchasingPower:  return "cart"
@@ -93,7 +174,8 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
     /// 무료 사용 한도 (개수형 기능만).
     static let freeSaveLimit = 3
 
-    /// 계약(FireTrackerSpec)에 선언하는 게이트 정책.
+    /// 계약(FireTrackerSpec)에 선언하는 게이트 정책. 무엇이 잠기는지만 말하고,
+    /// 어느 칸이 여는지는 `tier` 가 정한다(`ProGate`).
     static var gatePolicy: LeeoGatePolicy {
         LeeoGatePolicy(
             freeLimits: [ProFeature.unlimitedSaves.rawValue: freeSaveLimit],
@@ -103,42 +185,75 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
     }
 }
 
+// MARK: - 칸 게이트
+
+/// 칸까지 보는 게이트 — "지금 이 기능을 써도 되나". 기능마다 그 칸 이상이면 열린다.
+/// 판정(무료 한도 · 남은 개수)은 LeeoKit 의 `LeeoGate` 에 맡긴다.
+struct ProGate {
+    /// 지금 열린 칸. 무료면 nil.
+    let tier: ProTier?
+
+    private func gate(_ key: String) -> LeeoGate {
+        let needed = ProFeature(rawValue: key)?.tier ?? .pro
+        return LeeoGate(policy: ProFeature.gatePolicy, hasPro: tier.map { $0 >= needed } ?? false,
+                        isTrialActive: false)
+    }
+
+    func evaluate(_ key: String, current: Int = 0, adding: Int = 1) -> LeeoGateDecision {
+        gate(key).evaluate(key, current: current, adding: adding)
+    }
+
+    func allows(_ key: String) -> Bool { gate(key).allows(key) }
+
+    func remaining(_ key: String, current: Int) -> Int? { gate(key).remaining(key, current: current) }
+}
+
 // MARK: - 스토어 구성
 
-@MainActor
 enum ProAccess {
-    /// 판매 상품 — 비소모성 1회 구매.
-    static let productID = "com.devkoan.FireTracker.pro"
+    static let bundleID = "com.devkoan.FireTracker"
 
-    /// 프로 선물 — 소모성 상품. 받는 사람은 `productID` 를 산 것과 같아진다(`FireTrackerSpec.monetization`).
-    /// ⚠️ `productIDs` · `entitlementIDs` 에 넣지 않는다. 넣으면 선물을 산 사람 자신이 프로가 된다.
-    static let giftProductID = "com.devkoan.FireTracker.gift.pro"
+    /// Plus 평생을 산 사람이 Pro 평생으로 올리는 값(비소모성). 열면 Pro 평생과 같다.
+    static let upgradeID = "\(bundleID).pro.upgrade"
+    /// 구독 졸업: 연 구독 중인 사람만 보는 Pro 평생(비소모성, `LeeoGraduation`).
+    static let graduateID = "\(bundleID).pro.graduate"
+
+    /// 페이월이 불러올 상품, 화면 순서대로. 이 중 무엇이든 권한이다.
+    /// ⚠️ 선물 · 팁 · 언제나 평생 패스는 넣지 않는다. 넣으면 그것을 산 사람이 Pro 가 된다.
+    static let saleProductIDs = ProTier.allCases.flatMap(\.productIDs)
+
+    /// 구독 졸업을 제안할 구독. 주 · 월 구독에 졸업가를 주면 한 주 값으로 평생이 싸진다.
+    static let yearlyIDs: Set<String> = Set(ProTier.allCases.map(\.yearlyID))
+    /// 자동 갱신 구독 전부 (설정의 '구독 관리' 줄).
+    static let subscriptionIDs: Set<String> = Set(ProTier.allCases.flatMap { [$0.yearlyID, $0.monthlyID, $0.weeklyID] })
+
+    /// 자동 갱신 구독의 이용약관 — Apple 표준 EULA.
+    static let termsURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
+
+    /// 프로 선물 — 소모성 상품. 받는 사람은 Pro 평생을 산 것과 같아진다(`FireTrackerSpec.monetization`).
+    /// ⚠️ `saleProductIDs` 에 넣지 않는다. 넣으면 선물을 산 사람 자신이 Pro 가 된다.
+    static let giftProductID = "\(bundleID).gift.pro"
 
     /// 개발자 응원하기(팁) — 소모성 세 가지, 작은 것부터. 아무것도 열지 않는다.
-    /// ⚠️ 선물처럼 `productIDs` · `entitlementIDs` 에 넣지 않는다. 넣으면 팁을 낸 사람이 프로가 된다.
+    /// ⚠️ 선물처럼 `saleProductIDs` 에 넣지 않는다. 넣으면 팁을 낸 사람이 Pro 가 된다.
     static let tipProductIDs = [
-        "com.devkoan.FireTracker.tip.small",
-        "com.devkoan.FireTracker.tip.medium",
-        "com.devkoan.FireTracker.tip.large",
+        "\(bundleID).tip.small",
+        "\(bundleID).tip.medium",
+        "\(bundleID).tip.large",
     ]
 
-    /// 유료화 전 마지막 빌드 번호(CFBundleVersion). 이 빌드 이하로 처음 내려받은
-    /// 사람은 원래 무료로 쓰던 기능을 그대로 쓴다(그랜드파더링).
-    /// 유료화가 들어간 첫 출시 빌드는 반드시 이 값보다 커야 한다.
-    /// 1.2.0(빌드 7)까지 위젯·캡처 가져오기·계산기를 무료로 냈으므로 7.
-    static let lastFreeBuild = 7
-
-    /// 앱 자체가 유료(구매형)라 지금은 페이월을 걸지 않는다 — 모든 프로 기능이 열린다.
-    /// 부분 유료화로 바꿀 때 true 로 켜면 잠금·페이월·설정의 '퇴사각 프로' 칸이 돌아온다.
-    /// (그때 첫 출시 빌드는 lastFreeBuild 보다 커야 기존 구매자가 그대로 쓴다.)
-    static let paywallEnabled = false
+    /// 유료 다운로드로 낸 마지막 빌드 번호(CFBundleVersion, 1.2.4 빌드 12).
+    /// App Store 에서 이 빌드 이하로 처음 받은 사람은 앱값을 낸 사람이다 — Pro 평생.
+    /// ⚠️ 무료 전환 빌드는 반드시 이 값보다 커야 하고, 앱 가격을 무료로 내리는 날과 같은 날 낸다.
+    static let lastPaidBuild = 12
 
     /// 개발자 모드에서 권한을 강제하는 키. "unlock" / "lock" / 없음(정상 판정).
     static let overrideKey = "dev.proOverride"
 
+    @MainActor
     static func makeStore() -> LeeoStore {
         LeeoStore(
-            config: FireTrackerSpec.paywall ?? LeeoPaywallConfig(productIDs: [productID]),
+            config: FireTrackerSpec.paywall ?? LeeoPaywallConfig(productIDs: saleProductIDs),
             unlockOverride: { override },
             grandfather: { await isLegacyInstall() }
         )
@@ -148,22 +263,121 @@ enum ProAccess {
         switch UserDefaults.standard.string(forKey: overrideKey) {
         case "unlock": return true
         case "lock":   return false
-        default:       return paywallEnabled ? nil : true
+        // 유료 칸 상품을 한 번도 불러오지 못한 기기는 막지 않는다 — 상품을 만들기 전에 빌드가 나가도
+        // 살 수 없는데 막히는 사람이 없게. 한 번 불러온 기기는 네트워크가 끊겨도 다시 막는다.
+        default:       return storeReady ? nil : true
         }
     }
 
-    /// 유료화 전에 받은 설치인지. App Store 영수증(AppTransaction)의 최초 구매 빌드로 판단한다.
-    /// iOS 에서 originalAppVersion 은 CFBundleVersion(빌드 번호)이다.
-    /// 샌드박스·TestFlight·Xcode 에서는 이 값이 늘 "1.0" 이라 모두 기존 사용자로 잡히므로
-    /// 실제 App Store 설치에서만 판정한다 — 그래야 테스트 때 페이월이 보인다.
-    static func isLegacyInstall() async -> Bool {
-        guard let result = try? await AppTransaction.shared,
-              case .verified(let transaction) = result,
-              transaction.environment == .production,
-              let build = Double(transaction.originalAppVersion)
-        else { return false }
-        return build <= Double(lastFreeBuild)
+    // MARK: 상품 준비
+
+    private static let storeReadyKey = "pro.storeReady"
+    static var storeReady: Bool { UserDefaults.standard.bool(forKey: storeReadyKey) }
+
+    /// 상품을 불러오고, 유료 칸 상품이 하나라도 오면 이 기기에서 게이트를 켠다.
+    @MainActor
+    static func loadProducts(_ store: LeeoStore) async {
+        await store.loadProducts()
+        guard !storeReady, store.products.contains(where: { saleProductIDs.contains($0.id) }) else { return }
+        UserDefaults.standard.set(true, forKey: storeReadyKey)
+        store.objectWillChange.send()
     }
+
+    // MARK: 이미 산 사람
+
+    /// 앱값을 낸 설치인가. 한 번 맞으면 키체인에 남긴다(앱을 지웠다 깔아도, 오프라인이어도 그대로).
+    /// 1. App Store 영수증(AppTransaction)의 최초 구매 빌드가 `lastPaidBuild` 이하.
+    ///    iOS 에서 originalAppVersion 은 CFBundleVersion(빌드 번호)이다.
+    ///    샌드박스·TestFlight·Xcode 에서는 이 값이 늘 "1.0" 이라 실제 App Store 설치에서만 본다.
+    /// 2. 영수증을 못 읽으면(오프라인 첫 실행) 무료 전환 빌드를 처음 켤 때 이미 자산이 있었는가.
+    static func isLegacyInstall() async -> Bool {
+        if LegacyLatch.isSet { return true }
+        var legacy = false
+        if let result = try? await AppTransaction.shared,
+           case .verified(let transaction) = result,
+           transaction.environment == .production,
+           let build = Double(transaction.originalAppVersion) {
+            legacy = build <= Double(lastPaidBuild)
+        } else {
+            legacy = UserDefaults.standard.bool(forKey: hadDataKey)
+        }
+        if legacy { LegacyLatch.set() }
+        return legacy
+    }
+
+    private static let hadDataKey = "pro.hadDataAtFreeLaunch"
+
+    /// 무료 전환 빌드를 처음 켤 때 한 번 — 이미 쌓인 자산 · 기록이 있었는지 적어 둔다.
+    /// 새로 받은 사람은 여기서 false 로 굳고 나중에 자산을 넣어도 바뀌지 않는다.
+    static func noteExistingData(_ container: ModelContainer) {
+        let defaults = UserDefaults.standard
+        guard defaults.object(forKey: hadDataKey) == nil else { return }
+        #if DEBUG
+        defaults.set(false, forKey: hadDataKey)   // 개발 기기의 기록으로 Pro 가 열리지 않게
+        #else
+        let context = ModelContext(container)
+        let assets = (try? context.fetchCount(FetchDescriptor<Asset>())) ?? 0
+        let snapshots = (try? context.fetchCount(FetchDescriptor<NetWorthSnapshot>())) ?? 0
+        defaults.set(assets + snapshots > 0, forKey: hadDataKey)
+        #endif
+    }
+}
+
+/// 이미 산 사람 표시 — 키체인에 둔다.
+private enum LegacyLatch {
+    private static let query: [String: Any] = [
+        kSecClass as String: kSecClassGenericPassword,
+        kSecAttrService as String: "\(ProAccess.bundleID).legacy",
+        kSecAttrAccount as String: "paidDownload",
+    ]
+
+    static var isSet: Bool {
+        SecItemCopyMatching(query as CFDictionary, nil) == errSecSuccess
+    }
+
+    static func set() {
+        guard !isSet else { return }
+        var add = query
+        add[kSecValueData as String] = Data("1".utf8)
+        add[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
+        SecItemAdd(add as CFDictionary, nil)
+    }
+}
+
+extension LeeoStore {
+    /// 칸까지 보는 게이트. 잠그는 곳은 모두 이것으로 묻는다.
+    var access: ProGate { ProGate(tier: openTier) }
+
+    /// 지금 열린 칸 — 가진 칸에 개발자 강제와 '상품 준비 전에는 열어 둠'(`ProAccess.override`)을 더한다.
+    var openTier: ProTier? {
+        switch ProAccess.override {
+        case true?:  return .pro
+        case false?: return nil
+        case nil:    return ownedTier
+        }
+    }
+
+    /// 실제로 가진 칸 — 산 것 · 받은 선물 · 이미 산 사람. 상품 준비 전에 열어 둔 것과 개발자 강제는 빼고.
+    var ownedTier: ProTier? {
+        if isGrandfathered { return .pro }
+        return ProTier.allCases.last { !purchasedProductIDs.isDisjoint(with: $0.productIDs) }
+    }
+
+    /// 평생으로 가진 칸.
+    var lifetimeTier: ProTier? {
+        if isGrandfathered { return .pro }
+        if !purchasedProductIDs.isDisjoint(with: ProTier.pro.productIDs.filter { !ProAccess.subscriptionIDs.contains($0) }) {
+            return .pro
+        }
+        return purchasedProductIDs.contains(ProTier.plus.lifetimeID) ? .plus : nil
+    }
+
+    /// 지금 자동 갱신 구독으로 칸을 쓰는가 (평생이 없을 때).
+    var subscribedOnly: Bool {
+        lifetimeTier == nil && !purchasedProductIDs.isDisjoint(with: ProAccess.subscriptionIDs)
+    }
+
+    func product(_ id: String) -> Product? { products.first { $0.id == id } }
 }
 
 // MARK: - 잠금 안내 카드
@@ -183,7 +397,7 @@ struct ProLockedCard: View {
                     .background(Theme.accentSoft)
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 VStack(alignment: .leading, spacing: 4) {
-                    Label("프로", systemImage: "lock.fill")
+                    Label(feature.tier.name, systemImage: "lock.fill")
                         .font(.body.weight(.semibold))
                         .foregroundStyle(Theme.accentText)
                     Text(feature.leeoTitle)
@@ -196,7 +410,7 @@ struct ProLockedCard: View {
                 .foregroundStyle(Theme.textSecond)
                 .fixedSize(horizontal: false, vertical: true)
             Button(action: onUnlock) {
-                Text("퇴사각 프로로 열기")
+                Text(feature.tier == .plus ? LocalizedStringKey("퇴사각 Plus로 열기") : LocalizedStringKey("퇴사각 Pro로 열기"))
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
@@ -213,13 +427,13 @@ struct ProLockedCard: View {
 
 // MARK: - 그날의 나 미리보기 진입점
 
-/// 대시보드·계산 탭에서 미리보기로 들어가는 줄. 프로가 아니면 페이월을 연다.
+/// 대시보드·계산 탭에서 미리보기로 들어가는 줄. Pro 가 아니면 페이월을 연다.
 struct FuturePreviewEntry: View {
     @EnvironmentObject private var pro: LeeoStore
     @State private var paywallFeature: ProFeature?
     var compact = false
 
-    private var unlocked: Bool { pro.gate.allows(ProFeature.futurePreview.rawValue) }
+    private var unlocked: Bool { pro.access.allows(ProFeature.futurePreview.rawValue) }
 
     var body: some View {
         Group {
@@ -277,6 +491,11 @@ extension View {
     func proPaywall(_ feature: Binding<ProFeature?>) -> some View {
         modifier(ProPaywallPresenter(feature: feature))
     }
+
+    /// 앱 전체에 한 번: 이미 산 분께 드리는 안내, 구독 졸업 제안, 위젯의 'Pro로 열기'.
+    func proMoments() -> some View {
+        modifier(ProMoments())
+    }
 }
 
 private struct ProPaywallPresenter: ViewModifier {
@@ -288,5 +507,72 @@ private struct ProPaywallPresenter: ViewModifier {
             ProPaywallView(lead: f)
                 .environmentObject(store)
         }
+    }
+}
+
+/// 위젯이 여는 주소. 잠긴 위젯을 누르면 이것으로 앱이 열린다.
+enum ProLink {
+    static let widget = URL(string: "firetracker://pro/widget")!
+}
+
+private struct ProMoments: ViewModifier {
+    @EnvironmentObject private var store: LeeoStore
+    @Environment(\.scenePhase) private var scenePhase
+    @AppStorage("pro.legacyNoticeShown") private var legacyNoticeShown = false
+    @State private var legacyNotice = false
+    @State private var graduation = false
+    @State private var paywallFeature: ProFeature?
+
+    func body(content: Content) -> some View {
+        content
+            .task { await ProAccess.loadProducts(store) }
+            // 앱값을 내신 분께 한 번 — 무료로 바뀌어도 잃는 것이 없다고 알린다.
+            .onChange(of: store.isGrandfathered, initial: true) { _, legacy in
+                if legacy, !legacyNoticeShown {
+                    legacyNoticeShown = true
+                    legacyNotice = true
+                }
+            }
+            .onChange(of: scenePhase, initial: true) { _, phase in
+                if phase == .active { Task { await offerGraduationIfDue() } }
+            }
+            .onOpenURL { url in
+                if url == ProLink.widget, !store.access.allows(ProFeature.widget.rawValue) {
+                    AppUsage.log(.paywallShown)
+                    paywallFeature = .widget
+                }
+            }
+            .alert("이미 퇴사각 Pro예요", isPresented: $legacyNotice) {
+                Button("확인", role: .cancel) {}
+            } message: {
+                Text("퇴사각을 먼저 사 주셔서 고마워요. Plus와 Pro의 모든 기능을 추가 결제 없이 평생 쓰세요.")
+            }
+            .sheet(isPresented: $graduation) {
+                LeeoGraduationOfferView(graduate: store.product(ProAccess.graduateID)) {
+                    await store.refreshEntitlements()
+                }
+                .leeoStyle(ProAccess.style)
+                .onAppear { LeeoGraduation.markOffered() }
+            }
+            .proPaywall($paywallFeature)
+    }
+
+    /// 연 구독 6개월째 · 갱신 7일 전에 한 번씩 졸업가를 보인다.
+    private func offerGraduationIfDue() async {
+        guard !legacyNotice, paywallFeature == nil,
+              store.lifetimeTier == nil,
+              store.product(ProAccess.graduateID) != nil,
+              let sub = await LeeoGraduation.currentSubscription(among: ProAccess.yearlyIDs),
+              LeeoGraduation.isDue(sub, lastOffered: LeeoGraduation.lastOffered())
+        else { return }
+        graduation = true
+    }
+}
+
+extension ProAccess {
+    /// LeeoKit 부품(졸업 제안 등)을 앱 색으로.
+    static var style: LeeoStyle {
+        LeeoStyle(accent: Theme.accentText, bg: Theme.bg, surface: Theme.surface, surfaceAlt: Theme.surfaceHigh,
+                  text: Theme.textPrimary, textMuted: Theme.textSecond)
     }
 }

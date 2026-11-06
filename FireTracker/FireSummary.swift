@@ -21,6 +21,8 @@ struct FireSummary: Codable, Equatable {
     /// 앱 잠금을 켰는가 — 켰으면 위젯도 숫자를 가린다.
     var locked: Bool
     var updatedAt: Date
+    /// 위젯이 Pro 로 열리지 않았는가 — 그러면 위젯은 'Pro로 열기' 자리 표시를 보인다. 예전 기록은 nil(열림).
+    var widgetLocked: Bool? = nil
 
     static let appGroup = "group.com.devkoan.FireTracker"
     private static let key = "fireSummary.v1"

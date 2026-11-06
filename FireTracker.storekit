@@ -1,121 +1,361 @@
 {
-  "identifier" : "6F3A2C1D",
-  "nonRenewingSubscriptions" : [
-
-  ],
-  "products" : [
+  "identifier": "6F3A2C1D",
+  "nonRenewingSubscriptions": [],
+  "products": [
     {
-      "displayPrice" : "9900",
-      "familyShareable" : true,
-      "internalID" : "6740000001",
-      "localizations" : [
+      "displayPrice": "29.99",
+      "familyShareable": true,
+      "internalID": "0D903350-8FDA-49A2-B653-409E7B273E56",
+      "localizations": [
         {
-          "description" : "Unlock every calculator, unlimited saves, trade ledger and screenshot import.",
-          "displayName" : "FireTracker Pro",
-          "locale" : "en_US"
+          "description": "Forecasts, debt vs invest, ledger, more saves",
+          "displayName": "FireTracker Plus Lifetime",
+          "locale": "en_US"
         },
         {
-          "description" : "모든 계산기, 계산 무제한 저장, 매매 원장, 스크린샷 일괄 추가를 엽니다.",
-          "displayName" : "퇴사각 프로",
-          "locale" : "ko"
+          "description": "투자 예측, 빚 vs 투자, 계산 무제한 저장, 매매 원장을 엽니다.",
+          "displayName": "퇴사각 Plus 평생",
+          "locale": "ko_KR"
         }
       ],
-      "productID" : "com.devkoan.FireTracker.pro",
-      "referenceName" : "FireTracker Pro (Lifetime)",
-      "type" : "NonConsumable"
+      "productID": "com.devkoan.FireTracker.plus",
+      "referenceName": "Plus Lifetime",
+      "type": "NonConsumable"
     },
     {
-      "displayPrice" : "9900",
-      "familyShareable" : false,
-      "internalID" : "6740000002",
-      "localizations" : [
+      "displayPrice": "44.99",
+      "familyShareable": true,
+      "internalID": "6740000001",
+      "localizations": [
         {
-          "description" : "Give FireTracker Pro to someone else with a gift code.",
-          "displayName" : "Gift FireTracker Pro",
-          "locale" : "en_US"
+          "description": "All of Plus with Future Me, sync and widgets",
+          "displayName": "FireTracker Pro Lifetime",
+          "locale": "en_US"
         },
         {
-          "description" : "다른 사람에게 퇴사각 프로를 선물해요. 코드를 보내 주세요.",
-          "displayName" : "퇴사각 프로 선물",
-          "locale" : "ko"
+          "description": "Plus 전부에 그날의 나 미리보기, 동기화, 위젯까지.",
+          "displayName": "퇴사각 Pro 평생",
+          "locale": "ko_KR"
         }
       ],
-      "productID" : "com.devkoan.FireTracker.gift.pro",
-      "referenceName" : "Gift FireTracker Pro",
-      "type" : "Consumable"
+      "productID": "com.devkoan.FireTracker.pro",
+      "referenceName": "Pro Lifetime",
+      "type": "NonConsumable"
     },
     {
-      "displayPrice" : "2200",
-      "familyShareable" : false,
-      "internalID" : "6740000003",
-      "localizations" : [
+      "displayPrice": "14.99",
+      "familyShareable": true,
+      "internalID": "B056B689-EAE9-4A40-804A-360A6A1CE9C1",
+      "localizations": [
         {
-          "description" : "Buy the developer a coffee.",
-          "displayName" : "Small Tip",
-          "locale" : "en_US"
+          "description": "For Plus Lifetime owners: move up to Pro.",
+          "displayName": "Upgrade to Pro Lifetime",
+          "locale": "en_US"
         },
         {
-          "description" : "개발자에게 커피 한 잔을 보냅니다.",
-          "displayName" : "작은 응원",
-          "locale" : "ko"
+          "description": "Plus 평생을 산 분이 Pro 평생으로 올려요.",
+          "displayName": "퇴사각 Pro 평생으로 올리기",
+          "locale": "ko_KR"
         }
       ],
-      "productID" : "com.devkoan.FireTracker.tip.small",
-      "referenceName" : "Tip Small",
-      "type" : "Consumable"
+      "productID": "com.devkoan.FireTracker.pro.upgrade",
+      "referenceName": "Pro Lifetime Upgrade from Plus",
+      "type": "NonConsumable"
     },
     {
-      "displayPrice" : "5500",
-      "familyShareable" : false,
-      "internalID" : "6740000004",
-      "localizations" : [
+      "displayPrice": "29.99",
+      "familyShareable": true,
+      "internalID": "40903B6D-CA4B-49D0-80EE-C57AE99125B3",
+      "localizations": [
         {
-          "description" : "Help keep FireTracker improving.",
-          "displayName" : "Medium Tip",
-          "locale" : "en_US"
+          "description": "Pro Lifetime, offered only to subscribers.",
+          "displayName": "Pro Lifetime for Subscribers",
+          "locale": "en_US"
         },
         {
-          "description" : "퇴사각을 계속 다듬을 수 있게 힘을 보탭니다.",
-          "displayName" : "든든한 응원",
-          "locale" : "ko"
+          "description": "구독 중인 분께만 드리는 Pro 평생이에요.",
+          "displayName": "퇴사각 Pro 평생 (구독 졸업)",
+          "locale": "ko_KR"
         }
       ],
-      "productID" : "com.devkoan.FireTracker.tip.medium",
-      "referenceName" : "Tip Medium",
-      "type" : "Consumable"
+      "productID": "com.devkoan.FireTracker.pro.graduate",
+      "referenceName": "Pro Lifetime for Subscribers",
+      "type": "NonConsumable"
     },
     {
-      "displayPrice" : "11000",
-      "familyShareable" : false,
-      "internalID" : "6740000005",
-      "localizations" : [
+      "displayPrice": "44.99",
+      "familyShareable": false,
+      "internalID": "6740000002",
+      "localizations": [
         {
-          "description" : "Help build what comes next.",
-          "displayName" : "Large Tip",
-          "locale" : "en_US"
+          "description": "Give FireTracker Pro to someone else with a gift code.",
+          "displayName": "Gift FireTracker Pro",
+          "locale": "en_US"
         },
         {
-          "description" : "퇴사각의 다음 기능을 함께 만듭니다.",
-          "displayName" : "큰 응원",
-          "locale" : "ko"
+          "description": "다른 사람에게 퇴사각 프로를 선물해요. 코드를 보내 주세요.",
+          "displayName": "퇴사각 프로 선물",
+          "locale": "ko_KR"
         }
       ],
-      "productID" : "com.devkoan.FireTracker.tip.large",
-      "referenceName" : "Tip Large",
-      "type" : "Consumable"
+      "productID": "com.devkoan.FireTracker.gift.pro",
+      "referenceName": "Gift FireTracker Pro",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "1.49",
+      "familyShareable": false,
+      "internalID": "6740000003",
+      "localizations": [
+        {
+          "description": "Buy the developer a coffee.",
+          "displayName": "Small Tip",
+          "locale": "en_US"
+        },
+        {
+          "description": "개발자에게 커피 한 잔을 보냅니다.",
+          "displayName": "작은 응원",
+          "locale": "ko_KR"
+        }
+      ],
+      "productID": "com.devkoan.FireTracker.tip.small",
+      "referenceName": "Tip Small",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "3.49",
+      "familyShareable": false,
+      "internalID": "6740000004",
+      "localizations": [
+        {
+          "description": "Help keep FireTracker improving.",
+          "displayName": "Medium Tip",
+          "locale": "en_US"
+        },
+        {
+          "description": "퇴사각을 계속 다듬을 수 있게 힘을 보탭니다.",
+          "displayName": "든든한 응원",
+          "locale": "ko_KR"
+        }
+      ],
+      "productID": "com.devkoan.FireTracker.tip.medium",
+      "referenceName": "Tip Medium",
+      "type": "Consumable"
+    },
+    {
+      "displayPrice": "7.99",
+      "familyShareable": false,
+      "internalID": "6740000005",
+      "localizations": [
+        {
+          "description": "Help build what comes next.",
+          "displayName": "Large Tip",
+          "locale": "en_US"
+        },
+        {
+          "description": "퇴사각의 다음 기능을 함께 만듭니다.",
+          "displayName": "큰 응원",
+          "locale": "ko_KR"
+        }
+      ],
+      "productID": "com.devkoan.FireTracker.tip.large",
+      "referenceName": "Tip Large",
+      "type": "Consumable"
     }
   ],
-  "settings" : {
-    "_applicationInternalID" : "",
-    "_developerTeamID" : "",
-    "_locale" : "ko",
-    "_storefront" : "KOR"
+  "settings": {
+    "_applicationInternalID": "",
+    "_developerTeamID": "",
+    "_failTransactionsEnabled": false,
+    "_locale": "en_US",
+    "_storefront": "USA",
+    "_storeKitErrors": []
   },
-  "subscriptionGroups" : [
-
+  "subscriptionGroups": [
+    {
+      "id": "12670E6A-FBA9-4E2C-BB17-C107A9F329B5",
+      "localizations": [],
+      "name": "FireTracker",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "14.99",
+          "familyShareable": true,
+          "groupNumber": 1,
+          "internalID": "CFD4AB64-F012-4A91-AD4D-08CFB988CE4E",
+          "introductoryOffer": {
+            "internalID": "2320A927-1FC0-49BF-8ECD-C1CC1814F2DE",
+            "numberOfPeriods": 1,
+            "paymentMode": "payUpFront",
+            "subscriptionPeriod": "P1Y",
+            "displayPrice": "7.49"
+          },
+          "localizations": [
+            {
+              "description": "All of Plus with Future Me, sync and widgets",
+              "displayName": "FireTracker Pro Yearly",
+              "locale": "en_US"
+            },
+            {
+              "description": "Plus 전부에 그날의 나 미리보기, 동기화, 위젯까지.",
+              "displayName": "퇴사각 Pro 연간",
+              "locale": "ko_KR"
+            }
+          ],
+          "productID": "com.devkoan.FireTracker.pro.yearly",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Pro Yearly",
+          "subscriptionGroupID": "12670E6A-FBA9-4E2C-BB17-C107A9F329B5",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "4.99",
+          "familyShareable": true,
+          "groupNumber": 1,
+          "internalID": "72F010F3-7C16-40BC-8D4A-BC2997EC03B1",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "All of Plus with Future Me, sync and widgets",
+              "displayName": "FireTracker Pro Monthly",
+              "locale": "en_US"
+            },
+            {
+              "description": "Plus 전부에 그날의 나 미리보기, 동기화, 위젯까지.",
+              "displayName": "퇴사각 Pro 월간",
+              "locale": "ko_KR"
+            }
+          ],
+          "productID": "com.devkoan.FireTracker.pro.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Pro Monthly",
+          "subscriptionGroupID": "12670E6A-FBA9-4E2C-BB17-C107A9F329B5",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "1.99",
+          "familyShareable": true,
+          "groupNumber": 1,
+          "internalID": "73E7BE77-3720-4AC6-9FB6-EE6DF9559292",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "All of Plus with Future Me, sync and widgets",
+              "displayName": "FireTracker Pro Weekly",
+              "locale": "en_US"
+            },
+            {
+              "description": "Plus 전부에 그날의 나 미리보기, 동기화, 위젯까지.",
+              "displayName": "퇴사각 Pro 주간",
+              "locale": "ko_KR"
+            }
+          ],
+          "productID": "com.devkoan.FireTracker.pro.weekly",
+          "recurringSubscriptionPeriod": "P1W",
+          "referenceName": "Pro Weekly",
+          "subscriptionGroupID": "12670E6A-FBA9-4E2C-BB17-C107A9F329B5",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "9.99",
+          "familyShareable": true,
+          "groupNumber": 2,
+          "internalID": "24F2266E-27E6-4F3E-A16D-8EFFC628B319",
+          "introductoryOffer": {
+            "internalID": "AE47E7C8-4234-43A0-928D-D96587B82AEC",
+            "numberOfPeriods": 1,
+            "paymentMode": "payUpFront",
+            "subscriptionPeriod": "P1Y",
+            "displayPrice": "4.99"
+          },
+          "localizations": [
+            {
+              "description": "Forecasts, debt vs invest, ledger, more saves",
+              "displayName": "FireTracker Plus Yearly",
+              "locale": "en_US"
+            },
+            {
+              "description": "투자 예측, 빚 vs 투자, 계산 무제한 저장, 매매 원장을 엽니다.",
+              "displayName": "퇴사각 Plus 연간",
+              "locale": "ko_KR"
+            }
+          ],
+          "productID": "com.devkoan.FireTracker.plus.yearly",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Plus Yearly",
+          "subscriptionGroupID": "12670E6A-FBA9-4E2C-BB17-C107A9F329B5",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "3.49",
+          "familyShareable": true,
+          "groupNumber": 2,
+          "internalID": "D7E6983E-C0B8-46AE-B02B-9278EE1397DA",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Forecasts, debt vs invest, ledger, more saves",
+              "displayName": "FireTracker Plus Monthly",
+              "locale": "en_US"
+            },
+            {
+              "description": "투자 예측, 빚 vs 투자, 계산 무제한 저장, 매매 원장을 엽니다.",
+              "displayName": "퇴사각 Plus 월간",
+              "locale": "ko_KR"
+            }
+          ],
+          "productID": "com.devkoan.FireTracker.plus.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Plus Monthly",
+          "subscriptionGroupID": "12670E6A-FBA9-4E2C-BB17-C107A9F329B5",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "1.49",
+          "familyShareable": true,
+          "groupNumber": 2,
+          "internalID": "1F268A5C-3F31-46ED-A39A-E5FA541268BD",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Forecasts, debt vs invest, ledger, more saves",
+              "displayName": "FireTracker Plus Weekly",
+              "locale": "en_US"
+            },
+            {
+              "description": "투자 예측, 빚 vs 투자, 계산 무제한 저장, 매매 원장을 엽니다.",
+              "displayName": "퇴사각 Plus 주간",
+              "locale": "ko_KR"
+            }
+          ],
+          "productID": "com.devkoan.FireTracker.plus.weekly",
+          "recurringSubscriptionPeriod": "P1W",
+          "referenceName": "Plus Weekly",
+          "subscriptionGroupID": "12670E6A-FBA9-4E2C-BB17-C107A9F329B5",
+          "type": "RecurringSubscription",
+          "winbackOffers": []
+        }
+      ]
+    }
   ],
-  "version" : {
-    "major" : 4,
-    "minor" : 0
+  "version": {
+    "major": 4,
+    "minor": 0
   }
 }

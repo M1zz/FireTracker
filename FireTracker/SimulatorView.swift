@@ -18,8 +18,15 @@ struct SimulatorView: View {
     @Query private var settingsList: [FireSettings]
     // 마지막으로 보던 계산 모드를 저장해 다시 와도 그대로.
     @AppStorage("sim.mode") private var mode: SimMode = .lifecycle
+    // 계산 탭에 넣어 둔 계산기 — 질문으로 고른 것만 칩으로 보인다(CalcQuestionsView).
+    @AppStorage(CalcShelf.key) private var shelfRaw = ""
     @EnvironmentObject private var pro: LeeoStore
     @State private var paywallFeature: ProFeature?
+    @State private var showQuestions = false
+
+    private var shelf: [SimMode] { CalcShelf.modes(shelfRaw) }
+    // 저장된 모드가 칩에서 빠졌으면 첫 칩을 연다. 칩이 없으면 nil — 질문부터.
+    private var current: SimMode? { shelf.contains(mode) ? mode : shelf.first }
 
     private var settings: FireSettings { settingsList.first ?? FireSettings() }
     private var totalNet: Double { assets.reduce(0) { $0 + $1.netValue } }
@@ -99,12 +106,64 @@ struct SimulatorView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
-                modeChips
-                    .padding(.horizontal, Theme.gutter)
-                    .padding(.top, 4)
+                if let current {
+                    modeChips(current)
+                        .padding(.horizontal, Theme.gutter)
+                        .padding(.top, 4)
+                    section(current)
+                        .padding(.horizontal, Theme.gutter)
+                        .padding(.bottom, 8)
+                } else {
+                    ScrollView {
+                        CalcQuestionList(shelfRaw: $shelfRaw, onAdd: select)
+                            .padding(.horizontal, Theme.gutter)
+                            .padding(.vertical, 8)
+                    }
+                    .scrollIndicators(.hidden)
+                }
+            }
+            .frame(maxHeight: .infinity, alignment: .top)
+            .background(Theme.bg.ignoresSafeArea())
+            .navigationTitle("계산")
+            .navigationBarTitleDisplayMode(.inline)
+            .proPaywall($paywallFeature)
+            .onAppear {
+                // 처음 한 번 — 이미 써 본 사람은 전부, 새로 온 사람은 비운 채로 굳힌다.
+                if UserDefaults.standard.object(forKey: CalcShelf.key) == nil { shelfRaw = CalcShelf.initial }
+            }
+            .sheet(isPresented: $showQuestions) {
+                SimSheet(title: String(localized: "궁금한 것 고르기")) {
+                    CalcQuestionList(shelfRaw: $shelfRaw) { m in
+                        select(m)
+                        showQuestions = false
+                    }
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        // 불러오면 저장해 둔 모드가 펼쳐진 채로 돌아온다(칩에 없었으면 넣는다).
+                        SavedCalcsView(onRestore: {
+                            let m = savedMode
+                            if !shelf.contains(m) { shelfRaw = CalcShelf.adding(m, to: shelfRaw) }
+                            mode = m
+                        })
+                    } label: {
+                        Image(systemName: "bookmark")
+                    }
+                    .accessibilityLabel("저장한 계산")
+                }
+            }
+        }
+    }
 
-                // 모든 모드가 스크롤 없이 결과(차트)가 화면을 채우고, 값은 아래 패널에서 바꾼다.
-                Group {
+    private func select(_ m: SimMode) {
+        mode = m
+        AppUsage.logCalc(m.metricKey)
+    }
+
+    // 모든 모드가 스크롤 없이 결과(차트)가 화면을 채우고, 값은 아래 패널에서 바꾼다.
+    @ViewBuilder private func section(_ mode: SimMode) -> some View {
                     if let feature = lockedFeature(mode) {
                         ScrollView {
                             ProLockedCard(feature: feature) {
@@ -135,37 +194,15 @@ struct SimulatorView: View {
                         case .ruler: RulerSimSection()
                         }
                     }
-                }
-                .padding(.horizontal, Theme.gutter)
-                .padding(.bottom, 8)
-            }
-            .frame(maxHeight: .infinity, alignment: .top)
-            .background(Theme.bg.ignoresSafeArea())
-            .navigationTitle("계산")
-            .navigationBarTitleDisplayMode(.inline)
-            .proPaywall($paywallFeature)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        // 불러오면 저장해 둔 모드가 펼쳐진 채로 돌아온다.
-                        SavedCalcsView(onRestore: { mode = savedMode })
-                    } label: {
-                        Image(systemName: "bookmark")
-                    }
-                    .accessibilityLabel("저장한 계산")
-                }
-            }
-        }
     }
 
-    // 모드가 6개라 세그먼트로는 '생애주기' 같은 라벨이 잘린다 → 가로 스크롤 칩.
-    private var modeChips: some View {
+    // 세그먼트로는 '생애주기' 같은 라벨이 잘린다 → 가로 스크롤 칩. 끝의 [+] 로 질문을 다시 연다.
+    private func modeChips(_ current: SimMode) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                ForEach(SimMode.allCases) { m in
+                ForEach(shelf) { m in
                     Button {
-                        mode = m
-                        AppUsage.logCalc(m.metricKey)
+                        select(m)
                     } label: {
                         HStack(spacing: 4) {
                             if lockedFeature(m) != nil {
@@ -176,17 +213,29 @@ struct SimulatorView: View {
                             .font(.subheadline.weight(.semibold))
                             .padding(.horizontal, 14)
                             .padding(.vertical, 8)
-                            .background(mode == m ? Theme.accent : Theme.surfaceHigh)
-                            .foregroundStyle(mode == m ? Color.black : Theme.textSecond)
+                            .background(current == m ? Theme.accent : Theme.surfaceHigh)
+                            .foregroundStyle(current == m ? Color.black : Theme.textSecond)
                             .clipShape(Capsule())
                             .overlay(Capsule().stroke(Theme.hairline, lineWidth: 1))
                     }
                     .buttonStyle(.plain)
                 }
+                Button {
+                    showQuestions = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.subheadline.weight(.bold))
+                        .frame(width: 36, height: 36)
+                        .background(Theme.surfaceHigh, in: Circle())
+                        .overlay(Circle().stroke(Theme.hairline, lineWidth: 1))
+                        .foregroundStyle(Theme.textPrimary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("궁금한 것 고르기")
             }
             .padding(.vertical, 2)
         }
-        .animation(.easeInOut(duration: 0.2), value: mode)
+        .animation(.easeInOut(duration: 0.2), value: current)
     }
 
     /// 불러오기가 UserDefaults에 적어 둔 모드를 읽어 온다.

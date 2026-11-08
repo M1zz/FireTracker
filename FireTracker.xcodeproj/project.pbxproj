@@ -40,6 +40,7 @@
 		A1000020 /* CPIData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000020 /* CPIData.swift */; };
 		A1000021 /* TimeValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* TimeValueView.swift */; };
 		A1000070 /* ValueRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000070 /* ValueRulerView.swift */; };
+		A1000071 /* CalcQuestionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000071 /* CalcQuestionsView.swift */; };
 		A1000030 /* ProAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000030 /* ProAccess.swift */; };
 		A1000031 /* ProPaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000031 /* ProPaywallView.swift */; };
 		A1000033 /* FutureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000033 /* FutureEngine.swift */; };
@@ -117,6 +118,7 @@
 		B1000020 /* CPIData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPIData.swift; sourceTree = "<group>"; };
 		B1000021 /* TimeValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeValueView.swift; sourceTree = "<group>"; };
 		B1000070 /* ValueRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueRulerView.swift; sourceTree = "<group>"; };
+		B1000071 /* CalcQuestionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcQuestionsView.swift; sourceTree = "<group>"; };
 		B1000030 /* ProAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProAccess.swift; sourceTree = "<group>"; };
 		B1000031 /* ProPaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProPaywallView.swift; sourceTree = "<group>"; };
 		B1000033 /* FutureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureEngine.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				B1000020 /* CPIData.swift */,
 				B1000021 /* TimeValueView.swift */,
 				B1000070 /* ValueRulerView.swift */,
+				B1000071 /* CalcQuestionsView.swift */,
 				B100000E /* RefreshManager.swift */,
 				B100000F /* BackupManager.swift */,
 				B1000010 /* ReflectionTips.swift */,
@@ -408,6 +411,7 @@
 				A1000020 /* CPIData.swift in Sources */,
 				A1000021 /* TimeValueView.swift in Sources */,
 				A1000070 /* ValueRulerView.swift in Sources */,
+				A1000071 /* CalcQuestionsView.swift in Sources */,
 				A100000E /* RefreshManager.swift in Sources */,
 				A100000F /* BackupManager.swift in Sources */,
 				A1000010 /* ReflectionTips.swift in Sources */,

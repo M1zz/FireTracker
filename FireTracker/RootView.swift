@@ -455,6 +455,8 @@ enum ShotMode {
         // 언어마다 데모 자산 이름이 그 언어로 들어가도록 매번 새로 넣는다.
         if demoActive { try? DemoData.disable(context: context) }
         try? DemoData.enable(context: context)
+        // 계산 탭 스크린샷은 질문 목록이 아니라 계산기를 찍는다.
+        UserDefaults.standard.set(SimMode.allCases.map(\.metricKey).joined(separator: ","), forKey: CalcShelf.key)
         AppRouter.shared.selectedTab = UserDefaults.standard.integer(forKey: "shotTab")
         if sheet == "sell" { AppRouter.shared.showSellSignals = true }
     }

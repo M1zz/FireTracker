@@ -96,6 +96,7 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
     case debtVsInvest     = "calc.debtVsInvest"
     case purchasingPower  = "calc.wage"
     case timeValue        = "calc.time"
+    case valueRuler       = "calc.ruler"
     case unlimitedSaves   = "calc.saved"
     case tradeLedger      = "assets.tradeLedger"
     case screenshotImport = "assets.screenshotImport"
@@ -105,7 +106,7 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
     /// 이 기능을 여는 가장 낮은 칸.
     var tier: ProTier {
         switch self {
-        case .investForecast, .debtVsInvest, .purchasingPower, .timeValue, .unlimitedSaves, .tradeLedger:
+        case .investForecast, .debtVsInvest, .purchasingPower, .timeValue, .valueRuler, .unlimitedSaves, .tradeLedger:
             return .plus
         case .futurePreview, .quarterlyReport, .iCloudSync, .widget, .screenshotImport:
             return .pro
@@ -122,6 +123,7 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
         case .debtVsInvest:     return String(localized: "빚 갚기 vs 투자하기")
         case .purchasingPower:  return String(localized: "월급 구매력")
         case .timeValue:        return String(localized: "돈과 시간")
+        case .valueRuler:       return String(localized: "여러 잣대로 자산 재기")
         case .unlimitedSaves:   return String(localized: "계산 무제한 저장")
         case .tradeLedger:      return String(localized: "매매 원장")
         case .screenshotImport: return String(localized: "보유 종목 한 번에 가져오기")
@@ -146,6 +148,8 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
             return String(localized: "지난 월급을 물가로 나눠 내 실질 구매력이 늘었는지 알려줘요.")
         case .timeValue:
             return String(localized: "내 시급으로 돈을 시간으로 바꿔 보고, 저축이 시급을 넘는 시점을 찾아요.")
+        case .valueRuler:
+            return String(localized: "내 자산이 물가 · 금 · 달러 · 주가지수보다 더 올랐는지, 따라갔는지, 못 따라갔는지 알려줘요.")
         case .unlimitedSaves:
             return String(localized: "무료로는 3개까지 저장할 수 있어요. Plus부터 제한 없이 저장해요.")
         case .tradeLedger:
@@ -165,6 +169,7 @@ enum ProFeature: String, CaseIterable, Identifiable, LeeoProFeature {
         case .debtVsInvest:     return "arrow.triangle.branch"
         case .purchasingPower:  return "cart"
         case .timeValue:        return "hourglass"
+        case .valueRuler:       return "scalemass"
         case .unlimitedSaves:   return "bookmark.fill"
         case .tradeLedger:      return "list.bullet.rectangle"
         case .screenshotImport: return "text.viewfinder"

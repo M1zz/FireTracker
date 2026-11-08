@@ -18,6 +18,9 @@ import LeeoKit
 extension FireTrackerSpec {
     static var roadmap: [LeeoRoadmapItem] {[
         // MARK: 다음에 만들어요
+        .init(id: "calc.ruler", status: .building,
+              title: NSLocalizedString("여러 잣대로 자산 재기", comment: "Roadmap item: compare an asset against inflation, gold, dollar and stock indexes"),
+              detail: NSLocalizedString("내 자산이 물가 · 금 · 달러 · 주가지수보다 더 올랐는지 한눈에 비교해요.", comment: "Roadmap item detail: compare an asset against inflation, gold, dollar and stock indexes")),
         .init(id: "import.broker", status: .building,
               title: NSLocalizedString("증권사에서 종목 가져오기", comment: "Roadmap item: import holdings from a brokerage"),
               detail: NSLocalizedString("증권사에서 내려받은 표나 한국투자증권 계좌로 보유 종목과 수량을 한 번에 가져와요.", comment: "Roadmap item detail: import holdings from a brokerage")),

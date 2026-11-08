@@ -16,7 +16,7 @@ import SwiftData
 // MARK: - 계산 종류
 
 enum CalcKind: String, Codable, CaseIterable, Identifiable {
-    case lifecycle, loan, savings, invest, wage, time
+    case lifecycle, loan, savings, invest, wage, time, ruler
 
     var id: String { rawValue }
 
@@ -28,6 +28,7 @@ enum CalcKind: String, Codable, CaseIterable, Identifiable {
         case .invest:    return String(localized: "투자")
         case .wage:      return String(localized: "구매력")
         case .time:      return String(localized: "시간")
+        case .ruler:     return String(localized: "잣대")
         }
     }
 
@@ -39,6 +40,7 @@ enum CalcKind: String, Codable, CaseIterable, Identifiable {
         case .invest:    return "chart.line.uptrend.xyaxis"
         case .wage:      return "cart"
         case .time:      return "hourglass"
+        case .ruler:     return "scalemass"
         }
     }
 
@@ -53,6 +55,7 @@ enum CalcKind: String, Codable, CaseIterable, Identifiable {
         case .wage:      return ["sim.wage."]
         // 시간 계산은 구매력에 적어 둔 월급 기록을 시급 계산에 재사용한다.
         case .time:      return ["sim.time.", "sim.wage."]
+        case .ruler:     return ["sim.ruler."]
         }
     }
 

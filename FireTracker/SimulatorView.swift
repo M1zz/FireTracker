@@ -11,7 +11,8 @@ import FoundationModels
 // 생애주기(모으고 쓰는 인생 자산 곡선) · 대출(종류별 상환 흐름) ·
 // 저축(예금·적금·파킹 만기 수령액) · 투자(내 자산의 앞으로의 범위 예측) ·
 // 구매력(과거 월급을 물가로 나눈 실질임금 = 내 구매력 변화) ·
-// 시간(돈을 시간으로 환산해 하루의 밀도·순증, 저장 vs 시급 성장을 비교).
+// 시간(돈을 시간으로 환산해 하루의 밀도·순증, 저장 vs 시급 성장을 비교) ·
+// 잣대(자산이 물가·금·달러·주가지수보다 더 올랐는지).
 struct SimulatorView: View {
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query private var settingsList: [FireSettings]
@@ -32,7 +33,8 @@ struct SimulatorView: View {
     }
 
     // 순서 = 퇴사각에 가까운 순. 앞의 셋이 "언제 그만둘 수 있나"를 직접 다루고,
-    // 뒤의 넷은 그 답을 바꾸는 생활의 결정(빚·저축·월급·시간)을 다룬다.
+    // 뒤의 넷은 그 답을 바꾸는 생활의 결정(빚·저축·월급·시간)을 다루고,
+    // 잣대는 이미 가진 자산이 제값을 했는지 돌아본다.
     enum SimMode: String, CaseIterable, Identifiable {
         case lifecycle = "생애주기"
         case invest = "투자"
@@ -41,6 +43,7 @@ struct SimulatorView: View {
         case savings = "저축"
         case wage = "구매력"
         case time = "시간"
+        case ruler = "잣대"
         var id: String { rawValue }
 
         /// 칩에 보이는 이름.
@@ -56,6 +59,7 @@ struct SimulatorView: View {
             case .savings:      return "예금·적금 만기에 얼마를 받는지, 이자에 세금은 얼마인지 계산해요."
             case .wage:         return "지난 월급을 물가로 나눠, 내 실질 구매력이 늘었는지 봐요."
             case .time:         return "돈을 내 시간으로 바꿔 보고, 자산 수익이 시급을 넘는 시점을 찾아요."
+            case .ruler:        return "내 자산이 물가 · 금 · 달러 · 주가지수보다 더 올랐는지 여러 잣대로 재 봐요."
             }
         }
 
@@ -66,6 +70,7 @@ struct SimulatorView: View {
             case .debtVsInvest: return .debtVsInvest
             case .wage:         return .purchasingPower
             case .time:         return .timeValue
+            case .ruler:        return .valueRuler
             case .lifecycle, .loan, .savings: return nil
             }
         }
@@ -80,6 +85,7 @@ struct SimulatorView: View {
             case .debtVsInvest: return "debt_vs_invest"
             case .wage:         return "wage"
             case .time:         return "time"
+            case .ruler:        return "ruler"
             }
         }
     }
@@ -126,6 +132,7 @@ struct SimulatorView: View {
                             .keyboardDismissable()
                         case .wage: WageSimSection()
                         case .time: TimeSimSection(settings: settings, netWorth: totalNet)
+                        case .ruler: RulerSimSection()
                         }
                     }
                 }

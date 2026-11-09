@@ -1,0 +1,308 @@
+<title>가짜 부의 실체</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 레이아웃: 한 칼럼. 입력 → 한 문장 결론 → 지수 차트 → 자산별 카드 → 각주. */
+:root {
+  --bg: #f7f5f0;          /* 종이빛, 노랑 쪽으로 살짝 */
+  --surface: #fffdf9;
+  --line: #e2ddd2;
+  --fg: #1c1a16;
+  --fg-2: #5b574e;
+  --fg-3: #8d887c;
+  --accent: #8a5a12;      /* 금 세공 갈색 */
+  --rise: #1f7a3a;
+  --fall: #b3362b;
+  --s1: #2a78d6;          /* 명목 원화 */
+  --s2: #eb6834;          /* 물가 보정 */
+  --s3: #1baf7a;          /* 금 기준 */
+  --s4: #eda100;          /* 평균 소득 기준 */
+  --grid: #e8e4da;
+  --display: "Gowun Batang", "Apple SD Gothic Neo", serif;
+  --body: "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171613; --surface: #1f1e1a; --line: #33312b; --fg: #efece4; --fg-2: #b9b4a7; --fg-3: #847f73;
+    --accent: #d9a650; --rise: #4fb56e; --fall: #e36e62; --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --grid: #2a2924;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171613; --surface: #1f1e1a; --line: #33312b; --fg: #efece4; --fg-2: #b9b4a7; --fg-3: #847f73;
+  --accent: #d9a650; --rise: #4fb56e; --fall: #e36e62; --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --grid: #2a2924;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.6;
+  padding-block: 32px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 760px; margin: 0 auto; display: grid; gap: 36px; }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 40px); line-height: 1.2; margin: 0 0 8px; text-wrap: balance; letter-spacing: -0.01em; }
+.lede { color: var(--fg-2); margin: 0; max-width: 60ch; }
+h2 { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; color: var(--fg-3); text-transform: uppercase; margin: 0 0 12px; }
+
+/* 입력 */
+.inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 16px; }
+.field label { display: block; font-size: 12px; color: var(--fg-3); margin-bottom: 4px; }
+.field .box { display: flex; align-items: baseline; gap: 6px; border-bottom: 1px solid var(--line); padding: 2px 0 6px; }
+.field input, .field select {
+  width: 100%; min-width: 0; border: 0; background: transparent; color: var(--fg); font: inherit; font-size: 20px;
+  font-variant-numeric: tabular-nums; padding: 0; outline-offset: 4px;
+}
+.field input:focus-visible, .field select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); border-radius: 2px; }
+.field .unit { color: var(--fg-3); font-size: 13px; white-space: nowrap; }
+.hint { font-size: 12px; color: var(--fg-3); margin-top: 10px; }
+
+/* 결론 */
+.verdict { font-family: var(--display); font-size: clamp(20px, 3.4vw, 26px); line-height: 1.5; margin: 0; text-wrap: balance; }
+.verdict b { font-weight: 700; color: var(--accent); white-space: nowrap; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 18px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
+.tile .k { font-size: 12px; color: var(--fg-3); display: flex; align-items: center; gap: 6px; }
+.tile .k i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.tile .v { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; margin-top: 4px; }
+.tile .d { font-size: 13px; color: var(--fg-2); font-variant-numeric: tabular-nums; }
+.up { color: var(--rise); } .dn { color: var(--fall); }
+
+/* 차트 */
+.chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--fg-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 2px; display: inline-block; border-radius: 1px; }
+.chart { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 6px 4px; }
+.chart svg { width: 100%; height: auto; display: block; }
+.tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); font-size: 12px; padding: 8px 10px; border-radius: 4px; white-space: nowrap; display: none; z-index: 2; font-variant-numeric: tabular-nums; line-height: 1.5; }
+.tip b { font-weight: 700; }
+.toggle { font: inherit; font-size: 12px; color: var(--fg-2); background: transparent; border: 1px solid var(--line); border-radius: 4px; padding: 3px 10px; cursor: pointer; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+th, td { text-align: right; padding: 7px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { color: var(--fg-3); font-weight: 500; font-size: 12px; }
+th:first-child, td:first-child { text-align: left; }
+tr:last-child td { border-bottom: 0; }
+
+/* 자산 카드 */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 10px; align-content: start; }
+.card h3 { margin: 0; font-size: 16px; font-weight: 700; }
+.card .then { font-size: 12px; color: var(--fg-3); }
+.card .now { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.rows { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 10px; }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; }
+.row .l { color: var(--fg-2); }
+.row .r { font-variant-numeric: tabular-nums; font-weight: 500; }
+.chip { font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; margin-left: 6px; }
+.card p { margin: 0; font-size: 13px; color: var(--fg-2); }
+
+.note { font-size: 12.5px; color: var(--fg-3); line-height: 1.7; border-top: 1px solid var(--line); padding-top: 16px; }
+.note p { margin: 0 0 6px; }
+@media (prefers-reduced-motion: no-preference) { .tile .v, .card .now { transition: color .2s; } }
+</style>
+
+<main>
+  <header>
+    <h1>가짜 부의 실체</h1>
+    <p class="lede">원화로 센 숫자가 늘었다고 부자가 된 것은 아닙니다. 같은 돈을 물가 · 금 · 달러 · 남들의 소득이라는 다른 자로 재 보면 진짜 늘었는지가 드러납니다.</p>
+  </header>
+
+  <section>
+    <h2>내가 가진 것</h2>
+    <div class="inputs">
+      <div class="field"><label for="won">원화 현금 · 예금</label><div class="box"><input id="won" type="text" inputmode="numeric" value="100,000,000"><span class="unit">원</span></div></div>
+      <div class="field"><label for="usd">달러</label><div class="box"><input id="usd" type="text" inputmode="numeric" value="10,000"><span class="unit">$</span></div></div>
+      <div class="field"><label for="gold">금</label><div class="box"><input id="gold" type="text" inputmode="decimal" value="100"><span class="unit">g</span></div></div>
+      <div class="field"><label for="year">이만큼을 갖고 있던 때</label><div class="box"><select id="year"></select><span class="unit">년부터</span></div></div>
+    </div>
+    <p class="hint">처음 값은 예시입니다. 지금 가진 양을 넣으면, 그때부터 그대로 들고만 있었을 때의 변화를 봅니다. 아래 합계는 세 칸을 오늘 환율 · 금값으로 원화로 바꿔 더한 값이라, 원화만 보려면 달러와 금을 0으로 두세요.</p>
+  </section>
+
+  <section>
+    <p class="verdict" id="verdict"></p>
+    <div class="tiles" id="tiles"></div>
+  </section>
+
+  <section>
+    <div class="chart-head">
+      <h2 id="chartTitle">기준 연도 = 100</h2>
+      <div class="legend">
+        <span><i style="background:var(--s1)"></i>셋을 합쳐 원화로 센 값</span>
+        <span><i style="background:var(--s2)"></i>물가 보정 (살 수 있는 양)</span>
+        <span><i style="background:var(--s3)"></i>금으로 잰 값</span>
+        <span><i style="background:var(--s4)"></i>평균 소득으로 잰 값</span>
+      </div>
+    </div>
+    <div class="chart" id="chart"><div class="tip" id="tip"></div></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="toggle" id="toggleTable" type="button">표로 보기</button></div>
+    <div class="tablewrap" id="tablewrap" hidden></div>
+  </section>
+
+  <section>
+    <h2>자산별로 다른 자로 재 보면</h2>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section class="note">
+    <p>물가 보정은 한국 소비자물가지수(2020 = 100)로 했고, 2026년은 2025년보다 2% 오른 것으로 추정했습니다.</p>
+    <p>금과 환율은 Yahoo Finance 월봉으로, 지난 해는 그해 월 종가의 중앙값, 2026년은 11월 9일 시세입니다. 금 1g 값은 달러/온스 × 원/달러 ÷ 31.1035 입니다.</p>
+    <p>평균 소득은 한국은행 1인당 국민총소득(GNI, 원화)으로, 세계은행 자료를 썼습니다. 2026년은 2025년보다 4% 오른 것으로 추정했습니다. "몇 년치"는 내 자산을 그해 1인당 소득으로 나눈 값입니다.</p>
+    <p>이자 · 배당 · 보관 비용은 넣지 않았습니다. 들고만 있었을 때의 변화입니다.</p>
+  </section>
+</main>
+
+<script>
+// ---- 자료 (2003 ~ 2026) ----
+const YEARS = []; for (let y = 2003; y <= 2026; y++) YEARS.push(y);
+const GOLD_OZ = [368,410,436,630,671,884,954,1212,1566,1685,1394,1246,1142,1272,1269,1265,1365,1840,1774,1795,1967,2331,3319,4132.5];
+const FX      = [1190,1158,1018,937,922,1037,1251,1143,1101,1125,1086,1053,1113,1145,1124,1112,1161,1188,1141,1283,1319,1375,1428,1346.81];
+const CPI     = [69.91,72.42,74.41,76.08,78.01,81.66,83.91,86.37,89.85,91.82,93.01,94.2,94.86,95.78,97.64,99.09,99.47,100,102.5,107.71,111.59,114.18,116.6,118.9];
+const GNI     = [1807,1958,2051,2153,2325,2453,2542,2788,2918,3027,3134,3244,3422,3591,3780,3905,3974,4004,4337,4551,4725,5012,5242,5452].map(v => v * 1e4); // 1인당 GNI, 원
+const GOLD_G  = GOLD_OZ.map((g, i) => g * FX[i] / 31.1034768);
+const NOW = YEARS.length - 1;
+
+// ---- 입력 ----
+const $ = id => document.getElementById(id);
+const yearSel = $('year');
+for (let y = 2003; y <= 2025; y++) { const o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o); }
+yearSel.value = '2015';
+const num = s => { const v = parseFloat(String(s).replace(/[^0-9.]/g, '')); return isFinite(v) ? v : 0; };
+const fmtN = n => Math.round(n).toLocaleString('ko-KR');
+function won(n) {
+  n = Math.round(n);
+  if (Math.abs(n) >= 1e8) { const eok = Math.floor(n / 1e8), man = Math.round((n % 1e8) / 1e4); return man ? `${eok}억 ${man.toLocaleString('ko-KR')}만 원` : `${eok}억 원`; }
+  if (Math.abs(n) >= 1e4) return `${Math.round(n / 1e4).toLocaleString('ko-KR')}만 원`;
+  return `${n.toLocaleString('ko-KR')}원`;
+}
+const pct = r => { const p = Math.round((r - 1) * 100); return (p > 0 ? '+' : '') + p + '%'; };
+const cls = r => r > 1.005 ? 'up' : r < 0.995 ? 'dn' : '';
+function save() { try { localStorage.setItem('fw.inputs', JSON.stringify({ won: $('won').value, usd: $('usd').value, gold: $('gold').value, year: yearSel.value })); } catch (e) {} }
+function load() { try { const s = JSON.parse(localStorage.getItem('fw.inputs')); if (s) { $('won').value = s.won; $('usd').value = s.usd; $('gold').value = s.gold; yearSel.value = s.year; } } catch (e) {} }
+load();
+
+// ---- 계산 ----
+function compute() {
+  const W = num($('won').value), D = num($('usd').value), G = num($('gold').value);
+  const y0 = parseInt(yearSel.value, 10), i0 = y0 - 2003;
+  const total = YEARS.map((_, i) => W + D * FX[i] + G * GOLD_G[i]);
+  const idxNominal = total.map(v => v / total[i0] * 100);
+  const idxReal    = total.map((v, i) => v / total[i0] * CPI[i0] / CPI[i] * 100);
+  const idxGold    = total.map((v, i) => (v / GOLD_G[i]) / (total[i0] / GOLD_G[i0]) * 100);
+  const idxIncome  = total.map((v, i) => (v / GNI[i]) / (total[i0] / GNI[i0]) * 100);
+  return { W, D, G, y0, i0, total, idxNominal, idxReal, idxGold, idxIncome };
+}
+
+function render() {
+  const c = compute();
+  const { W, D, G, y0, i0, total } = c;
+  const nom = total[NOW] / total[i0], real = nom * CPI[i0] / CPI[NOW], gold = (total[NOW] / GOLD_G[NOW]) / (total[i0] / GOLD_G[i0]);
+  const cpiUp = CPI[NOW] / CPI[i0], gniUp = GNI[NOW] / GNI[i0];
+  const yrs = (v, i) => (v / GNI[i]).toFixed(1);
+
+  // 결론 한 문장
+  const realWord = real >= 1.005 ? `그때보다 <b>${pct(real)}</b> 더 살 수 있습니다` : real <= 0.995 ? `그때 살 수 있던 것 중 <b>${Math.round((1 - real) * 100)}%</b>는 이제 못 삽니다` : `살 수 있는 양은 그대로입니다`;
+  const goldWord = gold < 0.995 ? `금으로 재면 <b>${Math.round(gold * 100)}%</b>만 남았고,` : `금으로 재도 <b>${pct(gold)}</b>이고,`;
+  const incWord = ` 평균 소득으로 재면 <b>${yrs(total[i0], i0)}년치</b>에서 <b>${yrs(total[NOW], NOW)}년치</b>가 됐습니다.`;
+  const parts = [W > 0 && `원화 ${won(W)}`, D > 0 && `달러 ${won(D * FX[NOW])}`, G > 0 && `금 ${won(G * GOLD_G[NOW])}`].filter(Boolean).join(' + ');
+  $('verdict').innerHTML = `셋을 오늘 시세로 원화로 바꿔 더하면 <b>${won(total[NOW])}</b>, ${y0}년보다 <b>${pct(nom)}</b>입니다. 그런데 물가가 <b>${pct(cpiUp)}</b> 올라 ${realWord}. ${goldWord}${incWord}`;
+
+  $('tiles').innerHTML = [
+    ['var(--s1)', '셋을 합쳐 원화로 센 값', won(total[NOW]), `${parts} · ${y0}년엔 ${won(total[i0])}`, nom],
+    ['var(--s2)', `${y0}년 원화로 환산 (살 수 있는 양)`, won(total[NOW] * CPI[i0] / CPI[NOW]), pct(real), real],
+    ['var(--s3)', '금으로 잰 값', `${fmtN(total[NOW] / GOLD_G[NOW])} g`, `${pct(gold)} (${fmtN(total[i0] / GOLD_G[i0])} g 이던 것)`, gold],
+    ['var(--s4)', '평균 소득으로 잰 값', `${yrs(total[NOW], NOW)}년치`, `${pct(nom / gniUp)} (${yrs(total[i0], i0)}년치 소득이던 것)`, nom / gniUp],
+  ].map(([col, k, v, d, r]) => `<div class="tile"><div class="k"><i style="background:${col}"></i>${k}</div><div class="v ${cls(r)}">${v}</div><div class="d">${d}</div></div>`).join('');
+
+  $('chartTitle').textContent = `${y0}년 = 100`;
+  drawChart(c);
+  drawTable(c);
+
+  // 자산별 카드
+  const fxUp = FX[NOW] / FX[i0], goldUp = GOLD_G[NOW] / GOLD_G[i0];
+  const items = [
+    { name: '원화 현금', qty: `${won(W)} 그대로`, then: W, now: W, hide: W <= 0, mult: 1,
+      say: '숫자는 한 푼도 안 줄었지만, 그 돈으로 살 수 있는 양은 물가가 오른 만큼 줄었습니다. 가장 조용한 손실입니다.' },
+    { name: '달러', qty: `$${fmtN(D)}`, then: D * FX[i0], now: D * FX[NOW], hide: D <= 0, mult: fxUp,
+      say: fxUp > 1 ? '원화로 바꾸면 늘어 보입니다. 환율이 오른 만큼이지, 달러 자체가 불어난 것은 아닙니다.' : '환율이 내려 원화로는 줄었습니다. 달러의 세계 구매력과는 다른 이야기입니다.' },
+    { name: '금', qty: `${fmtN(G)} g`, then: G * GOLD_G[i0], now: G * GOLD_G[NOW], hide: G <= 0, mult: goldUp,
+      say: '금이 오른 게 아니라 돈이 금 앞에서 작아진 것입니다. 금 1g은 그때나 지금이나 금 1g입니다.' },
+  ];
+  $('cards').innerHTML = items.filter(x => !x.hide).map(x => {
+    const vsCpi = x.mult / cpiUp, vsUsd = x.mult / fxUp, vsGold = x.mult / goldUp, vsGni = x.mult / gniUp;
+    const row = (l, r) => `<div class="row"><span class="l">${l}</span><span class="r ${cls(r)}">${pct(r)}<span class="chip">${r > 1.05 ? '능가' : r < 0.95 ? '못 따라감' : '비슷'}</span></span></div>`;
+    return `<article class="card"><h3>${x.name}</h3><div class="then">${x.qty} · ${y0}년엔 ${won(x.then)}</div><div class="now">${won(x.now)}</div>
+      <div class="rows">${row('물가 대비', vsCpi)}${row('달러 대비', vsUsd)}${row('금 대비', vsGold)}${row('평균 소득 대비', vsGni)}</div><p>${x.say}</p></article>`;
+  }).join('');
+}
+
+// ---- 차트 ----
+function drawChart(c) {
+  const W = 720, H = 320, m = { t: 16, r: 60, b: 28, l: 40 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const series = [
+    { key: 'idxNominal', col: 'var(--s1)', label: '원화' },
+    { key: 'idxReal',    col: 'var(--s2)', label: '물가 보정' },
+    { key: 'idxGold',    col: 'var(--s3)', label: '금 기준' },
+    { key: 'idxIncome',  col: 'var(--s4)', label: '소득 기준' },
+  ];
+  const all = series.flatMap(s => c[s.key]);
+  const lo = Math.min(...all), hi = Math.max(...all);
+  const yMin = Math.floor(Math.min(lo, 100) / 25) * 25 - (lo < 25 ? 0 : 0);
+  const yMax = Math.ceil(Math.max(hi, 100) / 25) * 25;
+  const x = i => m.l + i / (YEARS.length - 1) * iw;
+  const y = v => m.t + (yMax - v) / (yMax - yMin) * ih;
+  const step = (yMax - yMin) > 400 ? 100 : (yMax - yMin) > 200 ? 50 : 25;
+  let g = '';
+  for (let v = yMin; v <= yMax; v += step) {
+    g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)" stroke-width="1"/>`;
+    g += `<text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--fg-3)">${v}</text>`;
+  }
+  g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(100)}" y2="${y(100)}" stroke="var(--fg-3)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  YEARS.forEach((yr, i) => { if (yr % 5 === 0 || i === NOW) g += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="var(--fg-3)">${yr}</text>`; });
+  const ends = [];
+  series.forEach(s => {
+    const d = c[s.key].map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('');
+    g += `<path d="${d}" fill="none" stroke="${s.col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    g += `<circle cx="${x(NOW)}" cy="${y(c[s.key][NOW])}" r="4" fill="${s.col}" stroke="var(--surface)" stroke-width="2"/>`;
+    ends.push({ y: y(c[s.key][NOW]), text: `${s.label} ${Math.round(c[s.key][NOW])}`, col: s.col });
+  });
+  ends.sort((a, b) => a.y - b.y);
+  for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 13) ends[i].y = ends[i - 1].y + 13;
+  ends.forEach(e => { g += `<text x="${x(NOW) + 8}" y="${e.y + 4}" font-size="11" fill="var(--fg-2)">${e.text}</text>`; });
+  g += `<circle cx="${x(c.i0)}" cy="${y(100)}" r="3" fill="var(--fg-3)"/>`;
+  g += `<line id="cross" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" stroke="var(--fg-3)" stroke-width="1" style="display:none"/>`;
+  g += `<rect id="hit" x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent"/>`;
+  const chart = $('chart');
+  const old = chart.querySelector('svg'); if (old) old.remove();
+  chart.insertAdjacentHTML('afterbegin', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="기준 연도 대비 지수 추이">${g}</svg>`);
+  const svg = chart.querySelector('svg'), hit = svg.querySelector('#hit'), cross = svg.querySelector('#cross'), tip = $('tip');
+  const show = ev => {
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const i = Math.max(0, Math.min(NOW, Math.round((p.x - m.l) / iw * (YEARS.length - 1))));
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.style.display = '';
+    tip.innerHTML = `<b>${YEARS[i]}년</b> · ${won(c.total[i])}<br>원화 ${Math.round(c.idxNominal[i])} · 물가 보정 ${Math.round(c.idxReal[i])} · 금 기준 ${Math.round(c.idxGold[i])} · 소득 기준 ${Math.round(c.idxIncome[i])}<br>환율 ${fmtN(FX[i])}원 · 금 ${fmtN(GOLD_G[i])}원/g · 1인당 소득 ${won(GNI[i])}`;
+    tip.style.display = 'block';
+    const r = chart.getBoundingClientRect(); let left = ev.clientX - r.left + 12;
+    if (left + tip.offsetWidth > r.width - 8) left = ev.clientX - r.left - tip.offsetWidth - 12;
+    tip.style.left = Math.max(4, left) + 'px'; tip.style.top = Math.max(4, ev.clientY - r.top - tip.offsetHeight - 10) + 'px';
+  };
+  hit.addEventListener('pointermove', show);
+  hit.addEventListener('pointerleave', () => { tip.style.display = 'none'; cross.style.display = 'none'; });
+}
+
+function drawTable(c) {
+  const rows = YEARS.map((yr, i) => `<tr><td>${yr}</td><td>${fmtN(FX[i])}</td><td>${fmtN(GOLD_G[i])}</td><td>${CPI[i]}</td><td>${won(GNI[i])}</td><td>${won(c.total[i])}</td><td>${Math.round(c.idxNominal[i])}</td><td>${Math.round(c.idxReal[i])}</td><td>${Math.round(c.idxGold[i])}</td><td>${Math.round(c.idxIncome[i])}</td></tr>`).join('');
+  $('tablewrap').innerHTML = `<table><thead><tr><th>연도</th><th>원/달러</th><th>금 원/g</th><th>물가지수</th><th>1인당 소득</th><th>원화 합계</th><th>원화 지수</th><th>물가 보정</th><th>금 기준</th><th>소득 기준</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+$('toggleTable').addEventListener('click', () => { const w = $('tablewrap'); w.hidden = !w.hidden; $('toggleTable').textContent = w.hidden ? '표로 보기' : '표 닫기'; });
+['won', 'usd', 'gold'].forEach(id => {
+  $(id).addEventListener('input', () => { save(); render(); });
+  $(id).addEventListener('blur', e => { const v = num(e.target.value); e.target.value = id === 'gold' ? String(v) : v.toLocaleString('ko-KR'); });
+});
+yearSel.addEventListener('change', () => { save(); render(); });
+render();
+</script>

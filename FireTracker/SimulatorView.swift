@@ -427,7 +427,7 @@ struct SimLeverPanel<Trailing: View, Footer: View>: View {
         .padding(12)
         .background(Theme.surfaceHigh.opacity(0.6))
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .sensoryFeedback(.selection, trigger: current?.text ?? "")
+        .tapFeedback(.selection, trigger: current?.text ?? "")
         .alert("\(current?.id ?? "") 직접 입력", isPresented: $typing) {
             TextField(current?.unitLabel ?? "", text: $draft)
                 .keyboardType(.decimalPad)
@@ -2150,7 +2150,7 @@ private struct InvestForecastSection: View {
                 // 온디바이스 파운데이션 모델 해석 — 숫자 예측은 몬테카를로가 하고,
                 // 모델은 그 결과의 '읽기'(리스크 구성·조언)만 맡는다.
                 #if canImport(FoundationModels)
-                if #available(iOS 26.0, *),
+                if #available(iOS 26.0, visionOS 26.0, *),
                    case .available = SystemLanguageModel.default.availability {
                     ForecastAICard(prompt: aiPrompt(asm, band: band))
                 }
@@ -2939,7 +2939,7 @@ private struct WageSimSection: View {
 #if canImport(FoundationModels)
 // 예측 결과를 온디바이스 모델이 자연어로 풀어주는 카드 — 수치는 건드리지 않고
 // '읽는 법'만 돕는다. 버튼을 눌렀을 때만 생성하고, 결과는 참고용임을 명시한다.
-@available(iOS 26.0, *)
+@available(iOS 26.0, visionOS 26.0, *)
 private struct ForecastAICard: View {
     let prompt: String
 

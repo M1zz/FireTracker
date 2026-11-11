@@ -872,7 +872,7 @@ struct AssetsView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         // 저장 직후(시트 닫히며 목록 갱신) 찍히자마자 스프링으로 움직이게.
         .animation(.spring(duration: 0.55, bounce: 0.45), value: collected)
-        .sensoryFeedback(.success, trigger: count) { old, new in new > old }
+        .tapFeedback(.success, trigger: count) { old, new in new > old }
         .cardStyle()
     }
 
@@ -2606,7 +2606,7 @@ struct AmountScrubber: View {
             }
         }
         .padding(.vertical, 2)
-        .sensoryFeedback(.selection, trigger: value)
+        .tapFeedback(.selection, trigger: value)
     }
 
     // 측정 테이프처럼 눈금이 손가락을 따라 흐르는 룰러 — 가운데 포인터가 기준점.

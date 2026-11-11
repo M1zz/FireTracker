@@ -13,7 +13,9 @@
 		38E33F7EB564676F8FCC2BE8 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */; };
 		555219EE5C66ADE4C6892A72 /* FireSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D870EF53B2A69CD2BBCA3E3C /* FireSummary.swift */; };
 		66086140F2D17A93089668DF /* FireTrackerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1565B7348B6849C756363468 /* FireTrackerSpec.swift */; };
-		70D4108E965ED61702D4DF1E /* FireTrackerWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		70D4108E965ED61702D4DF1E /* FireTrackerWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BF7D131C263A64A6558A2F0C /* FireTrackerWidgetExtension.appex */; platformFilters = (
+				ios,
+			); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7A1C0E5B9D2F4A6B8C3E1D07 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */; };
 		A1000001 /* FireTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* FireTrackerApp.swift */; };
 		A1000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000002 /* Models.swift */; };
@@ -436,6 +438,9 @@
 		1681EEF9D1B02A051025C069 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = FireTrackerWidgetExtension;
+			platformFilters = (
+				ios,
+			);
 			target = 2BC779ADBB91E37D1EE4802F /* FireTrackerWidgetExtension */;
 			targetProxy = 164D4FB312A6180730E6A738 /* PBXContainerItemProxy */;
 		};
@@ -625,11 +630,13 @@
 				MARKETING_VERSION = 1.2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.devkoan.FireTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,7";
+				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
@@ -655,11 +662,13 @@
 				MARKETING_VERSION = 1.2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.devkoan.FireTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,7";
+				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
@@ -701,7 +710,7 @@
 			repositoryURL = "https://github.com/M1zz/LeeoKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.38.1;
+				minimumVersion = 3.43.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -77,7 +77,12 @@ extension View {
 
     // Adds a "완료" button above the keyboard so number-pad fields (which have
     // no return key) can be dismissed, plus swipe-to-dismiss.
+    @ViewBuilder
     func keyboardDismissable() -> some View {
+        // visionOS 는 가상 키보드가 창 밖에 떠 있고 자기 닫기 단추가 있다 — 그대로 둔다.
+        #if os(visionOS)
+        self
+        #else
         self
             .scrollDismissesKeyboard(.interactively)
             .toolbar {
@@ -91,6 +96,7 @@ extension View {
                     }
                 }
             }
+        #endif
     }
 
     // Bordered field container that signals "this is editable".
@@ -130,3 +136,25 @@ struct AdaptiveRow<Leading: View, Trailing: View>: View {
         }
     }
 }
+
+// MARK: - 햅틱 (visionOS 2 에는 sensoryFeedback 이 없다 — 빈 수정자로)
+
+#if os(visionOS)
+enum TapFeedback { case success, selection }
+extension View {
+    func tapFeedback<T: Equatable>(_ feedback: TapFeedback, trigger: T) -> some View { self }
+    func tapFeedback<T: Equatable>(_ feedback: TapFeedback, trigger: T,
+                                   condition: @escaping (T, T) -> Bool) -> some View { self }
+}
+#else
+typealias TapFeedback = SensoryFeedback
+extension View {
+    func tapFeedback<T: Equatable>(_ feedback: TapFeedback, trigger: T) -> some View {
+        sensoryFeedback(feedback, trigger: trigger)
+    }
+    func tapFeedback<T: Equatable>(_ feedback: TapFeedback, trigger: T,
+                                   condition: @escaping (T, T) -> Bool) -> some View {
+        sensoryFeedback(feedback, trigger: trigger, condition: condition)
+    }
+}
+#endif

@@ -1,5 +1,151 @@
 # 릴리즈 노트
 
+## 1.2.6
+
+### 앱스토어 (한국어)
+
+이제 Apple Vision Pro에서도 쓸 수 있어요
+넓은 창에서 자산과 여정을 한눈에 봐요
+iCloud 동기화를 켜면 iPhone과 이어져요
+
+### App Store (English)
+
+Now available on Apple Vision Pro
+Assets and journey in one wide window
+Turn on iCloud to continue from iPhone
+
+### App Store (en-GB)
+
+Now available on Apple Vision Pro
+Assets and journey in one wide window
+Turn on iCloud to continue from iPhone
+
+### App Store (ja)
+
+Apple Vision Proでも使えるようになりました
+広いウインドウで資産と道のりを一目で
+iCloud同期をオンにすればiPhoneと続きます
+
+### App Store (zh-Hans)
+
+现在也能在 Apple Vision Pro 上使用
+在宽大的窗口中一览资产与进程
+开启 iCloud 同步即可接续 iPhone 的记录
+
+### App Store (zh-Hant)
+
+現在也能在 Apple Vision Pro 上使用
+在寬大的視窗中一覽資產與進程
+開啟 iCloud 同步即可接續 iPhone 的記錄
+
+### App Store (Spanish)
+
+Ya disponible en Apple Vision Pro
+Activos y camino en una ventana amplia
+Activa iCloud y sigue desde el iPhone
+
+### App Store (German)
+
+Jetzt auch auf Apple Vision Pro
+Vermögen und Weg in einem großen Fenster
+Mit iCloud geht es auf dem iPhone weiter
+
+### App Store (French)
+
+Désormais aussi sur Apple Vision Pro
+Actifs et parcours en grande fenêtre
+Activez iCloud pour continuer sur iPhone
+
+### App Store (Italian)
+
+Ora anche su Apple Vision Pro
+Patrimonio e percorso in finestra ampia
+Attiva iCloud per continuare da iPhone
+
+### App Store (pt-BR)
+
+Agora também no Apple Vision Pro
+Ativos e caminho em uma janela ampla
+Ative o iCloud para continuar do iPhone
+
+### App Store (Russian)
+
+Теперь и на Apple Vision Pro
+Активы и путь к цели в широком окне
+Включите iCloud и продолжайте с iPhone
+
+### App Store (Thai)
+
+ใช้งานได้แล้วบน Apple Vision Pro
+ดูสินทรัพย์และเส้นทางในหน้าต่างกว้าง
+เปิด iCloud เพื่อใช้ต่อจาก iPhone
+
+### App Store (Vietnamese)
+
+Nay đã có trên Apple Vision Pro
+Tài sản và hành trình trong cửa sổ rộng
+Bật iCloud để tiếp tục từ iPhone
+
+### App Store (Czech)
+
+Nyní také na Apple Vision Pro
+Majetek a cesta k cíli v širokém okně
+Zapněte iCloud a pokračujte z iPhonu
+
+### App Store (Danish)
+
+Nu også på Apple Vision Pro
+Aktiver og rejse i ét bredt vindue
+Slå iCloud til og fortsæt fra din iPhone
+
+### App Store (Greek)
+
+Τώρα και στο Apple Vision Pro
+Περιουσία και πορεία σε μεγάλο παράθυρο
+Με iCloud συνεχίζετε από το iPhone
+
+### App Store (Finnish)
+
+Nyt myös Apple Vision Prossa
+Varat ja matka leveässä ikkunassa
+Ota iCloud käyttöön ja jatka iPhonesta
+
+### App Store (Indonesian)
+
+Kini tersedia di Apple Vision Pro
+Aset dan perjalanan dalam jendela lebar
+Aktifkan iCloud untuk lanjut dari iPhone
+
+### App Store (Norwegian Bokmål)
+
+Nå også på Apple Vision Pro
+Eiendeler og reise i ett bredt vindu
+Slå på iCloud og fortsett fra iPhone
+
+### App Store (Dutch)
+
+Nu ook op Apple Vision Pro
+Bezit en route in één breed venster
+Zet iCloud aan en ga verder op je iPhone
+
+### App Store (Polish)
+
+Teraz także na Apple Vision Pro
+Majątek i droga do celu w szerokim oknie
+Włącz iCloud, by kontynuować z iPhone'a
+
+### App Store (Swedish)
+
+Nu även på Apple Vision Pro
+Tillgångar och resa i ett brett fönster
+Slå på iCloud och fortsätt från iPhone
+
+### App Store (Turkish)
+
+Artık Apple Vision Pro'da da
+Varlıklar ve yolculuk geniş pencerede
+iCloud'u açın, iPhone'dan devam edin
+
 ## 1.2.5
 
 ### 앱스토어 (한국어)

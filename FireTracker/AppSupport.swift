@@ -128,7 +128,10 @@ extension FireSummary {
     /// 앱이 계산한 요약을 위젯에 넘긴다. 바뀌었을 때만 위젯을 다시 그린다.
     static func publish(_ summary: FireSummary) {
         if summary.save() {
+            // visionOS 2 에는 위젯이 없다(위젯 확장은 iOS 에만 묶여 있다).
+            #if !os(visionOS)
             WidgetCenter.shared.reloadAllTimelines()
+            #endif
         }
     }
 }

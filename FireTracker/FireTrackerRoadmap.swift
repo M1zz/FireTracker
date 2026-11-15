@@ -18,7 +18,7 @@ import LeeoKit
 extension FireTrackerSpec {
     static var roadmap: [LeeoRoadmapItem] {[
         // MARK: 다음에 만들어요
-        .init(id: "calc.ruler", status: .building,
+        .init(id: "calc.ruler", status: .shipped("1.2.5"),
               title: NSLocalizedString("여러 잣대로 자산 재기", comment: "Roadmap item: compare an asset against inflation, gold, dollar and stock indexes"),
               detail: NSLocalizedString("내 자산이 물가 · 금 · 달러 · 주가지수보다 더 올랐는지 한눈에 비교해요.", comment: "Roadmap item detail: compare an asset against inflation, gold, dollar and stock indexes")),
         .init(id: "import.broker", status: .building,
@@ -39,6 +39,9 @@ extension FireTrackerSpec {
         .init(id: "a11y.motion", status: .planned,
               title: NSLocalizedString("움직임 줄이기", comment: "Roadmap item: reduce motion"),
               detail: NSLocalizedString("움직임 줄이기를 켜면 화면 효과가 차분해져요.", comment: "Roadmap item detail: reduce motion")),
+        .init(id: "wide", status: .shipped("1.2.5"),
+              title: NSLocalizedString("아이패드 · Vision Pro 넓은 화면", comment: "Roadmap item: wide screens on iPad and Vision Pro"),
+              detail: NSLocalizedString("넓은 화면에서는 자산 옆에 대시보드가 함께 서서, 자산을 고치면 퇴사 날짜가 바로 바뀌어요.", comment: "Roadmap item detail: wide screens on iPad and Vision Pro")),
         .init(id: "lang.english", status: .shipped("1.2.1"),
               title: NSLocalizedString("영어 지원", comment: "Roadmap item: English"),
               detail: NSLocalizedString("앱을 영어로도 쓸 수 있어요.", comment: "Roadmap item detail: English")),

@@ -37,7 +37,10 @@ shot() { # 언어 출력파일 탭번호
            -AppleLanguages "($lang)" -AppleLocale "$loc" >/dev/null; }
   sleep "$WAIT"
   mkdir -p "$(dirname "$out")"
-  t 60 xcrun simctl io "$DEV" screenshot "$out" >/dev/null 2>&1
+  # 시뮬레이터 서비스는 Documents 안에 바로 쓰지 못할 때가 있다 — 임시 폴더에 찍고 옮긴다.
+  tmp="${TMPDIR:-/tmp}/ipad-shot-$$.png"
+  t 60 xcrun simctl io "$DEV" screenshot "$tmp" >/dev/null 2>&1
+  mv -f "$tmp" "$out"
   echo "  $out"
 }
 

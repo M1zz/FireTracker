@@ -238367,6 +238367,306 @@
           }
         }
       }
+    },
+    "아이패드 · Vision Pro 넓은 화면" : {
+      "comment" : "Roadmap item: wide screens on iPad and Vision Pro",
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Široká obrazovka na iPadu a Vision Pro"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bred skærm på iPad og Vision Pro"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Große Ansicht auf iPad und Vision Pro"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ευρεία οθόνη σε iPad και Vision Pro"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wide screens on iPad and Vision Pro"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wide screens on iPad and Vision Pro"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pantallas amplias en iPad y Vision Pro"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leveä näkymä iPadilla ja Vision Prolla"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grand écran sur iPad et Vision Pro"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Layar lebar di iPad dan Vision Pro"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schermo ampio su iPad e Vision Pro"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPadとVision Proの広い画面"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아이패드 · Vision Pro 넓은 화면"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bred skjerm på iPad og Vision Pro"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breed scherm op iPad en Vision Pro"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szeroki ekran na iPadzie i Vision Pro"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tela ampla no iPad e no Vision Pro"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Широкий экран на iPad и Vision Pro"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bred skärm på iPad och Vision Pro"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หน้าจอกว้างบน iPad และ Vision Pro"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPad ve Vision Pro'da geniş ekran"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Màn hình rộng trên iPad và Vision Pro"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPad 与 Vision Pro 宽屏"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPad 與 Vision Pro 寬螢幕"
+          }
+        }
+      }
+    },
+    "넓은 화면에서는 자산 옆에 대시보드가 함께 서서, 자산을 고치면 퇴사 날짜가 바로 바뀌어요." : {
+      "comment" : "Roadmap item detail: wide screens on iPad and Vision Pro",
+      "extractionState" : "manual",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na široké obrazovce je přehled vedle majetku a datum odchodu se změní hned, jak majetek upravíte."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "På en bred skærm står oversigten ved siden af dine aktiver, og din stopdato opdateres, mens du redigerer."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf großen Bildschirmen steht das Dashboard neben deinem Vermögen, und dein Ausstiegsdatum ändert sich sofort beim Bearbeiten."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Σε ευρεία οθόνη ο πίνακας βρίσκεται δίπλα στα περιουσιακά σας και η ημερομηνία αποχώρησης αλλάζει αμέσως όταν τα επεξεργάζεστε."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On wide screens your dashboard sits beside your assets, so your quit date updates as you edit."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On wide screens your dashboard sits beside your assets, so your quit date updates as you edit."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En pantallas amplias el panel está junto a tus activos y tu fecha de salida se actualiza al editarlos."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leveällä näytöllä yhteenveto on varojen vieressä, ja lopetuspäivä päivittyy heti muokatessasi."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sur grand écran, le tableau de bord s’affiche à côté de vos actifs et votre date de départ se met à jour dès que vous les modifiez."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Di layar lebar, dasbor ada di samping aset, dan tanggal berhenti langsung berubah saat kamu mengeditnya."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sugli schermi ampi la dashboard sta accanto al patrimonio e la data d’uscita si aggiorna mentre lo modifichi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "広い画面では資産の横にダッシュボードが並び、資産を直すと退職日がすぐ変わります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "넓은 화면에서는 자산 옆에 대시보드가 함께 서서, 자산을 고치면 퇴사 날짜가 바로 바뀌어요."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "På bred skjerm står oversikten ved siden av eiendelene, og sluttdatoen oppdateres mens du redigerer."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Op een breed scherm staat het dashboard naast je bezit en je stopdatum verandert meteen als je iets aanpast."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na szerokim ekranie pulpit stoi obok majątku, a data odejścia zmienia się od razu, gdy go edytujesz."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em telas amplas, o painel fica ao lado dos seus ativos e a data de saída muda assim que você os edita."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "На широком экране панель стоит рядом с активами, и дата ухода сразу меняется, когда вы их правите."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "På bred skärm står översikten bredvid dina tillgångar och slutdatumet uppdateras direkt när du redigerar."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บนหน้าจอกว้าง แดชบอร์ดอยู่ข้างสินทรัพย์ แก้ไขสินทรัพย์แล้ววันออกจากงานเปลี่ยนทันที"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geniş ekranda pano varlıklarınızın yanında durur, varlıkları düzenledikçe bırakma tarihi hemen değişir."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trên màn hình rộng, bảng tổng quan nằm cạnh tài sản và ngày nghỉ việc cập nhật ngay khi bạn sửa."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在宽屏上，仪表板就在资产旁边，修改资产时辞职日期会立即更新。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在寬螢幕上，儀表板就在資產旁邊，修改資產時離職日期會立即更新。"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

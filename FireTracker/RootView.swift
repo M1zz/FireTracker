@@ -516,7 +516,7 @@ private struct ShotSheet: ViewModifier {
     @State private var shown = ["future", "mood", "import", "paywall"].contains(ShotMode.sheet ?? "")
     private let scroll = UserDefaults.standard.double(forKey: "shotScroll")
     func body(content: Content) -> some View {
-        content.defaultScrollAnchor(ShotMode.isOn ? UnitPoint(x: 0.5, y: scroll) : nil)
+        content.defaultScrollAnchor(ShotMode.isOn ? UnitPoint(x: 0, y: scroll) : nil)
         .sheet(isPresented: $shown) {
             if ShotMode.sheet == "import" {
                 ScreenshotImportView(startingSortOrder: 0)

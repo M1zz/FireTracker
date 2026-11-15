@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """App Store 마케팅 스크린샷: 원본 캡처 + 헤드라인 → HTML → 헤드리스 Chrome (appstore-assets 스킬).
 
-사용법: python3 scripts/make_marketing_screenshots.py [언어 ...]   (없으면 전부)
+사용법: python3 scripts/make_marketing_screenshots.py [--pad] [언어 ...]   (없으면 전부)
+        --pad 면 iPad 13" 제출본(2064x2752, ipad-NN-….png)을 만든다. 원본은 capture_ipad_screenshots.sh.
 
 자리
   docs/screenshots/raw/<언어>/NN-….png          원본 캡처 (1320x2868, 스토어에 안 올라감)
@@ -82,6 +83,32 @@ body { background:%(dark_bg)s; }
 """,
 }
 
+# iPad: 아이폰과 같은 제목을 쓰고, 넓은 창의 '탭 | 대시보드' 두 판이 다 보이게 판을 크게 둔다.
+PAD_W, PAD_H = 2064, 2752
+PAD_SHOTS = [("ipad-01-assets.png", 1, "light"), ("ipad-02-dashboard.png", 0, "light"),
+             ("ipad-03-journey.png", 2, "light"), ("ipad-04-calc.png", 3, "dark")]
+PAD_CSS = """
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { width:%(W)dpx; height:%(H)dpx; overflow:hidden; }
+body { background:%(bg)s; font-family:-apple-system, "SF Pro Display", "Helvetica Neue", "Apple SD Gothic Neo", sans-serif; }
+:lang(ja) body { font-family:-apple-system, "Hiragino Sans", sans-serif; }
+:lang(zh-Hans) body { font-family:-apple-system, "PingFang SC", sans-serif; }
+:lang(zh-Hant) body { font-family:-apple-system, "PingFang TC", sans-serif; }
+.headline { font-size:112px; font-weight:800; color:%(ink)s; letter-spacing:-2px; line-height:1.18; text-align:center;
+  text-wrap:balance; margin-top:190px; padding:0 140px; }
+.sub { font-size:56px; font-weight:500; color:%(sub)s; line-height:1.35; text-align:center; text-wrap:balance;
+  margin-top:40px; padding:0 160px; }
+:lang(ko) .headline, :lang(ko) .sub { word-break:keep-all; }
+.wrap { display:flex; justify-content:center; margin-top:110px; }
+.pad { width:1720px; background:%(frame)s; border-radius:96px; border:3px solid %(rim)s; padding:34px;
+  box-shadow: 50px 80px 120px rgba(0,0,0,.22), 16px 26px 46px rgba(0,0,0,.12); }
+.pad img { width:100%%; display:block; border-radius:64px; }
+body.dark { background:%(dark_bg)s; }
+body.dark .headline { color:%(dark_ink)s; } body.dark .sub { color:%(dark_sub)s; }
+body.dark .pad { border-color:#48484e; box-shadow: 0 0 160px %(glow)s, 40px 70px 110px rgba(0,0,0,.55); }
+"""
+PAD_BODY = '<div class="headline">{h}</div><div class="sub">{s}</div><div class="wrap"><div class="pad"><img src="{img}"></div></div>'
+
 TEXT_FIRST = '<div class="headline">{h}</div><div class="sub">{s}</div><div class="wrap"><div class="phone"><img src="{img}"></div></div>'
 PHONE_FIRST = '<div class="wrap"><div class="phone"><img src="{img}"></div></div><div class="headline">{h}</div><div class="sub">{s}</div>'
 HTML = '<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><style>{css}</style></head><body>{body}</body></html>'
@@ -107,32 +134,58 @@ def main(langs):
             html = tmp / f"{lang}-{fname}.html"
             html.write_text(HTML.format(lang=lang, css=css, body=tpl.format(h=h, s=s, img=src.as_uri())), encoding="utf-8")
             out = out_dir / fname
-            # Chrome 은 그림을 다 쓰고도 안 끝나거나, 아무것도 안 그리고 끝날 때가 있다.
-            # 파일이 생기고 크기가 멈추면 다 된 것으로 보고 닫는다. 세 번까지 한다.
-            for _ in range(3):
-                out.unlink(missing_ok=True)
-                proc = subprocess.Popen([CHROME, "--headless=new", f"--screenshot={out}", f"--window-size={W},{H}",
-                                         "--force-device-scale-factor=1", "--hide-scrollbars", "--disable-gpu",
-                                         "--no-first-run", "--disable-extensions", "--disable-background-networking",
-                                         "--virtual-time-budget=3000", "--allow-file-access-from-files",
-                                         f"--user-data-dir={tmp / 'chrome'}", html.as_uri()],
-                                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                size, deadline = -1, time.time() + 90
-                while time.time() < deadline:
-                    time.sleep(1)
-                    now = out.stat().st_size if out.exists() else -1
-                    if now > 0 and now == size:
-                        break
-                    if proc.poll() is not None and now <= 0:
-                        break
-                    size = now
-                proc.kill(); proc.wait()
-                if out.exists() and out.stat().st_size > 0:
-                    break
-            else:
-                raise SystemExit(f"Chrome 이 그리지 못했다: {out}")
-            print("rendered", out.relative_to(ROOT))
+            render(html, out, W, H, tmp)
+
+
+def render(html, out, w, h, tmp):
+    # Chrome 은 그림을 다 쓰고도 안 끝나거나, 아무것도 안 그리고 끝날 때가 있다.
+    # 파일이 생기고 크기가 멈추면 다 된 것으로 보고 닫는다. 세 번까지 한다.
+    for _ in range(3):
+        out.unlink(missing_ok=True)
+        proc = subprocess.Popen([CHROME, "--headless=new", f"--screenshot={out}", f"--window-size={w},{h}",
+                                 "--force-device-scale-factor=1", "--hide-scrollbars", "--disable-gpu",
+                                 "--no-first-run", "--disable-extensions", "--disable-background-networking",
+                                 "--virtual-time-budget=3000", "--allow-file-access-from-files",
+                                 f"--user-data-dir={tmp / 'chrome'}", html.as_uri()],
+                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        size, deadline = -1, time.time() + 90
+        while time.time() < deadline:
+            time.sleep(1)
+            now = out.stat().st_size if out.exists() else -1
+            if now > 0 and now == size:
+                break
+            if proc.poll() is not None and now <= 0:
+                break
+            size = now
+        proc.kill(); proc.wait()
+        if out.exists() and out.stat().st_size > 0:
+            break
+    else:
+        raise SystemExit(f"Chrome 이 그리지 못했다: {out}")
+    print("rendered", out.relative_to(ROOT))
+
+
+def main_pad(langs):
+    tmp = pathlib.Path(tempfile.mkdtemp())
+    css = PAD_CSS % dict(THEME, W=PAD_W, H=PAD_H)
+    for lang in langs:
+        out_dir = OUT / STORE[lang]
+        out_dir.mkdir(parents=True, exist_ok=True)
+        for fname, idx, tone in PAD_SHOTS:
+            h, s = SHOTS[idx][2][lang]
+            src = RAW / lang / fname
+            assert src.exists(), f"원본 없음: {src}"
+            html = tmp / f"{lang}-{fname}.html"
+            body = PAD_BODY.format(h=h, s=s, img=src.as_uri())
+            html.write_text(HTML.format(lang=lang, css=css, body=body).replace("<body>", f'<body class="{tone}">'),
+                            encoding="utf-8")
+            render(html, out_dir / fname, PAD_W, PAD_H, tmp)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:] or list(STORE))
+    args = sys.argv[1:]
+    if "--pad" in args:
+        args.remove("--pad")
+        main_pad(args or list(STORE))
+    else:
+        main(args or list(STORE))

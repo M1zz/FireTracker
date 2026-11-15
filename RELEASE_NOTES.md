@@ -1,151 +1,5 @@
 # 릴리즈 노트
 
-## 1.2.6
-
-### 앱스토어 (한국어)
-
-이제 Apple Vision Pro에서도 쓸 수 있어요
-넓은 창에서 자산과 여정을 한눈에 봐요
-iCloud 동기화를 켜면 iPhone과 이어져요
-
-### App Store (English)
-
-Now available on Apple Vision Pro
-Assets and journey in one wide window
-Turn on iCloud to continue from iPhone
-
-### App Store (en-GB)
-
-Now available on Apple Vision Pro
-Assets and journey in one wide window
-Turn on iCloud to continue from iPhone
-
-### App Store (ja)
-
-Apple Vision Proでも使えるようになりました
-広いウインドウで資産と道のりを一目で
-iCloud同期をオンにすればiPhoneと続きます
-
-### App Store (zh-Hans)
-
-现在也能在 Apple Vision Pro 上使用
-在宽大的窗口中一览资产与进程
-开启 iCloud 同步即可接续 iPhone 的记录
-
-### App Store (zh-Hant)
-
-現在也能在 Apple Vision Pro 上使用
-在寬大的視窗中一覽資產與進程
-開啟 iCloud 同步即可接續 iPhone 的記錄
-
-### App Store (Spanish)
-
-Ya disponible en Apple Vision Pro
-Activos y camino en una ventana amplia
-Activa iCloud y sigue desde el iPhone
-
-### App Store (German)
-
-Jetzt auch auf Apple Vision Pro
-Vermögen und Weg in einem großen Fenster
-Mit iCloud geht es auf dem iPhone weiter
-
-### App Store (French)
-
-Désormais aussi sur Apple Vision Pro
-Actifs et parcours en grande fenêtre
-Activez iCloud pour continuer sur iPhone
-
-### App Store (Italian)
-
-Ora anche su Apple Vision Pro
-Patrimonio e percorso in finestra ampia
-Attiva iCloud per continuare da iPhone
-
-### App Store (pt-BR)
-
-Agora também no Apple Vision Pro
-Ativos e caminho em uma janela ampla
-Ative o iCloud para continuar do iPhone
-
-### App Store (Russian)
-
-Теперь и на Apple Vision Pro
-Активы и путь к цели в широком окне
-Включите iCloud и продолжайте с iPhone
-
-### App Store (Thai)
-
-ใช้งานได้แล้วบน Apple Vision Pro
-ดูสินทรัพย์และเส้นทางในหน้าต่างกว้าง
-เปิด iCloud เพื่อใช้ต่อจาก iPhone
-
-### App Store (Vietnamese)
-
-Nay đã có trên Apple Vision Pro
-Tài sản và hành trình trong cửa sổ rộng
-Bật iCloud để tiếp tục từ iPhone
-
-### App Store (Czech)
-
-Nyní také na Apple Vision Pro
-Majetek a cesta k cíli v širokém okně
-Zapněte iCloud a pokračujte z iPhonu
-
-### App Store (Danish)
-
-Nu også på Apple Vision Pro
-Aktiver og rejse i ét bredt vindue
-Slå iCloud til og fortsæt fra din iPhone
-
-### App Store (Greek)
-
-Τώρα και στο Apple Vision Pro
-Περιουσία και πορεία σε μεγάλο παράθυρο
-Με iCloud συνεχίζετε από το iPhone
-
-### App Store (Finnish)
-
-Nyt myös Apple Vision Prossa
-Varat ja matka leveässä ikkunassa
-Ota iCloud käyttöön ja jatka iPhonesta
-
-### App Store (Indonesian)
-
-Kini tersedia di Apple Vision Pro
-Aset dan perjalanan dalam jendela lebar
-Aktifkan iCloud untuk lanjut dari iPhone
-
-### App Store (Norwegian Bokmål)
-
-Nå også på Apple Vision Pro
-Eiendeler og reise i ett bredt vindu
-Slå på iCloud og fortsett fra iPhone
-
-### App Store (Dutch)
-
-Nu ook op Apple Vision Pro
-Bezit en route in één breed venster
-Zet iCloud aan en ga verder op je iPhone
-
-### App Store (Polish)
-
-Teraz także na Apple Vision Pro
-Majątek i droga do celu w szerokim oknie
-Włącz iCloud, by kontynuować z iPhone'a
-
-### App Store (Swedish)
-
-Nu även på Apple Vision Pro
-Tillgångar och resa i ett brett fönster
-Slå på iCloud och fortsätt från iPhone
-
-### App Store (Turkish)
-
-Artık Apple Vision Pro'da da
-Varlıklar ve yolculuk geniş pencerede
-iCloud'u açın, iPhone'dan devam edin
-
 ## 1.2.5
 
 ### 앱스토어 (한국어)
@@ -154,6 +8,7 @@ iCloud'u açın, iPhone'dan devam edin
 앱을 사신 분은 Pro를 평생 그대로 쓰세요
 내 자산이 물가나 금값보다 더 올랐는지 재 볼 수 있어요
 궁금한 질문을 고르면 맞는 계산기를 꺼내 드려요
+iPad와 Vision Pro에서는 자산 옆에 퇴사 날짜가 보여요
 
 ### App Store (English)
 
@@ -161,6 +16,7 @@ Now free to download, with Plus or Pro when you need more
 If you bought the app, Pro is yours for life
 See if your assets beat inflation and gold
 Pick a question and get the calculator that answers it
+On iPad and Vision Pro, your quit date sits beside your assets
 
 ### App Store (en-GB)
 
@@ -168,6 +24,7 @@ Now free to download, with Plus or Pro when you need more
 If you bought the app, Pro is yours for life
 See if your assets beat inflation and gold
 Pick a question and get the calculator that answers it
+On iPad and Vision Pro, your quit date sits beside your assets
 
 ### App Store (ja)
 
@@ -175,6 +32,7 @@ Pick a question and get the calculator that answers it
 アプリを購入済みの方はProをずっと使えます
 資産が物価や金より上がったか確かめられます
 気になる質問を選ぶと、答えてくれる計算機が出てきます
+iPadとVision Proでは資産の横に退職日が並びます
 
 ### App Store (zh-Hans)
 
@@ -182,6 +40,7 @@ Pick a question and get the calculator that answers it
 已购买本应用的用户可永久使用 Pro
 看看你的资产是否跑赢物价和黄金
 选一个你关心的问题，就会出现能回答它的计算器
+在 iPad 和 Vision Pro 上，资产旁就能看到辞职日期
 
 ### App Store (zh-Hant)
 
@@ -189,6 +48,7 @@ Pick a question and get the calculator that answers it
 已購買本 App 的用戶可永久使用 Pro
 看看你的資產是否贏過物價和黃金
 選一個你關心的問題，就會出現能回答它的計算器
+在 iPad 和 Vision Pro 上，資產旁就能看到離職日期
 
 ### App Store (Spanish)
 
@@ -196,6 +56,7 @@ Ahora es gratis, con Plus o Pro cuando necesites más
 Si ya compraste la app, Pro es tuyo para siempre
 Mira si tus activos ganan a la inflación y al oro
 Elige una pregunta y te damos la calculadora que la responde
+En iPad y Vision Pro, tu fecha de salida junto a tus activos
 
 ### App Store (German)
 
@@ -203,6 +64,7 @@ Jetzt kostenlos laden, Plus oder Pro bei Bedarf
 Hast du die App gekauft, gehört Pro dir für immer
 Sieh, ob dein Vermögen Inflation und Gold schlägt
 Wähle eine Frage und erhalte den passenden Rechner
+Auf iPad und Vision Pro steht dein Ausstiegsdatum neben dem Vermögen
 
 ### App Store (French)
 
@@ -210,6 +72,7 @@ Désormais gratuite, avec Plus ou Pro selon vos besoins
 Vous avez acheté l’app ? Pro est à vous pour toujours
 Voyez si vos actifs battent l’inflation et l’or
 Choisissez une question, l’app vous propose le bon calculateur
+Sur iPad et Vision Pro, votre date de départ à côté de vos actifs
 
 ### App Store (Italian)
 
@@ -217,6 +80,7 @@ Ora gratis da scaricare, con Plus o Pro quando serve
 Se hai acquistato l’app, Pro è tuo per sempre
 Scopri se i tuoi beni battono inflazione e oro
 Scegli una domanda e trovi il calcolatore che risponde
+Su iPad e Vision Pro la data d’uscita accanto al patrimonio
 
 ### App Store (pt-BR)
 
@@ -224,6 +88,7 @@ Agora grátis para baixar, com Plus ou Pro quando precisar
 Se você comprou o app, o Pro é seu para sempre
 Veja se seus ativos superam a inflação e o ouro
 Escolha uma pergunta e receba a calculadora que responde
+No iPad e no Vision Pro, a data de saída ao lado dos ativos
 
 ### App Store (Russian)
 
@@ -231,6 +96,7 @@ Escolha uma pergunta e receba a calculadora que responde
 Купили приложение раньше? Pro остаётся у вас навсегда
 Узнайте, обогнали ли активы инфляцию и золото
 Выберите вопрос, и появится калькулятор с ответом
+На iPad и Vision Pro дата ухода видна рядом с активами
 
 ### App Store (Thai)
 
@@ -238,6 +104,7 @@ Escolha uma pergunta e receba a calculadora que responde
 ใครเคยซื้อแอปไว้ ใช้ Pro ได้ตลอดไป
 ดูว่าสินทรัพย์ของคุณชนะเงินเฟ้อและทองคำไหม
 เลือกคำถาม แล้วรับเครื่องคำนวณที่ตอบคำถามนั้น
+บน iPad และ Vision Pro เห็นวันออกจากงานข้างสินทรัพย์
 
 ### App Store (Vietnamese)
 
@@ -245,6 +112,7 @@ Giờ tải miễn phí, chọn Plus hoặc Pro khi cần
 Nếu đã mua ứng dụng, bạn dùng Pro trọn đời
 Xem tài sản của bạn có vượt lạm phát và vàng không
 Chọn một câu hỏi để có ngay máy tính trả lời nó
+Trên iPad và Vision Pro, ngày nghỉ việc hiện cạnh tài sản
 
 ### App Store (Czech)
 
@@ -252,6 +120,7 @@ Nyní zdarma ke stažení, Plus nebo Pro podle potřeby
 Pokud jste aplikaci koupili, Pro máte navždy
 Zjistěte, zda váš majetek porazil inflaci a zlato
 Vyberte otázku a dostanete kalkulačku, která na ni odpoví
+Na iPadu a Vision Pro vidíte datum odchodu vedle majetku
 
 ### App Store (Danish)
 
@@ -259,6 +128,7 @@ Nu gratis at hente, med Plus eller Pro efter behov
 Har du købt appen, er Pro din for altid
 Se om din formue slår inflation og guld
 Vælg et spørgsmål og få beregneren, der svarer på det
+På iPad og Vision Pro ser du stopdatoen ved siden af aktiverne
 
 ### App Store (Greek)
 
@@ -266,6 +136,7 @@ Vælg et spørgsmål og få beregneren, der svarer på det
 Αν αγοράσατε την εφαρμογή, το Pro είναι δικό σας για πάντα
 Δείτε αν η περιουσία σας νικά τον πληθωρισμό και τον χρυσό
 Διαλέξτε μια ερώτηση και βρείτε τον υπολογιστή που απαντά
+Σε iPad και Vision Pro βλέπετε την ημερομηνία αποχώρησης δίπλα στα περιουσιακά σας
 
 ### App Store (Finnish)
 
@@ -273,6 +144,7 @@ Nyt ilmainen ladata, Plus tai Pro tarpeen mukaan
 Jos ostit sovelluksen, Pro on sinun ikuisesti
 Katso, voittavatko varasi inflaation ja kullan
 Valitse kysymys ja saat laskurin, joka vastaa siihen
+iPadilla ja Vision Prolla lopetuspäivä näkyy varojen vieressä
 
 ### App Store (Indonesian)
 
@@ -280,6 +152,7 @@ Kini gratis diunduh, pilih Plus atau Pro sesuai kebutuhan
 Sudah membeli aplikasinya? Pro jadi milikmu selamanya
 Lihat apakah asetmu mengalahkan inflasi dan emas
 Pilih pertanyaan dan dapatkan kalkulator yang menjawabnya
+Di iPad dan Vision Pro, tanggal berhenti tampil di samping aset
 
 ### App Store (Norwegian Bokmål)
 
@@ -287,6 +160,7 @@ Nå gratis å laste ned, med Plus eller Pro ved behov
 Har du kjøpt appen, er Pro din for alltid
 Se om formuen din slår inflasjon og gull
 Velg et spørsmål og få kalkulatoren som svarer på det
+På iPad og Vision Pro ser du sluttdatoen ved siden av eiendelene
 
 ### App Store (Dutch)
 
@@ -294,6 +168,7 @@ Nu gratis te downloaden, met Plus of Pro als je meer wilt
 Heb je de app gekocht, dan is Pro voor altijd van jou
 Zie of je bezittingen inflatie en goud verslaan
 Kies een vraag en krijg de rekenhulp die hem beantwoordt
+Op iPad en Vision Pro staat je stopdatum naast je bezit
 
 ### App Store (Polish)
 
@@ -301,6 +176,7 @@ Teraz za darmo, a Plus lub Pro, gdy potrzebujesz
 Jeśli kupiłeś aplikację, Pro masz na zawsze
 Sprawdź, czy twój majątek pobił inflację i złoto
 Wybierz pytanie i dostań kalkulator, który odpowie
+Na iPadzie i Vision Pro data odejścia jest obok majątku
 
 ### App Store (Swedish)
 
@@ -308,6 +184,7 @@ Nu gratis att ladda ner, med Plus eller Pro vid behov
 Har du köpt appen är Pro din för alltid
 Se om dina tillgångar slår inflation och guld
 Välj en fråga och få kalkylatorn som besvarar den
+På iPad och Vision Pro syns slutdatumet bredvid tillgångarna
 
 ### App Store (Turkish)
 
@@ -315,6 +192,7 @@ Artık ücretsiz, ihtiyaç duyduğunuzda Plus veya Pro
 Uygulamayı satın aldıysanız Pro ömür boyu sizin
 Varlıklarınızın enflasyonu ve altını geçip geçmediğini görün
 Bir soru seçin, onu yanıtlayan hesaplayıcı karşınızda
+iPad ve Vision Pro'da bırakma tarihi varlıkların yanında
 
 ## 1.2.4
 

@@ -535,11 +535,14 @@ struct SettingsView: View {
     }
 
     // The biometry available on this device, for accurate labels.
-    private var biometryType: LABiometryType {
+    /// LAContext 는 물을 때마다 시스템과 동기로 왕복한다. 화면을 그릴 때마다 물으면 메인이 막힐 수 있어
+    /// (세끼 1.2.2 가 같은 자리에서 워치독에 죽었다) 앱이 켜진 동안 한 번만 묻는다.
+    private static let deviceBiometryType: LABiometryType = {
         let ctx = LAContext()
         _ = ctx.canEvaluatePolicy(.deviceOwnerAuthentication, error: nil)
         return ctx.biometryType
-    }
+    }()
+    private var biometryType: LABiometryType { Self.deviceBiometryType }
     private var biometryName: String {
         switch biometryType {
         case .faceID:  return "Face ID"

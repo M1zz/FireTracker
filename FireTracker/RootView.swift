@@ -61,6 +61,10 @@ struct RootView: View {
             }
             TabView(selection: $router.selectedTab) {
             DashboardView()
+                // 아이패드 · 맥 · 비전에서 카드가 창 끝까지 늘어나지 않게 읽기 좋은 폭으로.
+                .frame(maxWidth: 760)
+                .frame(maxWidth: .infinity)
+                .background(Theme.bg.ignoresSafeArea())
                 .tabItem { Label("대시보드", systemImage: "flame.fill") }
                 .tag(0)
 
@@ -387,6 +391,49 @@ struct AppLockGate<Content: View>: View {
     }
 }
 
+// MARK: - 넓은 창 (아이패드 · 맥 · 비전)
+
+extension View {
+    /// 넓은 창이면 이 판을 펼친 듀오처럼 나눈다: 왼쪽 고른 탭 | 오른쪽 대시보드.
+    /// 자산을 보고 고치는 동안 퇴사 날짜가 옆에서 바로 바뀐다. 듀오에서 다듬은 나누기를 그대로 쓴다.
+    /// 탭 판 안쪽(`FoldSplitView`)에만 건다 — 탭바는 그 기기의 시스템 탭바(아이패드 위 · 비전 옆)를 그대로 둔다.
+    func wideSplit() -> some View { modifier(WideSplit()) }
+}
+
+private struct WideSplit: ViewModifier {
+    @Environment(\.foldLayout) private var fold
+    @State private var frame: CGRect = .zero
+
+    /// 이보다 넓으면 나눈다. 판 하나가 큰 아이폰 폭(약 440pt) 이상이 되는 폭.
+    static let minWidth: CGFloat = 900
+
+    private var layout: FoldLayout {
+        guard !fold.isUnfolded, !Self.isPhone, frame.width >= Self.minWidth else { return fold }
+        return FoldLayout(posture: .innerLandscape, windowSize: frame.size, windowOrigin: frame.origin)
+    }
+
+    private static var isPhone: Bool {
+        #if os(iOS)
+        UIDevice.current.userInterfaceIdiom == .phone
+        #else
+        false
+        #endif
+    }
+
+    func body(content: Content) -> some View {
+        content
+            .environment(\.foldLayout, layout)
+            .background {
+                GeometryReader { proxy in
+                    Color.clear
+                        .onAppear { frame = proxy.frame(in: .global) }
+                        .onChange(of: proxy.frame(in: .global)) { _, now in frame = now }
+                }
+                .ignoresSafeArea()
+            }
+    }
+}
+
 // MARK: - 아이폰 듀오
 
 /// 펼친 화면의 탭 한 장: 왼쪽(세로면 아래) 고른 탭 | 오른쪽(위) 대시보드.
@@ -403,6 +450,9 @@ struct FoldTab<Choose: View>: View {
                 // 오른쪽 판 안에서는 접히지 않은 화면처럼 선다.
                 .environment(\.foldLayout, .single)
         }
+        // 아이패드 · 맥 · 비전의 넓은 창도 같은 두 판으로. 두 판 사이도 같은 바탕.
+        .wideSplit()
+        .background(Theme.bg.ignoresSafeArea())
         .foldTabBarRoom()
     }
 }

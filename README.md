@@ -33,6 +33,22 @@
 - 월 평균 저축 = 최근 6개월 (수입 − 지출) 평균
 - 전월 대비 = 최신 두 스냅샷 순자산 차이
 
+## 요금제 (USD, App Store Connect 기준)
+무료 다운로드 + 퇴사각 Plus · Pro. 칸 나누기와 잠기는 기능은 `ProAccess.swift`, 로컬 결제 테스트 값은 `FireTracker.storekit`.
+
+| 상품 | ID | 가격 |
+|---|---|---|
+| Plus 주 · 월 · 연 구독 | `….plus.weekly` · `.monthly` · `.yearly` | $1.49 · $3.49 · $9.99 (연 첫해 $4.99) |
+| Plus 평생 | `….plus` | $29.99 |
+| Pro 주 · 월 · 연 구독 | `….pro.weekly` · `.monthly` · `.yearly` | $1.99 · $4.99 · $14.99 (연 첫해 $7.49) |
+| **Pro 평생** | `….pro` | **$150.00** (2026-11-16 확정, 심사 문의에 의도한 값이라고 답함) |
+| Plus 평생 → Pro 평생 올리기 | `….pro.upgrade` | $14.99 |
+| 연 구독자용 Pro 평생(졸업) | `….pro.graduate` | $29.99 |
+| Pro 선물 (소모성) | `….gift.pro` | $44.99 (App Store Connect 에 아직 없음) |
+| 응원(팁) | `….tip.small` · `.medium` · `.large` | $1.49 · $3.49 · $7.99 |
+
+가격을 바꾸면 App Store Connect 와 `FireTracker.storekit` 과 이 표를 함께 고친다.
+
 ## 사용 순서
 1. 설정에서 목표 지출/SWR 입력
 2. 기록 탭에서 첫 스냅샷 추가 (자산 + 수입/지출)

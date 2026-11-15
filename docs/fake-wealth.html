@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>가짜 부의 실체</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
@@ -34,13 +39,15 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+section, header { min-width: 0; }
 body {
   margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.6;
   padding-block: 32px 56px;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-main { max-width: 760px; margin: 0 auto; display: grid; gap: 36px; }
+main { max-width: 760px; min-width: 0; margin: 0 auto; display: grid; gap: 36px; }
 h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 40px); line-height: 1.2; margin: 0 0 8px; text-wrap: balance; letter-spacing: -0.01em; }
 .lede { color: var(--fg-2); margin: 0; max-width: 60ch; }
 h2 { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; color: var(--fg-3); text-transform: uppercase; margin: 0 0 12px; }
@@ -74,10 +81,10 @@ h2 { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; color: var(--fg-
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 14px; height: 2px; display: inline-block; border-radius: 1px; }
 .chart { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 6px 4px; }
-.chart svg { width: 100%; height: auto; display: block; }
-.tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); font-size: 12px; padding: 8px 10px; border-radius: 4px; white-space: nowrap; display: none; z-index: 2; font-variant-numeric: tabular-nums; line-height: 1.5; }
+.chart svg { width: 100%; height: auto; display: block; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); font-size: 12px; padding: 8px 10px; border-radius: 4px; max-width: min(300px, calc(100% - 8px)); display: none; z-index: 2; font-variant-numeric: tabular-nums; line-height: 1.5; }
 .tip b { font-weight: 700; }
-.toggle { font: inherit; font-size: 12px; color: var(--fg-2); background: transparent; border: 1px solid var(--line); border-radius: 4px; padding: 3px 10px; cursor: pointer; }
+.toggle { font: inherit; font-size: 12px; color: var(--fg-2); background: transparent; border: 1px solid var(--line); border-radius: 4px; padding: 8px 14px; cursor: pointer; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
 .tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
 th, td { text-align: right; padding: 7px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
@@ -100,9 +107,19 @@ tr:last-child td { border-bottom: 0; }
 
 .note { font-size: 12.5px; color: var(--fg-3); line-height: 1.7; border-top: 1px solid var(--line); padding-top: 16px; }
 .note p { margin: 0 0 6px; }
+@media (max-width: 420px) {
+  body { padding-top: 20px; font-size: 15px; }
+  main { gap: 28px; }
+  .inputs { grid-template-columns: 1fr 1fr; }
+  .tiles { grid-template-columns: 1fr 1fr; }
+  .tile { min-width: 0; padding: 10px 12px; }
+  .tile .v { font-size: 18px; overflow-wrap: anywhere; }
+  .cards { grid-template-columns: 1fr; }
+}
 @media (prefers-reduced-motion: no-preference) { .tile .v, .card .now { transition: color .2s; } }
 </style>
-
+</head>
+<body>
 <main>
   <header>
     <h1>가짜 부의 실체</h1>
@@ -238,14 +255,20 @@ function render() {
 }
 
 // ---- 차트 ----
+let hideTip = () => {}, lastC = null, lastW = 0;
+document.addEventListener('pointerdown', ev => { if (!ev.target.closest('#chart')) hideTip(); });
+new ResizeObserver(() => { const w = $('chart').clientWidth; if (lastC && Math.abs(w - lastW) > 1) { lastW = w; drawChart(lastC); } }).observe($('chart'));
 function drawChart(c) {
-  const W = 720, H = 320, m = { t: 16, r: 60, b: 28, l: 40 };
+  lastC = c; lastW = $('chart').clientWidth;
+  const W = Math.max(280, Math.round($('chart').clientWidth - 12)) || 720;
+  const narrow = W < 480;
+  const H = narrow ? 260 : 320, m = { t: 16, r: narrow ? 74 : 92, b: 28, l: 36 };
   const iw = W - m.l - m.r, ih = H - m.t - m.b;
   const series = [
     { key: 'idxNominal', col: 'var(--s1)', label: '원화' },
-    { key: 'idxReal',    col: 'var(--s2)', label: '물가 보정' },
-    { key: 'idxGold',    col: 'var(--s3)', label: '금 기준' },
-    { key: 'idxIncome',  col: 'var(--s4)', label: '소득 기준' },
+    { key: 'idxReal',    col: 'var(--s2)', label: narrow ? '물가' : '물가 보정' },
+    { key: 'idxGold',    col: 'var(--s3)', label: narrow ? '금' : '금 기준' },
+    { key: 'idxIncome',  col: 'var(--s4)', label: narrow ? '소득' : '소득 기준' },
   ];
   const all = series.flatMap(s => c[s.key]);
   const lo = Math.min(...all), hi = Math.max(...all);
@@ -260,7 +283,7 @@ function drawChart(c) {
     g += `<text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--fg-3)">${v}</text>`;
   }
   g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(100)}" y2="${y(100)}" stroke="var(--fg-3)" stroke-width="1" stroke-dasharray="3 3"/>`;
-  YEARS.forEach((yr, i) => { if (yr % 5 === 0 || i === NOW) g += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="var(--fg-3)">${yr}</text>`; });
+  YEARS.forEach((yr, i) => { if ((yr % (narrow ? 10 : 5) === 0 && NOW - i > 2) || i === NOW) g += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="var(--fg-3)">${yr}</text>`; });
   const ends = [];
   series.forEach(s => {
     const d = c[s.key].map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('');
@@ -283,14 +306,17 @@ function drawChart(c) {
     const p = pt.matrixTransform(svg.getScreenCTM().inverse());
     const i = Math.max(0, Math.min(NOW, Math.round((p.x - m.l) / iw * (YEARS.length - 1))));
     cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.style.display = '';
-    tip.innerHTML = `<b>${YEARS[i]}년</b> · ${won(c.total[i])}<br>원화 ${Math.round(c.idxNominal[i])} · 물가 보정 ${Math.round(c.idxReal[i])} · 금 기준 ${Math.round(c.idxGold[i])} · 소득 기준 ${Math.round(c.idxIncome[i])}<br>환율 ${fmtN(FX[i])}원 · 금 ${fmtN(GOLD_G[i])}원/g · 1인당 소득 ${won(GNI[i])}`;
+    tip.innerHTML = `<b>${YEARS[i]}년</b> · ${won(c.total[i])}<br>원화 ${Math.round(c.idxNominal[i])} · 물가 보정 ${Math.round(c.idxReal[i])} · 금 기준 ${Math.round(c.idxGold[i])}<br>소득 기준 ${Math.round(c.idxIncome[i])}<br>환율 ${fmtN(FX[i])}원<br>금 ${fmtN(GOLD_G[i])}원/g · 1인당 소득 ${won(GNI[i])}`;
     tip.style.display = 'block';
     const r = chart.getBoundingClientRect(); let left = ev.clientX - r.left + 12;
     if (left + tip.offsetWidth > r.width - 8) left = ev.clientX - r.left - tip.offsetWidth - 12;
     tip.style.left = Math.max(4, left) + 'px'; tip.style.top = Math.max(4, ev.clientY - r.top - tip.offsetHeight - 10) + 'px';
   };
+  const hide = () => { tip.style.display = 'none'; cross.style.display = 'none'; };
+  hit.addEventListener('pointerdown', show);
   hit.addEventListener('pointermove', show);
-  hit.addEventListener('pointerleave', () => { tip.style.display = 'none'; cross.style.display = 'none'; });
+  hit.addEventListener('pointerleave', ev => { if (ev.pointerType === 'mouse') hide(); });
+  hideTip = hide;
 }
 
 function drawTable(c) {
@@ -306,3 +332,5 @@ $('toggleTable').addEventListener('click', () => { const w = $('tablewrap'); w.h
 yearSel.addEventListener('change', () => { save(); render(); });
 render();
 </script>
+</body>
+</html>

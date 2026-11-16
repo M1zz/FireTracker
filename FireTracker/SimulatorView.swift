@@ -930,7 +930,7 @@ private struct LifecycleSimSection: View {
         }
     }
 
-    // 한 화면 결과 영역 — 판정 한 줄 · 차트(남는 높이 전부) · 조작 패널.
+    // 한 화면 결과 영역 — 숫자 · 차트(남는 높이 전부) · 판정 한 줄 · 조작 패널.
     private func mainCard(_ result: (points: [LifePoint], peak: Double, end: Double, depletionAge: Int?, crossoverAge: Int?),
                              _ a: (cur: Int, retire: Int, end: Int),
                              _ v: (feasible: Bool, comfy: Bool, headline: String, reason: String)) -> some View {
@@ -939,10 +939,6 @@ private struct LifecycleSimSection: View {
             ? (v.comfy ? "checkmark.seal.fill" : "checkmark.circle.fill")
             : "exclamationmark.triangle.fill"
         return VStack(alignment: .leading, spacing: 10) {
-            SimResultHeader(title: v.headline, icon: icon, tint: tint) { showInfo = true }
-            // 3단계 — 닻: '충분한 삶'의 값을 마주하되 매일 쫓지 말라고 짚는다.
-            .popoverTip(enoughAnchorTip)
-
             HStack(alignment: .top, spacing: 12) {
                 simStat(String(localized: "은퇴(\(a.retire)세) 자산"), String(localized: "\(Fmt.krw(result.peak))원"), tint: .blue)
                 if let dep = result.depletionAge {
@@ -1041,6 +1037,11 @@ private struct LifecycleSimSection: View {
                 }
             }
             .frame(minHeight: 140, maxHeight: .infinity)
+
+            // 판정과 [해석·저장]은 숫자 · 차트를 먼저 보고 난 자리, 조작 패널 바로 위에.
+            SimResultHeader(title: v.headline, icon: icon, tint: tint) { showInfo = true }
+            // 3단계 — 닻: '충분한 삶'의 값을 마주하되 매일 쫓지 말라고 짚는다.
+            .popoverTip(enoughAnchorTip)
 
             SimLeverPanel(levers: Lever.allCases.map(lever), selection: $leverID,
                           onBeginEdit: captureBaseline) {

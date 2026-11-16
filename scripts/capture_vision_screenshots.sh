@@ -38,9 +38,11 @@ shot() { # 언어 출력파일 탭번호
            -AppleLanguages "($lang)" -AppleLocale "$loc" >/dev/null; }
   sleep "$WAIT"
   mkdir -p "$(dirname "$out")"
-  t 60 xcrun simctl io "$DEV" screenshot "$out.png" >/dev/null 2>&1
-  python3 -c "from PIL import Image; import sys; Image.open(sys.argv[1]).convert('RGB').save(sys.argv[2], quality=92, optimize=True)" "$out.png" "$out"
-  rm -f "$out.png"
+  # 시뮬레이터 서비스는 Documents 안에 바로 쓰지 못할 때가 있다 — 임시 폴더에 찍고 옮긴다.
+  tmp="${TMPDIR:-/tmp}/vision-shot-$$.png"
+  t 60 xcrun simctl io "$DEV" screenshot "$tmp" >/dev/null 2>&1
+  python3 -c "from PIL import Image; import sys; Image.open(sys.argv[1]).convert('RGB').save(sys.argv[2], quality=92, optimize=True)" "$tmp" "$out"
+  rm -f "$tmp"
   echo "  $out"
 }
 

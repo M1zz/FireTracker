@@ -105,27 +105,30 @@ struct SimulatorView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 12) {
-                if let current {
-                    modeChips(current)
-                        .padding(.horizontal, Theme.gutter)
-                        .padding(.top, 4)
-                    section(current)
-                        .padding(.horizontal, Theme.gutter)
-                        .padding(.bottom, 8)
-                } else {
-                    ScrollView {
-                        CalcQuestionList(shelfRaw: $shelfRaw, onAdd: select)
-                            .padding(.horizontal, Theme.gutter)
-                            .padding(.vertical, 8)
+            // 들어가면 차트가 화면을 꽉 채우고, 글자가 커서 넘치면 그때만 스크롤한다.
+            // (스크롤 없이 두면 넘친 만큼 위의 칩과 아래 패널이 바·탭바 밑으로 숨는다.)
+            GeometryReader { viewport in
+                ScrollView {
+                    VStack(spacing: 12) {
+                        if let current {
+                            modeChips(current)
+                            section(current)
+                        } else {
+                            HStack { Spacer(); savedLink }
+                            CalcQuestionList(shelfRaw: $shelfRaw, onAdd: select)
+                        }
                     }
-                    .scrollIndicators(.hidden)
+                    .padding(.horizontal, Theme.gutter)
+                    .padding(.vertical, 8)
+                    .frame(minHeight: viewport.size.height, alignment: .top)
                 }
+                .scrollIndicators(.hidden)
+                .scrollBounceBehavior(.basedOnSize)
+                .keyboardDismissable()
             }
-            .frame(maxHeight: .infinity, alignment: .top)
             .background(Theme.bg.ignoresSafeArea())
-            .navigationTitle("계산")
-            .navigationBarTitleDisplayMode(.inline)
+            // 제목은 탭 이름과 같아 자리만 차지한다 — 바를 걷고 저장 목록은 칩 줄 끝에 둔다.
+            .toolbar(.hidden, for: .navigationBar)
             .proPaywall($paywallFeature)
             .onAppear {
                 // 처음 한 번 — 이미 써 본 사람은 전부, 새로 온 사람은 비운 채로 굳힌다.
@@ -139,22 +142,28 @@ struct SimulatorView: View {
                     }
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        // 불러오면 저장해 둔 모드가 펼쳐진 채로 돌아온다(칩에 없었으면 넣는다).
-                        SavedCalcsView(onRestore: {
-                            let m = savedMode
-                            if !shelf.contains(m) { shelfRaw = CalcShelf.adding(m, to: shelfRaw) }
-                            mode = m
-                        })
-                    } label: {
-                        Image(systemName: "bookmark")
-                    }
-                    .accessibilityLabel("저장한 계산")
-                }
-            }
         }
+    }
+
+    private var savedLink: some View {
+        NavigationLink {
+            // 불러오면 저장해 둔 모드가 펼쳐진 채로 돌아온다(칩에 없었으면 넣는다).
+            SavedCalcsView(onRestore: {
+                let m = savedMode
+                if !shelf.contains(m) { shelfRaw = CalcShelf.adding(m, to: shelfRaw) }
+                mode = m
+            })
+            .toolbar(.visible, for: .navigationBar)
+        } label: {
+            Image(systemName: "bookmark")
+                .font(.subheadline.weight(.bold))
+                .frame(width: 36, height: 36)
+                .background(Theme.surfaceHigh, in: Circle())
+                .overlay(Circle().stroke(Theme.hairline, lineWidth: 1))
+                .foregroundStyle(Theme.accentText)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("저장한 계산")
     }
 
     private func select(_ m: SimMode) {
@@ -162,16 +171,13 @@ struct SimulatorView: View {
         AppUsage.logCalc(m.metricKey)
     }
 
-    // 모든 모드가 스크롤 없이 결과(차트)가 화면을 채우고, 값은 아래 패널에서 바꾼다.
+    // 결과(차트)가 남는 높이를 채우고, 값은 아래 패널에서 바꾼다. 스크롤은 바깥 한 곳에서만.
     @ViewBuilder private func section(_ mode: SimMode) -> some View {
                     if let feature = lockedFeature(mode) {
-                        ScrollView {
-                            ProLockedCard(feature: feature) {
-                                AppUsage.log(.paywallShown)
-                                paywallFeature = feature
-                            }
+                        ProLockedCard(feature: feature) {
+                            AppUsage.log(.paywallShown)
+                            paywallFeature = feature
                         }
-                        .scrollIndicators(.hidden)
                     } else {
                         switch mode {
                         case .lifecycle:
@@ -181,14 +187,9 @@ struct SimulatorView: View {
                         case .savings: SavingsSimSection()
                         case .invest: InvestForecastSection()
                         case .debtVsInvest:
-                            // 입력 위주의 비교표라 이 모드만 스크롤로 둔다.
-                            ScrollView {
-                                WhatIfView(defaultAmount: totalDebt,
-                                           defaultInvestRatePct: settings.expectedAnnualReturn * 100,
-                                           embedded: true)
-                            }
-                            .scrollIndicators(.hidden)
-                            .keyboardDismissable()
+                            WhatIfView(defaultAmount: totalDebt,
+                                       defaultInvestRatePct: settings.expectedAnnualReturn * 100,
+                                       embedded: true)
                         case .wage: WageSimSection()
                         case .time: TimeSimSection(settings: settings, netWorth: totalNet)
                         case .ruler: RulerSimSection()
@@ -198,6 +199,13 @@ struct SimulatorView: View {
 
     // 세그먼트로는 '생애주기' 같은 라벨이 잘린다 → 가로 스크롤 칩. 끝의 [+] 로 질문을 다시 연다.
     private func modeChips(_ current: SimMode) -> some View {
+        HStack(spacing: 8) {
+            chipScroller(current)
+            savedLink
+        }
+    }
+
+    private func chipScroller(_ current: SimMode) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(shelf) { m in

@@ -27,6 +27,7 @@
 		A1000008 /* SnapshotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000008 /* SnapshotsView.swift */; };
 		A1000009 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000009 /* SettingsView.swift */; };
 		A100000A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B100000A /* Assets.xcassets */; };
+		A10001C0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = B10001C0 /* AppIcon.icon */; };
 		A100000B /* PriceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000B /* PriceService.swift */; };
 		A100000C /* AssetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000C /* AssetsView.swift */; };
 		A100000D /* SimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000D /* SimulatorView.swift */; };
@@ -105,6 +106,7 @@
 		B1000008 /* SnapshotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotsView.swift; sourceTree = "<group>"; };
 		B1000009 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B100000A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B10001C0 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		B100000B /* PriceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceService.swift; sourceTree = "<group>"; };
 		B100000C /* AssetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsView.swift; sourceTree = "<group>"; };
 		B100000D /* SimulatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorView.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 				B1000010 /* ReflectionTips.swift */,
 				B1000011 /* DemoData.swift */,
 				B100000A /* Assets.xcassets */,
+				B10001C0 /* AppIcon.icon */,
 				1565B7348B6849C756363468 /* FireTrackerSpec.swift */,
 				93817F759D0640138E251F93 /* FireTrackerRoadmap.swift */,
 				B1000012 /* Usage.swift */,
@@ -368,6 +371,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A100000A /* Assets.xcassets in Resources */,
+				A10001C0 /* AppIcon.icon in Resources */,
 				38E33F7EB564676F8FCC2BE8 /* Localizable.xcstrings in Resources */,
 				C01278F18EF876C76971B987 /* AppShortcuts.xcstrings in Resources */,
 			);

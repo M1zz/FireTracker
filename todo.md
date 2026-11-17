@@ -388,3 +388,8 @@
 - [ ] '예상 달성 시점(yearsToFire)'도 수익률 가정을 뺄지 결정 — 현재는 장기라 expectedAnnualReturn 유지 중
 - [ ] 설정에 '원하는 월 지출'을 월 단위로 직접 입력하는 필드 추가 (현재는 연간 목표 지출÷12)
 - [ ] 커버율 100% 달성 시 대시보드 상단 축하/배지 강조
+
+## 중국 본토 AI 규정 대응 (2026-11-17)
+- [x] 중국 본토 App Store 계정이면 AI 생성 기능을 감춤(`ChinaMainlandGate`, Storefront CHN · 모르면 기기 지역 CN)
+- [ ] 다음 버전 제출
+- [ ] App Store Connect → 앱 → 일반 → App Compliance: AI-Generated or Synthetic Content "No", Security Assessment "No" (2027-01-31 까지)

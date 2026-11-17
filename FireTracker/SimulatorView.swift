@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftUI
 import SwiftData
 import Charts
@@ -2955,8 +2956,17 @@ private struct ForecastAICard: View {
     @State private var summary: String?
     @State private var loading = false
     @State private var failed = false
+    /// 중국 본토 계정이면 카드째 감춘다(`ChinaMainlandGate`). 확인 전에는 안 보인다.
+    @State private var allowed = false
 
     var body: some View {
+        Group {
+            if allowed { card }
+        }
+        .task { allowed = await ChinaMainlandGate.allowsAIGeneration() }
+    }
+
+    private var card: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Label("AI 해석", systemImage: "sparkles")
@@ -3009,3 +3019,14 @@ private struct ForecastAICard: View {
     }
 }
 #endif
+
+/// 중국 본토 App Store 계정이면 AI 생성 기능을 끈다.
+/// 현지법(AI 생성 · 합성 콘텐츠 표시 방법, 보안 평가)상 이 기능을 중국 본토에 내려면 LLM 비안(备案) 번호와
+/// 보안 평가 보고서가 필요하다. 지역에서 막아 두고 App Store Connect 의 App Compliance 에는 "아니요"로 신고한다.
+enum ChinaMainlandGate {
+    static func allowsAIGeneration() async -> Bool {
+        if let code = await Storefront.current?.countryCode { return code != "CHN" }
+        // App Store 계정을 모르면(로그아웃 등) 기기 지역으로.
+        return Locale.current.region?.identifier != "CN"
+    }
+}

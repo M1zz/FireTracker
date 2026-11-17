@@ -93,7 +93,8 @@ struct SettingsView: View {
             }
             DeveloperContactSection()
         }
-        .navigationTitle("설정")
+        // 제목은 탭 이름과 같아 자리만 차지한다. 들어간 화면은 저마다 바를 다시 연다.
+        .toolbar(.hidden, for: .navigationBar)
         .scrollIndicators(.hidden)
         .keyboardDismissable()
         .onAppear(perform: load)

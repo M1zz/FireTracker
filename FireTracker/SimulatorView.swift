@@ -931,7 +931,7 @@ private struct LifecycleSimSection: View {
         }
     }
 
-    // 한 화면 결과 영역 — 숫자 · 차트(남는 높이 전부) · 판정 한 줄 · 조작 패널.
+    // 한 화면 결과 영역 — 숫자 · 차트(남는 높이 전부) · 조작 패널(바닥에 판정 한 줄과 해석·저장).
     private func mainCard(_ result: (points: [LifePoint], peak: Double, end: Double, depletionAge: Int?, crossoverAge: Int?),
                              _ a: (cur: Int, retire: Int, end: Int),
                              _ v: (feasible: Bool, comfy: Bool, headline: String, reason: String)) -> some View {
@@ -1039,23 +1039,40 @@ private struct LifecycleSimSection: View {
             }
             .frame(minHeight: 140, maxHeight: .infinity)
 
-            // 판정과 [해석·저장]은 숫자 · 차트를 먼저 보고 난 자리, 조작 패널 바로 위에.
-            SimResultHeader(title: v.headline, icon: icon, tint: tint) { showInfo = true }
-            // 3단계 — 닻: '충분한 삶'의 값을 마주하되 매일 쫓지 말라고 짚는다.
-            .popoverTip(enoughAnchorTip)
-
             SimLeverPanel(levers: Lever.allCases.map(lever), selection: $leverID,
                           onBeginEdit: captureBaseline) {
                 if isChanged(result.points) {
                     SimPanelButton(title: String(localized: "되돌리기"), icon: "arrow.uturn.backward", action: resetToBaseline)
                 }
             } footer: {
-                if let b = baseline, isChanged(result.points) {
-                    changeSummary(result, b)
-                } else {
-                    Text("밀면 곡선이 바로 바뀌어요. 숫자를 누르면 직접 입력, 차트를 훑으면 나이별 자산.")
-                        .font(.caption2)
-                        .foregroundStyle(Theme.textSecond)
+                // 판정 한 줄과 [해석·저장]을 패널 바닥에 — 값을 미는 손 바로 아래서 판정이 바뀐다.
+                VStack(alignment: .leading, spacing: 8) {
+                    if let b = baseline, isChanged(result.points) {
+                        changeSummary(result, b)
+                    }
+                    HStack(alignment: .center, spacing: 8) {
+                        Label {
+                            Text(v.headline)
+                                .fixedSize(horizontal: false, vertical: true)
+                        } icon: {
+                            Image(systemName: icon)
+                        }
+                        .font(.system(.subheadline, design: .rounded, weight: .bold))
+                        .foregroundStyle(tint)
+                        Spacer(minLength: 0)
+                        Button { showInfo = true } label: {
+                            Label("해석·저장", systemImage: "doc.text")
+                                .font(.caption.weight(.semibold))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .background(Theme.surface, in: Capsule())
+                                .foregroundStyle(Theme.textPrimary)
+                        }
+                        .buttonStyle(.plain)
+                        .fixedSize()
+                    }
+                    // 3단계 — 닻: '충분한 삶'의 값을 마주하되 매일 쫓지 말라고 짚는다.
+                    .popoverTip(enoughAnchorTip)
                 }
             }
             // 1단계 — 거울: 허영을 덜어낸 '진짜 나의 만족점'은 얼마인가.

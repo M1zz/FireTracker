@@ -84,6 +84,19 @@ struct TrendView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
+                    HStack {
+                        Button { showingHistory = true } label: {
+                            // 아이콘만 있으면 무엇인지 몰라 안 누른다 — 글자를 함께.
+                            Label("기록", systemImage: "clock.arrow.circlepath").topActionChip()
+                        }
+                        Spacer()
+                        NavigationLink {
+                            GoalSettingsView().toolbar(.visible, for: .navigationBar)
+                        } label: {
+                            Label("내 목표", systemImage: "target").topActionChip()
+                        }
+                    }
+                    .buttonStyle(.plain)
                     // 1) 남은 길 — 목표까지 얼마나 왔고 얼마를 더 모아야 하나.
                     JourneyGoalsSection()
                     // 석 달 단위로 돌아보기 — 퇴사 날짜가 실제로 움직였나.
@@ -131,28 +144,11 @@ struct TrendView: View {
                         }
                     }
                 }
-                .padding(.horizontal, Theme.gutter).padding(.vertical, 16)
+                .padding(.horizontal, Theme.gutter).padding(.top, 8).padding(.bottom, 16)
             }
             .scrollIndicators(.hidden)
             .background(Theme.bg.ignoresSafeArea())
-            .navigationTitle("여정")
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button { showingHistory = true } label: {
-                        // 아이콘만 있으면 무엇인지 몰라 안 누른다 — 글자를 함께.
-                        Label("기록", systemImage: "clock.arrow.circlepath")
-                            .labelStyle(.titleAndIcon)
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        GoalSettingsView()
-                    } label: {
-                        Label("내 목표", systemImage: "target")
-                            .labelStyle(.titleAndIcon)
-                    }
-                }
-            }
+            .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showingHistory) { SnapshotsView() }
             .onAppear { clampSelections() }
             .onChange(of: snapshots.count) { _, _ in clampSelections() }

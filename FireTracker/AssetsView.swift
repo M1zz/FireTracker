@@ -113,12 +113,17 @@ struct AssetsView: View {
         NavigationStack {
             Group {
                 if assets.isEmpty {
-                    emptyState
+                    VStack(spacing: 0) {
+                        actionRow
+                            .padding(.horizontal, Theme.gutter)
+                            .padding(.top, 8)
+                        emptyState
+                    }
                 } else {
                     catalogList
                 }
             }
-            .navigationDestination(isPresented: $showingSellSignals) { SellSignalsView() }
+            .navigationDestination(isPresented: $showingSellSignals) { SellSignalsView().toolbar(.visible, for: .navigationBar) }
             .background(Theme.bg.ignoresSafeArea())
             // 자산 탭에 들어올 때마다 최신화(15분 쓰로틀로 과도한 호출 방지).
             .task {
@@ -134,42 +139,7 @@ struct AssetsView: View {
                 AppRouter.shared.openAsset = nil
             }
             // 자산 변동 자동 기록은 RootView가 앱 전역에서 감지한다.
-            .navigationTitle("자산")
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button { refreshNow() } label: {
-                        if refresher.isRefreshing {
-                            ProgressView()
-                        } else {
-                            Image(systemName: "arrow.clockwise")
-                        }
-                    }
-                    .disabled(refresher.isRefreshing || assets.isEmpty)
-                    .accessibilityLabel("시세·배당 새로고침")
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button { showingCategoryPicker = true } label: {
-                            Label("카테고리 추가", systemImage: "folder.badge.plus")
-                        }
-                        Button { startNewAsset() } label: {
-                            Label("직접 추가", systemImage: "square.and.pencil")
-                        }
-                        Button {
-                            if pro.access.allows(ProFeature.screenshotImport.rawValue) {
-                                showingImport = true
-                            } else {
-                                AppUsage.log(.paywallShown)
-                                paywallFeature = .screenshotImport
-                            }
-                        } label: {
-                            Label("가져오기·맞추기",
-                                  systemImage: pro.access.allows(ProFeature.screenshotImport.rawValue)
-                                      ? "text.viewfinder" : "lock.fill")
-                        }
-                    } label: { Image(systemName: "plus") }
-                }
-            }
+            .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showingNew) {
                 AssetEditor(asset: nil, nextSortOrder: assets.count,
                             initialClass: newClass, initialCustomLabel: newCustomLabel,
@@ -218,6 +188,11 @@ struct AssetsView: View {
 
     private var catalogList: some View {
         List {
+            Section {
+                actionRow
+                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
+                    .listRowBackground(Color.clear)
+            }
             // 1) 자산 구성 — 먼저.
             if !compositionEntries.isEmpty {
                 Section {
@@ -298,16 +273,61 @@ struct AssetsView: View {
         }
         .scrollContentBackground(.hidden)
         .scrollIndicators(.hidden)
+        // 제목 바가 없으니 목록 위 기본 여백을 줄여 버튼 줄을 다른 탭과 같은 높이에 둔다.
+        .contentMargins(.top, 0, for: .scrollContent)
         .environment(\.editMode, $editMode)
-        .toolbar {
-            // 글자만 있는 EditButton 은 세로로 서는 툴바(아이폰 듀오)에서 사라진다. 아이콘을 붙인다.
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(editMode.isEditing ? LocalizedStringKey("완료") : LocalizedStringKey("편집"),
-                       systemImage: editMode.isEditing ? "checkmark" : "pencil") {
+    }
+
+    // 제목 바 자리에 있던 버튼들 — 새로고침 · 편집 · 추가. 목록 첫 줄에서 함께 스크롤한다.
+    private var actionRow: some View {
+        HStack(spacing: 8) {
+            Button { refreshNow() } label: {
+                Group {
+                    if refresher.isRefreshing {
+                        ProgressView()
+                    } else {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                }
+                .topActionChip()
+            }
+            .disabled(refresher.isRefreshing || assets.isEmpty)
+            .accessibilityLabel("시세·배당 새로고침")
+            Spacer()
+            if !assets.isEmpty {
+                Button {
                     withAnimation { editMode = editMode.isEditing ? .inactive : .active }
+                } label: {
+                    Label(editMode.isEditing ? LocalizedStringKey("완료") : LocalizedStringKey("편집"),
+                          systemImage: editMode.isEditing ? "checkmark" : "pencil")
+                        .topActionChip()
                 }
             }
+            Menu {
+                Button { showingCategoryPicker = true } label: {
+                    Label("카테고리 추가", systemImage: "folder.badge.plus")
+                }
+                Button { startNewAsset() } label: {
+                    Label("직접 추가", systemImage: "square.and.pencil")
+                }
+                Button {
+                    if pro.access.allows(ProFeature.screenshotImport.rawValue) {
+                        showingImport = true
+                    } else {
+                        AppUsage.log(.paywallShown)
+                        paywallFeature = .screenshotImport
+                    }
+                } label: {
+                    Label("가져오기·맞추기",
+                          systemImage: pro.access.allows(ProFeature.screenshotImport.rawValue)
+                              ? "text.viewfinder" : "lock.fill")
+                }
+            } label: {
+                Image(systemName: "plus").topActionChip()
+            }
+            .accessibilityLabel("자산 추가")
         }
+        .buttonStyle(.plain)
     }
 
     private var totalCard: some View {

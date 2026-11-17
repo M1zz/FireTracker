@@ -158,3 +158,18 @@ extension View {
     }
 }
 #endif
+
+// 탭 맨 위 제목 바를 걷고 그 자리의 버튼을 내용 첫 줄에 둘 때 쓰는 모양.
+// 제목은 탭바 이름과 같아 자리만 차지한다 — 버튼만 남겨 내용과 함께 스크롤한다.
+extension View {
+    func topActionChip() -> some View {
+        self
+            .font(.subheadline.weight(.semibold))
+            .padding(.horizontal, 12)
+            .frame(minWidth: 36, minHeight: 36)
+            .background(Theme.surfaceHigh, in: Capsule())
+            .overlay(Capsule().stroke(Theme.hairline, lineWidth: 1))
+            .foregroundStyle(Theme.textPrimary)
+            .contentShape(Capsule())
+    }
+}

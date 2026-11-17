@@ -2745,7 +2745,9 @@ struct ParsedHolding: Identifiable {
 // 두 가지 배치를 읽는다.
 //  · 두 줄 배치(뱅크샐러드·토스 등) — 왼쪽 종목명, 오른쪽 위 평가액 "23,157,790원",
 //    그 아래 손익 "▲ 2,363,961원(11.36%)". 화살표는 OCR이 엉뚱한 글자로 읽으므로
-//    손익의 부호는 괄호 속 수익률에서 가져온다.
+//    손익의 부호는 괄호 속 수익률에서, 없으면 앞의 +/− 에서 가져온다.
+//    토스 증권 탭은 손익에 '원'이 없고("+2,938,713 (11.4%)") 종목명 아래에 "61주" 가 있다 —
+//    그 수량과 티커(AAPL)를 함께 넘겨, 기존 종목은 코드로 맞추고 수량까지 갱신한다.
 //  · 한 줄 배치 — 종목명과 금액이 한 줄에. 두 줄 배치로 하나도 못 읽었을 때만.
 enum HoldingsOCR {
     private typealias Token = (text: String, box: CGRect)
@@ -2753,7 +2755,12 @@ enum HoldingsOCR {
     private static let numberRegex = try! NSRegularExpression(pattern: #"[0-9][0-9,]*(?:\.[0-9]+)?"#)
     private static let valueRegex = try! NSRegularExpression(pattern: #"^\s*([0-9][0-9,]*)\s*원\s*$"#)
     private static let changeRegex = try! NSRegularExpression(
-        pattern: #"([0-9][0-9,]*)\s*원\s*\(\s*([+\-−]?[0-9]+(?:\.[0-9]+)?)\s*%\s*\)"#)
+        pattern: #"([+\-−]?)\s*([0-9][0-9,]*)\s*원?\s*\(\s*([+\-−]?[0-9]+(?:\.[0-9]+)?)\s*%\s*\)"#)
+    // 영문 대문자로만 된 국내 종목 이름 — 미국 티커와 모양이 같다.
+    private static let koreanLatinNames: Set<String> = ["NAVER", "LG", "SK", "KT", "GS", "CJ", "LS", "HD",
+                                                        "SBS", "KCC", "OCI", "BGF", "DL", "HL", "SKC", "KG"]
+    // 종목명 아래의 보유 수량 "61주" · "20.364378주".
+    private static let quantityRegex = try! NSRegularExpression(pattern: #"^\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*주\s*$"#)
     // 종목명 자리에 걸리는 화면 글자들.
     private static let notNames: Set<String> = ["자산", "조회", "목표", "홈", "가계부", "건강보험",
                                                 "금융쇼핑", "투자", "주식", "전체", "국내", "해외"]
@@ -2780,10 +2787,15 @@ enum HoldingsOCR {
     static func merge(_ batches: [[ParsedHolding]]) -> [ParsedHolding] {
         var out: [ParsedHolding] = []
         for row in batches.joined() {
-            let dup = out.contains {
+            if let i = out.firstIndex(where: {
                 normalized($0.name) == normalized(row.name) && abs($0.amount - row.amount) < 1
+            }) {
+                // 화면 끝에 걸려 손익·수량이 잘린 쪽보다 다 보인 쪽을 남긴다.
+                let info = { (r: ParsedHolding) in (r.gain != nil ? 1 : 0) + (r.quantity != nil ? 1 : 0) }
+                if info(row) > info(out[i]) { out[i] = row }
+            } else {
+                out.append(row)
             }
-            if !dup { out.append(row) }
         }
         return out
     }
@@ -2807,11 +2819,16 @@ enum HoldingsOCR {
     private static func parsePaired(_ tokens: [Token]) -> [ParsedHolding] {
         let values = tokens.filter { $0.box.midX > 0.5 && match(valueRegex, $0.text) != nil }
         let changes = tokens.filter { match(changeRegex, $0.text) != nil }
+        let quantities = tokens.filter { $0.box.midX < 0.55 && match(quantityRegex, $0.text) != nil }
         let names = tokens.filter { t in
-            t.box.minX < 0.45 && t.box.midX < 0.55
-                && t.text.rangeOfCharacter(from: .letters) != nil
+            let text = t.text.trimmingCharacters(in: .whitespaces)
+            // 티커 O 는 OCR 이 숫자 0 으로 읽는다.
+            let isTickerO = text == "0" || text == "O"
+            return t.box.minX < 0.45 && t.box.midX < 0.55
+                && (t.text.rangeOfCharacter(from: .letters) != nil || isTickerO)
                 && match(valueRegex, t.text) == nil && match(changeRegex, t.text) == nil
-                && !notNames.contains(t.text.trimmingCharacters(in: .whitespaces))
+                && match(quantityRegex, t.text) == nil
+                && !notNames.contains(text)
                 && t.text.range(of: #"^\d{1,2}:\d{2}"#, options: .regularExpression) == nil
         }
         var out: [ParsedHolding] = []
@@ -2822,9 +2839,13 @@ enum HoldingsOCR {
                 .filter { $0.box.midY < v.box.midY && v.box.midY - $0.box.midY < lineH * 2 }
                 .max { $0.box.midY < $1.box.midY }
             let rowMid = change.map { (v.box.midY + $0.box.midY) / 2 } ?? v.box.midY
-            guard let name = names
-                .filter({ abs($0.box.midY - rowMid) < lineH * 1.6 })
-                .min(by: { abs($0.box.midY - rowMid) < abs($1.box.midY - rowMid) })
+            let inRow = { (t: Token) in abs(t.box.midY - rowMid) < lineH * 1.6 }
+            // 종목명은 평가액과 같은 윗줄에 있다. 아이콘 속 글자(코카콜라 로고 · "S&P")는
+            // 작아서 거른다 — 그것밖에 없을 때만 쓴다.
+            let rowNames = names.filter(inRow)
+            let sized = rowNames.filter { $0.box.height >= lineH * 0.55 }
+            guard let name = (sized.isEmpty ? rowNames : sized)
+                .min(by: { abs($0.box.midY - v.box.midY) < abs($1.box.midY - v.box.midY) })
             else { continue }
 
             var value = match(valueRegex, v.text).flatMap { number($0[0]) } ?? 0
@@ -2832,11 +2853,12 @@ enum HoldingsOCR {
             var pct: Double?
             var estimated = false
             if let c = change, let g = match(changeRegex, c.text),
-               let amt = number(g[0]), let p = number(g[1]) {
-                pct = p
-                gain = p < 0 ? -amt : amt
+               let amt = number(g[1]), let p = number(g[2]) {
+                let negative = p < 0 || g[0] == "-" || g[0] == "−"
+                pct = negative ? -abs(p) : p
+                gain = negative ? -amt : amt
                 // 버튼에 가려 평가액 앞자리가 잘리면 손익·수익률과 맞지 않는다 — 거꾸로 계산한다.
-                if p != 0, p > -100 {
+                if p != 0, abs(p) < 100 || !negative {
                     let cost = amt / abs(p / 100)
                     let implied = cost + (gain ?? 0)
                     if implied > 0, value == 0 || abs(implied - value) / implied > 0.05 {
@@ -2846,15 +2868,30 @@ enum HoldingsOCR {
                 }
             }
             guard value > 0 else { continue }
-            let raw = name.text.trimmingCharacters(in: .whitespaces)
+            var raw = name.text.trimmingCharacters(in: .whitespaces)
+            if raw == "0" { raw = "O" }
             // 말줄임이 OCR에서 빠지기도 한다 — 이름 칸 끝까지 찬 이름도 잘린 것으로 본다.
             // 가려져 평가액을 계산한 줄은 이름도 가려졌을 수 있다.
             let truncated = raw.hasSuffix("…") || raw.hasSuffix("...") || raw.hasSuffix("..")
                 || name.box.maxX >= 0.47 || estimated
             let clean = raw.trimmingCharacters(in: CharacterSet(charactersIn: ".… "))
-            out.append(ParsedHolding(name: clean, amountText: String(Int(value)),
-                                     gain: gain, gainPct: pct,
-                                     truncated: truncated, estimated: estimated))
+            var row = ParsedHolding(name: clean, amountText: String(Int(value)),
+                                    gain: gain, gainPct: pct,
+                                    truncated: truncated, estimated: estimated)
+            // 보유 수량 — 종목명 아래 "61주".
+            if let q = quantities.filter(inRow)
+                .min(by: { abs($0.box.midY - rowMid) < abs($1.box.midY - rowMid) }),
+               let n = match(quantityRegex, q.text).flatMap({ number($0[0]) }), n > 0 {
+                row.quantity = n
+            }
+            // 티커(AAPL · BRK.A)면 코드로 기존 종목과 맞춘다. 금액은 화면대로 원이다.
+            // 영문 대문자 이름의 국내 종목(NAVER · LG …)은 티커로 보지 않고 이름으로 맞춘다.
+            if !truncated, !koreanLatinNames.contains(clean), let sym = HoldingsFile.symbol(clean) {
+                row.symbol = sym.code
+                row.isUS = sym.isUS
+                row.inUSD = false
+            }
+            out.append(row)
         }
         return out
     }

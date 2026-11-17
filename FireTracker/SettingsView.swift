@@ -45,6 +45,7 @@ struct SettingsView: View {
     @State private var showPaywall = false
     @State private var showGraduation = false
     @State private var showManageSubscription = false
+    @State private var showGiftSupport = false
     /// 개발자 모드 전용 — 권한 강제("unlock"/"lock"), 빈 값이면 정상 판정.
     @AppStorage(ProAccess.overrideKey) private var proOverride = ""
     @AppStorage(SyncManager.enabledKey) private var syncEnabled = false
@@ -60,10 +61,6 @@ struct SettingsView: View {
     private var settingsForm: some View {
         Form {
             proSection
-            // 선물은 Pro 평생을 연다. 상품이 App Store 에서 와야 줄이 선다.
-            if let gift = pro.gift {
-                GiftRows(gift: gift, hasPro: pro.ownedTier == .pro)
-            }
             syncSection
             displaySection
             securitySection
@@ -74,10 +71,6 @@ struct SettingsView: View {
             Section {
                 LeeoSupportSection<FireTrackerSpec>()
                 NavigationLink(LeeoRoadmapText.entry) { RoadmapScreen() }
-                // 개발자 응원하기(팁). 상품이 App Store 에서 와야 선다.
-                if let tipJar = pro.tipJar {
-                    LeeoTipJarLink<FireTrackerSpec>(tipJar: tipJar)
-                }
                 if isMasterMode {
                     NavigationLink {
                         LeeoUsageStatsView<FireTrackerSpec>()
@@ -178,58 +171,60 @@ struct SettingsView: View {
 
     // MARK: - 퇴사각 Plus · Pro
 
+    // 요금제 · 선물 · 응원을 한 칸에. 줄마다 아이콘 · 이름 · 오른쪽 값으로 같은 모양을 쓴다
+    // (설정의 다른 줄처럼 — 예전처럼 주황 글자 단추를 늘어놓지 않는다).
     private var proSection: some View {
         Section {
-            if let owned = pro.ownedTier {
-                Label(pro.isGrandfathered
-                      ? LocalizedStringKey("퇴사각 Pro · 먼저 사 주신 분께 평생")
-                      : (owned == .pro ? LocalizedStringKey("퇴사각 Pro를 쓰고 있어요")
-                                       : LocalizedStringKey("퇴사각 Plus를 쓰고 있어요")),
-                      systemImage: "checkmark.seal.fill")
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(Theme.positive)
-                if owned == .plus {
-                    Button { showPaywall = true } label: {
-                        Text("Pro로 올리기")
-                            .font(.body)
-                            .foregroundStyle(Theme.accentText)
-                    }
-                }
-                // 구독 중인 사람: 구독 관리 아래에 '평생으로 바꾸기'를 늘 둔다.
-                if pro.subscribedOnly {
-                    Button { showManageSubscription = true } label: {
-                        Text("구독 관리")
-                            .font(.body)
-                            .foregroundStyle(Theme.accentText)
-                    }
-                    Button {
-                        Task {
-                            let yearly = await LeeoGraduation.currentSubscription(among: ProAccess.yearlyIDs)
-                            // 연 구독은 졸업가로, 주 · 월 구독은 페이월의 평생으로.
-                            if yearly != nil, pro.product(ProAccess.graduateID) != nil {
-                                showGraduation = true
-                            } else {
-                                showPaywall = true
-                            }
+            Button { showPaywall = true } label: {
+                LabeledContent {
+                    HStack(spacing: 6) {
+                        if let owned = pro.ownedTier {
+                            Label(owned == .pro ? "Pro" : "Plus", systemImage: "checkmark.seal.fill")
+                                .labelStyle(.titleAndIcon)
+                                .foregroundStyle(Theme.positive)
                         }
-                    } label: {
-                        Text(LeeoLadderText.switchToLifetimeEntry)
-                            .font(.body)
-                            .foregroundStyle(Theme.accentText)
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.tertiary)
                     }
+                } label: {
+                    Label("퇴사각 Plus · Pro", systemImage: "flame.fill")
                 }
-            } else {
+            }
+            .tint(Theme.textPrimary)
+            if pro.ownedTier == .plus {
                 Button { showPaywall = true } label: {
-                    HStack {
-                        Label("퇴사각 Plus · Pro", systemImage: "flame.fill")
-                            .font(.body.weight(.semibold))
-                            .foregroundStyle(Theme.textPrimary)
-                        Spacer()
-                        Text("알아보기")
-                            .font(.body)
-                            .foregroundStyle(Theme.accentText)
-                    }
+                    Label("Pro로 올리기", systemImage: "arrow.up.circle")
                 }
+            }
+            // 구독 중인 사람: 구독 관리 아래에 '평생으로 바꾸기'를 늘 둔다.
+            if pro.subscribedOnly {
+                Button { showManageSubscription = true } label: {
+                    Label("구독 관리", systemImage: "calendar.badge.clock")
+                }
+                Button {
+                    Task {
+                        let yearly = await LeeoGraduation.currentSubscription(among: ProAccess.yearlyIDs)
+                        // 연 구독은 졸업가로, 주 · 월 구독은 페이월의 평생으로.
+                        if yearly != nil, pro.product(ProAccess.graduateID) != nil {
+                            showGraduation = true
+                        } else {
+                            showPaywall = true
+                        }
+                    }
+                } label: {
+                    Label(LeeoLadderText.switchToLifetimeEntry, systemImage: "infinity")
+                }
+            }
+            // 선물은 Pro 평생을 연다. 상품이 App Store 에서 와야 줄이 선다.
+            if let gift = pro.gift {
+                GiftRows(gift: gift, hasPro: pro.ownedTier == .pro, onContactSupport: { showGiftSupport = true })
+            }
+            // 개발자 응원하기(팁) — 낸 사람에게는 후원 단계 배지가 선다. 상품이 App Store 에서 와야 선다.
+            if let tipJar = pro.tipJar {
+                LeeoTipJarLink<FireTrackerSpec>(tipJar: tipJar)
+            }
+            if pro.ownedTier == nil {
                 Button {
                     Task {
                         await pro.restore()
@@ -238,9 +233,11 @@ struct SettingsView: View {
                              : String(localized: "복원할 구매가 없어요."))
                     }
                 } label: {
-                    Text("구매 복원")
-                        .font(.body)
-                        .foregroundStyle(Theme.accentText)
+                    HStack {
+                        Label("구매 복원", systemImage: "arrow.clockwise")
+                        Spacer()
+                        if pro.isRestoring { ProgressView() }
+                    }
                 }
                 .disabled(pro.isRestoring)
             }
@@ -250,16 +247,19 @@ struct SettingsView: View {
                     Text("해제").tag("unlock")
                     Text("잠금").tag("lock")
                 }
-                .font(.body)
                 .onChange(of: proOverride) { _, _ in pro.objectWillChange.send() }
             }
-        } header: {
-            Text("퇴사각 Plus · Pro")
         } footer: {
-            if pro.ownedTier == nil {
+            if pro.isGrandfathered {
+                Text("퇴사각 Pro · 먼저 사 주신 분께 평생")
+            } else if pro.ownedTier == nil {
                 Text("내 퇴사 날짜는 무료로. 더 깊이 파고들 도구를 연 구독이나 평생으로 고르세요.")
-                    .font(.body)
-                    .foregroundStyle(Theme.textSecond)
+            }
+        }
+        .sheet(isPresented: $showGiftSupport) {
+            NavigationStack {
+                LeeoFeedbackView<FireTrackerSpec>(initialType: .bug, extraInfo: pro.gift?.supportLines ?? [],
+                                                  initialCategory: .purchase)
             }
         }
         .sheet(isPresented: $showPaywall) {
@@ -597,32 +597,25 @@ struct SettingsView: View {
 private struct GiftRows: View {
     @ObservedObject var gift: LeeoGiftStore
     let hasPro: Bool
-    @State private var showSupport = false
+    /// 선물이 안 되면 결제 번호·코드를 붙여 문의하게 한다 — 막힌 사람을 놓치지 않게.
+    let onContactSupport: () -> Void
 
     var body: some View {
         if gift.isAvailable || gift.pendingCount > 0 || !gift.sentGifts.isEmpty || gift.redeemed != nil {
-            Section {
-                NavigationLink {
-                    // 선물이 안 되면 결제 번호·코드를 붙여 문의하게 한다 — 막힌 사람을 놓치지 않게.
-                    LeeoGiftView<FireTrackerSpec>(gift: gift, showsRedeemLink: false,
-                                                  onContactSupport: { showSupport = true })
-                } label: {
-                    Label(LeeoGiftText.sendEntry, systemImage: "gift.fill")
-                }
-                // 이미 프로인 사람은 받을 것이 없다 — 받은 적이 있으면 그 기록을 볼 수 있게만 남긴다.
-                if !hasPro || gift.redeemed != nil {
-                    NavigationLink {
-                        LeeoGiftRedeemView<FireTrackerSpec>(gift: gift,
-                                                            onContactSupport: { showSupport = true })
-                    } label: {
-                        Label(LeeoGiftText.redeemEntry, systemImage: "giftcard")
-                    }
-                }
+            NavigationLink {
+                LeeoGiftView<FireTrackerSpec>(gift: gift, showsRedeemLink: false,
+                                              onContactSupport: onContactSupport)
+                    .toolbar(.visible, for: .navigationBar)
+            } label: {
+                Label(LeeoGiftText.sendEntry, systemImage: "gift.fill")
             }
-            .sheet(isPresented: $showSupport) {
-                NavigationStack {
-                    LeeoFeedbackView<FireTrackerSpec>(initialType: .bug, extraInfo: gift.supportLines,
-                                                      initialCategory: .purchase)
+            // 이미 프로인 사람은 받을 것이 없다 — 받은 적이 있으면 그 기록을 볼 수 있게만 남긴다.
+            if !hasPro || gift.redeemed != nil {
+                NavigationLink {
+                    LeeoGiftRedeemView<FireTrackerSpec>(gift: gift, onContactSupport: onContactSupport)
+                        .toolbar(.visible, for: .navigationBar)
+                } label: {
+                    Label(LeeoGiftText.redeemEntry, systemImage: "giftcard")
                 }
             }
         }

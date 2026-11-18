@@ -268,9 +268,14 @@ enum ProAccess {
         switch UserDefaults.standard.string(forKey: overrideKey) {
         case "unlock": return true
         case "lock":   return false
+        #if DEBUG
+        // Xcode 로 빌드한 개발자 기기는 늘 Pro — 페이월을 보려면 개발자 모드에서 'lock' 으로 강제한다.
+        default:       return true
+        #else
         // 유료 칸 상품을 한 번도 불러오지 못한 기기는 막지 않는다 — 상품을 만들기 전에 빌드가 나가도
         // 살 수 없는데 막히는 사람이 없게. 한 번 불러온 기기는 네트워크가 끊겨도 다시 막는다.
         default:       return storeReady ? nil : true
+        #endif
         }
     }
 

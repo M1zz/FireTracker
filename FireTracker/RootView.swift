@@ -11,6 +11,8 @@ struct RootView: View {
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query(sort: \NetWorthSnapshot.date) private var snapshots: [NetWorthSnapshot]
     @StateObject private var refresher = RefreshManager()
+    // 오늘 기록 갱신을 잠깐 미룬다 — 가져오기처럼 여러 자산이 잇달아 바뀌면 마지막에 한 번만.
+    @State private var recordTask: Task<Void, Never>?
     @EnvironmentObject private var pro: LeeoStore
     @AppStorage("amountNumbersOnly") private var amountNumbersOnly = false
     @AppStorage(DemoData.activeKey) private var demoActive = false
@@ -114,12 +116,17 @@ struct RootView: View {
         }
         // 자산에 변동이 생기면(어느 탭이든) 오늘 기록을 자동 갱신 — 수동 저장 불필요.
         .onChange(of: assetsFingerprint) { _, _ in
-            let s = settingsList.first ?? FireSettings()
-            refresher.upsertCurrentPeriodSnapshot(
-                assets: assets, settings: s, snapshots: snapshots, context: context
-            )
-            updateUsageMetrics()
-            publishSummary()
+            recordTask?.cancel()
+            recordTask = Task {
+                try? await Task.sleep(for: .milliseconds(600))
+                guard !Task.isCancelled else { return }
+                let s = settingsList.first ?? FireSettings()
+                refresher.upsertCurrentPeriodSnapshot(
+                    assets: assets, settings: s, snapshots: snapshots, context: context
+                )
+                updateUsageMetrics()
+                publishSummary()
+            }
         }
         // 목표가 바뀌어도 위젯·알림 문구를 새 숫자로.
         .onChange(of: settingsFingerprint) { _, _ in publishSummary() }

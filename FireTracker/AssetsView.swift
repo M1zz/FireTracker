@@ -23,7 +23,6 @@ struct AssetsView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Asset.sortOrder) private var assets: [Asset]
     @Query private var settingsList: [FireSettings]
-    @Query private var snapshots: [NetWorthSnapshot]
     @EnvironmentObject private var refresher: RefreshManager
     @EnvironmentObject private var pro: LeeoStore
     @State private var paywallFeature: ProFeature?
@@ -48,6 +47,8 @@ struct AssetsView: View {
     @State private var pendingCategory: (cls: AssetClass, label: String)?
     // 접힌 카테고리 그룹 id들. 비어 있으면 전부 펼침(기본).
     @State private var collapsedGroups: Set<String> = []
+    // 그룹 안 순서를 사용자가 정하게 된 뒤 한 번만 — 예전의 금액 순을 번호로 옮겨 둔다.
+    @AppStorage("assets.orderSeeded") private var orderSeeded = false
 
     private let otherAssetsTip = OtherAssetsTip()
 
@@ -127,6 +128,7 @@ struct AssetsView: View {
             .background(Theme.bg.ignoresSafeArea())
             // 자산 탭에 들어올 때마다 최신화(15분 쓰로틀로 과도한 호출 방지).
             .task {
+                seedOrderIfNeeded()
                 await refresher.refreshIfStale(
                     assets: assets, settings: settings, context: context,
                     maxAge: RefreshManager.tabThrottle
@@ -219,6 +221,7 @@ struct AssetsView: View {
                                 .listRowBackground(Theme.surface)
                         }
                         .onDelete { offsets in pendingDelete = offsets.map { group.assets[$0] } }
+                        .onMove { from, to in move(in: group, from: from, to: to) }
                         Button {
                             startNewAsset(group.assetClass, customLabel: group.customLabel,
                                           lock: true, classTotal: group.subtotal)
@@ -1040,36 +1043,47 @@ struct AssetsView: View {
         else { collapsedGroups.insert(id) }
     }
 
-    // 카탈로그를 종류별 그룹으로. AssetClass.allCases 순서를 유지하고, 직접 입력은
-    // 사용자가 붙인 라벨별로 갈라 별도 그룹이 되게 한다.
+    // 카탈로그를 종류별 그룹으로 — 값이 크게 출렁이는 종류(코인 · 주식)부터, 현금 · 부채는 아래.
+    // 그룹 안은 사용자가 편집에서 끌어 정한 순서(sortOrder). 직접 입력은 라벨별로 갈라 따로 묶는다.
     private var assetGroups: [AssetGroup] {
         var groups: [AssetGroup] = []
-        for ac in AssetClass.allCases {
-            // 그룹 안에서는 금액(절댓값) 큰 종목부터.
-            let members = assets.filter { $0.assetClass == ac }
-                .sorted { abs($0.netValue) > abs($1.netValue) }
+        for ac in AssetClass.byVolatility {
+            let members = assets.filter { $0.assetClass == ac }   // @Query 가 sortOrder 순
             guard !members.isEmpty else { continue }
             if ac == .custom {
                 var labels: [String] = []
                 for m in members where !labels.contains(m.customLabel) { labels.append(m.customLabel) }
                 for label in labels {
-                    let sub = members.filter { $0.customLabel == label }
                     groups.append(AssetGroup(id: "custom:\(label)",
                                              assetClass: ac,
                                              title: label.isEmpty ? ac.label : label,
                                              customLabel: label,
-                                             assets: sub))
+                                             assets: members.filter { $0.customLabel == label }))
                 }
             } else {
-                groups.append(AssetGroup(id: ac.rawValue,
-                                         assetClass: ac,
-                                         title: ac.label,
-                                         customLabel: "",
-                                         assets: members))
+                groups.append(AssetGroup(id: ac.rawValue, assetClass: ac, title: ac.label,
+                                         customLabel: "", assets: members))
             }
         }
-        // 카테고리도 금액(소계) 큰 순으로 — 부채는 음수라 자연스레 맨 아래.
-        return groups.sorted { $0.subtotal > $1.subtotal }
+        return groups
+    }
+
+    /// 편집에서 끌어 옮긴 순서를 저장한다 — 화면에 보이는 순서대로 전체 번호를 다시 매긴다.
+    private func move(in group: AssetGroup, from: IndexSet, to: Int) {
+        var moved = group.assets
+        moved.move(fromOffsets: from, toOffset: to)
+        let ordered = assetGroups.flatMap { $0.id == group.id ? moved : $0.assets }
+        for (i, a) in ordered.enumerated() where a.sortOrder != i { a.sortOrder = i }
+        context.saveReporting(String(localized: "자산"))
+    }
+
+    /// 처음 한 번, 그룹 안 순서를 그동안 보이던 대로(금액 큰 순) 번호로 굳혀 둔다.
+    private func seedOrderIfNeeded() {
+        guard !orderSeeded, !assets.isEmpty else { return }
+        let ordered = assetGroups.flatMap { g in g.assets.sorted { abs($0.netValue) > abs($1.netValue) } }
+        for (i, a) in ordered.enumerated() where a.sortOrder != i { a.sortOrder = i }
+        context.saveReporting(String(localized: "자산"))
+        orderSeeded = true
     }
 
     // Tappable category header: chevron + icon + name + count, and the group's
@@ -1112,6 +1126,14 @@ struct AssetsView: View {
 
 // One category section in the catalog: a group of holdings sharing an asset
 // class (custom holdings split further by their user-typed label).
+extension AssetClass {
+    /// 자산 탭 묶음 순서 — 값이 크게 출렁이는 종류부터. 부채는 맨 아래.
+    static let byVolatility: [AssetClass] = [
+        .crypto, .stocks, .fund, .valuables, .realEstate, .pension, .bond, .vehicle,
+        .ip, .custom, .other, .insurance, .receivable, .jeonse, .deposit, .cash, .debt,
+    ]
+}
+
 struct AssetGroup: Identifiable {
     let id: String
     let assetClass: AssetClass

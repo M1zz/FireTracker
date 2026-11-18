@@ -44,14 +44,17 @@ final class RefreshManager: ObservableObject {
         statusMessage = String(localized: "시세·배당 불러오는 중…")
         defer { isRefreshing = false }
 
-        var pricedCount = 0
+        // 받기와 반영을 나눈다 — 받는 동안 모델을 하나씩 바꾸면 자산을 구독하는 모든 화면과
+        // 오늘 기록 · 위젯이 종목 수만큼 다시 그려져 버벅인다. 다 받은 뒤 한 번에 반영한다.
+        var prices: [(Asset, amount: Double, unit: Double)] = []
+        var yields: [(Asset, Double)] = []
         var failedCount = 0
-        var dividendCount = 0
         for asset in targets {
             let symbol = asset.symbol.trimmingCharacters(in: .whitespaces)
             guard !symbol.isEmpty else { continue }
 
-            // 1) 자동 시세 자산: 평가액·단가 최신화.
+            // 1) 자동 시세 자산: 평가액·단가.
+            var unit = asset.unitPriceKRW
             if asset.autoPriced {
                 if let result = try? await PriceService.autoValue(
                     assetClass: asset.assetClass,
@@ -65,35 +68,41 @@ final class RefreshManager: ObservableObject {
                     kisAppSecret: settings.kisAppSecret,
                     dataGoKey: settings.dataGoKey
                 ) {
-                    asset.amount = result.amount.rounded()
-                    asset.unitPriceKRW = result.unit
-                    asset.lastPriced = Date()
-                    // 매도 원칙 — 고점을 기억하고, 닿았으면 알린다.
-                    SellWatch.evaluate(asset)
-                    pricedCount += 1
+                    prices.append((asset, result.amount.rounded(), result.unit))
+                    unit = result.unit
                 } else {
                     failedCount += 1
                 }
             }
 
-            // 2) 주식·ETF 배당률 최신화 — 사용자가 배당액을 직접 넣지 않은 경우만.
+            // 2) 주식·ETF 배당률 — 사용자가 배당액을 직접 넣지 않은 경우만.
             //    배당률(%)로 저장해 평가액이 바뀌어도 월 배당이 따라간다.
             if (asset.assetClass == .stocks || asset.assetClass == .fund),
                asset.monthlyIncome == 0 {
-                let unit = asset.unitPriceKRW > 0
-                    ? asset.unitPriceKRW
-                    : (asset.quantity > 0 ? asset.amount / asset.quantity : 0)
+                if unit <= 0, asset.quantity > 0 { unit = asset.amount / asset.quantity }
                 if unit > 0,
                    let perShare = try? await PriceService.annualDividendKRWPerShare(
                        assetClass: asset.assetClass, symbol: asset.symbol, currency: asset.currency),
                    perShare > 0 {
-                    let yieldPct = (perShare / unit * 1000).rounded() / 10   // 소수 한 자리
-                    asset.incomeKind = .dividend
-                    asset.annualYieldPct = yieldPct
-                    dividendCount += 1
+                    yields.append((asset, (perShare / unit * 1000).rounded() / 10))   // 소수 한 자리
                 }
             }
         }
+
+        let now = Date()
+        for (asset, amount, unit) in prices {
+            asset.amount = amount
+            asset.unitPriceKRW = unit
+            asset.lastPriced = now
+            // 매도 원칙 — 고점을 기억하고, 닿았으면 알린다.
+            SellWatch.evaluate(asset)
+        }
+        for (asset, pct) in yields {
+            asset.incomeKind = .dividend
+            asset.annualYieldPct = pct
+        }
+        let pricedCount = prices.count
+        let dividendCount = yields.count
         context.saveReporting(String(localized: "시세"))
 
         // 하나도 못 불러왔는데 '최신 상태'라고 하면 안 된다 — 실패를 그대로 말한다.

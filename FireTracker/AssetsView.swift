@@ -33,6 +33,7 @@ struct AssetsView: View {
     @State private var showingNew = false
     @State private var showingImport = false
     @State private var showingSellSignals = false
+    @State private var showingFearGreed = false
     @State private var showingBreakdown = false
     @State private var totalMode: AssetTotalMode = .gross
     // 자산 구성 도넛에서 탭으로 선택된 조각(각도값).
@@ -125,6 +126,7 @@ struct AssetsView: View {
                 }
             }
             .navigationDestination(isPresented: $showingSellSignals) { SellSignalsView().toolbar(.visible, for: .navigationBar) }
+            .navigationDestination(isPresented: $showingFearGreed) { FearGreedView().toolbar(.visible, for: .navigationBar) }
             .background(Theme.bg.ignoresSafeArea())
             // 자산 탭에 들어올 때마다 최신화(15분 쓰로틀로 과도한 호출 방지).
             .task {
@@ -210,6 +212,12 @@ struct AssetsView: View {
                     SellWatchCard(showingAll: $showingSellSignals)
                         .listRowInsets(EdgeInsets())
                         .listRowBackground(Color.clear)
+                }
+                // 팔 때 보는 원칙 옆에, 살 때 보는 시장 분위기.
+                Section {
+                    MarketMoodRow { showingFearGreed = true }
+                        .padding(.vertical, 4)
+                        .listRowBackground(Theme.surface)
                 }
             }
             // 2) 내 자산 — 종류(카테고리)별로 묶어, 접고 펼치며 종목을 관리.
@@ -1949,6 +1957,8 @@ struct AssetEditor: View {
                 ForEach(TradeKind.allCases) { Text($0.label).tag($0) }
             }
             .pickerStyle(.segmented)
+            // 살 때는 지금 시장 분위기를 한 줄로 — 공포에 나눠 사고, 탐욕에 크게 사지 않게.
+            if tradeKind == .buy { MarketMoodRow() }
             DatePicker("날짜", selection: $tradeDate, displayedComponents: .date)
             TextField("수량 (\(buyUnitLabel))", text: $tradeQty)
                 .keyboardType(.decimalPad)

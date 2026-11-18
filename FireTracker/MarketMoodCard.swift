@@ -651,3 +651,62 @@ private struct FearGreedGauge: View {
         .accessibilityLabel(Text("\(current.label) \(Int(score.rounded()))"))
     }
 }
+
+// MARK: - 살 때 보는 한 줄
+
+/// 살 때 보는 시장 분위기 한 줄 — 매도 원칙 카드와 짝을 이룬다. 자산 탭 · 매수 기록에 둔다.
+/// `onTap` 이 있으면 눌러서 공포·탐욕 지수 화면으로 간다.
+struct MarketMoodRow: View {
+    var onTap: (() -> Void)? = nil
+    @State private var snap: MarketMoodSnapshot?
+
+    var body: some View {
+        Group {
+            if let onTap {
+                Button(action: onTap) { content(chevron: true) }.buttonStyle(.plain)
+            } else {
+                content(chevron: false)
+            }
+        }
+        .task {
+            if snap == nil { snap = try? await MarketMoodService.load() }
+        }
+    }
+
+    private func content(chevron: Bool) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "gauge.with.needle")
+                .font(.title3)
+                .foregroundStyle(snap?.mood.color ?? Theme.textSecond)
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 6) {
+                    Text("시장 공포 나침반")
+                        .foregroundStyle(Theme.textSecond)
+                    if let snap {
+                        Text(snap.mood.label)
+                            .fontWeight(.bold)
+                            .foregroundStyle(snap.mood.color)
+                        Text(verbatim: "VIX \(Fmt.trimNumber((snap.vix * 10).rounded() / 10))")
+                            .foregroundStyle(Theme.textSecond)
+                    } else {
+                        ProgressView().controlSize(.mini)
+                    }
+                }
+                .font(.subheadline)
+                if let snap {
+                    Text(snap.mood.guide)
+                        .font(.caption)
+                        .foregroundStyle(Theme.textSecond)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            Spacer(minLength: 0)
+            if chevron {
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.textSecond)
+            }
+        }
+        .contentShape(Rectangle())
+    }
+}

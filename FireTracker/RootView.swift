@@ -153,6 +153,8 @@ struct RootView: View {
         .modifier(ShotSheet())
         #endif
         .environmentObject(refresher)
+        // 유료가 되면 콘페티, 이미 유료인 사람에게는 한 번 감사 인사.
+        .leeoCelebrations(appName: FireTrackerSpec.displayName)
         // 앱 시작 시 — 마지막 갱신이 7일 이상 지났으면 시세·배당을 자동 갱신하고,
         // 이번 달 기록이 없으면 최신 평가액으로 월 1회 자동 스냅샷을 남긴다.
         .task {

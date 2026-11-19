@@ -84,7 +84,7 @@ FIRE Calculator & Net Worth
 
 ### 키워드
 
-retirement,independence,savings,passive,income,portfolio,withdrawal,nestegg,dividends,assets,wealth
+financial freedom,pension,coast,barista,compound,nestegg,independence,withdrawal,assets,dividends
 
 ### 프로모션 텍스트
 
@@ -206,7 +206,7 @@ FIREの達成率と退職時期がわかる
 
 ### 키워드
 
-FIRE,退職,老後,資産管理,純資産,貯蓄率,配当,年金,不労所得,資産運用,家計簿,ローン,投資,積立,複利,4%ルール,節約,目標
+貯蓄率,早期退職,退職金,資産推移,老後資金,資産シミュレーション,資産形成,計算機,iDeCo,純資産,老後,不労所得,4%ルール,複利,年金,節約,配当,目標,積立,投資,資産運用,資産管理
 
 ### 프로모션 텍스트
 
@@ -267,7 +267,7 @@ FIRE达成率与辞职时间
 
 ### 키워드
 
-FIRE,提前退休,财务自由,净资产,储蓄率,被动收入,资产管理,养老,理财,记账,分红,复利,4%法则,贷款,投资,目标
+储蓄率,4%法则,退休计划,复利计算,退休年龄,财务规划,资产记录,养老金,退休金,存钱计划,躺平,净资产,复利,被动收入,财务自由,养老,分红,资产管理,目标,记账,投资,理财,贷款
 
 ### 프로모션 텍스트
 

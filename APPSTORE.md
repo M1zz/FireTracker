@@ -27,7 +27,7 @@ https://m1zz.github.io/FireTracker/
 
 ### 프로모션 텍스트
 
-매달 자산과 수입·지출만 기록하면 FIRE 달성률과 예상 달성 시점을 바로 보여줍니다. 목표 금액은 4% 룰로 자동 계산되고, 순자산과 저축률 추이는 그래프로 쌓입니다. 퇴사 날짜, 이제 감이 아니라 숫자로 확인하세요.
+연말, 올해 내 순자산은 얼마나 늘었을까요? 흩어진 자산을 한곳에 모으면 FIRE 달성률과 예상 달성 시점이 바로 나옵니다. 새해 목표는 감이 아니라 숫자로 세우세요.
 
 ### 설명
 
@@ -88,7 +88,7 @@ financial freedom,pension,coast,barista,compound,nestegg,independence,withdrawal
 
 ### 프로모션 텍스트
 
-Log your assets each month to see your FIRE progress and projected quit date. Your target follows the 4% rule. Know when you can quit by the numbers, not a hunch.
+How much did your net worth grow this year? Bring every asset into one place to see your FIRE progress and projected quit date, then set next year's goal by the numbers.
 
 ### 설명
 
@@ -149,7 +149,7 @@ retirement,independence,savings,passive,income,portfolio,withdrawal,pension,divi
 
 ### 프로모션 텍스트
 
-Log your assets each month to see your FIRE progress and projected quit date. Your target follows the 4% rule. Know when you can quit by the numbers, not a gut feeling.
+How much did your net worth grow this year? Bring every asset into one place to see your FIRE progress and projected quit date, then set next year's goal by the numbers.
 
 ### 설명
 
@@ -210,7 +210,7 @@ FIREの達成率と退職時期がわかる
 
 ### 프로모션 텍스트
 
-毎月の資産と収入・支出を記録するだけで、FIREの達成率と退職できる時期がすぐにわかります。目標金額は4%ルールで自動計算され、純資産と貯蓄率の推移がグラフに積み上がります。退職日を、勘ではなく数字で確かめましょう。
+今年、純資産はどれだけ増えた？散らばった資産をひとつにまとめれば、FIREの達成率と達成見込みの時期がすぐわかります。新年の目標は、勘ではなく数字で決めましょう。
 
 ### 설명
 
@@ -271,7 +271,7 @@ FIRE达成率与辞职时间
 
 ### 프로모션 텍스트
 
-每月只需记录资产与收支，就能立刻看到FIRE达成率和预计达成时间。目标金额按4%法则自动计算，净资产和储蓄率的走势会以图表累积。辞职日，不凭感觉，用数字确认。
+今年你的净资产涨了多少？把分散的资产集中到一处，马上就能看到 FIRE 达成率和预计实现时间。新一年的目标，用数字来定，而不是凭感觉。
 
 ### 설명
 
@@ -332,7 +332,7 @@ FIRE,提前退休,財務自由,淨資產,儲蓄率,被動收入,資產管理,養
 
 ### 프로모션 텍스트
 
-每月只需記錄資產與收支，就能立刻看到FIRE達成率和預計達成時間。目標金額按4%法則自動計算，淨資產和儲蓄率的走勢會以圖表累積。離職日，不憑感覺，用數字確認。
+今年你的淨資產成長了多少？把分散的資產集中在一起，馬上就能看到 FIRE 達成率和預計達成時間。新年目標，用數字來訂，而不是憑感覺。
 
 ### 설명
 
@@ -393,7 +393,7 @@ jubilación,retiro,independencia,patrimonio,ingresos,pasivos,dividendos,inversi�
 
 ### 프로모션 텍스트
 
-Registra tus activos, ingresos y gastos cada mes y ve al instante tu progreso FIRE y la fecha estimada. Tu fecha de salida, con números y no a ojo.
+¿Cuánto creció tu patrimonio este año? Reúne todos tus activos en un solo lugar, mira tu progreso FIRE y la fecha estimada, y fija la meta del año nuevo con números.
 
 ### 설명
 
@@ -454,7 +454,7 @@ Ruhestand,Rente,Finanzfreiheit,Nettovermögen,Sparquote,Dividenden,Kredit,Geldan
 
 ### 프로모션 텍스트
 
-Trag jeden Monat Vermögen, Einnahmen und Ausgaben ein und sieh sofort deinen FIRE-Fortschritt und dein Zieldatum. Dein Ausstieg: mit Zahlen statt Bauchgefühl.
+Wie viel ist dein Vermögen dieses Jahr gewachsen? Bündle alle Anlagen an einem Ort, sieh FIRE-Fortschritt und Zieldatum und setz dein Ziel fürs neue Jahr mit Zahlen.
 
 ### 설명
 
@@ -515,7 +515,7 @@ indépendance,épargne,passif,revenus,dividendes,investissement,dette,prêt,budg
 
 ### 프로모션 텍스트
 
-Notez chaque mois vos actifs, revenus et dépenses : votre avancement FIRE et la date estimée s’affichent aussitôt. Votre date de départ, en chiffres plutôt qu’au pif.
+De combien votre patrimoine a-t-il grimpé cette année ? Réunissez tous vos actifs, voyez votre avancement FIRE et la date estimée, puis fixez l'objectif de l'an prochain.
 
 ### 설명
 
@@ -576,7 +576,7 @@ indipendenza,finanziaria,patrimonio,risparmio,rendita,passiva,dividendi,investim
 
 ### 프로모션 텍스트
 
-Registra ogni mese patrimonio, entrate e spese e vedi subito i progressi FIRE e la data stimata. La tua data di uscita, con i numeri e non a occhio.
+Quanto è cresciuto il tuo patrimonio quest'anno? Riunisci tutto in un solo posto, guarda i progressi FIRE e la data stimata e fissa con i numeri l'obiettivo del 2027.
 
 ### 설명
 
@@ -637,7 +637,7 @@ independência,financeira,poupança,renda,passiva,dividendos,investimentos
 
 ### 프로모션 텍스트
 
-Registre todo mês seus ativos, receitas e gastos e veja na hora o progresso FIRE e a data estimada. Sua data de saída, com números e não no chute.
+Quanto seu patrimônio cresceu este ano? Junte todos os seus ativos em um só lugar, veja o progresso FIRE e a data estimada e defina a meta do ano novo com números.
 
 ### 설명
 
@@ -698,7 +698,7 @@ Toesagak: калькулятор FIRE
 
 ### 프로모션 텍스트
 
-Записывайте активы, доходы и расходы раз в месяц — и сразу видьте прогресс FIRE и ожидаемую дату. Дата ухода — по цифрам, а не на глаз.
+Насколько вырос ваш капитал за год? Соберите все активы в одном месте, посмотрите прогресс FIRE и ожидаемую дату и ставьте цель на новый год по цифрам.
 
 ### 설명
 
@@ -759,7 +759,7 @@ Toesagak: คำนวณ FIRE
 
 ### 프로모션 텍스트
 
-บันทึกสินทรัพย์ รายรับ และรายจ่ายทุกเดือน แล้วดูความคืบหน้า FIRE กับวันที่คาดว่าจะถึงเป้าทันที วันออกจากงาน ดูด้วยตัวเลข ไม่ใช่ความรู้สึก
+ปีนี้ความมั่งคั่งสุทธิของคุณเพิ่มขึ้นเท่าไร รวมสินทรัพย์ทั้งหมดไว้ที่เดียว ดูความคืบหน้า FIRE และวันที่คาดว่าจะถึงเป้า แล้วตั้งเป้าปีใหม่ด้วยตัวเลข
 
 ### 설명
 
@@ -820,7 +820,7 @@ tiết,kiệm,thu,nhập,cổ,tức,đầu,tư,nợ,vay,lãi,kép,tiền,quỹ,t
 
 ### 프로모션 텍스트
 
-Ghi tài sản, thu nhập và chi tiêu mỗi tháng để thấy ngay tiến độ FIRE và thời điểm dự kiến. Ngày nghỉ việc, xem bằng con số chứ không phải cảm tính.
+Năm nay tài sản ròng của bạn tăng bao nhiêu? Gom mọi tài sản về một chỗ để thấy tiến độ FIRE và thời điểm dự kiến, rồi đặt mục tiêu năm mới bằng con số.
 
 ### 설명
 
@@ -881,7 +881,7 @@ finanční,nezávislost,úspory,pasivní,příjem,dividendy,investice,dluh,úvě
 
 ### 프로모션 텍스트
 
-Zapisujte každý měsíc majetek, příjmy a výdaje a hned uvidíte pokrok k FIRE i odhad data. Datum odchodu – podle čísel, ne od oka.
+O kolik letos vzrostlo vaše čisté jmění? Mějte veškerý majetek na jednom místě, uvidíte pokrok k FIRE i odhad data a cíl na nový rok stanovíte podle čísel.
 
 ### 설명
 
@@ -942,7 +942,7 @@ Tidlig pension og formue
 
 ### 프로모션 텍스트
 
-Registrér aktiver, indtægter og udgifter hver måned og se straks din FIRE-fremdrift og forventede dato. Din stopdato – med tal, ikke mavefornemmelse.
+Hvor meget voksede din formue i år? Saml alle dine aktiver ét sted, se din FIRE-fremdrift og forventede dato, og sæt næste års mål med tal.
 
 ### 설명
 
@@ -1003,7 +1003,7 @@ Toesagak: Υπολογιστής FIRE
 
 ### 프로모션 텍스트
 
-Καταγράψτε κάθε μήνα περιουσία, έσοδα και έξοδα και δείτε αμέσως την πρόοδο FIRE και την εκτιμώμενη ημερομηνία. Η ημερομηνία αποχώρησης με αριθμούς, όχι με το μάτι.
+Πόσο αυξήθηκε φέτος η καθαρή σας περιουσία; Συγκεντρώστε τα όλα σε ένα σημείο, δείτε την πρόοδο FIRE και την εκτιμώμενη ημερομηνία και βάλτε στόχο για τη νέα χρονιά.
 
 ### 설명
 
@@ -1064,7 +1064,7 @@ taloudellinen,riippumattomuus,säästäminen,passiivinen,tulo,osingot,sijoittami
 
 ### 프로모션 텍스트
 
-Kirjaa kuukausittain varat, tulot ja menot ja näe heti FIRE-etenemisesi ja arvioitu päivämäärä. Lopetuspäiväsi luvuilla, ei fiiliksellä.
+Paljonko nettovarallisuutesi kasvoi tänä vuonna? Kokoa kaikki varat yhteen paikkaan, näe FIRE-etenemisesi ja arvioitu päivä ja aseta ensi vuoden tavoite luvuilla.
 
 ### 설명
 
@@ -1125,7 +1125,7 @@ kebebasan,finansial,tabungan,pasif,penghasilan,dividen,investasi,utang,cicilan
 
 ### 프로모션 텍스트
 
-Catat aset, pemasukan, dan pengeluaran tiap bulan, lalu lihat langsung progres FIRE dan perkiraan tanggalnya. Tanggal berhenti kerja, pakai angka, bukan firasat.
+Berapa kekayaan bersihmu tumbuh tahun ini? Kumpulkan semua aset di satu tempat, lihat progres FIRE dan perkiraan tanggalnya, lalu tetapkan target tahun baru pakai angka.
 
 ### 설명
 
@@ -1186,7 +1186,7 @@ Tidlig pensjon og formue
 
 ### 프로모션 텍스트
 
-Registrer eiendeler, inntekter og utgifter hver måned og se straks FIRE-fremdriften og forventet dato. Sluttdatoen din – med tall, ikke magefølelse.
+Hvor mye vokste formuen din i år? Samle alle eiendelene på ett sted, se FIRE-fremdriften og forventet dato, og sett neste års mål med tall.
 
 ### 설명
 
@@ -1247,7 +1247,7 @@ financiële,vrijheid,sparen,passief,inkomen,dividend,beleggen,schuld,lening,budg
 
 ### 프로모션 텍스트
 
-Noteer elke maand je bezittingen, inkomsten en uitgaven en zie meteen je FIRE-voortgang en verwachte datum. Je stopdatum: met cijfers, niet op gevoel.
+Hoeveel is je vermogen dit jaar gegroeid? Breng al je bezittingen samen, zie je FIRE-voortgang en verwachte datum en zet je doel voor het nieuwe jaar met cijfers.
 
 ### 설명
 
@@ -1308,7 +1308,7 @@ niezależność,finansowa,oszczędności,majątek,pasywny,dochód,dywidendy,inwe
 
 ### 프로모션 텍스트
 
-Zapisuj co miesiąc aktywa, przychody i wydatki i od razu zobacz postęp FIRE oraz szacowaną datę. Data odejścia – na liczbach, nie na oko.
+O ile urósł w tym roku Twój majątek? Zbierz wszystkie aktywa w jednym miejscu, zobacz postęp FIRE i szacowaną datę i ustal cel na nowy rok na liczbach.
 
 ### 설명
 
@@ -1369,7 +1369,7 @@ ekonomisk,frihet,sparande,passiv,inkomst,utdelning,investering,skuld,lån,budget
 
 ### 프로모션 텍스트
 
-Registrera tillgångar, inkomster och utgifter varje månad och se direkt din FIRE-framgång och beräknade datum. Ditt slutdatum – med siffror, inte magkänsla.
+Hur mycket växte din förmögenhet i år? Samla alla tillgångar på ett ställe, se din FIRE-framgång och beräknade datum, och sätt nästa års mål med siffror.
 
 ### 설명
 
@@ -1430,7 +1430,7 @@ finansal,özgürlük,birikim,pasif,gelir,temettü,yatırım,borç,kredi,bütçe,
 
 ### 프로모션 텍스트
 
-Her ay varlık, gelir ve giderlerinizi kaydedin; FIRE ilerlemenizi ve tahmini tarihi hemen görün. Bırakma tarihiniz: hisle değil, rakamla.
+Bu yıl net servetiniz ne kadar büyüdü? Tüm varlıklarınızı tek yerde toplayın, FIRE ilerlemenizi ve tahmini tarihi görün, yeni yılın hedefini rakamlarla koyun.
 
 ### 설명
 

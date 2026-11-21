@@ -210,7 +210,7 @@ struct TimeSimSection: View {
                 conclusionCard
                 CalcSaveRow(
                     kind: .time,
-                    headline: String(localized: "한계 시급 \(tvWon(marginalWage)) · 하루 밀도 ×\(String(format: "%.2f", density))"),
+                    headline: String(localized: "한계 시급 \(tvWon(marginalWage)) · 하루 밀도 ×\(Fmt.fixed(density, 2))"),
                     detail: String(localized: "회계적 시급 \(tvWon(accountingWage)) · FIRE 시급 \(tvWon(fireWage)) · 주 \(Int(hoursPerWeek))시간")
                         + (boughtHours > 0 ? String(localized: " · 순증 \(tvHours(netGain))") : "")
                 )
@@ -227,7 +227,7 @@ struct TimeSimSection: View {
     private var shortHeadline: String {
         if g0 > annualReturn {
             if let x = crossoverYear, x <= 40 {
-                return String(localized: "지금은 시급에 투자할 때 · 전환점 \(String(format: "%.0f", x))년 뒤")
+                return String(localized: "지금은 시급에 투자할 때 · 전환점 \(Int(x.rounded()))년 뒤")
             }
             return String(localized: "지금은 시급에 투자할 때")
         }
@@ -403,7 +403,7 @@ struct TimeSimSection: View {
                 Text("원 →")
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
-                TextField("0", text: hoursBinding(idx))
+                TextField("0", text: hoursBinding(idx).asciiNumber)
                     .keyboardType(.decimalPad)
                     .accessibilityLabel("시간")
                     .multilineTextAlignment(.trailing)
@@ -517,7 +517,7 @@ struct TimeSimSection: View {
                         .font(.system(.title3, design: .rounded).weight(.bold))
                         .foregroundStyle(Theme.textPrimary)
                 } trailing: {
-                    Text("밀도 ×\(String(format: "%.2f", density))")
+                    Text("밀도 ×\(Fmt.fixed(density, 2))")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.accentText)
                 }
@@ -545,7 +545,7 @@ struct TimeSimSection: View {
             HStack(alignment: .top, spacing: 10) {
                 tvStat(String(localized: "번 시급"), tvWon(earnWage), sub: String(localized: "내 시간을 판 값"))
                 tvStat(String(localized: "산 시급"), tvWon(boughtWage), sub: String(localized: "남의 시간을 산 값"))
-                tvStat(String(localized: "환율 배율"), wageRatio > 0 ? "×\(String(format: "%.2f", wageRatio))" : "—",
+                tvStat(String(localized: "환율 배율"), wageRatio > 0 ? "×\(Fmt.fixed(wageRatio, 2))" : "—",
                        sub: String(localized: "번 ÷ 산"), tint: up ? Theme.positive : (flat ? Theme.textSecond : Theme.negative))
             }
 
@@ -672,12 +672,13 @@ struct TimeSimSection: View {
                     .foregroundStyle(Theme.textPrimary)
                     .symbolSize(90)
                     .annotation(position: .topTrailing) {
-                        Text("FIRE 전환점 \(String(format: "%.0f", x))년 뒤")
+                        Text("FIRE 전환점 \(Int(x.rounded()))년 뒤")
                             .font(.caption2.weight(.semibold))
                             .foregroundStyle(Theme.textPrimary)
                     }
             }
         }
+        .dataAxisLeftToRight()
         .chartYAxis {
             AxisMarks(position: .leading) { value in
                 AxisGridLine().foregroundStyle(Theme.hairline)
@@ -713,7 +714,7 @@ struct TimeSimSection: View {
         if g0 > annualReturn {
             if let x = crossoverYear, x <= 40 {
                 let age = settings.currentAge > 0 ? String(localized: " · \(settings.currentAge + Int(x.rounded()))세") : ""
-                return String(localized: "지금은 시급에 투자할 때 (전환점 \(String(format: "%.0f", x))년 뒤\(age))")
+                return String(localized: "지금은 시급에 투자할 때 (전환점 \(Int(x.rounded()))년 뒤\(age))")
             }
             return String(localized: "지금은 시급에 투자할 때")
         }
@@ -772,7 +773,7 @@ struct TimeSimSection: View {
                         .font(.system(.title3, design: .rounded).weight(.bold))
                         .foregroundStyle(Theme.accentText)
                     if marginalWage > 0 {
-                        Text("지금 시급의 \(String(format: "%.1f", futureWage / marginalWage))배예요. 지금 1시간의 진짜 가격은 오늘 시급이 아니라, 그 시간이 올려 줄 미래 시급이에요.")
+                        Text("지금 시급의 \(Fmt.fixed(futureWage / marginalWage, 1))배예요. 지금 1시간의 진짜 가격은 오늘 시급이 아니라, 그 시간이 올려 줄 미래 시급이에요.")
                             .font(.caption2)
                             .foregroundStyle(Theme.textSecond)
                             .fixedSize(horizontal: false, vertical: true)
@@ -895,7 +896,7 @@ struct TimeSimSection: View {
                     .font(.subheadline)
                     .foregroundStyle(Theme.textSecond)
                 Spacer()
-                TextField(placeholder, text: money ? text.commaGrouped : text)
+                TextField(placeholder, text: money ? text.commaGrouped : text.asciiNumber)
                     .keyboardType(decimal ? .decimalPad : .numberPad)
                     .multilineTextAlignment(.trailing)
                     .font(.system(.body, design: .rounded).weight(.semibold))
@@ -983,5 +984,5 @@ private func tvWon(_ v: Double) -> String {
 private func tvHours(_ v: Double) -> String {
     guard v.isFinite else { return String(localized: "0시간") }
     if abs(v - v.rounded()) < 0.05 { return String(localized: "\(Int(v.rounded()))시간") }
-    return String(localized: "\(String(format: "%.1f", v))시간")
+    return String(localized: "\(Fmt.fixed(v, 1))시간")
 }

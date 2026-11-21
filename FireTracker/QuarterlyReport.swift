@@ -33,15 +33,15 @@ struct QuarterKey: Hashable, Comparable, Identifiable {
     }
 
     var start: Date {
-        Calendar.current.date(from: DateComponents(year: year, month: (quarter - 1) * 3 + 1, day: 1)) ?? .now
+        Calendar.gregorian.date(from: DateComponents(year: year, month: (quarter - 1) * 3 + 1, day: 1)) ?? .now
     }
     var end: Date {
-        Calendar.current.date(byAdding: .month, value: 3, to: start) ?? .now
+        Calendar.gregorian.date(byAdding: .month, value: 3, to: start) ?? .now
     }
     var previous: QuarterKey {
         quarter == 1 ? QuarterKey(year: year - 1, quarter: 4) : QuarterKey(year: year, quarter: quarter - 1)
     }
-    var title: String { String(localized: "\(String(year))년 \(quarter)분기") }
+    var title: String { String(localized: "\(Fmt.year(year))년 \(quarter)분기") }
 }
 
 struct QuarterlyReport {
@@ -363,7 +363,7 @@ struct QuarterlyReportEntry: View {
                     .foregroundStyle(Theme.textSecond)
             }
             Spacer(minLength: 4)
-            Image(systemName: "chevron.right")
+            Image(systemName: "chevron.forward")
                 .font(.body)
                 .foregroundStyle(Theme.textSecond)
         }

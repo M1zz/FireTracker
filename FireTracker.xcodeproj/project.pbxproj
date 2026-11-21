@@ -342,6 +342,7 @@
 				"zh-Hans",
 				ja,
 				"en-GB",
+				ar,
 			);
 			mainGroup = D0000000;
 			packageReferences = (

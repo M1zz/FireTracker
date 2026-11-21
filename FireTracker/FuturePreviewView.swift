@@ -112,7 +112,7 @@ struct FutureContext {
         if profile.quitAge > 0 { return max(currentAge, profile.quitAge) }
         return realQuitAge ?? assetQuitAge
     }
-    func year(at age: Int) -> Int { Calendar.current.component(.year, from: Date()) + max(0, age - currentAge) }
+    func year(at age: Int) -> Int { Calendar.gregorian.component(.year, from: Date()) + max(0, age - currentAge) }
     var quitYear: Int { year(at: quitAge) }
 
     /// 퇴사 때 굴릴 수 있는 돈(오늘 돈 기준, 평균 수익률로 단순 계산).
@@ -265,7 +265,7 @@ struct FuturePreviewView: View {
     // 1) 그날
     private func header(_ c: FutureContext) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("\(String(c.quitYear))년, \(c.quitAge)세")
+            Text("\(Fmt.year(c.quitYear))년, \(c.quitAge)세")
                 .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Theme.accentText)
             Text(c.quitAge <= c.currentAge ? LocalizedStringKey("오늘 회사를 그만둔다면") : LocalizedStringKey("회사를 그만두는 날"))
@@ -489,7 +489,7 @@ struct FuturePreviewView: View {
                 .foregroundStyle(Theme.textPrimary)
             Spacer()
             if trailing {
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.body)
                     .foregroundStyle(Theme.textSecond)
             }
@@ -546,6 +546,7 @@ struct SurvivalChart: View {
                 .foregroundStyle(Theme.textSecond.opacity(0.6))
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
         }
+        .dataAxisLeftToRight()
         .chartXScale(domain: (bands.first?.age ?? 0)...(bands.last?.age ?? 100))
         .chartYAxis {
             AxisMarks(position: .leading) { v in
@@ -775,7 +776,7 @@ struct PostQuitCostView: View {
                 .tint(Theme.accent)
                 if model.profile.voluntaryPension {
                     FutureMoneyRow(label: "기준소득월액", value: $model.profile.voluntaryBaseIncome)
-                    Text("한 달 \(Fmt.krw(costs.voluntaryPensionMonthly))원 (\(String(c.quitYear))년 보험료율 기준)")
+                    Text("한 달 \(Fmt.krw(costs.voluntaryPensionMonthly))원 (\(Fmt.year(c.quitYear))년 보험료율 기준)")
                         .font(.body.weight(.semibold))
                         .foregroundStyle(Theme.textPrimary)
                 }
@@ -981,6 +982,7 @@ struct WithdrawalChart: View {
             BarMark(x: .value("나이", b.age), y: .value("금액", b.amount))
                 .foregroundStyle(by: .value("계좌", b.kind))
         }
+        .dataAxisLeftToRight()
         .chartForegroundStyleScale([
             String(localized: "일반계좌"): Theme.accent,
             String(localized: "ISA"): Theme.fall,

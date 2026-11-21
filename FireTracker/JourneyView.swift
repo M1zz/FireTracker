@@ -66,7 +66,7 @@ struct JourneyGoalsSection: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 4)
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.caption)
                     .foregroundStyle(Theme.textSecond)
             }
@@ -101,6 +101,7 @@ struct JourneyGoalsSection: View {
     // "지난 기록"의 정체 — 비교 대상 스냅샷의 날짜.
     private func recordDateText(_ date: Date) -> String {
         let f = DateFormatter()
+        f.calendar = .gregorian
         f.setLocalizedDateFormatFromTemplate("MMMd")
         return f.string(from: date)
     }
@@ -155,7 +156,7 @@ struct JourneyGoalsSection: View {
     // 선택한 구간의 달력 경계. 이번 달=1일~말일, 올해=1월 1일~12월 31일,
     // 5년·은퇴=이번 달 1일~N개월 뒤. X축을 이 범위로 고정한다.
     private func periodBounds(label: String, months: Int) -> (start: Date, end: Date) {
-        let cal = Calendar.current
+        let cal = Calendar.gregorian
         let now = Date()
         let monthStart = cal.date(from: cal.dateComponents([.year, .month], from: now)) ?? now
         switch label {
@@ -260,6 +261,7 @@ struct JourneyGoalsSection: View {
                         Text("목표").font(.caption2.weight(.semibold)).foregroundStyle(Theme.accentText)
                     }
             }
+            .dataAxisLeftToRight()
             .chartXScale(domain: mdl.start...mdl.end)
             .chartYAxis {
                 AxisMarks(position: .leading) { value in
@@ -276,20 +278,20 @@ struct JourneyGoalsSection: View {
             .chartXAxis {
                 // 이번 달=일 단위, 1년 안=월 단위, 그 이상=연 단위 눈금.
                 if mdl.spanDays <= 45 {
-                    AxisMarks(values: .stride(by: .day, count: 7)) { _ in
+                    AxisMarks(values: .stride(by: .day, count: 7, calendar: .gregorian)) { _ in
                         AxisGridLine().foregroundStyle(Theme.hairline)
-                        AxisValueLabel(format: .dateTime.day())
+                        AxisValueLabel(format: Date.FormatStyle.gregorian.day())
                     }
                 } else if mdl.spanDays <= 550 {
                     // 석 달 간격 — 달 이름이 긴 언어(러시아어 등)에서도 눈금 글자가 서로 겹치지 않게.
-                    AxisMarks(values: .stride(by: .month, count: 3)) { _ in
+                    AxisMarks(values: .stride(by: .month, count: 3, calendar: .gregorian)) { _ in
                         AxisGridLine().foregroundStyle(Theme.hairline)
-                        AxisValueLabel(format: .dateTime.month(.abbreviated))
+                        AxisValueLabel(format: Date.FormatStyle.gregorian.month(.abbreviated))
                     }
                 } else {
-                    AxisMarks(values: .stride(by: .year, count: 1)) { _ in
+                    AxisMarks(values: .stride(by: .year, count: 1, calendar: .gregorian)) { _ in
                         AxisGridLine().foregroundStyle(Theme.hairline)
-                        AxisValueLabel(format: .dateTime.year())
+                        AxisValueLabel(format: Date.FormatStyle.gregorian.year())
                     }
                 }
             }

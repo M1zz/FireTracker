@@ -65,7 +65,7 @@ struct FireEngine {
     // Months remaining in the calendar year, counting the current month.
     // e.g. June → 7 (Jun…Dec).
     static func monthsLeftInYear(asOf date: Date) -> Int {
-        let month = Calendar.current.component(.month, from: date)
+        let month = Calendar.gregorian.component(.month, from: date)
         return max(0, 12 - month + 1)
     }
 
@@ -98,7 +98,7 @@ struct FireEngine {
                                 monthlySavings: Double,
                                 monthlyPassiveIncome: Double,
                                 asOf date: Date) -> [ProjectionStep] {
-        let cal = Calendar(identifier: .gregorian)
+        let cal = Calendar.gregorian
         let months = monthsLeftInYear(asOf: date)
         var balance = currentNetWorth
         var steps: [ProjectionStep] = []
@@ -193,14 +193,33 @@ enum Fmt {
     }
 
     // Renders a quantity without trailing ".0" (e.g. 3.0 → "3", 0.25 → "0.25").
+    // 입력칸에 채우는 값이라 언제나 0~9 로 쓴다(Double(...) 이 다시 읽는다). 화면에 보일 때는 number(_:).
     static func trimNumber(_ value: Double) -> String {
         guard value.isFinite else { return "0" }
         if value == value.rounded() { return String(Int(value)) }
         return String(value)
     }
 
+    // 화면에 보이는 수. 기기의 숫자 체계를 따른다 — 아랍어 기기에서 ٣٫٥ 가 다른 숫자와 한 화면에 섞이지 않게.
+    static func number(_ value: Double, maxFraction: Int = 6) -> String {
+        guard value.isFinite else { return "0" }
+        return value.formatted(.number.grouping(.never).precision(.fractionLength(0...maxFraction)))
+    }
+
+    // 소수 자리를 고정한 수(×1.25 처럼). String(format:) 은 언제나 0~9 라 아랍어 숫자와 섞인다.
+    static func fixed(_ value: Double, _ digits: Int) -> String {
+        guard value.isFinite else { return "0" }
+        return value.formatted(.number.grouping(.never).precision(.fractionLength(digits)))
+    }
+
+    // 연도(2026). 자릿수 쉼표 없이, 기기의 숫자 체계로.
+    static func year(_ year: Int) -> String {
+        year.formatted(.number.grouping(.never))
+    }
+
     static func date(_ date: Date) -> String {
         let f = DateFormatter()
+        f.calendar = .gregorian
         f.setLocalizedDateFormatFromTemplate("yyyyMM")
         return f.string(from: date)
     }
@@ -217,9 +236,53 @@ extension Binding where Value == String {
                 return n.formatted()
             },
             set: { newValue in
-                wrappedValue = newValue.filter(\.isNumber)
+                wrappedValue = newValue.asciiDigits.filter(\.isNumber)
             }
         )
+    }
+
+    // 소수까지 받는 입력칸. 아랍어 숫자 자판(١٢٫٥)으로 쳐도 Double(...) 이 읽도록 0~9 와 '.' 로 바꿔 둔다.
+    var asciiNumber: Binding<String> {
+        Binding<String>(get: { wrappedValue }, set: { wrappedValue = $0.asciiDigits })
+    }
+}
+
+extension String {
+    // ٠١٢٣ · ۰۱۲۳ 같은 다른 숫자 체계를 0~9 로, 아랍어 소수점(٫)을 '.' 로, 자릿수 구분(٬)은 지운다.
+    var asciiDigits: String {
+        var out = ""
+        for ch in self {
+            if ch == "٫" { out.append(".") }
+            else if ch == "٬" { continue }
+            else if !ch.isASCII, let d = ch.wholeNumberValue { out.append(String(d)) }
+            else { out.append(ch) }
+        }
+        return out
+    }
+}
+
+extension Locale {
+    // 기기의 언어 · 지역 · 숫자 체계는 그대로, 달력만 양력으로.
+    static var gregorian: Locale {
+        var parts = Locale.Components(locale: .current)
+        parts.calendar = .gregorian
+        return Locale(components: parts)
+    }
+}
+
+extension Date.FormatStyle {
+    // 그래프 눈금용 날짜 형식. 기본 .dateTime 은 기기 달력(사우디는 히즈라력)을 따른다.
+    static var gregorian: Date.FormatStyle { Date.FormatStyle(locale: .gregorian, calendar: .gregorian) }
+}
+
+extension Calendar {
+    // 날짜 계산과 표시는 양력으로 한다. 사우디 기기의 기본 달력은 히즈라력(1448년)이라
+    // 올해 · 분기 · 물가 연도 계산이 어긋난다. 언어 · 지역 표기는 기기를 그대로 따른다.
+    static var gregorian: Calendar {
+        var cal = Calendar(identifier: .gregorian)
+        cal.locale = .gregorian
+        cal.timeZone = .current
+        return cal
     }
 }
 
@@ -233,5 +296,22 @@ extension Color {
             green: Double((rgb >> 8) & 0xFF) / 255,
             blue: Double(rgb & 0xFF) / 255
         )
+    }
+}
+
+extension View {
+    // 그래프는 x 축이 시간 · 금액 · 나이 같은 데이터라 아랍어에서도 왼쪽에서 오른쪽으로 둔다.
+    // 거울처럼 뒤집으면 축 이름표와 손가락으로 고른 자리가 어긋난다. 도넛도 위에서 시계 방향으로.
+    func dataAxisLeftToRight() -> some View {
+        environment(\.layoutDirection, .leftToRight)
+    }
+}
+
+extension Font.Design {
+    // 식(= ÷ ×)을 보여 주는 글꼴. 고정폭(SF Mono)에는 아랍 글자가 없어 낱자로 떨어지므로
+    // 오른쪽에서 왼쪽으로 쓰는 언어에서는 기본 글꼴을 쓴다.
+    static var formula: Font.Design {
+        let shown = Bundle.main.preferredLocalizations.first ?? "en"
+        return Locale.Language(identifier: shown).characterDirection == .rightToLeft ? .default : .monospaced
     }
 }

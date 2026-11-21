@@ -126,7 +126,7 @@ enum DemoData {
         try wipe(context: context)
 
         let now = Date()
-        let cal = Calendar.current
+        let cal = Calendar.gregorian
 
         // 설정 — 36세, 55세 은퇴, 은퇴 후 월 350만 지출 목표(4% 룰 → 10.5억).
         let settings = FireSettings(targetAnnualExpense: 42_000_000,

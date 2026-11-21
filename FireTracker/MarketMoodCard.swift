@@ -135,7 +135,7 @@ struct MarketMoodCard: View {
                     Text("공포·탐욕 지수 보기")
                         .font(.body.weight(.semibold))
                     Spacer()
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.forward")
                 }
                 .foregroundStyle(Theme.accentText)
                 .padding(.top, 4)
@@ -210,6 +210,8 @@ private struct MoodGauge: View {
             .foregroundStyle(Theme.textSecond)
             .frame(width: 272)
         }
+        // 눈금은 탐욕(왼쪽)에서 공포(오른쪽)로 그린다 — 아래 이름표도 같은 쪽에 두려고 글 방향을 고정한다.
+        .dataAxisLeftToRight()
         .accessibilityElement()
         .accessibilityLabel(Text(current.label))
     }
@@ -546,6 +548,7 @@ struct FearGreedView: View {
                         .interpolationMethod(.monotone)
                 }
             }
+            .dataAxisLeftToRight()
             .chartYScale(domain: 0...100)
             .chartYAxis {
                 AxisMarks(values: [0, 25, 50, 75, 100])
@@ -646,6 +649,7 @@ private struct FearGreedGauge: View {
                 .background(Theme.surface, in: Capsule())
                 .offset(y: 18)
         }
+        .dataAxisLeftToRight()
         .padding(.bottom, 18)
         .accessibilityElement()
         .accessibilityLabel(Text("\(current.label) \(Int(score.rounded()))"))
@@ -686,7 +690,7 @@ struct MarketMoodRow: View {
                         Text(snap.mood.label)
                             .fontWeight(.bold)
                             .foregroundStyle(snap.mood.color)
-                        Text(verbatim: "VIX \(Fmt.trimNumber((snap.vix * 10).rounded() / 10))")
+                        Text(verbatim: "VIX \(Fmt.number((snap.vix * 10).rounded() / 10))")
                             .foregroundStyle(Theme.textSecond)
                     } else {
                         ProgressView().controlSize(.mini)
@@ -702,7 +706,7 @@ struct MarketMoodRow: View {
             }
             Spacer(minLength: 0)
             if chevron {
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.textSecond)
             }

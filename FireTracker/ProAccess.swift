@@ -478,7 +478,7 @@ struct FuturePreviewEntry: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 4)
-            Image(systemName: "chevron.right")
+            Image(systemName: "chevron.forward")
                 .font(.body)
                 .foregroundStyle(Theme.textSecond)
         }

@@ -50,6 +50,10 @@ struct FireTrackerApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                // 날짜는 양력으로 보인다 — 사우디 기기의 기본 달력(히즈라력)과 앱의 연도 계산이 어긋나지 않게.
+                // 그래프 축의 달 이름은 locale 의 달력을 따르므로 locale 에도 양력을 넣는다.
+                .environment(\.locale, .gregorian)
+                .environment(\.calendar, .gregorian)
                 // 개발자가 보낸 의견에 답장하면, 앱이 앞으로 올 때 답장을 시트로 보여 준다 (LeeoKit).
                 .leeoFeedbackReplyNotice(FireTrackerSpec.self)
                 .storeFallbackNotice()

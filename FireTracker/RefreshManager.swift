@@ -122,7 +122,7 @@ final class RefreshManager: ObservableObject {
     func autoRecordIfNeeded(assets: [Asset], settings: FireSettings,
                             snapshots: [NetWorthSnapshot], context: ModelContext) {
         guard !assets.isEmpty else { return }
-        let cal = Calendar.current
+        let cal = Calendar.gregorian
         let now = Date()
         if snapshots.contains(where: { cal.isDate($0.date, equalTo: now, toGranularity: .weekOfYear) }) {
             return
@@ -148,7 +148,7 @@ final class RefreshManager: ObservableObject {
     func upsertCurrentPeriodSnapshot(assets: [Asset], settings: FireSettings,
                                      snapshots: [NetWorthSnapshot], context: ModelContext) {
         guard !assets.isEmpty else { return }
-        let cal = Calendar.current
+        let cal = Calendar.gregorian
         let now = Date()
         let passive = passiveTotal(assets, settings)
         let liquid = assets.reduce(0) { $0 + $1.liquidValue }

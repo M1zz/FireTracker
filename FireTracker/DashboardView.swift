@@ -131,7 +131,7 @@ struct DashboardView: View {
     // 자산 탭이 바뀔 때마다 카탈로그를 그대로 따라가므로, 한 주 전 기록과 비교해야
     // '이번 주 들어 얼마나 변했는지'가 의미 있게 보인다.
     private var changeBaseline: NetWorthSnapshot? {
-        let cal = Calendar.current
+        let cal = Calendar.gregorian
         let now = Date()
         return snapshots
             .filter { $0.date < now && !cal.isDate($0.date, equalTo: now, toGranularity: .weekOfYear) }
@@ -232,10 +232,10 @@ struct DashboardView: View {
                                     asOf: Date())
     }
     private var yearEndLabel: String {
-        let year = Calendar.current.component(.year, from: Date())
+        let year = Calendar.gregorian.component(.year, from: Date())
         let basis = hasDebt ? String(localized: " (순자산 기준)") : ""
         // 연도는 숫자 묶음 기호 없이(2,026 X) 그대로.
-        return String(localized: "\(String(year))년 말 예상 자산\(basis)")
+        return String(localized: "\(Fmt.year(year))년 말 예상 자산\(basis)")
     }
     // 퇴사각 — 위젯·알림과 같은 계산. 월 저축은 '내 목표'의 계획값을 쓴다
     // (기록의 수입·지출도 결국 그 계획값을 옮겨 적은 것이라 따로 평균 내면 0이 되곤 했다).
@@ -633,7 +633,7 @@ struct DashboardView: View {
                                 .fixedSize()
                         }
                     } trailing: {
-                        DeltaChip(text: Fmt.krw(abs(it.displayDelta)) + String(localized: "원"),
+                        DeltaChip(text: Fmt.wonKo(abs(it.displayDelta)),
                                   up: it.displayDelta > 0, tint: deltaColor(it))
                             .padding(.leading, 14)
                     }
@@ -673,6 +673,7 @@ struct DashboardView: View {
                     .foregroundStyle(changeBarColor(debtBar)).cornerRadius(4)
                 RuleMark(x: .value("0", 0.0)).foregroundStyle(Theme.hairline)
             }
+            .dataAxisLeftToRight()
             .chartXScale(domain: -bound ... bound)
             .chartYAxis(.hidden)
             .chartXAxis { AxisMarks { _ in AxisGridLine().foregroundStyle(Theme.hairline) } }
@@ -721,6 +722,7 @@ struct DashboardView: View {
     // "지난 기록"의 정체 — 비교 대상 스냅샷의 날짜와 며칠 전인지.
     private func recordDateText(_ date: Date) -> String {
         let f = DateFormatter()
+        f.calendar = .gregorian
         f.setLocalizedDateFormatFromTemplate("MMMd")
         return f.string(from: date)
     }
@@ -793,7 +795,7 @@ struct DashboardView: View {
                         Text("30초 만에 내 퇴사일 보기")
                             .font(.subheadline.weight(.semibold))
                         Spacer()
-                        Image(systemName: "arrow.right")
+                        Image(systemName: "arrow.forward")
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 13)
@@ -824,7 +826,7 @@ struct DashboardView: View {
             } trailing: {
                 HStack(spacing: 2) {
                     Text("내 목표")
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.forward")
                 }
                 .font(.caption)
                 .foregroundStyle(Theme.accentText)
@@ -1028,7 +1030,7 @@ struct DashboardView: View {
                 } trailing: {
                     HStack(spacing: 2) {
                         Text("내 목표 고치기")
-                        Image(systemName: "chevron.right")
+                        Image(systemName: "chevron.forward")
                     }
                 }
                 .font(.caption)
@@ -1240,7 +1242,7 @@ struct DashboardView: View {
                     Button {
                         AppRouter.shared.selectedTab = AppRouter.Tab.assets
                     } label: {
-                        Label("자산 탭으로", systemImage: "arrow.right.circle")
+                        Label("자산 탭으로", systemImage: "arrow.forward.circle")
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(Theme.accentText)
                     }
@@ -1362,7 +1364,7 @@ struct DashboardView: View {
             } trailing: {
                 HStack(spacing: 2) {
                     Text("근거 보기")
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.forward")
                 }
                 .font(.caption)
                 .foregroundStyle(Theme.accentText)
@@ -1488,7 +1490,7 @@ struct DashboardView: View {
                     .foregroundStyle(Theme.textSecond)
             }
             Spacer(minLength: 4)
-            Image(systemName: "chevron.right")
+            Image(systemName: "chevron.forward")
                 .font(.caption)
                 .foregroundStyle(Theme.textSecond)
         }
@@ -1667,7 +1669,7 @@ struct ProjectionDetailView: View {
     }
 
     private func monthName(_ date: Date) -> String {
-        let m = Calendar.current.component(.month, from: date)
+        let m = Calendar.gregorian.component(.month, from: date)
         return String(localized: "\(m)월")
     }
 }

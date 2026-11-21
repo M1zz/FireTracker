@@ -187,7 +187,7 @@ struct TrendView: View {
     // 그 기간 단위로 묶었을 때 생기는 버킷 수 — 2개 미만이면 비교가 불가능하니
     // 그 기간 세그먼트는 만들지 않는다.
     private func bucketCount(_ p: TrendPeriod) -> Int {
-        let cal = Calendar.current
+        let cal = Calendar.gregorian
         var dates = snapshots.map(\.date)
         if hasCatalog { dates.append(Date()) }
         return Set(dates.map { cal.dateInterval(of: p.component, for: $0)?.start ?? $0 }).count
@@ -272,7 +272,7 @@ struct TrendView: View {
         var raw = snapshots.map { point(from: $0) }
         if hasCatalog { raw.append(currentPoint) }
 
-        let cal = Calendar.current
+        let cal = Calendar.gregorian
         var byKey: [Date: TrendPoint] = [:]
         for p in raw.sorted(by: { $0.date < $1.date }) {
             let start = cal.dateInterval(of: period.component, for: p.date)?.start ?? p.date
@@ -376,6 +376,7 @@ struct TrendView: View {
                     }
                 }
             }
+            .dataAxisLeftToRight()
             .chartYAxis(.hidden)
             .chartXAxis {
                 AxisMarks(values: labelIndices(count)) { value in
@@ -405,7 +406,7 @@ struct TrendView: View {
     // 이번 달 안의 기록들 + 오늘(현재 상태). 월 단위 추이는 버킷당 1점이라
     // 한 달 안의 움직임이 안 보이므로, 일 단위로 그대로 펼친다.
     private var thisMonthPoints: [TrendPoint] {
-        let cal = Calendar.current
+        let cal = Calendar.gregorian
         guard let month = cal.dateInterval(of: .month, for: Date()) else { return [] }
         var raw = snapshots.filter { month.contains($0.date) }.map { point(from: $0) }
         if hasCatalog { raw.append(currentPoint) }
@@ -419,9 +420,10 @@ struct TrendView: View {
 
     // "오늘"·"6월 8일" 같은 이번 달 날짜 라벨.
     private func thisMonthDayLabel(_ date: Date) -> String {
-        let cal = Calendar.current
+        let cal = Calendar.gregorian
         if cal.isDateInToday(date) { return String(localized: "오늘") }
         let f = DateFormatter()
+        f.calendar = .gregorian
         f.setLocalizedDateFormatFromTemplate("MMMd")
         return f.string(from: date)
     }
@@ -488,6 +490,7 @@ struct TrendView: View {
                         }
                 }
             }
+            .dataAxisLeftToRight()
             .chartYAxis(.hidden)
             .chartXAxis {
                 AxisMarks(values: labelIndices(count)) { value in
@@ -653,6 +656,7 @@ struct TrendView: View {
 
     private func periodLabel(_ date: Date) -> String {
         let f = DateFormatter()
+        f.calendar = .gregorian
         switch period {
         case .week:  f.setLocalizedDateFormatFromTemplate("Md")
         case .month: f.setLocalizedDateFormatFromTemplate("MMM")
@@ -662,6 +666,7 @@ struct TrendView: View {
     }
     private func periodLabelFull(_ date: Date) -> String {
         let f = DateFormatter()
+        f.calendar = .gregorian
         switch period {
         case .week:  f.setLocalizedDateFormatFromTemplate("yyyyMMMd")
         case .month: f.setLocalizedDateFormatFromTemplate("yyyyMMMM")
@@ -750,6 +755,7 @@ struct TrendView: View {
                         }
                 }
             }
+            .dataAxisLeftToRight()
             .chartYAxis { krwYAxis() }
             .chartXSelection(value: $passiveSel)
             .frame(height: 240)
@@ -799,6 +805,7 @@ struct TrendView: View {
                 )
                 .cornerRadius(4)
             }
+            .dataAxisLeftToRight()
             .chartYAxis {
                 AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) { v in
                     AxisGridLine().foregroundStyle(Theme.hairline)
@@ -897,6 +904,7 @@ struct TrendView: View {
                     }
                 }
             }
+            .dataAxisLeftToRight()
             .chartForegroundStyleScale(
                 domain: present.map { $0.label },
                 range: present.map { Color(hexCode: $0.colorHex) }

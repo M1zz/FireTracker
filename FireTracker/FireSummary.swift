@@ -48,6 +48,7 @@ struct FireSummary: Codable, Equatable {
     var fireDateText: String? {
         guard let fireDate else { return nil }
         let f = DateFormatter()
+        f.calendar = Calendar(identifier: .gregorian)
         f.setLocalizedDateFormatFromTemplate("yyyyMMMM")
         return f.string(from: fireDate)
     }

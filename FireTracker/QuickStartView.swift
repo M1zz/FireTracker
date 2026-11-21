@@ -224,6 +224,7 @@ struct QuickStartView: View {
 
     static func monthText(_ date: Date) -> String {
         let f = DateFormatter()
+        f.calendar = .gregorian
         f.setLocalizedDateFormatFromTemplate("yyyyMMMM")
         return f.string(from: date)
     }

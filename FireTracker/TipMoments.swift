@@ -29,7 +29,7 @@ enum FireTrackerTipMoments {
 
     static func reachedNow(snapshots: [NetWorthSnapshot]) -> [LeeoTipMoment] {
         guard !DemoData.isActive, let first = snapshots.map(\.date).min() else { return [] }
-        let m = Calendar.current.dateComponents([.month], from: first, to: Date()).month ?? 0
+        let m = Calendar.gregorian.dateComponents([.month], from: first, to: Date()).month ?? 0
         return reached(monthsTracked: m)
     }
 }

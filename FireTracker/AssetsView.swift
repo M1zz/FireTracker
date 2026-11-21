@@ -370,7 +370,7 @@ struct AssetsView: View {
                         Text("\(Fmt.wonKo(total)) · 내역 보기")
                             .font(.caption2)
                     }
-                    Image(systemName: "chevron.right").font(.caption2)
+                    Image(systemName: "chevron.forward").font(.caption2)
                     Spacer()
                 }
                 .foregroundStyle(Theme.textSecond)
@@ -731,6 +731,7 @@ struct AssetsView: View {
                 .accessibilityLabel(item.assetClass.label)
                 .accessibilityValue("\(Fmt.krw(item.amount))원")
             }
+            .dataAxisLeftToRight()
             .chartAngleSelection(value: $selectedSlice)
             // 중앙 라벨은 차트 위(overlay)에 — 배경에 두면 긴 금액이 도넛 링에
             // 가려진다. 구멍 폭 안에서만 그리고 길면 자동 축소해 항상 보이게.
@@ -930,8 +931,8 @@ struct AssetsView: View {
                     let unit = asset.assetClass == .crypto ? String(localized: "개") : String(localized: "shares.unit", defaultValue: "주")
                     let avg = asset.averagePrice
                     Text(avg > 0
-                         ? "\(Fmt.trimNumber(asset.quantity))\(unit) · 평단 \(Fmt.krw(avg))원"
-                         : "\(Fmt.trimNumber(asset.quantity))\(unit)")
+                         ? "\(Fmt.number(asset.quantity))\(unit) · 평단 \(Fmt.krw(avg))원"
+                         : "\(Fmt.number(asset.quantity))\(unit)")
                         .font(.caption2)
                         .foregroundStyle(Theme.textSecond)
                         .fixedSize(horizontal: false, vertical: true)
@@ -1101,7 +1102,7 @@ struct AssetsView: View {
         let subtotal = group.subtotal
         return Button { toggleGroup(group.id) } label: {
             HStack(spacing: 8) {
-                Image(systemName: collapsed ? "chevron.right" : "chevron.down")
+                Image(systemName: collapsed ? "chevron.forward" : "chevron.down")
                     .font(.caption2.weight(.bold))
                     .foregroundStyle(Theme.textSecond)
                     .frame(width: 10)
@@ -1200,7 +1201,7 @@ struct CategoryPickerSheet: View {
                         Button {
                             onPick(.custom, customLabel.trimmingCharacters(in: .whitespaces))
                         } label: {
-                            Image(systemName: "arrow.right.circle.fill")
+                            Image(systemName: "arrow.forward.circle.fill")
                                 .foregroundStyle(customLabel.trimmingCharacters(in: .whitespaces).isEmpty
                                                  ? Theme.textSecond.opacity(0.4) : Theme.accent)
                         }
@@ -1693,7 +1694,7 @@ struct AssetEditor: View {
         Section {
             TextField("월 이자/상환액 (원)", text: $monthlyIncome.commaGrouped)
                 .keyboardType(.numberPad)
-            TextField("또는 연 이자율 (%)", text: $annualYieldPct)
+            TextField("또는 연 이자율 (%)", text: $annualYieldPct.asciiNumber)
                 .keyboardType(.decimalPad)
             if previewMonthlyIncome > 0 {
                 AdaptiveRow {
@@ -1786,7 +1787,7 @@ struct AssetEditor: View {
             }
             Picker("고점에서 빠지면 팔기", selection: $stopPct) {
                 ForEach(SellWatch.stopChoices, id: \.self) { p in
-                    Text(p == 0 ? "알리지 않음" : "\(Fmt.trimNumber(p))% 빠지면").tag(p)
+                    Text(p == 0 ? "알리지 않음" : "\(Fmt.number(p))% 빠지면").tag(p)
                 }
             }
             if let a = asset, a.peakUnitPrice > 0, stopPct > 0 {
@@ -1839,7 +1840,7 @@ struct AssetEditor: View {
                     Text("지금 보유")
                     Spacer()
                     Text(l.quantity > 0
-                         ? "\(Fmt.trimNumber(l.quantity))\(buyUnitLabel) · 평단 \(Fmt.krw(l.avgPrice))원"
+                         ? "\(Fmt.number(l.quantity))\(buyUnitLabel) · 평단 \(Fmt.krw(l.avgPrice))원"
                          : "없음 (전량 매도)")
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.accentText)
@@ -1939,7 +1940,7 @@ struct AssetEditor: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
                 Text(row.quantity > 0
-                     ? "\(row.kind.label) \(Fmt.trimNumber(row.quantity))\(buyUnitLabel) · \(buyUnitLabel)당 \(Fmt.krw(row.unitPrice))원"
+                     ? "\(row.kind.label) \(Fmt.number(row.quantity))\(buyUnitLabel) · \(buyUnitLabel)당 \(Fmt.krw(row.unitPrice))원"
                      : "\(row.kind.label) · 금액만 기록")
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
@@ -1960,7 +1961,7 @@ struct AssetEditor: View {
             // 살 때는 지금 시장 분위기를 한 줄로 — 공포에 나눠 사고, 탐욕에 크게 사지 않게.
             if tradeKind == .buy { MarketMoodRow() }
             DatePicker("날짜", selection: $tradeDate, displayedComponents: .date)
-            TextField("수량 (\(buyUnitLabel))", text: $tradeQty)
+            TextField("수량 (\(buyUnitLabel))", text: $tradeQty.asciiNumber)
                 .keyboardType(.decimalPad)
             TextField("\(buyUnitLabel)당 단가 (원)", text: $tradePrice.commaGrouped)
                 .keyboardType(.numberPad)
@@ -2001,6 +2002,7 @@ struct AssetEditor: View {
 
     private static func tradeDateText(_ date: Date) -> String {
         let f = DateFormatter()
+        f.calendar = .gregorian
         f.setLocalizedDateFormatFromTemplate("yyyyMMdd")
         return f.string(from: date)
     }
@@ -2012,7 +2014,7 @@ struct AssetEditor: View {
         return cb > 0 ? cb : (Double(amount) ?? 0)
     }
     private var openingSummary: String {
-        let qty = openingQuantity > 0 ? "\(Fmt.trimNumber(openingQuantity))\(buyUnitLabel) · " : ""
+        let qty = openingQuantity > 0 ? "\(Fmt.number(openingQuantity))\(buyUnitLabel) · " : ""
         return String(localized: "\(qty)\(Fmt.krw(openingCost))원으로 시작한 걸로 남겨요 (날짜·금액은 나중에 고칠 수 있어요)")
     }
 
@@ -2162,7 +2164,7 @@ struct AssetEditor: View {
                 }
                 TextField(incomeAmountLabel, text: $monthlyIncome.commaGrouped)
                     .keyboardType(.numberPad)
-                TextField("또는 연 수익률 (%)", text: $annualYieldPct)
+                TextField("또는 연 수익률 (%)", text: $annualYieldPct.asciiNumber)
                     .keyboardType(.decimalPad)
                 if previewMonthlyIncome > 0 {
                     AdaptiveRow {
@@ -2343,7 +2345,7 @@ struct AssetEditor: View {
                         .textInputAutocapitalization(.characters)
                         .focused($tickerFocused)
                 case .realEstate:
-                    TextField("법정동코드 5자리 (예: 11680)", text: $symbol)
+                    TextField("법정동코드 5자리 (예: 11680)", text: $symbol.asciiNumber)
                         .keyboardType(.numberPad)
                 default:
                     EmptyView()
@@ -2415,10 +2417,10 @@ struct AssetEditor: View {
                         .foregroundStyle(Theme.textSecond)
                 }
             } else if assetClass == .crypto {
-                TextField("수량", text: $quantity)
+                TextField("수량", text: $quantity.asciiNumber)
                     .keyboardType(.decimalPad)
             } else {
-                TextField("보유 수량 (주/좌)", text: $quantity)
+                TextField("보유 수량 (주/좌)", text: $quantity.asciiNumber)
                     .keyboardType(.decimalPad)
             }
         case .realEstate:
@@ -2456,6 +2458,7 @@ struct AssetEditor: View {
             PointMark(x: .value("월", point.date), y: .value("평가액", point.amount))
                 .foregroundStyle(Theme.accentText)
         }
+        .dataAxisLeftToRight()
         .chartYAxis(.hidden)
         .frame(height: 160)
     }
@@ -2704,6 +2707,8 @@ struct AmountScrubber: View {
         .frame(height: 46)
         .background(Theme.surfaceHigh)
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        // 줄자처럼 오른쪽으로 밀면 커진다. 아랍어에서도 눈금과 손가락 방향이 같도록 고정한다.
+        .dataAxisLeftToRight()
         .contentShape(Rectangle())
         .gesture(
             DragGesture(minimumDistance: 1)
@@ -3314,8 +3319,8 @@ struct ScreenshotImportView: View {
                     let unit = String(localized: "shares.unit", defaultValue: "주")
                     let avg = (r.cost ?? 0) / q
                     Text(avg > 0
-                         ? "\(Fmt.trimNumber(q))\(unit) · 평단 \(Fmt.krw(avg))원"
-                         : "\(Fmt.trimNumber(q))\(unit)")
+                         ? "\(Fmt.number(q))\(unit) · 평단 \(Fmt.krw(avg))원"
+                         : "\(Fmt.number(q))\(unit)")
                         .font(.caption)
                         .foregroundStyle(Theme.textSecond)
                 }
@@ -3788,12 +3793,12 @@ struct SellSignalRow: View {
     private var detail: String {
         var parts: [String] = []
         if let floor = status.floor {
-            let dd = Fmt.trimNumber((status.drawdown * 1000).rounded() / 10)
+            let dd = Fmt.number((status.drawdown * 1000).rounded() / 10)
             switch status.signal {
             case .stopHit:
-                parts.append(String(localized: "고점 \(Fmt.krw(status.peak))원에서 \(dd)% 빠져 기준(−\(Fmt.trimNumber(asset.trailingStopPct))%)을 넘었어요. 정한 대로 파세요"))
+                parts.append(String(localized: "고점 \(Fmt.krw(status.peak))원에서 \(dd)% 빠져 기준(−\(Fmt.number(asset.trailingStopPct))%)을 넘었어요. 정한 대로 파세요"))
             default:
-                let room = Fmt.trimNumber(((status.roomToFloor ?? 0) * 1000).rounded() / 10)
+                let room = Fmt.number(((status.roomToFloor ?? 0) * 1000).rounded() / 10)
                 parts.append(String(localized: "고점 대비 −\(dd)% · \(room)% 더 빠지면 팔 때(\(Fmt.krw(floor))원)"))
             }
         }
@@ -3801,7 +3806,7 @@ struct SellSignalRow: View {
             if status.signal == .targetHit {
                 parts.append(String(localized: "살 때 정한 목표가 \(Fmt.krw(target))원에 닿았어요"))
             } else {
-                let up = Fmt.trimNumber(((status.toTarget ?? 0) * 1000).rounded() / 10)
+                let up = Fmt.number(((status.toTarget ?? 0) * 1000).rounded() / 10)
                 parts.append(String(localized: "목표가 \(Fmt.krw(target))원까지 +\(up)%"))
             }
         }
@@ -4037,7 +4042,7 @@ struct SellWatchCard: View {
                     HStack(spacing: 4) {
                         Text("전체 보기")
                             .font(.caption.weight(.semibold))
-                        Image(systemName: "chevron.right")
+                        Image(systemName: "chevron.forward")
                             .font(.caption2.weight(.semibold))
                     }
                     .foregroundStyle(Theme.textSecond)

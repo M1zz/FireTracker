@@ -109,7 +109,7 @@ struct FireOutlook {
 
     var date: Date? {
         guard let years else { return nil }
-        return Calendar.current.date(byAdding: .month, value: Int((years * 12).rounded()), to: Date())
+        return Calendar.gregorian.date(byAdding: .month, value: Int((years * 12).rounded()), to: Date())
     }
 
     var ageAtFire: Int? {

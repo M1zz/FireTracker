@@ -79,7 +79,7 @@ enum SyncManager {
 
         // 기록 — 같은 날 기록은 항목이 많은(같으면 나중) 하나만.
         if let snaps = try? context.fetch(FetchDescriptor<NetWorthSnapshot>()) {
-            let cal = Calendar.current
+            let cal = Calendar.gregorian
             let byDay = Dictionary(grouping: snaps) { cal.startOfDay(for: $0.date) }
             for (_, group) in byDay where group.count > 1 {
                 // 직접 남긴 기록(메모가 '자동 기록'이 아닌 것)을 먼저, 그다음 항목 많은 것.

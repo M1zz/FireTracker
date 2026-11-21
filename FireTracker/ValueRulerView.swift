@@ -129,7 +129,7 @@ final class RulerPrices: ObservableObject {
     /// 잣대의 원화 값. year 가 nil 이면 지금. 자료가 없으면 nil.
     func value(_ ruler: ValueRuler, year: Int?) -> Double? {
         if ruler == .cpi {
-            return CPIData.country("KR").cpi(year ?? Calendar.current.component(.year, from: .now))
+            return CPIData.country("KR").cpi(year ?? Calendar.gregorian.component(.year, from: .now))
         }
         var v = 1.0
         for s in ruler.symbols {
@@ -185,7 +185,7 @@ struct RulerSimSection: View {
     @State private var leverID = ""
     @State private var sliderMax: Double = 100_000_000
 
-    private static var thisYear: Int { Calendar.current.component(.year, from: .now) }
+    private static var thisYear: Int { Calendar.gregorian.component(.year, from: .now) }
     private static let firstYear = 1995
 
     struct Item: Codable, Identifiable, Equatable {
@@ -241,7 +241,7 @@ struct RulerSimSection: View {
                 HStack(alignment: .top, spacing: 12) {
                     stat(String(localized: "원화로"), signed(m - 1))
                     stat(String(localized: "연평균"), signed(pow(m, 1 / Double(years(item))) - 1))
-                    stat(String(localized: "기간"), String(localized: "\(String(item.year))년부터"))
+                    stat(String(localized: "기간"), String(localized: "\(Fmt.year(item.year))년부터"))
                 }
                 rulerChart(list)
                     .frame(minHeight: 150, maxHeight: .infinity)
@@ -303,13 +303,14 @@ struct RulerSimSection: View {
                     }
             }
         }
+        .dataAxisLeftToRight()
         .chartXScale(domain: lo...hi)
         .chartXAxis {
             AxisMarks { value in
                 AxisGridLine().foregroundStyle(Theme.hairline)
                 AxisValueLabel {
                     if let v = value.as(Double.self) {
-                        Text(verbatim: "\(Int(v))%").font(.caption2).foregroundStyle(Theme.textSecond)
+                        Text(verbatim: "\(Fmt.number(v.rounded(.towardZero)))%").font(.caption2).foregroundStyle(Theme.textSecond)
                     }
                 }
             }
@@ -380,7 +381,7 @@ struct RulerSimSection: View {
         )
         list.append(SimLever(id: String(localized: "산 해"), value: yearBinding,
                              range: Double(Self.firstYear)...Double(Self.thisYear), step: 1,
-                             text: String(localized: "\(String(item.year))년"), unitLabel: String(localized: "년")))
+                             text: String(localized: "\(Fmt.year(item.year))년"), unitLabel: String(localized: "년")))
         list.append(moneyLever(String(localized: "그때 값"), \.then))
         list.append(moneyLever(String(localized: "지금 값"), \.now))
         list.append(moneyLever(String(localized: "받은 돈"), \.income))
@@ -423,7 +424,7 @@ struct RulerSimSection: View {
             }
         }
         if let item = current {
-            SimInfoCard(title: String(localized: "\(String(item.year))년부터 잣대가 오른 만큼")) {
+            SimInfoCard(title: String(localized: "\(Fmt.year(item.year))년부터 잣대가 오른 만큼")) {
                 ForEach(rows(item)) { r in
                     VStack(alignment: .leading, spacing: 3) {
                         HStack {
@@ -431,7 +432,7 @@ struct RulerSimSection: View {
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(Theme.textPrimary)
                             Spacer()
-                            Text(r.rulerMultiple.map { "×" + String(format: "%.2f", $0) } ?? "—")
+                            Text(r.rulerMultiple.map { "×" + Fmt.fixed($0, 2) } ?? "—")
                                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                                 .foregroundStyle(Theme.textPrimary)
                                 .monospacedDigit()
@@ -446,7 +447,7 @@ struct RulerSimSection: View {
         }
         SimInfoCard(title: String(localized: "읽는 법")) {
             Text("잣대 대비 = (지금 값 + 받은 돈) ÷ 그때 값 ÷ 잣대가 오른 배수")
-                .font(.system(.caption, design: .monospaced))
+                .font(.system(.caption, design: .formula))
                 .foregroundStyle(Theme.accentText)
                 .fixedSize(horizontal: false, vertical: true)
             Text("원화로 두 배가 됐어도 같은 기간 금이 세 배가 됐다면, 그 자산을 팔아 살 수 있는 금은 오히려 줄었어요. 잣대마다 결과가 다르면 자산보다 잣대 쪽이 크게 움직인 거예요. 여러 잣대에서 모두 능가했다면 확실히 잘 오른 자산이에요.")
@@ -460,7 +461,7 @@ struct RulerSimSection: View {
         }
         if let item = current, item.multiple != nil {
             CalcSaveRow(kind: .ruler, headline: headline(item),
-                        detail: String(localized: "\(String(item.year))년부터 · 원화 \(signed((item.multiple ?? 1) - 1))"))
+                        detail: String(localized: "\(Fmt.year(item.year))년부터 · 원화 \(signed((item.multiple ?? 1) - 1))"))
         }
         Text("물가는 한국 소비자물가지수(World Bank), 금 · 달러 · 주가지수는 Yahoo Finance 월별 가격이에요. 지난 해는 그해 평균, 지금은 최근 가격으로 계산하고 모두 원화로 바꿔 비교해요. 올해 물가는 확정 전이라 작년 값을 써요.")
             .font(.caption2)
@@ -476,7 +477,7 @@ struct RulerSimSection: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.textPrimary)
                 Spacer()
-                Text(String(localized: "\(String(item.year))년부터 · 원화 \(signed((item.multiple ?? 1) - 1))"))
+                Text(String(localized: "\(Fmt.year(item.year))년부터 · 원화 \(signed((item.multiple ?? 1) - 1))"))
                     .font(.caption2)
                     .foregroundStyle(Theme.textSecond)
             }
@@ -611,7 +612,7 @@ struct RulerSimSection: View {
 
     private func importAsset(_ a: Asset) {
         let first = a.tradeList.map(\.date).min() ?? a.createdAt
-        let year = min(max(Calendar.current.component(.year, from: first), Self.firstYear), Self.thisYear)
+        let year = min(max(Calendar.gregorian.component(.year, from: first), Self.firstYear), Self.thisYear)
         let item = Item(name: a.name, year: year, then: a.costBasis, now: a.amount)
         items.append(item)
         selectedID = item.id.uuidString

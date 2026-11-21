@@ -151,7 +151,7 @@ struct FireWidgetView: View {
     }
 
     private func percent(_ v: Double) -> String {
-        "\(Int((min(v, 1) * 100).rounded()))%"
+        (min(v, 1)).formatted(.percent.precision(.fractionLength(0)))
     }
 }
 

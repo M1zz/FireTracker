@@ -299,7 +299,7 @@ struct ProPaywallView: View {
             if upgrades { return String(localized: "Plus 평생을 산 분께만, 차액만 내면 돼요.") }
             guard let yearly = product(.yearly)?.price, yearly > 0, let lifetime = product(.lifetime)?.price else { return nil }
             let years = Int(NSDecimalNumber(decimal: lifetime / yearly).doubleValue.rounded(.down))
-            return years >= 2 ? String(format: LeeoLadderText.lifetimeWorthFormat, years) : nil
+            return years >= 2 ? String(format: LeeoLadderText.lifetimeWorthFormat, locale: .current, years) : nil
         case .monthly, .weekly:
             return nil
         }

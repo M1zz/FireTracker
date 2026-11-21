@@ -183,7 +183,7 @@ struct SettingsView: View {
                                 .labelStyle(.titleAndIcon)
                                 .foregroundStyle(Theme.positive)
                         }
-                        Image(systemName: "chevron.right")
+                        Image(systemName: "chevron.forward")
                             .font(.footnote.weight(.semibold))
                             .foregroundStyle(.tertiary)
                     }
@@ -697,6 +697,7 @@ private struct AutoBackupListView: View {
 
     private var dateFormatter: DateFormatter {
         let f = DateFormatter()
+        f.calendar = .gregorian
         f.setLocalizedDateFormatFromTemplate("yyyyMMMdEjmm")
         return f
     }

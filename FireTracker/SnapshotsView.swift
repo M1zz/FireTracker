@@ -121,8 +121,8 @@ struct SnapshotDetail: View {
                     }
                 }
                 Section("수입 / 지출 (원)") {
-                    TextField("월 수입", text: $income).keyboardType(.numberPad)
-                    TextField("월 지출", text: $expense).keyboardType(.numberPad)
+                    TextField("월 수입", text: $income.asciiNumber).keyboardType(.numberPad)
+                    TextField("월 지출", text: $expense.asciiNumber).keyboardType(.numberPad)
                 }
                 // 이 기록 시점의 월 패시브 인컴 — 잘못 저장된 값이 기간별 목표·추이
                 // 차트에 튀는 점으로 남을 때 여기서 바로 고칠 수 있다.

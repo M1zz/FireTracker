@@ -275,7 +275,7 @@ private func simActionButton(title: String, done: Bool,
             Image(systemName: done ? "checkmark.circle.fill" : "plus.circle.fill")
             Text(title).font(.subheadline.weight(.semibold))
             Spacer()
-            if !done { Image(systemName: "arrow.right") }
+            if !done { Image(systemName: "arrow.forward") }
         }
         .foregroundStyle(done ? Theme.positive : Color.black)
         .padding(.horizontal, 16)
@@ -350,7 +350,7 @@ struct SimLever: Identifiable {
         let b = Binding<Double>(get: { Double(text.wrappedValue) ?? 0 },
                                 set: { text.wrappedValue = Fmt.trimNumber(($0 * 10).rounded() / 10) })
         return SimLever(id: label, value: b, range: fit(range, b.wrappedValue), step: step,
-                        text: "\(prefix)\(Fmt.trimNumber(b.wrappedValue))\(suffix)", unitLabel: suffix)
+                        text: "\(prefix)\(Fmt.number(b.wrappedValue))\(suffix)", unitLabel: suffix)
     }
 
     // 문자열로 저장된 정수 칸 — 년·개월·시간.
@@ -359,11 +359,12 @@ struct SimLever: Identifiable {
         let b = Binding<Double>(get: { Double(text.wrappedValue) ?? range.lowerBound },
                                 set: { text.wrappedValue = String(Int($0.rounded())) })
         return SimLever(id: label, value: b, range: fit(range, b.wrappedValue), step: step,
-                        text: "\(prefix)\(Int(b.wrappedValue.rounded()))\(suffix)", unitLabel: suffix)
+                        text: "\(prefix)\(Fmt.number(b.wrappedValue.rounded()))\(suffix)", unitLabel: suffix)
     }
 
     static func choice(_ label: String, current: String, _ options: [SimOption]) -> SimLever {
-        SimLever(id: label, text: current, options: options)
+        // 칩(LocalizedStringKey(o.id))처럼 고른 값도 번역해서 보인다. 열거형 rawValue(한국어)가 그대로 나오던 것.
+        SimLever(id: label, text: String(localized: String.LocalizationValue(current)), options: options)
     }
 }
 
@@ -438,7 +439,7 @@ struct SimLeverPanel<Trailing: View, Footer: View>: View {
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .tapFeedback(.selection, trigger: current?.text ?? "")
         .alert("\(current?.id ?? "") 직접 입력", isPresented: $typing) {
-            TextField(current?.unitLabel ?? "", text: $draft)
+            TextField(current?.unitLabel ?? "", text: $draft.asciiNumber)
                 .keyboardType(.decimalPad)
             Button("취소", role: .cancel) {}
             Button("적용") {
@@ -1019,6 +1020,7 @@ private struct LifecycleSimSection: View {
                         }
                 }
             }
+            .dataAxisLeftToRight()
             .chartXSelection(value: $selectedAge)
             .chartForegroundStyleScale([String(localized: "모으는 시기"): Color.blue, String(localized: "쓰는 시기"): Color.orange])
             .chartXScale(domain: a.cur...a.end)
@@ -1287,7 +1289,7 @@ private struct LifecycleSimSection: View {
                     Text(reflected ? "내 목표에 반영됨" : "이 값을 내 목표에 반영")
                         .font(.subheadline.weight(.semibold))
                     Spacer()
-                    if !reflected { Image(systemName: "arrow.right") }
+                    if !reflected { Image(systemName: "arrow.forward") }
                 }
                 .foregroundStyle(reflected ? Theme.positive : Color.black)
                 .padding(.horizontal, 16)
@@ -1492,6 +1494,7 @@ private struct MortgageSimSection: View {
                         .lineStyle(StrokeStyle(lineWidth: 2.5))
                 }
             }
+            .dataAxisLeftToRight()
             .chartYAxis {
                 AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) { value in
                     AxisGridLine().foregroundStyle(Theme.hairline)
@@ -1917,6 +1920,7 @@ private struct SavingsSimSection: View {
                     }
             }
         }
+        .dataAxisLeftToRight()
         .chartYAxis {
             AxisMarks(position: .leading) { value in
                 AxisGridLine().foregroundStyle(Theme.hairline)
@@ -2250,6 +2254,7 @@ private struct InvestForecastSection: View {
                         .foregroundStyle(Theme.textSecond)
                 }
         }
+        .dataAxisLeftToRight()
         .chartYAxis {
             AxisMarks(position: .leading) { value in
                 AxisGridLine().foregroundStyle(Theme.hairline)
@@ -2318,7 +2323,7 @@ private struct InvestForecastSection: View {
 }
 
 // 연도를 문자열로 — Text 보간에 Int를 그대로 넣으면 "2,026년"처럼 천 단위가 끼어든다.
-private func yearLabel(_ year: Int) -> String { String(year) }
+private func yearLabel(_ year: Int) -> String { Fmt.year(year) }
 
 // MARK: - 월급 · 실질임금(구매력)
 
@@ -2341,7 +2346,7 @@ private struct WageSimSection: View {
     @State private var leverID = ""
     @State private var sliderMax: Double = 5_000_000
 
-    private static var thisYear: Int { Calendar.current.component(.year, from: Date()) }
+    private static var thisYear: Int { Calendar.gregorian.component(.year, from: Date()) }
     // 물가를 적용할 나라 — 금액 표기(통화)도 여기를 따른다.
     private var country: CPICountry { CPIData.country(countryCode) }
     // 환산 기준연도 — 올해. 아직 확정 물가가 없으면 그 나라 표의 마지막 해로 맞춘다.
@@ -2796,23 +2801,24 @@ private struct WageSimSection: View {
         let data = rows
         return Chart {
             ForEach(data) { r in
-                BarMark(x: .value("연도", "\(r.year)"),
+                BarMark(x: .value("연도", Fmt.year(r.year)),
                         y: .value("명목", r.nominal),
                         width: .ratio(0.45))
                     .foregroundStyle(Theme.textSecond.opacity(0.3))
                     .cornerRadius(4)
             }
             ForEach(data) { r in
-                LineMark(x: .value("연도", "\(r.year)"),
+                LineMark(x: .value("연도", Fmt.year(r.year)),
                          y: .value("실질", realValue(r)))
                     .foregroundStyle(Theme.accentText)
                     .lineStyle(StrokeStyle(lineWidth: 2.5))
-                PointMark(x: .value("연도", "\(r.year)"),
+                PointMark(x: .value("연도", Fmt.year(r.year)),
                           y: .value("실질", realValue(r)))
                     .foregroundStyle(Theme.accentText)
                     .symbolSize(50)
             }
         }
+        .dataAxisLeftToRight()
         .chartYAxis {
             AxisMarks(position: .leading) { value in
                 AxisGridLine().foregroundStyle(Theme.hairline)

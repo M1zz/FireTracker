@@ -511,7 +511,7 @@ Retraite anticipée, patrimoine
 
 ### 키워드
 
-indépendance,épargne,passif,revenus,dividendes,investissement,dette,prêt,budget,intérêts
+indépendance,épargne,passif,revenus,dividendes,investissement,dette,prêt,budget,intérêts,inflation
 
 ### 프로모션 텍스트
 
@@ -572,7 +572,7 @@ Pensione anticipata e risparmi
 
 ### 키워드
 
-indipendenza,finanziaria,patrimonio,risparmio,rendita,passiva,dividendi,investimenti,debiti
+indipendenza,finanziaria,patrimonio,risparmio,rendita,passiva,dividendi,investimenti,debiti,ETF
 
 ### 프로모션 텍스트
 
@@ -633,7 +633,7 @@ Aposentadoria e patrimônio
 
 ### 키워드
 
-independência,financeira,poupança,renda,passiva,dividendos,investimentos
+independência,financeira,poupança,renda,passiva,dividendos,investimentos,inflação,juros compostos
 
 ### 프로모션 텍스트
 
@@ -694,7 +694,7 @@ Toesagak: калькулятор FIRE
 
 ### 키워드
 
-финансовая,независимость,накопления,пассивный,доход,дивиденды,инвестиции,долг,кредит
+финансовая,независимость,накопления,пассивный,доход,дивиденды,инвестиции,долг,кредит,инфляция,ETF
 
 ### 프로모션 텍스트
 
@@ -816,7 +816,7 @@ Nghỉ hưu sớm, tài sản ròng
 
 ### 키워드
 
-tiết,kiệm,thu,nhập,cổ,tức,đầu,tư,nợ,vay,lãi,kép,tiền,quỹ,thuế,lương
+tiết,kiệm,thu,nhập,cổ,tức,đầu,tư,nợ,vay,lãi,kép,tiền,quỹ,thuế,lương,lạm,phát,chứng,khoán,ETF
 
 ### 프로모션 텍스트
 
@@ -877,7 +877,7 @@ Předčasný důchod a majetek
 
 ### 키워드
 
-finanční,nezávislost,úspory,pasivní,příjem,dividendy,investice,dluh,úvěr,rozpočet
+finanční,nezávislost,úspory,pasivní,příjem,dividendy,investice,dluh,úvěr,rozpočet,inflace,ETF,krypto
 
 ### 프로모션 텍스트
 
@@ -938,7 +938,7 @@ Tidlig pension og formue
 
 ### 키워드
 
-økonomisk,frihed,opsparing,passiv,indkomst,udbytte,investering,gæld,lån,budget
+økonomisk,frihed,opsparing,passiv,indkomst,udbytte,investering,gæld,lån,budget,inflation,ETF,krypto
 
 ### 프로모션 텍스트
 
@@ -999,7 +999,7 @@ Toesagak: Υπολογιστής FIRE
 
 ### 키워드
 
-οικονομική,ανεξαρτησία,αποταμίευση,εισόδημα,μερίσματα,επένδυση,χρέος,δάνειο
+οικονομική,ανεξαρτησία,αποταμίευση,εισόδημα,μερίσματα,επένδυση,χρέος,δάνειο,πληθωρισμός,ETF,μετοχές
 
 ### 프로모션 텍스트
 
@@ -1060,7 +1060,7 @@ Varhainen eläke ja varallisuus
 
 ### 키워드
 
-taloudellinen,riippumattomuus,säästäminen,passiivinen,tulo,osingot,sijoittaminen
+taloudellinen,riippumattomuus,säästäminen,passiivinen,tulo,osingot,sijoittaminen,inflaatio,ETF
 
 ### 프로모션 텍스트
 
@@ -1121,7 +1121,7 @@ Pensiun dini & kekayaan
 
 ### 키워드
 
-kebebasan,finansial,tabungan,pasif,penghasilan,dividen,investasi,utang,cicilan
+kebebasan,finansial,tabungan,pasif,penghasilan,dividen,investasi,utang,cicilan,inflasi,saham,ETF
 
 ### 프로모션 텍스트
 
@@ -1182,7 +1182,7 @@ Tidlig pensjon og formue
 
 ### 키워드
 
-økonomisk,frihet,sparing,passiv,inntekt,utbytte,investering,gjeld,lån,budsjett
+økonomisk,frihet,sparing,passiv,inntekt,utbytte,investering,gjeld,lån,budsjett,inflasjon,ETF,krypto
 
 ### 프로모션 텍스트
 
@@ -1243,7 +1243,7 @@ Vroeg pensioen en vermogen
 
 ### 키워드
 
-financiële,vrijheid,sparen,passief,inkomen,dividend,beleggen,schuld,lening,budget
+financiële,vrijheid,sparen,passief,inkomen,dividend,beleggen,schuld,lening,budget,inflatie,ETF
 
 ### 프로모션 텍스트
 
@@ -1304,7 +1304,7 @@ Wcześniejsza emerytura
 
 ### 키워드
 
-niezależność,finansowa,oszczędności,majątek,pasywny,dochód,dywidendy,inwestycje,dług
+niezależność,finansowa,oszczędności,majątek,pasywny,dochód,dywidendy,inwestycje,dług,inflacja,ETF
 
 ### 프로모션 텍스트
 
@@ -1365,7 +1365,7 @@ Tidig pension och förmögenhet
 
 ### 키워드
 
-ekonomisk,frihet,sparande,passiv,inkomst,utdelning,investering,skuld,lån,budget
+ekonomisk,frihet,sparande,passiv,inkomst,utdelning,investering,skuld,lån,budget,inflation,ETF,krypto
 
 ### 프로모션 텍스트
 
@@ -1426,7 +1426,7 @@ Erken emeklilik ve varlık
 
 ### 키워드
 
-finansal,özgürlük,birikim,pasif,gelir,temettü,yatırım,borç,kredi,bütçe,portföy
+finansal,özgürlük,birikim,pasif,gelir,temettü,yatırım,borç,kredi,bütçe,portföy,enflasyon,hisse,ETF
 
 ### 프로모션 텍스트
 

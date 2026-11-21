@@ -1,5 +1,157 @@
 # 릴리즈 노트
 
+## 1.2.7
+
+### 앱스토어 (한국어)
+
+이제 아랍어로도 쓸 수 있어요
+아랍어에서는 화면이 오른쪽에서 왼쪽으로 놓여요
+숫자가 기기의 숫자 표기에 맞춰 보여요
+
+### App Store (English)
+
+Now available in Arabic
+Arabic screens run right to left
+Numbers match your device's style
+
+### 앱스토어 (일본어)
+
+アラビア語で使えるようになりました
+アラビア語では画面が右から左に並びます
+数字が端末の数字表記に合わせて表示されます
+
+### App Store (en-GB)
+
+Now available in Arabic
+Arabic screens run right to left
+Numbers match your device's style
+
+### 앱스토어 (스페인어)
+
+Ahora disponible en árabe
+En árabe, todo va de derecha a izquierda
+Cifras con el formato del dispositivo
+
+### 앱스토어 (독일어)
+
+Jetzt auch auf Arabisch
+Arabisch läuft von rechts nach links
+Zahlen im Format deines Geräts
+
+### 앱스토어 (zh-Hans)
+
+现已支持阿拉伯语
+阿拉伯语界面从右向左排列
+数字会按设备的数字格式显示
+
+### 앱스토어 (zh-Hant)
+
+現已支援阿拉伯文
+阿拉伯文介面由右至左排列
+數字會依裝置的數字格式顯示
+
+### 앱스토어 (러시아어)
+
+Теперь доступен арабский язык
+На арабском экран идёт справа налево
+Цифры следуют настройкам устройства
+
+### 앱스토어 (프랑스어)
+
+Désormais disponible en arabe
+En arabe, affichage de droite à gauche
+Chiffres au format de votre appareil
+
+### 앱스토어 (이탈리아어)
+
+Ora disponibile in arabo
+In arabo tutto va da destra a sinistra
+Numeri nel formato del dispositivo
+
+### 앱스토어 (pt-BR)
+
+Agora disponível em árabe
+Em árabe, tudo vai da direita à esquerda
+Os números seguem o formato do aparelho
+
+### 앱스토어 (태국어)
+
+ใช้งานเป็นภาษาอาหรับได้แล้ว
+ภาษาอาหรับจัดหน้าจอจากขวาไปซ้าย
+ตัวเลขแสดงตามรูปแบบตัวเลขของเครื่อง
+
+### 앱스토어 (베트남어)
+
+Giờ đã có tiếng Ả Rập
+Tiếng Ả Rập hiển thị từ phải sang trái
+Chữ số hiển thị theo kiểu số của máy
+
+### 앱스토어 (체코어)
+
+Nově i v arabštině
+Arabština se řadí zprava doleva
+Čísla se řídí formátem zařízení
+
+### 앱스토어 (덴마크어)
+
+Findes nu på arabisk
+Arabisk vises fra højre mod venstre
+Tal følger din enheds talformat
+
+### 앱스토어 (그리스어)
+
+Τώρα διαθέσιμο και στα αραβικά
+Τα αραβικά πάνε από δεξιά προς αριστερά
+Αριθμοί στη μορφή της συσκευής σας
+
+### 앱스토어 (핀란드어)
+
+Nyt saatavilla myös arabiaksi
+Arabia näkyy oikealta vasemmalle
+Numerot laitteen muodossa
+
+### 앱스토어 (인도네시아어)
+
+Kini tersedia dalam bahasa Arab
+Layar bahasa Arab dari kanan ke kiri
+Angka mengikuti format angka perangkat
+
+### 앱스토어 (노르웨이어(보크말))
+
+Finnes nå på arabisk
+Arabisk vises fra høyre mot venstre
+Tall følger enhetens tallformat
+
+### 앱스토어 (네덜란드어)
+
+Nu ook beschikbaar in het Arabisch
+Arabisch loopt van rechts naar links
+Cijfers in de stijl van je apparaat
+
+### 앱스토어 (폴란드어)
+
+Teraz także po arabsku
+Arabski układa się od prawej do lewej
+Liczby są zgodne z formatem urządzenia
+
+### 앱스토어 (스웨덴어)
+
+Finns nu på arabiska
+Arabiska visas från höger till vänster
+Siffror följer enhetens sifferformat
+
+### 앱스토어 (튀르키예어)
+
+Artık Arapça da kullanılabiliyor
+Arapçada ekranlar sağdan sola dizilir
+Rakamlar cihazınızın biçimine uyar
+
+### 앱스토어 (아랍어)
+
+صار التطبيق متوفرًا باللغة العربية
+الواجهة العربية من اليمين إلى اليسار
+تظهر الأرقام وفق نظام الأرقام في جهازك
+
 ## 1.2.6
 
 ### 앱스토어 (한국어)

@@ -502,8 +502,9 @@ private struct FoldDashboardRedirect: ViewModifier {
 
 #if DEBUG
 // 스토어 스크린샷용 — `-shotMode YES -shotTab 2` 로 띄우면 데모 데이터를 넣고 그 탭을 연다(배너는 숨김).
-// `-shotSheet sell|future|mood|import|paywall` 를 더하면 그 화면을 시트로 바로 띄우고, `-shotScroll 0.5` 면
+// `-shotSheet sell|future|mood|import|paywall|gift` 를 더하면 그 화면을 시트로 바로 띄우고, `-shotScroll 0.5` 면
 // 스크롤 화면을 그 높이(0 위 ~ 1 아래)에서 연다(언어별 레이아웃 점검용).
+// `gift` 는 인앱 상품 심사 이미지용 — 선물 상품을 사는 화면.
 enum ShotMode {
     static var isOn: Bool { UserDefaults.standard.bool(forKey: "shotMode") }
     static var sheet: String? { isOn ? UserDefaults.standard.string(forKey: "shotSheet") : nil }
@@ -522,7 +523,8 @@ enum ShotMode {
 }
 
 private struct ShotSheet: ViewModifier {
-    @State private var shown = ["future", "mood", "import", "paywall"].contains(ShotMode.sheet ?? "")
+    @State private var shown = ["future", "mood", "import", "paywall", "gift"].contains(ShotMode.sheet ?? "")
+    @EnvironmentObject private var store: LeeoStore
     private let scroll = UserDefaults.standard.double(forKey: "shotScroll")
     func body(content: Content) -> some View {
         content.defaultScrollAnchor(ShotMode.isOn ? UnitPoint(x: 0, y: scroll) : nil)
@@ -531,6 +533,10 @@ private struct ShotSheet: ViewModifier {
                 ScreenshotImportView(startingSortOrder: 0)
             } else if ShotMode.sheet == "paywall" {
                 ProPaywallView(lead: .investForecast)
+            } else if ShotMode.sheet == "gift", let gift = store.gift {
+                NavigationStack {
+                    LeeoGiftView<FireTrackerSpec>(gift: gift, showsRedeemLink: false, onContactSupport: {})
+                }
             } else {
                 NavigationStack {
                     if ShotMode.sheet == "future" { FuturePreviewView() } else { FearGreedView() }

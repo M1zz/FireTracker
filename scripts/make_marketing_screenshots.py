@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """App Store 마케팅 스크린샷: 원본 캡처 + 헤드라인 → HTML → 헤드리스 Chrome (appstore-assets 스킬).
 
 사용법: python3 scripts/make_marketing_screenshots.py [--pad] [언어 ...]   (없으면 전부)
@@ -18,7 +19,7 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 W, H = 1242, 2688   # 이 계정의 아이폰 제출 규격
 
 # 앱 언어 → App Store 로케일
-STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant", "es": "es", "de": "de", "fr": "fr", "it": "it", "pt-BR": "pt-BR", "ru": "ru", "th": "th", "vi": "vi", "cs": "cs", "da": "da", "el": "el", "fi": "fi", "id": "id", "nb": "nb", "nl": "nl", "pl": "pl", "sv": "sv", "tr": "tr"}
+STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant", "es": "es", "de": "de", "fr": "fr", "it": "it", "pt-BR": "pt-BR", "ru": "ru", "th": "th", "vi": "vi", "cs": "cs", "da": "da", "el": "el", "fi": "fi", "id": "id", "nb": "nb", "nl": "nl", "pl": "pl", "sv": "sv", "tr": "tr", "ar": "ar"}
 
 # 파일 · 배치 · 언어별 (헤드라인, 보조 문장)
 # 원본은 데모 데이터(설정 ▸ 데모)로 찍고, 맨 위 '데모 데이터로 보는 중' 띠를 잘라 냈다(1320x2702).
@@ -28,6 +29,14 @@ SHOTS = [
     ("03-journey.png",   "text-bottom", {"ko": ("목표까지 가는 길이<br>그려져요", "기간별 목표와 필요한 저축을 알려줘요"), "en": ("See the road<br>to your goal", "Goals by period and the savings you need"), "en-GB": ("See the road<br>to your goal", "Goals by period and the savings you need"), "ja": ("目標までの道のりが<br>見えてきます", "期間別の目標と必要な貯蓄がわかります"), "zh-Hans": ("通往目标的路，<br>清晰可见", "告诉你分期目标和所需储蓄"), "zh-Hant": ("通往目標的路，<br>清晰可見", "告訴你分期目標和所需儲蓄"), "es": ("El camino a tu objetivo,<br>dibujado", "Objetivos por periodo y el ahorro que necesitas"), "de": ("Der Weg zum Ziel<br>wird sichtbar", "Ziele nach Zeitraum und nötige Sparrate"), "fr": ("Le chemin vers l’objectif<br>se dessine", "Objectifs par période et épargne nécessaire"), "it": ("La strada verso l’obiettivo<br>prende forma", "Obiettivi per periodo e risparmio necessario"), "pt-BR": ("O caminho até a meta<br>ganha forma", "Metas por período e poupança necessária"), "ru": ("Путь к цели<br>становится видимым", "Цели по периодам и нужные накопления"), "th": ("เส้นทางสู่เป้าหมาย<br>เห็นชัดขึ้น", "เป้าหมายตามช่วงเวลาและเงินออมที่ต้องใช้"), "vi": ("Con đường đến mục tiêu<br>hiện rõ", "Mục tiêu theo kỳ và khoản tiết kiệm cần thiết"), "cs": ("Cesta k cíli<br>se vykreslí", "Cíle podle období a potřebné spoření"), "da": ("Vejen mod målet<br>bliver tydelig", "Mål pr. periode og den opsparing, du skal bruge"), "el": ("Ο δρόμος προς τον στόχο<br>γίνεται ορατός", "Στόχοι ανά περίοδο και η αποταμίευση που χρειάζεστε"), "fi": ("Matka tavoitteeseen<br>piirtyy näkyviin", "Jaksokohtaiset tavoitteet ja tarvittava säästö"), "id": ("Jalan menuju target<br>terlihat jelas", "Target per periode dan tabungan yang dibutuhkan"), "nb": ("Veien mot målet<br>blir tydelig", "Mål per periode og sparingen du trenger"), "nl": ("De weg naar je doel<br>wordt zichtbaar", "Doelen per periode en het spaargeld dat je nodig hebt"), "pl": ("Droga do celu<br>staje się widoczna", "Cele według okresów i potrzebne oszczędności"), "sv": ("Vägen mot målet<br>blir synlig", "Mål per period och sparandet du behöver"), "tr": ("Hedefe giden yol<br>görünür oluyor", "Döneme göre hedefler ve gereken birikim")}),
     ("04-loan.png",      "dark",        {"ko": ("대출, 저축, 은퇴까지<br>계산해 봐요", "계산한 결과는 저장해 두고 다시 불러와요"), "en": ("From loans to savings<br>to retirement", "Save results and pick them up later"), "en-GB": ("From loans to savings<br>to retirement", "Save results and pick them up later"), "ja": ("ローンも貯蓄も<br>退職後も計算", "計算結果は保存して、いつでも呼び出せます"), "zh-Hans": ("贷款、储蓄、退休，<br>都能计算", "计算结果可保存，随时再次调出"), "zh-Hant": ("貸款、儲蓄、退休，<br>都能計算", "計算結果可儲存，隨時再次叫出"), "es": ("Préstamos, ahorro<br>y retiro, calculados", "Guarda los resultados y vuélvelos a cargar"), "de": ("Kredite, Sparen und<br>Ruhestand berechnen", "Speichere Ergebnisse und lade sie später wieder"), "fr": ("Prêts, épargne et<br>retraite calculés", "Enregistrez les résultats et rechargez-les plus tard"), "it": ("Prestiti, risparmio e<br>pensione calcolati", "Salva i risultati e ricaricali più tardi"), "pt-BR": ("Empréstimos, poupança<br>e aposentadoria", "Salve os resultados e recarregue depois"), "ru": ("Кредиты, накопления<br>и пенсия — в расчёт", "Сохраняйте результаты и загружайте позже"), "th": ("เงินกู้ เงินออม<br>และเกษียณ คำนวณได้", "บันทึกผลลัพธ์แล้วเรียกกลับมาใช้ภายหลัง"), "vi": ("Khoản vay, tiết kiệm<br>và nghỉ hưu", "Lưu kết quả để tải lại khi cần"), "cs": ("Úvěry, spoření<br>i odchod spočítáte", "Výsledky uložte a později znovu načtěte"), "da": ("Lån, opsparing og<br>pension beregnes", "Gem resultater og indlæs dem senere"), "el": ("Δάνεια, αποταμίευση<br>και σύνταξη υπολογισμένα", "Αποθηκεύστε τα αποτελέσματα και φορτώστε τα αργότερα"), "fi": ("Lainat, säästäminen<br>ja eläke laskettuna", "Tallenna tulokset ja lataa ne myöhemmin"), "id": ("Pinjaman, tabungan,<br>dan pensiun terhitung", "Simpan hasil dan muat kembali nanti"), "nb": ("Lån, sparing og<br>pensjon beregnes", "Lagre resultater og last dem inn senere"), "nl": ("Leningen, sparen<br>en pensioen berekend", "Bewaar resultaten en laad ze later weer"), "pl": ("Kredyty, oszczędzanie<br>i emerytura policzone", "Zapisz wyniki i wczytaj je później"), "sv": ("Lån, sparande och<br>pension uträknat", "Spara resultat och läs in dem senare"), "tr": ("Kredi, birikim ve<br>emeklilik hesaplanır", "Sonuçları kaydedin, sonra yeniden yükleyin")}),
 ]
+
+# 아랍어 (한 줄이 너무 길어지면 파이썬 3.9 가 줄을 읽다 글자를 끊는다 — 따로 더한다)
+AR = [("كم بقي على استقالتك؟<br>اعرفه بالأرقام", "نسبة إنجاز الهدف وتغيّر الأسبوع في لمحة"),
+      ("أصولك المتفرقة<br>في مكان واحد", "العقارات والأسهم والمعاشات والقروض معًا"),
+      ("طريقك إلى الهدف<br>واضح أمامك", "أهداف كل فترة والادخار الذي تحتاجه"),
+      ("احسب القروض<br>والادخار والتقاعد", "احفظ النتائج وارجع إليها متى شئت")]
+for (_, _, texts), ar in zip(SHOTS, AR):
+    texts["ar"] = ar
 
 # 색은 헤더·검색 결과 그림(make_creative_assets.py)과 맞춘다.
 THEME = dict(bg="#FAF6F0", ink="#1F1B17", sub="#6E675C", dark_bg="#1F1B17", dark_ink="#FAF6F0",
@@ -83,6 +92,26 @@ body { background:%(dark_bg)s; }
 """,
 }
 
+# 오른쪽에서 왼쪽으로 쓰는 언어(아랍어): 글은 오른쪽에서 시작하고, 기울인 기기는 거울처럼 뒤집는다.
+# 가운데 맞춘 장면(hero-bleed · dark · iPad)은 dir=rtl 만으로 맞는다.
+RTL = {"ar"}
+# 아랍 글자는 이어 쓰여서 글자 사이를 좁히면 끊어진다. Helvetica Neue 에는 아랍 글자가 없다.
+RTL_CSS = """
+body { font-family:"SF Arabic","Geeza Pro",-apple-system,sans-serif; }
+.headline, .sub { letter-spacing:0; }
+.headline { line-height:1.3; }
+"""
+RTL_LAYOUTS = {
+    "left-text": """
+.headline { text-align:right; margin:280px 105px 0 90px; }
+.sub { text-align:right; margin:44px 109px 0 90px; }
+.wrap { left:auto; right:290px; perspective-origin:70% 30%; }
+.phone { transform:rotateY(-16deg) rotateX(2deg); }
+""",
+    "text-bottom": ".phone { transform:rotateY(10deg) rotateX(2deg); }",
+    "flat-rotate": ".wrap { left:auto; right:115px; } .phone { transform:rotate(6deg); }",
+}
+
 # iPad: 아이폰과 같은 제목을 쓰고, 넓은 창의 '탭 | 대시보드' 두 판이 다 보이게 판을 크게 둔다.
 PAD_W, PAD_H = 2064, 2752
 PAD_SHOTS = [("ipad-01-assets.png", 1, "light"), ("ipad-02-dashboard.png", 0, "light"),
@@ -111,7 +140,11 @@ PAD_BODY = '<div class="headline">{h}</div><div class="sub">{s}</div><div class=
 
 TEXT_FIRST = '<div class="headline">{h}</div><div class="sub">{s}</div><div class="wrap"><div class="phone"><img src="{img}"></div></div>'
 PHONE_FIRST = '<div class="wrap"><div class="phone"><img src="{img}"></div></div><div class="headline">{h}</div><div class="sub">{s}</div>'
-HTML = '<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><style>{css}</style></head><body>{body}</body></html>'
+HTML = '<!doctype html><html lang="{lang}"{dir}><head><meta charset="utf-8"><style>{css}</style></head><body>{body}</body></html>'
+
+
+def dir_attr(lang):
+    return ' dir="rtl"' if lang in RTL else ""
 
 
 def raw_for(lang, fname):
@@ -131,8 +164,10 @@ def main(langs):
             assert src.exists(), f"원본 없음: {src}"
             tpl = PHONE_FIRST if layout == "text-bottom" else TEXT_FIRST
             css = BASE_CSS % vals + LAYOUTS[layout] % vals if "%(" in LAYOUTS[layout] else BASE_CSS % vals + LAYOUTS[layout]
+            if lang in RTL:
+                css += RTL_CSS + RTL_LAYOUTS.get(layout, "")
             html = tmp / f"{lang}-{fname}.html"
-            html.write_text(HTML.format(lang=lang, css=css, body=tpl.format(h=h, s=s, img=src.as_uri())), encoding="utf-8")
+            html.write_text(HTML.format(lang=lang, dir=dir_attr(lang), css=css, body=tpl.format(h=h, s=s, img=src.as_uri())), encoding="utf-8")
             out = out_dir / fname
             render(html, out, W, H, tmp)
 
@@ -177,7 +212,8 @@ def main_pad(langs):
             assert src.exists(), f"원본 없음: {src}"
             html = tmp / f"{lang}-{fname}.html"
             body = PAD_BODY.format(h=h, s=s, img=src.as_uri())
-            html.write_text(HTML.format(lang=lang, css=css, body=body).replace("<body>", f'<body class="{tone}">'),
+            html.write_text(HTML.format(lang=lang, dir=dir_attr(lang), css=css + (RTL_CSS if lang in RTL else ""),
+                                        body=body).replace("<body>", f'<body class="{tone}">'),
                             encoding="utf-8")
             render(html, out_dir / fname, PAD_W, PAD_H, tmp)
 

@@ -21,7 +21,7 @@ OUT = ROOT / "docs" / "screenshots" / "creative"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 # 앱 언어 코드 → App Store Connect 로케일. 퇴사각은 지금 한국어 페이지 하나뿐이다.
-STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant", "es": "es", "de": "de", "fr": "fr", "it": "it", "pt-BR": "pt-BR", "ru": "ru", "th": "th", "vi": "vi", "cs": "cs", "da": "da", "el": "el", "fi": "fi", "id": "id", "nb": "nb", "nl": "nl", "pl": "pl", "sv": "sv", "tr": "tr"}
+STORE = {"ko": "ko", "en": "en", "en-GB": "en-GB", "ja": "ja", "zh-Hans": "zh-Hans", "zh-Hant": "zh-Hant", "es": "es", "de": "de", "fr": "fr", "it": "it", "pt-BR": "pt-BR", "ru": "ru", "th": "th", "vi": "vi", "cs": "cs", "da": "da", "el": "el", "fi": "fi", "id": "id", "nb": "nb", "nl": "nl", "pl": "pl", "sv": "sv", "tr": "tr", "ar": "ar"}
 
 # (가로, 세로, 안전 영역 left, top, right, bottom)
 SPEC = {
@@ -56,6 +56,7 @@ SEARCH = {
     "pl": ("Kalkulator emerytalny", "Jak daleko jest<br>twoje odejście?", "Zapisz aktywa i zobacz, ile brakuje do celu"),
     "sv": ("Pensionskalkylator", "Hur långt är det<br>till ditt slut?", "Registrera tillgångar och se vad som saknas till målet"),
     "tr": ("Emeklilik hesaplayıcı", "Bırakmanıza<br>ne kadar var?", "Varlıklarınızı kaydedin, hedefe ne kadar kaldığını görün"),
+    "ar": ("حاسبة التقاعد", "كم بقي<br>على تقاعدك؟", "سجّل أصولك وشاهد كم بقي لبلوغ هدفك"),
 }
 
 # 헤더 — 한 가지 약속: 회사를 그만둬도 되는 날까지의 거리를 보여 준다.
@@ -84,6 +85,7 @@ HEADER = {
     "pl": ("Kalkulator FIRE", "Zmierz liczbami<br>dystans do odejścia"),
     "sv": ("FIRE-kalkylator", "Mät avståndet till slutdatumet<br>med siffror"),
     "tr": ("FIRE hesaplayıcı", "Bırakmaya kalan mesafeyi<br>rakamlarla görün"),
+    "ar": ("حاسبة FIRE", "كم بقي على استقالتك؟<br>اعرفه بالأرقام"),
 }
 
 # 바탕 · 글자색은 앱 화면(Theme.swift)과 같다: 따뜻한 크림 바탕, 금색 강조 하나("quiet money").
@@ -109,6 +111,15 @@ body { background:#FAF6F0; position:relative;
 .ring { position:absolute; border-radius:50%%;
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100%% - var(--w)), #000 calc(100%% - var(--w) + 1px));
           mask: radial-gradient(farthest-side, transparent calc(100%% - var(--w)), #000 calc(100%% - var(--w) + 1px)); }
+"""
+
+# 오른쪽에서 왼쪽으로 쓰는 언어(아랍어): 글은 오른쪽 정렬, 검색 결과는 글과 기기 자리를 거울처럼 바꾼다.
+# 아랍 글자는 이어 쓰여서 글자 사이를 좁히면 끊어진다. Helvetica Neue 에는 아랍 글자가 없다.
+RTL = {"ar"}
+RTL_CSS = """
+body { font-family:"SF Arabic","Geeza Pro",-apple-system,sans-serif; }
+.eyebrow, .headline, .sub { letter-spacing:0; }
+.headline { line-height:1.3; }
 """
 
 # 글이 상자를 넘지 않을 때까지 줄인다. 잘리는 글은 없다 - 끝까지 안 맞으면 표시하고 멈춘다.
@@ -163,13 +174,16 @@ def search_html(lang):
     ph_w = 1040
     ph_left = l + col + int(sw * 0.04)
     img = (RAW / lang / "01-dashboard.png").as_uri()
+    # 아랍어는 거울처럼: 글이 오른쪽, 기기가 왼쪽
+    x = (lambda left, width: W - left - width) if lang in RTL else (lambda left, width: left)
+    align = "text-align:right;" if lang in RTL else ""
     return f"""
-<div class="glow" style="left:{ph_left - 300}px;top:500px;width:1700px;height:1700px;background:rgba(232,163,61,.20)"></div>
-<div class="glow" style="left:{l - 700}px;top:{t - 500}px;width:1400px;height:1000px;background:rgba(46,158,120,.10)"></div>
-{ring(120, 180, 560, 0.72, 70, *GOLD)}
-{ring(380, 1960, 380, 1.0, 54, *GREEN)}
-{phone(img, ph_left, t - 360, ph_w, 0)}
-<div class="text" style="left:{l}px;top:{t}px;width:{col}px;height:{sh}px">
+<div class="glow" style="left:{x(ph_left - 300, 1700)}px;top:500px;width:1700px;height:1700px;background:rgba(232,163,61,.20)"></div>
+<div class="glow" style="left:{x(l - 700, 1400)}px;top:{t - 500}px;width:1400px;height:1000px;background:rgba(46,158,120,.10)"></div>
+{ring(x(120, 560), 180, 560, 0.72, 70, *GOLD)}
+{ring(x(380, 380), 1960, 380, 1.0, 54, *GREEN)}
+{phone(img, x(ph_left, ph_w), t - 360, ph_w, 0)}
+<div class="text" style="left:{x(l, col)}px;top:{t}px;width:{col}px;height:{sh}px;{align}">
   <div class="eyebrow" style="font-size:96px">{eyebrow}</div>
   <div class="headline" data-max="250" data-min="140" style="margin-top:36px">{headline}</div>
   <div class="sub" style="font-size:84px;margin-top:52px">{sub}</div>
@@ -208,8 +222,10 @@ def html_lang(lang):
 def render(lang, kind):
     W, H, _ = SPEC[kind]
     body = search_html(lang) if kind == "search" else header_html(lang)
-    page = (f'<!doctype html><html lang="{html_lang(lang)}"><head><meta charset="utf-8"><style>'
-            f'{BASE_CSS % {"W": W, "H": H}}</style></head><body>{body}{FIT_JS}</body></html>')
+    rtl = lang in RTL
+    dir_attr = ' dir="rtl"' if rtl else ""
+    page = (f'<!doctype html><html lang="{html_lang(lang)}"{dir_attr}><head><meta charset="utf-8"><style>'
+            f'{BASE_CSS % {"W": W, "H": H}}{RTL_CSS if rtl else ""}</style></head><body>{body}{FIT_JS}</body></html>')
     html_path = pathlib.Path(tempfile.gettempdir()) / f"firetracker-creative-{lang}-{kind}.html"
     html_path.write_text(page, encoding="utf-8")
     # 글이 끝까지 안 맞으면 그림을 만들지 않는다(잘린 글이 스토어에 올라가는 것보다 낫다).

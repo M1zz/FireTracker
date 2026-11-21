@@ -984,7 +984,7 @@ struct AssetsView: View {
         }
         // 매도 원칙에 닿았거나 가까우면 목록에서도 바로 보이게.
         if let st = SellWatch.status(asset), st.signal != .holding {
-            SellSignalChip(signal: st.signal)
+            SellSignalChip(status: st)
         }
     }
 
@@ -3707,21 +3707,11 @@ struct NetWorthBreakdownView: View {
 
 // MARK: - 매도 원칙 한눈에
 
-// 상태 칩 — 팔 때(빨강) · 목표가(초록) · 준비/근처(주황) · 지켜보는 중(회색).
-struct SellSignalChip: View {
-    let signal: SellWatch.Signal
-    var body: some View {
-        Text(signal.label)
-            .font(.caption2.weight(.bold))
-            .padding(.horizontal, 7)
-            .padding(.vertical, 3)
-            .foregroundStyle(tint)
-            .background(tint.opacity(0.14), in: Capsule())
-            .fixedSize()
-    }
-    private var tint: Color {
+// 매도 신호의 색 — 익절·목표가(초록) · 손절(빨강) · 준비/근처(주황) · 지켜보는 중(회색).
+extension SellWatch.Status {
+    var tint: Color {
         switch signal {
-        case .stopHit: return Theme.negative
+        case .stopHit: return exit == .takeProfit ? Theme.positive : Theme.negative
         case .targetHit: return Theme.positive
         case .nearStop, .nearTarget: return .orange
         case .holding: return Theme.textSecond
@@ -3729,13 +3719,29 @@ struct SellSignalChip: View {
     }
 }
 
+// 상태 칩 — 색은 SellWatch.Status.tint 를 따른다.
+struct SellSignalChip: View {
+    let status: SellWatch.Status
+    var body: some View {
+        Text(status.label)
+            .font(.caption2.weight(.bold))
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .foregroundStyle(tint)
+            .background(tint.opacity(0.14), in: Capsule())
+            .fixedSize()
+    }
+    private var tint: Color { status.tint }
+}
+
 // 고점에서 얼마나 빠졌는지를 기준선까지의 막대로 — 끝에 닿으면 팔 때.
 struct DrawdownBar: View {
     let drawdown: Double     // 0.06
     let limit: Double        // 0.10
+    var hitTint: Color = Theme.negative   // 끝에 닿았을 때 — 익절이면 초록, 손절이면 빨강
     var body: some View {
         let p = limit > 0 ? min(drawdown / limit, 1) : 0
-        let tint: Color = p >= 1 ? Theme.negative : (p >= 0.7 ? .orange : Theme.textSecond.opacity(0.6))
+        let tint: Color = p >= 1 ? hitTint : (p >= 0.7 ? .orange : Theme.textSecond.opacity(0.6))
         GeometryReader { geo in
             ZStack(alignment: .leading) {
                 Capsule().fill(Theme.textSecond.opacity(0.15))
@@ -3762,7 +3768,7 @@ struct SellSignalRow: View {
                     .lineLimit(2)
             } trailing: {
                 HStack(spacing: 6) {
-                    SellSignalChip(signal: status.signal)
+                    SellSignalChip(status: status)
                     Text("\(Fmt.krw(status.price))원")
                         .font(.system(.caption, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.textPrimary)
@@ -3770,7 +3776,7 @@ struct SellSignalRow: View {
                 }
             }
             if status.floor != nil {
-                DrawdownBar(drawdown: status.drawdown, limit: asset.trailingStopPct / 100)
+                DrawdownBar(drawdown: status.drawdown, limit: asset.trailingStopPct / 100, hitTint: status.tint)
             }
             Text(detail)
                 .font(.caption2)
@@ -3918,11 +3924,11 @@ struct SellActionRow: View {
                         .lineLimit(2)
                 }
             } trailing: {
-                SellSignalChip(signal: status.signal)
+                SellSignalChip(status: status)
             }
             Text(instruction)
                 .font(.body.weight(.semibold))
-                .foregroundStyle(status.signal == .stopHit ? Theme.negative : Theme.positive)
+                .foregroundStyle(status.tint)
                 .fixedSize(horizontal: false, vertical: true)
             Text(holding)
                 .font(.body)
@@ -3939,9 +3945,14 @@ struct SellActionRow: View {
     }
 
     private var instruction: String {
-        status.signal == .stopHit
-            ? String(localized: "고점에서 정한 만큼 빠졌어요. 원칙대로 팔 때예요")
-            : String(localized: "살 때 정한 목표가에 닿았어요. 원칙대로 팔 때예요")
+        guard status.signal == .stopHit else {
+            return String(localized: "살 때 정한 목표가에 닿았어요. 원칙대로 팔 때예요")
+        }
+        switch status.exit {
+        case .takeProfit?: return String(localized: "고점에서 정한 만큼 빠졌어요. 번 돈을 지키려면 지금 익절할 때예요")
+        case .stopLoss?:   return String(localized: "정한 하락선 아래로 빠졌고 산 값보다 낮아요. 손실이 커지기 전에 손절할 때예요")
+        case nil:          return String(localized: "고점에서 정한 만큼 빠졌어요. 원칙대로 팔 때예요")
+        }
     }
 
     private var holding: String {

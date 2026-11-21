@@ -239,12 +239,35 @@ enum SellWatch {
         var urgent: Bool { self == .stopHit || self == .targetHit }
     }
 
+    /// 하락선에서 파는 게 무엇인가 — 평단보다 위면 번 돈을 지키는 익절, 아래면 손실을 끊는 손절.
+    /// 하락선 하나가 두 몫을 한다: 산 뒤 오르지 못했으면 고점이 평단이라 '평단 −N%' 손절선이고,
+    /// 오를수록 고점을 따라 올라가 평단을 넘으면 익절선이 된다.
+    enum Exit { case takeProfit, stopLoss }
+
     struct Status {
         let signal: Signal
         let price: Double
         let peak: Double
         let floor: Double?
         let target: Double?
+        /// 평단(1주당 산 값). 0 = 모름.
+        let avg: Double
+        /// 하락선에서 판다면 익절인지 손절인지. 이미 닿았으면 지금 값으로, 아니면 하락선 값으로 가른다. 평단을 모르면 nil.
+        var exit: Exit? {
+            guard let floor, avg > 0 else { return nil }
+            let sellAt = signal == .stopHit ? price : floor
+            return sellAt >= avg ? .takeProfit : .stopLoss
+        }
+        /// 칩에 쓸 말 — 하락선 신호는 익절·손절로 나눠 말한다.
+        var label: String {
+            switch (signal, exit) {
+            case (.stopHit, .takeProfit?):  return String(localized: "익절할 때")
+            case (.stopHit, .stopLoss?):    return String(localized: "손절할 때")
+            case (.nearStop, .takeProfit?): return String(localized: "익절 준비")
+            case (.nearStop, .stopLoss?):   return String(localized: "손절 준비")
+            default:                        return signal.label
+            }
+        }
         /// 고점 대비 지금 몇 % 빠졌나(0.06 = −6%).
         var drawdown: Double { peak > 0 ? max(0, 1 - price / peak) : 0 }
         /// 하락 기준선까지 남은 폭(0.03 = 3% 더 빠지면 기준선).
@@ -271,7 +294,7 @@ enum SellWatch {
         else if let floor, price <= floor * (1 + nearStopBand) { signal = .nearStop }
         else if let target, price >= target * (1 - nearTargetBand) { signal = .nearTarget }
         else { signal = .holding }
-        return Status(signal: signal, price: price, peak: peak, floor: floor, target: target)
+        return Status(signal: signal, price: price, peak: peak, floor: floor, target: target, avg: avg)
     }
 
     /// 주식·펀드·코인을 갖고 있지만 시세를 못 받아 원칙을 지켜보지 못하는 종목.
@@ -294,7 +317,11 @@ enum SellWatch {
 
         if let floor = stopPrice(a), price <= floor, a.stopAlertedPeak != a.peakUnitPrice {
             a.stopAlertedPeak = a.peakUnitPrice
-            notify(a, id: "stop", title: String(localized: "\(a.name) — 지금 팔 때예요"),
+            let avg = a.averagePrice
+            let title = avg <= 0 ? String(localized: "\(a.name) — 지금 팔 때예요")
+                : price >= avg ? String(localized: "\(a.name) — 익절할 때예요")
+                : String(localized: "\(a.name) — 손절할 때예요")
+            notify(a, id: "stop", title: title,
                    body: String(localized: "고점 \(Fmt.krw(a.peakUnitPrice))원에서 \(Fmt.trimNumber(a.trailingStopPct))% 넘게 빠졌어요(지금 \(Fmt.krw(price))원). 정해 둔 원칙대로 팔아 주세요."))
         }
         if a.sellTargetPrice > 0, price >= a.sellTargetPrice, a.targetAlertedFor != a.sellTargetPrice {

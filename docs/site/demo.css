@@ -35,3 +35,13 @@
 
 @media (prefers-reduced-motion: reduce) { .fire-bar i, .fire-field input::-webkit-slider-thumb { transition: none; } }
 @media (max-width: 760px) { .demo-card { grid-template-columns: 1fr; } }
+
+/* 오른쪽에서 왼쪽으로 쓰는 언어(아랍어). 생성기 스타일(sitegen.css)의 왼쪽 고정도 여기서 뒤집는다. */
+[dir="rtl"] .fire-field input::-webkit-slider-runnable-track {
+  background: linear-gradient(to left, var(--accent) var(--fill), var(--line) var(--fill)); }
+[dir="rtl"] .fire-note { text-align: right; }
+[dir="rtl"] .skip { left: auto; right: var(--s4); }
+[dir="rtl"] .plan ul { padding-left: 0; padding-right: 1.2em; }
+[dir="rtl"] summary { padding: var(--s4) 0 var(--s4) var(--s6); }
+[dir="rtl"] summary::after { right: auto; left: 0; }
+@media (max-width: 760px) { [dir="rtl"] .hero { text-align: right; } }

@@ -34,8 +34,11 @@
     return months >= CAP_YEARS * 12 ? null : months / 12;
   }
   // 단위 글은 한 가지이거나 [하나일 때, 여럿일 때] 두 가지다(1 año · 2 años).
+  // 아랍어처럼 수 모양이 여럿인 언어는 {one, two, few, many, other} 로 준다.
   const plural = new Intl.PluralRules(lang);
-  const unit = (t, n) => fill(Array.isArray(t) ? t[plural.select(n) === "one" ? 0 : 1] : t, { n });
+  const pick = (t, n) => Array.isArray(t) ? t[plural.select(n) === "one" ? 0 : 1]
+    : typeof t === "object" ? (t[plural.select(n)] ?? t.other) : t;
+  const unit = (t, n) => fill(pick(t, n), { n });
   function span(y) {
     const whole = Math.floor(y), m = Math.floor((y - whole) * 12);
     if (!whole) return unit(T.months, m);

@@ -1,5 +1,151 @@
 # 릴리즈 노트
 
+## 1.2.6
+
+### 앱스토어 (한국어)
+
+팔 때가 익절인지 손절인지 색으로 보여요
+산 값보다 위면 초록, 아래면 빨강으로 표시해요
+알림에서도 익절할 때인지 손절할 때인지 알려 드려요
+
+### App Store (English)
+
+See at a glance whether selling locks in gains or cuts losses
+Green when you are above what you paid, red when below
+Alerts now tell you if it is time to take profit or cut losses
+
+### App Store (en-GB)
+
+See at a glance whether selling locks in gains or cuts losses
+Green when you are above what you paid, red when below
+Alerts now tell you if it is time to take profit or cut losses
+
+### App Store (ja)
+
+売りどきが利確か損切りか色でわかります
+買値より上なら緑、下なら赤で表示します
+通知でも利確どきか損切りどきかをお知らせします
+
+### App Store (zh-Hans)
+
+卖出时是止盈还是止损，用颜色一眼看清
+高于买入价显示绿色，低于买入价显示红色
+提醒也会告诉你该止盈还是该止损
+
+### App Store (zh-Hant)
+
+賣出時是停利還是停損，用顏色一眼看清
+高於買進價顯示綠色，低於買進價顯示紅色
+通知也會告訴你該停利還是該停損
+
+### App Store (Spanish)
+
+Ve de un vistazo si vender asegura ganancias o corta pérdidas
+Verde si estás por encima de lo que pagaste, rojo si estás por debajo
+Los avisos te dicen si toca asegurar ganancias o cortar pérdidas
+
+### App Store (German)
+
+Sieh sofort, ob ein Verkauf Gewinne sichert oder Verluste begrenzt
+Grün über deinem Kaufpreis, rot darunter
+Hinweise sagen dir, ob Gewinnmitnahme oder Verlustbegrenzung ansteht
+
+### App Store (French)
+
+Voyez d'un coup d'œil si vendre protège vos gains ou coupe vos pertes
+Vert au-dessus de votre prix d'achat, rouge en dessous
+Les alertes précisent s'il faut prendre vos gains ou couper vos pertes
+
+### App Store (Italian)
+
+Vedi subito se vendere ti fa incassare o tagliare le perdite
+Verde sopra il prezzo pagato, rosso sotto
+Gli avvisi ti dicono se è ora di incassare o di tagliare le perdite
+
+### App Store (pt-BR)
+
+Veja na hora se vender garante o lucro ou corta o prejuízo
+Verde acima do preço que você pagou, vermelho abaixo
+Os alertas dizem se é hora de realizar o lucro ou cortar o prejuízo
+
+### App Store (Russian)
+
+Сразу видно, фиксирует ли продажа прибыль или режет убыток
+Зелёный выше цены покупки, красный ниже
+Уведомления подскажут, пора фиксировать прибыль или резать убыток
+
+### App Store (Thai)
+
+ดูได้ทันทีว่าการขายคือทำกำไรหรือตัดขาดทุน
+สีเขียวเมื่อสูงกว่าราคาที่ซื้อ สีแดงเมื่อต่ำกว่า
+การแจ้งเตือนบอกด้วยว่าถึงเวลาทำกำไรหรือตัดขาดทุน
+
+### App Store (Vietnamese)
+
+Nhìn màu là biết bán lúc này là chốt lời hay cắt lỗ
+Xanh khi trên giá mua, đỏ khi dưới giá mua
+Thông báo cũng cho biết đã đến lúc chốt lời hay cắt lỗ
+
+### App Store (Czech)
+
+Hned uvidíte, zda prodejem vybíráte zisk, nebo omezujete ztrátu
+Zelená nad nákupní cenou, červená pod ní
+Upozornění řeknou, zda je čas vybrat zisk, nebo omezit ztrátu
+
+### App Store (Danish)
+
+Se med det samme, om et salg sikrer gevinst eller stopper tab
+Grøn over købsprisen, rød under
+Beskeder fortæller, om det er tid til at tage gevinst eller stoppe tab
+
+### App Store (Greek)
+
+Δείτε αμέσως αν η πώληση κλειδώνει κέρδη ή κόβει ζημιές
+Πράσινο πάνω από την τιμή αγοράς, κόκκινο κάτω
+Οι ειδοποιήσεις λένε αν ήρθε ώρα για κέρδη ή για stop-loss
+
+### App Store (Finnish)
+
+Näet heti, kotiutatko myynnillä voittoa vai katkaisetko tappion
+Vihreä ostohinnan yläpuolella, punainen alapuolella
+Ilmoitukset kertovat, onko aika kotiuttaa voitot vai katkaista tappiot
+
+### App Store (Indonesian)
+
+Langsung terlihat apakah menjual berarti ambil untung atau potong rugi
+Hijau saat di atas harga beli, merah saat di bawahnya
+Notifikasi juga memberi tahu saatnya ambil untung atau potong rugi
+
+### App Store (Norwegian Bokmål)
+
+Se med en gang om et salg sikrer gevinst eller kutter tap
+Grønn over kjøpsprisen, rød under
+Varsler sier om det er tid for å ta gevinst eller kutte tap
+
+### App Store (Dutch)
+
+Zie meteen of verkopen winst vastzet of verlies beperkt
+Groen boven je aankoopprijs, rood eronder
+Meldingen vertellen of het tijd is om winst of verlies te nemen
+
+### App Store (Polish)
+
+Od razu widać, czy sprzedaż realizuje zysk, czy tnie stratę
+Zielony powyżej ceny zakupu, czerwony poniżej
+Powiadomienia podpowiedzą, czy czas zrealizować zysk, czy uciąć stratę
+
+### App Store (Swedish)
+
+Se direkt om en försäljning säkrar vinst eller bryter förlust
+Grönt över inköpspriset, rött under
+Aviseringar säger om det är dags att ta hem vinst eller bryta förlust
+
+### App Store (Turkish)
+
+Satmanın kâr almak mı zararı kesmek mi olduğunu renkten anlayın
+Alış fiyatının üstündeyse yeşil, altındaysa kırmızı
+Bildirimler de kâr alma mı zarar kesme mi zamanı olduğunu söyler
+
 ## 1.2.5
 
 ### 앱스토어 (한국어)

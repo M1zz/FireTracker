@@ -1,5 +1,157 @@
 # 릴리즈 노트
 
+## 1.2.8
+
+### 앱스토어 (한국어)
+
+첫 화면에서 시장 공포 지수를 바로 볼 수 있어요
+팔 때 바로 아래에 더 살 때를 함께 보여 드려요
+시장이 무서워할수록 나눠 살 때를 알려 드려요
+
+### App Store (English)
+
+See the market fear gauge right on the home screen
+When to buy more now sits right below when to sell
+The more the market fears, the clearer your buy moment
+
+### 앱스토어 (일본어)
+
+ホーム画面で市場の恐怖指数がすぐ見られます
+売りどきのすぐ下に買い増しどきを表示します
+市場が怖がるほど、分けて買うときを知らせます
+
+### App Store (en-GB)
+
+See the market fear gauge right on the home screen
+When to buy more now sits right below when to sell
+The more the market fears, the clearer your buy moment
+
+### 앱스토어 (스페인어)
+
+Mira el indicador de miedo del mercado en el inicio
+Cuándo comprar más aparece justo bajo cuándo vender
+Con más miedo en el mercado, más claro el momento
+
+### 앱스토어 (독일어)
+
+Das Angstbarometer des Markts direkt auf dem Start
+Wann nachkaufen steht jetzt direkt unter Verkaufen
+Je größer die Angst, desto klarer der Kaufmoment
+
+### 앱스토어 (zh-Hans)
+
+首页即可查看市场恐慌指数
+在卖出时机下方同时显示加仓时机
+市场越恐慌，越提醒你分批加仓
+
+### 앱스토어 (zh-Hant)
+
+首頁就能看到市場恐慌指數
+在賣出時機下方同時顯示加碼時機
+市場越恐慌，越提醒你分批加碼
+
+### 앱스토어 (러시아어)
+
+Индекс страха рынка теперь на главном экране
+Когда докупать видно прямо под тем, когда продавать
+Чем сильнее страх, тем яснее момент для покупки
+
+### 앱스토어 (프랑스어)
+
+L'indice de peur du marché dès l'écran d'accueil
+Quand renforcer s'affiche juste sous quand vendre
+Plus le marché a peur, plus le moment est clair
+
+### 앱스토어 (이탈리아어)
+
+L'indice della paura del mercato nella home
+Quando comprare di più è subito sotto quando vendere
+Più il mercato ha paura, più è chiaro quando comprare
+
+### 앱스토어 (pt-BR)
+
+Veja o medidor de medo do mercado na tela inicial
+Quando comprar mais aparece logo abaixo de vender
+Quanto mais medo no mercado, mais claro o momento
+
+### 앱스토어 (태국어)
+
+ดูดัชนีความกลัวของตลาดได้ทันทีที่หน้าแรก
+แสดงเวลาซื้อเพิ่มไว้ใต้เวลาขายเลย
+ยิ่งตลาดกลัว ยิ่งบอกจังหวะทยอยซื้อชัดขึ้น
+
+### 앱스토어 (베트남어)
+
+Xem chỉ số sợ hãi thị trường ngay màn hình chính
+Thời điểm mua thêm hiện ngay dưới thời điểm bán
+Thị trường càng sợ, thời điểm mua càng rõ
+
+### 앱스토어 (체코어)
+
+Ukazatel strachu na trhu hned na hlavní obrazovce
+Kdy přikoupit je teď hned pod tím, kdy prodat
+Čím větší strach na trhu, tím jasnější chvíle nákupu
+
+### 앱스토어 (덴마크어)
+
+Se markedets frygtmåler direkte på forsiden
+Hvornår du køber mere står lige under salg
+Jo mere frygt, jo tydeligere dit købsøjeblik
+
+### 앱스토어 (그리스어)
+
+Δείτε τον δείκτη φόβου της αγοράς στην αρχική
+Το πότε να αγοράσετε μπήκε κάτω από το πότε να πουλήσετε
+Όσο φοβάται η αγορά, τόσο πιο σαφής η στιγμή αγοράς
+
+### 앱스토어 (핀란드어)
+
+Markkinoiden pelkomittari suoraan etusivulla
+Milloin ostaa lisää näkyy heti myynnin alla
+Mitä enemmän pelkoa, sitä selvempi ostohetki
+
+### 앱스토어 (인도네시아어)
+
+Lihat indeks ketakutan pasar langsung di beranda
+Kapan beli lagi kini ada tepat di bawah kapan jual
+Makin pasar takut, makin jelas waktunya beli
+
+### 앱스토어 (노르웨이어(보크말))
+
+Se markedets fryktmåler rett på startsiden
+Når du bør kjøpe mer står rett under salg
+Jo mer frykt, jo tydeligere kjøpsøyeblikk
+
+### 앱스토어 (네덜란드어)
+
+Zie de angstmeter van de markt direct op home
+Wanneer bijkopen staat nu direct onder verkopen
+Hoe banger de markt, hoe duidelijker je koopmoment
+
+### 앱스토어 (폴란드어)
+
+Wskaźnik strachu rynku od razu na ekranie głównym
+Kiedy dokupić widać tuż pod tym, kiedy sprzedać
+Im większy strach, tym wyraźniejszy moment zakupu
+
+### 앱스토어 (스웨덴어)
+
+Se marknadens rädslemätare direkt på startsidan
+När du ska köpa mer syns direkt under sälj
+Ju räddare marknaden, desto tydligare köpläge
+
+### 앱스토어 (튀르키예어)
+
+Piyasa korku göstergesi artık ana ekranda
+Ne zaman daha fazla alınır, satışın hemen altında
+Piyasa korktukça alım anı daha net görünür
+
+### 앱스토어 (아랍어)
+
+شاهد مؤشر خوف السوق مباشرة في الشاشة الرئيسية
+وقت الشراء الإضافي يظهر الآن تحت وقت البيع
+كلما زاد خوف السوق اتضح وقت الشراء
+
 ## 1.2.7
 
 ### 앱스토어 (한국어)

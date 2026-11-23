@@ -377,6 +377,10 @@ struct DashboardView: View {
                             if SellWatchCard.hasContent(assets) {
                                 section(String(localized: "매도 원칙"), String(localized: "정해 둔 대로 팔 때가 됐나")) { sellCard }
                             }
+                            // 팔 때 옆에 살 때 — 모두가 무서워할 때가 더 사는 때다.
+                            section(String(localized: "더 살 때"), String(localized: "시장이 무서워할수록 더 사는 때")) {
+                                MarketMoodCard()
+                            }
                             section(String(localized: "이번 주"), String(localized: "지난 기록과 비교해 무엇이 달라졌나")) {
                                 welcomeCard
                             }
@@ -396,8 +400,6 @@ struct DashboardView: View {
                             showMoreButton
                             if showMore {
                                 signalCard
-                                // 내 돈이 아니라 시장의 분위기 — 공포에 사고 탐욕에 팔 때 보는 나침반.
-                                MarketMoodCard()
                                 // 목표를 안 정했으면 기본값(9억) 막대를 내 목표처럼 보이지 않는다.
                                 if settings.goalConfigured { goalProgressCard }
                                 NavigationLink {

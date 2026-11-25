@@ -10,6 +10,8 @@ struct FireTrackerApp: App {
     @Environment(\.scenePhase) private var scenePhase
     // 퇴사각 Plus · Pro 권한 — 앱 전역에서 하나. 구매·복원·환불이 어느 화면에서든 바로 반영된다.
     @StateObject private var proStore = ProAccess.makeStore()
+    /// 할인 배너에서 연 페이월
+    @State private var showsSalePaywall = false
 
     init() {
         // 계약(FireTrackerSpec)에 선언한 것들을 실제로 켠다 — 사용량 기록, 크래시·행 진단,
@@ -73,6 +75,9 @@ struct FireTrackerApp: App {
                 }
                 .leeoSatisfactionCheck(FireTrackerSpec.self)
                 .proMoments()
+                // 할인 기간이면 앱을 연 뒤 한 번 할인 배너를 띄운다. 단추는 요금제를 연다 (LeeoKit).
+                .leeoSaleBanner { showsSalePaywall = true }
+                .sheet(isPresented: $showsSalePaywall) { ProPaywallView(lead: nil).environmentObject(proStore) }
                 .environmentObject(proStore)
         }
         .modelContainer(sharedModelContainer)

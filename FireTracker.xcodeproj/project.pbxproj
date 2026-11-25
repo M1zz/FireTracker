@@ -17,6 +17,7 @@
 				ios,
 			); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7A1C0E5B9D2F4A6B8C3E1D07 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */; };
+		1AF0D1A0B2C3D4E5F6A7B8C9 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 530AB634DEC8850402195F2C /* InfoPlist.xcstrings */; };
 		A1000001 /* FireTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* FireTrackerApp.swift */; };
 		A1000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000002 /* Models.swift */; };
 		A1000003 /* FireEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000003 /* FireEngine.swift */; };
@@ -55,6 +56,7 @@
 		A1000050 /* TipMoments.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000050 /* TipMoments.swift */; };
 		B80435CC7F315916A1F7D98D /* QuickStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6903DE5951883DA07B7400 /* QuickStartView.swift */; };
 		C01278F18EF876C76971B987 /* AppShortcuts.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9021D0A850C59C99866517D2 /* AppShortcuts.xcstrings */; };
+		DEC8850402195F2C4511E3D7 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 530AB634DEC8850402195F2C /* InfoPlist.xcstrings */; };
 		E462C9CD9739025E4BA75C3C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B092EFA29A5C377CBE44FBED /* Foundation.framework */; };
 		EE2A5530FE505FB7D9D0AFE6 /* LeeoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2FA7A0D0A2BBD3B0B029E932 /* LeeoKit */; };
 		F3808CA53E41CA8046B99C85 /* FireTrackerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AFE0290DA1AF556C4A919F /* FireTrackerWidget.swift */; };
@@ -93,6 +95,7 @@
 		55AF5C1C6F36BF4EE0CFD4AE /* FireIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireIntents.swift; sourceTree = "<group>"; };
 		665BD2C273815DDB4FFF7F44 /* FireTrackerWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = FireTrackerWidget.entitlements; sourceTree = "<group>"; };
 		9021D0A850C59C99866517D2 /* AppShortcuts.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; path = AppShortcuts.xcstrings; sourceTree = "<group>"; };
+		530AB634DEC8850402195F2C /* InfoPlist.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		93817F759D0640138E251F93 /* FireTrackerRoadmap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FireTrackerRoadmap.swift; sourceTree = "<group>"; };
 		B0000000 /* FireTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FireTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B092EFA29A5C377CBE44FBED /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -242,6 +245,7 @@
 				25785C6DCF7AD162E79E1621 /* Localizable.xcstrings */,
 				55AF5C1C6F36BF4EE0CFD4AE /* FireIntents.swift */,
 				9021D0A850C59C99866517D2 /* AppShortcuts.xcstrings */,
+				530AB634DEC8850402195F2C /* InfoPlist.xcstrings */,
 			);
 			path = FireTracker;
 			sourceTree = "<group>";
@@ -364,6 +368,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A1C0E5B9D2F4A6B8C3E1D07 /* Localizable.xcstrings in Resources */,
+				1AF0D1A0B2C3D4E5F6A7B8C9 /* InfoPlist.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +380,7 @@
 				A10001C0 /* AppIcon.icon in Resources */,
 				38E33F7EB564676F8FCC2BE8 /* Localizable.xcstrings in Resources */,
 				C01278F18EF876C76971B987 /* AppShortcuts.xcstrings in Resources */,
+				DEC8850402195F2C4511E3D7 /* InfoPlist.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -251543,6 +251543,4150 @@
           }
         }
       }
+    },
+    "판 뒤 저점 %@원에서 %@%% 올랐어요(지금 %@원). 정해 둔 대로 3분의 1을 사 주세요." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ارتفع %2$@%% عن القاع بعد البيع %1$@ وون (الآن %3$@ وون). اشترِ الثلث كما خططت."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Od minima po prodeji %1$@ wonů vzrostla o %2$@ %% (teď %3$@ wonů). Kupte třetinu, jak jste si určili."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steget %2$@ %% fra bunden efter salget på %1$@ won (nu %3$@ won). Køb en tredjedel, som du har besluttet."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seit dem Tief nach dem Verkauf von %1$@ Won um %2$@ %% gestiegen (jetzt %3$@ Won). Kauf wie geplant ein Drittel."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Άνοδος %2$@%% από το χαμηλό μετά την πώληση στα %1$@ γουόν (τώρα %3$@ γουόν). Αγοράστε το ένα τρίτο, όπως ορίσατε."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up %2$@%% from the post-sale low of %1$@ won (now %3$@ won). Buy one third, as you planned."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up %2$@%% from the post-sale low of %1$@ won (now %3$@ won). Buy one third, as you planned."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ha subido un %2$@ %% desde el mínimo tras la venta de %1$@ wones (ahora %3$@ wones). Compra un tercio, como decidiste."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noussut %2$@ %% myynnin jälkeisestä pohjasta %1$@ wonia (nyt %3$@ wonia). Osta kolmannes, kuten päätit."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En hausse de %2$@ %% depuis le plus bas après la vente, %1$@ wons (maintenant %3$@ wons). Rachetez un tiers, comme prévu."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naik %2$@%% dari titik terendah setelah dijual, %1$@ won (sekarang %3$@ won). Beli sepertiga sesuai rencana."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salito del %2$@ %% dal minimo dopo la vendita di %1$@ won (ora %3$@ won). Compra un terzo, come avevi deciso."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "売った後の安値%1$@ウォンから%2$@%%上がりました（現在%3$@ウォン）。決めたとおり3分の1を買いましょう。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steget %2$@ %% fra bunnen etter salget på %1$@ won (nå %3$@ won). Kjøp en tredjedel, slik du bestemte."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@%% gestegen vanaf het dieptepunt na verkoop van %1$@ won (nu %3$@ won). Koop zoals gepland een derde."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wzrost o %2$@%% od dołka po sprzedaży, %1$@ wonów (teraz %3$@ wonów). Kup jedną trzecią, tak jak ustaliłeś."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subiu %2$@%% desde a mínima após a venda de %1$@ wons (agora %3$@ wons). Compre um terço, como planejado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Рост на %2$@%% от минимума после продажи %1$@ вон (сейчас %3$@ вон). Купите треть, как решили."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upp %2$@ %% från bottnen efter försäljningen på %1$@ won (nu %3$@ won). Köp en tredjedel, som du bestämt."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขึ้นมา %2$@%% จากจุดต่ำสุดหลังขาย %1$@ วอน (ตอนนี้ %3$@ วอน) ซื้อหนึ่งในสามตามที่ตั้งไว้"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satıştan sonraki %1$@ won dipten %%%2$@ yükseldi (şu an %3$@ won). Planladığınız gibi üçte birini alın."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã tăng %2$@%% từ đáy sau khi bán %1$@ won (hiện %3$@ won). Hãy mua một phần ba như đã định."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已从卖出后的低点 %1$@ 韩元上涨 %2$@%%（现在 %3$@ 韩元）。按计划买入三分之一。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已從賣出後的低點 %1$@ 韓元上漲 %2$@%%（現在 %3$@ 韓元）。依計畫買入三分之一。"
+          }
+        }
+      }
+    },
+    "1차 신호 %@원보다 %@%% 더 올랐어요(지금 %@원). 정해 둔 대로 3분의 1을 더 사 주세요." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ارتفع %2$@%% فوق الإشارة الأولى %1$@ وون (الآن %3$@ وون). اشترِ ثلثًا آخر كما خططت."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O %2$@ %% výš než první signál %1$@ wonů (teď %3$@ wonů). Kupte další třetinu, jak jste si určili."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ %% over det første signal på %1$@ won (nu %3$@ won). Køb endnu en tredjedel, som du har besluttet."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ %% über dem ersten Signal von %1$@ Won (jetzt %3$@ Won). Kauf wie geplant ein weiteres Drittel."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@%% πάνω από το πρώτο σήμα στα %1$@ γουόν (τώρα %3$@ γουόν). Αγοράστε άλλο ένα τρίτο, όπως ορίσατε."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up %2$@%% more than the first signal at %1$@ won (now %3$@ won). Buy another third, as you planned."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up %2$@%% more than the first signal at %1$@ won (now %3$@ won). Buy another third, as you planned."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un %2$@ %% por encima de la primera señal de %1$@ wones (ahora %3$@ wones). Compra otro tercio, como decidiste."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ %% ensimmäisen signaalin %1$@ wonia yläpuolella (nyt %3$@ wonia). Osta toinen kolmannes, kuten päätit."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ %% au-dessus du premier signal à %1$@ wons (maintenant %3$@ wons). Rachetez un autre tiers, comme prévu."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naik %2$@%% lagi dari sinyal pertama %1$@ won (sekarang %3$@ won). Beli sepertiga lagi sesuai rencana."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ %% sopra il primo segnale di %1$@ won (ora %3$@ won). Compra un altro terzo, come avevi deciso."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最初のサイン%1$@ウォンよりさらに%2$@%%上がりました（現在%3$@ウォン）。決めたとおり3分の1を買い足しましょう。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ %% over det første signalet på %1$@ won (nå %3$@ won). Kjøp en tredjedel til, slik du bestemte."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@%% boven het eerste signaal van %1$@ won (nu %3$@ won). Koop zoals gepland nog een derde."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O %2$@%% wyżej niż pierwszy sygnał %1$@ wonów (teraz %3$@ wonów). Dokup kolejną jedną trzecią, tak jak ustaliłeś."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subiu mais %2$@%% sobre o primeiro sinal de %1$@ wons (agora %3$@ wons). Compre mais um terço, como planejado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "На %2$@%% выше первого сигнала %1$@ вон (сейчас %3$@ вон). Докупите ещё треть, как решили."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ %% över den första signalen på %1$@ won (nu %3$@ won). Köp en tredjedel till, som du bestämt."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขึ้นจากสัญญาณแรก %1$@ วอน อีก %2$@%% (ตอนนี้ %3$@ วอน) ซื้อเพิ่มอีกหนึ่งในสามตามที่ตั้งไว้"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlk sinyal olan %1$@ wonun %%%2$@ üzerinde (şu an %3$@ won). Planladığınız gibi bir üçte bir daha alın."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã tăng thêm %2$@%% so với tín hiệu đầu %1$@ won (hiện %3$@ won). Hãy mua thêm một phần ba như đã định."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "比第一次信号 %1$@ 韩元又上涨 %2$@%%（现在 %3$@ 韩元）。按计划再买入三分之一。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "比第一次訊號 %1$@ 韓元又上漲 %2$@%%（現在 %3$@ 韓元）。依計畫再買入三分之一。"
+          }
+        }
+      }
+    },
+    "%@ — 다시 살 때예요(%@/3)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — حان وقت إعادة الشراء (%@/3)"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — čas znovu nakoupit (%@/3)"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — tid til at købe igen (%@/3)"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — Zeit zum Rückkauf (%@/3)"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — ώρα να ξαναγοράσετε (%@/3)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — time to buy back (%@/3)"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — time to buy back (%@/3)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — hora de recomprar (%@/3)"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — aika ostaa takaisin (%@/3)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — moment de racheter (%@/3)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — saatnya beli lagi (%@/3)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — è ora di ricomprare (%@/3)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — 買い戻す時です（%@/3）"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — tid for å kjøpe tilbake (%@/3)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — tijd om terug te kopen (%@/3)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — czas odkupić (%@/3)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — hora de recomprar (%@/3)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — пора выкупить (%@/3)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — dags att köpa tillbaka (%@/3)"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — ถึงเวลาซื้อกลับ (%@/3)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — geri alma zamanı (%@/3)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — đến lúc mua lại (%@/3)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — 该买回了（%@/3）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ — 該買回了（%@/3）"
+          }
+        }
+      }
+    },
+    "정해 둔 매수 원칙에 닿았어요. 앱에서 확인해 주세요." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحققت قاعدة شراء حددتها. تحقق منها في التطبيق."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bylo dosaženo vámi nastaveného pravidla nákupu. Podívejte se do aplikace."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En købsregel, du har sat, er nået. Se det i appen."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine deiner Kaufregeln wurde erreicht. Sieh in der App nach."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Επιτεύχθηκε ένας κανόνας αγοράς που ορίσατε. Ελέγξτε στην εφαρμογή."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A buy rule you set was reached. Check it in the app."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A buy rule you set was reached. Check it in the app."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha alcanzado una regla de compra que fijaste. Revísalo en la app."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asettamasi ostosääntö täyttyi. Katso sovelluksesta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une règle d’achat que vous avez fixée est atteinte. Vérifiez dans l’app."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aturan beli yang kamu tetapkan sudah tercapai. Cek di aplikasi."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una regola di acquisto che hai fissato è stata raggiunta. Controlla nell’app."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "決めておいた買いルールに届きました。アプリで確認してください。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En kjøpsregel du har satt, er nådd. Se i appen."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Een koopregel die je hebt ingesteld is bereikt. Bekijk het in de app."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Osiągnięto ustaloną przez ciebie zasadę zakupu. Sprawdź w aplikacji."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uma regra de compra que você definiu foi atingida. Confira no app."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сработало ваше правило покупки. Проверьте в приложении."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En köpregel du satt har nåtts. Kolla i appen."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถึงกฎการซื้อที่ตั้งไว้แล้ว ตรวจสอบในแอป"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belirlediğiniz bir alım kuralına ulaşıldı. Uygulamada kontrol edin."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã chạm nguyên tắc mua bạn đặt. Hãy kiểm tra trong ứng dụng."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已触及你设定的买入规则。请在应用中查看。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已觸及你設定的買入規則。請在 App 中查看。"
+          }
+        }
+      }
+    },
+    "판 뒤 저점에서 오르면 사기" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اشترِ عند الارتفاع من القاع بعد البيع"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koupit, když vzroste od minima po prodeji"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Køb når den stiger fra bunden efter salg"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaufen, wenn es vom Tief nach dem Verkauf steigt"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αγορά όταν ανέβει από το χαμηλό μετά την πώληση"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buy when it rises from the post-sale low"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buy when it rises from the post-sale low"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprar cuando suba desde el mínimo tras la venta"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Osta, kun nousee myynnin jälkeisestä pohjasta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Racheter quand il remonte du plus bas après la vente"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beli saat naik dari titik terendah setelah dijual"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compra quando sale dal minimo dopo la vendita"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "売った後の安値から上がったら買う"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kjøp når den stiger fra bunnen etter salg"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopen als het stijgt vanaf het dieptepunt na verkoop"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kup, gdy wzrośnie od dołka po sprzedaży"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprar quando subir da mínima após a venda"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Покупать при росте от минимума после продажи"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Köp när den stiger från bottnen efter försäljning"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ซื้อเมื่อขึ้นจากจุดต่ำสุดหลังขาย"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satış sonrası dipten yükselince al"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mua khi tăng từ đáy sau khi bán"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从卖出后的低点上涨时买入"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從賣出後的低點上漲時買入"
+          }
+        }
+      }
+    },
+    "%@%% 오르면" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إذا ارتفع %@%%"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Při růstu o %@ %%"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ved stigning på %@ %%"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bei %@ %% Anstieg"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αν ανέβει %@%%"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If it rises %@%%"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If it rises %@%%"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si sube un %@ %%"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kun nousee %@ %%"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si hausse de %@ %%"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jika naik %@%%"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se sale del %@ %%"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@%%上がったら"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ved stigning på %@ %%"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bij %@%% stijging"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gdy wzrośnie o %@%%"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se subir %@%%"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "При росте на %@%%"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vid uppgång på %@ %%"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถ้าขึ้น %@%%"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%%%@ yükselirse"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nếu tăng %@%%"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上涨 %@%% 时"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上漲 %@%% 時"
+          }
+        }
+      }
+    },
+    "나머지를 더 사는 간격" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الفاصل لشراء الباقي"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Krok pro dokoupení zbytku"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interval for at købe resten"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abstand für den Rest"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Βήμα για την αγορά του υπολοίπου"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step for buying the rest"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step for buying the rest"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervalo para comprar el resto"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Väli loppujen ostoon"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écart pour racheter le reste"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jarak untuk membeli sisanya"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervallo per comprare il resto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "残りを買い足す間隔"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervall for å kjøpe resten"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stap voor de rest"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odstęp przy dokupowaniu reszty"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervalo para comprar o resto"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Шаг для докупки остального"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervall för att köpa resten"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ระยะห่างในการซื้อส่วนที่เหลือ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalanı alma aralığı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khoảng cách mua phần còn lại"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "买入剩余部分的间隔"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買入剩餘部分的間隔"
+          }
+        }
+      }
+    },
+    "%@%%마다" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كل %@%%"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Každých %@ %%"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hver %@ %%"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle %@ %%"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Κάθε %@%%"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every %@%%"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every %@%%"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cada %@ %%"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ %% välein"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les %@ %%"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setiap %@%%"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ogni %@ %%"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@%%ごと"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hver %@ %%"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elke %@%%"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Co %@%%"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A cada %@%%"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Каждые %@%%"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Var %@ %%"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ทุก %@%%"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her %%%@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mỗi %@%%"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每 %@%%"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每 %@%%"
+          }
+        }
+      }
+    },
+    "다시 사는 원칙" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قواعد إعادة الشراء"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pravidla zpětného nákupu"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regler for genkøb"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rückkaufregeln"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Κανόνες επαναγοράς"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buy-back rules"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buy-back rules"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reglas de recompra"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takaisinostosäännöt"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règles de rachat"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aturan beli kembali"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regole di riacquisto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買い戻しルール"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regler for tilbakekjøp"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terugkoopregels"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zasady odkupu"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regras de recompra"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Правила обратной покупки"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regler för återköp"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กฎการซื้อกลับ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geri alım kuralları"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nguyên tắc mua lại"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "买回规则"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買回規則"
+          }
+        }
+      }
+    },
+    "다 팔았거나 아직 안 산 종목(수량 0)은 그 뒤 가장 낮은 값을 기억해요. 거기서 정한 만큼 오르면 3분의 1을, 그 값보다 간격만큼 더 오를 때마다 3분의 1씩 더 사라고 알려 드려요. 신호를 받고도 사지 않은 채 저점을 다시 깨면 처음부터 다시 지켜봐요." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "للأسهم التي بعتها بالكامل أو لم تشترها بعد (الكمية 0)، يتذكر التطبيق أدنى سعر منذ ذلك الحين. عندما يرتفع بالنسبة التي حددتها ننبهك لشراء الثلث، ثم ثلثًا آخر كلما ارتفع خطوة أخرى فوق ذلك السعر. إذا كسر القاع مجددًا قبل أن تشتري تبدأ المتابعة من جديد."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "U pozic, které jste celé prodali nebo ještě nekoupili (množství 0), si aplikace pamatuje nejnižší cenu od té doby. Když vzroste o nastavenou hodnotu, upozorní vás na nákup třetiny a pak další třetiny pokaždé, když stoupne o další krok nad tuto cenu. Pokud před nákupem znovu prorazí minimum, sledování začne znovu."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For aktier, du har solgt helt eller endnu ikke købt (antal 0), husker appen den laveste pris siden. Når den stiger med det valgte, får du besked om at købe en tredjedel og derefter en tredjedel mere, hver gang den stiger et trin over den pris. Bryder den bunden igen, før du køber, starter overvågningen forfra."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bei Positionen, die du ganz verkauft oder noch nicht gekauft hast (Menge 0), merkt sich die App den tiefsten Kurs seitdem. Steigt er um den gewählten Wert, sagt sie dir, ein Drittel zu kaufen, und dann jedes Mal ein weiteres Drittel, wenn er eine Stufe über diesem Kurs steigt. Fällt er vor dem Kauf wieder unter das Tief, beginnt die Beobachtung von vorn."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Για θέσεις που πουλήσατε εντελώς ή δεν έχετε αγοράσει ακόμα (ποσότητα 0), η εφαρμογή θυμάται τη χαμηλότερη τιμή από τότε. Όταν ανέβει όσο ορίσατε, σας λέει να αγοράσετε το ένα τρίτο και μετά άλλο ένα τρίτο κάθε φορά που ανεβαίνει ένα βήμα πάνω από εκείνη την τιμή. Αν σπάσει ξανά το χαμηλό πριν αγοράσετε, η παρακολούθηση ξεκινά από την αρχή."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For holdings you sold out of or haven’t bought yet (quantity 0), the app remembers the lowest price since. When it rises by your set amount, you’re told to buy one third, then another third each time it climbs one more step above that price. If it breaks the low again before you buy, watching starts over."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For holdings you sold out of or haven’t bought yet (quantity 0), the app remembers the lowest price since. When it rises by your set amount, you’re told to buy one third, then another third each time it climbs one more step above that price. If it breaks the low again before you buy, watching starts over."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En las posiciones que vendiste por completo o que aún no compraste (cantidad 0), la app recuerda el precio más bajo desde entonces. Cuando sube lo que fijaste, te avisa para comprar un tercio, y otro tercio cada vez que sube un tramo más por encima de ese precio. Si vuelve a romper el mínimo antes de que compres, el seguimiento empieza de nuevo."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kokonaan myydyistä tai vielä ostamattomista (määrä 0) sovellus muistaa alimman hinnan siitä lähtien. Kun hinta nousee asettamasi verran, saat kehotuksen ostaa kolmanneksen ja sitten uuden kolmanneksen aina, kun hinta nousee välin verran tuon hinnan yli. Jos pohja rikkoutuu uudelleen ennen ostoa, seuranta alkaa alusta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour les positions vendues en totalité ou pas encore achetées (quantité 0), l’app retient le prix le plus bas depuis. Quand il remonte de la valeur choisie, elle vous dit d’acheter un tiers, puis un autre tiers chaque fois qu’il monte d’un écart de plus au-dessus de ce prix. S’il casse à nouveau le plus bas avant votre achat, le suivi recommence."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Untuk saham yang sudah kamu jual habis atau belum dibeli (jumlah 0), aplikasi mengingat harga terendah sejak itu. Saat naik sebesar yang kamu tetapkan, kamu diberi tahu untuk membeli sepertiga, lalu sepertiga lagi setiap kali naik satu langkah di atas harga itu. Jika menembus titik terendah lagi sebelum kamu membeli, pemantauan dimulai dari awal."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per le posizioni vendute del tutto o non ancora acquistate (quantità 0), l’app ricorda il prezzo più basso da allora. Quando sale della misura scelta ti avvisa di comprare un terzo, e un altro terzo ogni volta che sale di un altro intervallo sopra quel prezzo. Se rompe di nuovo il minimo prima che tu compri, il monitoraggio riparte da capo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部売った銘柄やまだ買っていない銘柄（数量0）は、その後の最安値を覚えておきます。そこから決めた分だけ上がったら3分の1を、その値段から間隔分さらに上がるたびに3分の1ずつ買うようお知らせします。買わないまま安値をまた割ったら、最初から見守り直します。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For aksjer du har solgt helt eller ikke kjøpt ennå (antall 0), husker appen den laveste prisen siden. Når den stiger med det du har valgt, får du beskjed om å kjøpe en tredjedel, og så en tredjedel til hver gang den stiger ett trinn over den prisen. Bryter den bunnen igjen før du kjøper, starter overvåkingen på nytt."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bij posities die je helemaal hebt verkocht of nog niet hebt gekocht (aantal 0) onthoudt de app de laagste prijs sindsdien. Stijgt die met het ingestelde percentage, dan krijg je een seintje om een derde te kopen, en daarna telkens nog een derde als hij een stap verder boven die prijs komt. Breekt hij het dieptepunt opnieuw voordat je koopt, dan begint het volgen opnieuw."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dla pozycji sprzedanych w całości lub jeszcze niekupionych (ilość 0) aplikacja zapamiętuje najniższą cenę od tego czasu. Gdy wzrośnie o ustaloną wartość, przypomni o kupnie jednej trzeciej, a potem kolejnej jednej trzeciej za każdym razem, gdy wzrośnie o kolejny krok ponad tę cenę. Jeśli przed zakupem znów przebije dołek, obserwacja zaczyna się od nowa."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para posições vendidas por completo ou ainda não compradas (quantidade 0), o app guarda o menor preço desde então. Quando ele sobe o que você definiu, avisa para comprar um terço, e mais um terço sempre que subir mais um intervalo acima desse preço. Se romper a mínima de novo antes de você comprar, o acompanhamento recomeça."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Для бумаг, проданных полностью или ещё не купленных (количество 0), приложение запоминает минимальную цену с тех пор. Когда цена вырастет на заданную величину, оно предложит купить треть, а затем ещё треть каждый раз, когда цена поднимется на шаг выше той цены. Если до покупки цена снова пробьёт минимум, наблюдение начнётся заново."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "För innehav du har sålt helt eller inte köpt ännu (antal 0) minns appen det lägsta priset sedan dess. När det stiger med det du valt får du besked att köpa en tredjedel, och sedan en tredjedel till varje gång det stiger ett steg över det priset. Bryter det bottnen igen innan du köper börjar bevakningen om."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หุ้นที่ขายหมดแล้วหรือยังไม่ได้ซื้อ (จำนวน 0) แอปจะจำราคาต่ำสุดหลังจากนั้น เมื่อราคาขึ้นตามที่ตั้งไว้จะแจ้งให้ซื้อหนึ่งในสาม และแจ้งให้ซื้อเพิ่มอีกหนึ่งในสามทุกครั้งที่ราคาขึ้นอีกหนึ่งระยะจากราคานั้น ถ้าราคาหลุดจุดต่ำสุดอีกครั้งก่อนที่คุณจะซื้อ จะเริ่มเฝ้าดูใหม่ตั้งแต่ต้น"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamen sattığınız ya da henüz almadığınız varlıklarda (adet 0) uygulama o zamandan beri görülen en düşük fiyatı hatırlar. Belirlediğiniz kadar yükselince üçte birini almanızı, sonra o fiyatın üzerine her bir adım daha çıktığında bir üçte bir daha almanızı söyler. Siz almadan dip yeniden kırılırsa izleme baştan başlar."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Với mã đã bán hết hoặc chưa mua (số lượng 0), ứng dụng ghi nhớ giá thấp nhất kể từ đó. Khi giá tăng đúng mức bạn đặt, ứng dụng báo mua một phần ba, rồi mỗi lần tăng thêm một khoảng so với giá đó lại báo mua thêm một phần ba. Nếu giá thủng đáy lần nữa trước khi bạn mua, việc theo dõi bắt đầu lại."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "对于已全部卖出或尚未买入（数量为 0）的标的，应用会记住此后的最低价。从那里上涨到你设定的幅度时提醒你买入三分之一，之后每比那个价格再涨一个间隔就再提醒买入三分之一。如果收到信号后没买、价格又跌破低点，就从头重新观察。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "對於已全部賣出或尚未買入（數量為 0）的標的，App 會記住此後的最低價。從那裡上漲到你設定的幅度時提醒你買入三分之一，之後每比那個價格再漲一個間隔就再提醒買入三分之一。如果收到訊號後沒買、價格又跌破低點，就從頭重新觀察。"
+          }
+        }
+      }
+    },
+    "지금 살 때 %lld개" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "للشراء الآن: %lld"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ke koupi teď: %lld"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld at købe nu"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld jetzt kaufen"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld για αγορά τώρα"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld to buy now"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld to buy now"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld para comprar ahora"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ostettavaa nyt"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld à acheter maintenant"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld untuk dibeli sekarang"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld da comprare ora"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今買う銘柄%lld件"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld å kjøpe nå"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld nu kopen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do kupienia teraz: %lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld para comprar agora"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Купить сейчас: %lld"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld att köpa nu"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ควรซื้อตอนนี้ %lld รายการ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi alınacak %lld"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld mã nên mua bây giờ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "现在该买 %lld 个"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在該買 %lld 個"
+          }
+        }
+      }
+    },
+    "한 번에 다 사지 말고 3분의 1만 사세요. 산 다음엔 ‘샀으면 기록하기’로 매수를 남겨 두면, 산 날부터 고점을 새로 잡아 파는 원칙이 지켜요." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا تشترِ كل شيء دفعة واحدة، فقط الثلث. بعد الشراء سجّله عبر ‹سجّل الشراء› وستحميه قاعدة البيع وتتتبع قمة جديدة من ذلك اليوم."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nekupujte vše najednou, jen třetinu. Po nákupu ho zapište přes ‚Zapsat nákup‘ a pravidlo prodeje ho pohlídá s novým maximem od toho dne."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Køb ikke det hele på én gang, kun en tredjedel. Når du har købt, så registrér det med ‘Registrér købet’, så passer din salgsregel på det med en ny top fra den dag."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kauf nicht alles auf einmal, nur ein Drittel. Trag den Kauf danach mit ‚Kauf eintragen‘ ein, dann schützt ihn deine Verkaufsregel mit einem neuen Hoch ab diesem Tag."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Μην αγοράσετε όλα μαζί, μόνο το ένα τρίτο. Μετά την αγορά καταχωρίστε την με «Καταγραφή αγοράς» και ο κανόνας πώλησης θα τη φυλάει με νέο υψηλό από εκείνη τη μέρα."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don’t buy it all at once, just one third. After buying, log it with ‘Log the buy’ and your sell rule will guard it, tracking a new peak from that day."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Don’t buy it all at once, just one third. After buying, log it with ‘Log the buy’ and your sell rule will guard it, tracking a new peak from that day."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No lo compres todo de una vez, solo un tercio. Después, regístralo con ‘Registrar la compra’ y tu regla de venta lo vigilará con un nuevo máximo desde ese día."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Älä osta kaikkea kerralla, vain kolmannes. Kirjaa osto sen jälkeen kohdasta ‘Kirjaa osto’, niin myyntisääntö vartioi sitä uudella huipulla siitä päivästä alkaen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "N’achetez pas tout d’un coup, seulement un tiers. Ensuite, notez-le avec « Noter l’achat » et votre règle de vente le surveillera avec un nouveau plus haut à partir de ce jour."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jangan beli semuanya sekaligus, cukup sepertiga. Setelah membeli, catat lewat ‘Catat pembelian’ agar aturan jual menjaganya dengan puncak baru sejak hari itu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non comprare tutto in una volta, solo un terzo. Dopo l’acquisto registralo con ‘Registra l’acquisto’ e la regola di vendita lo proteggerà con un nuovo massimo da quel giorno."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一度に全部買わず、3分の1だけ買いましょう。買ったら「買ったら記録する」で残しておくと、買った日から高値を取り直して売りルールが守ります。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ikke kjøp alt på en gang, bare en tredjedel. Når du har kjøpt, registrer det med ‘Registrer kjøpet’, så passer salgsregelen på det med en ny topp fra den dagen."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koop niet alles tegelijk, alleen een derde. Leg de aankoop daarna vast met ‘Aankoop vastleggen’, dan bewaakt je verkoopregel hem met een nieuwe top vanaf die dag."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie kupuj wszystkiego naraz, tylko jedną trzecią. Po zakupie zapisz go przez ‚Zapisz zakup‘, a zasada sprzedaży będzie go pilnować z nowym szczytem od tego dnia."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não compre tudo de uma vez, só um terço. Depois, registre com ‘Registrar a compra’ e sua regra de venda vai protegê-la com uma nova máxima a partir desse dia."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не покупайте всё сразу, только треть. После покупки запишите её через «Записать покупку» — правило продажи будет её охранять, отсчитывая новый пик с этого дня."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Köp inte allt på en gång, bara en tredjedel. Registrera köpet efteråt med ‘Registrera köpet’, så vaktar säljregeln det med en ny topp från den dagen."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อย่าซื้อทั้งหมดในครั้งเดียว ซื้อแค่หนึ่งในสาม หลังซื้อให้บันทึกด้วย ‘บันทึกการซื้อ’ แล้วกฎการขายจะคอยดูแลโดยเริ่มนับจุดสูงสุดใหม่ตั้งแต่วันนั้น"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hepsini birden almayın, yalnızca üçte birini alın. Aldıktan sonra ‘Alımı kaydet’ ile kaydedin; satış kuralınız o günden itibaren yeni bir zirve izleyerek onu korur."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đừng mua hết một lần, chỉ mua một phần ba. Mua xong hãy ghi lại bằng ‘Ghi lại lần mua’, nguyên tắc bán sẽ bảo vệ với đỉnh mới tính từ hôm đó."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不要一次买满，只买三分之一。买入后用“记录买入”记下来，卖出规则会从那天起重新计算高点来守护它。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不要一次買滿，只買三分之一。買入後用「記錄買入」記下來，賣出規則會從那天起重新計算高點來守護它。"
+          }
+        }
+      }
+    },
+    "다시 살 때를 기다리는 종목 %lld개" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بانتظار إعادة الشراء: %lld"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čeká na zpětný nákup: %lld"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld venter på genkøb"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld warten auf Rückkauf"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld σε αναμονή επαναγοράς"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld waiting to buy back"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld waiting to buy back"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld esperando recompra"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld odottaa takaisinostoa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld en attente de rachat"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld menunggu dibeli lagi"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld in attesa di riacquisto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買い戻しを待つ銘柄%lld件"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld venter på tilbakekjøp"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld wachten op terugkoop"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czeka na odkup: %lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld aguardando recompra"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ждут обратной покупки: %lld"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld väntar på återköp"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รอซื้อกลับ %lld รายการ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geri alım bekleyen %lld"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld mã chờ mua lại"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "等待买回的标的 %lld 个"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "等待買回的標的 %lld 個"
+          }
+        }
+      }
+    },
+    "다 판 종목과 수량 0으로 넣은 관심 종목이에요. 판 뒤 가장 낮은 값에서 정한 만큼 오르면 3분의 1씩 나눠 사라고 알려 드려요." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أسهم بعتها بالكامل وعناصر قائمة المتابعة المضافة بكمية 0. عندما يرتفع السعر بالنسبة المحددة من أدنى مستوى بعد البيع ننبهك للشراء على ثلاث دفعات."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozice, které jste celé prodali, a sledované tituly přidané s množstvím 0. Když cena vzroste o nastavenou hodnotu od minima po prodeji, upozorníme vás na nákup po třetinách."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktier, du har solgt helt, og overvågede aktier tilføjet med antal 0. Når prisen stiger det valgte fra bunden efter salget, får du besked om at købe i tredjedele."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ganz verkaufte Positionen und Beobachtungswerte mit Menge 0. Steigt der Kurs vom Tief nach dem Verkauf um den gewählten Wert, sagen wir dir, in Dritteln zu kaufen."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Θέσεις που πουλήσατε εντελώς και στοιχεία λίστας παρακολούθησης με ποσότητα 0. Όταν η τιμή ανέβει όσο ορίσατε από το χαμηλό μετά την πώληση, θα σας πούμε να αγοράσετε σε τρίτα."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holdings you sold out of, plus watchlist items added with quantity 0. When the price rises your set amount from its lowest since the sale, you’ll be told to buy in thirds."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holdings you sold out of, plus watchlist items added with quantity 0. When the price rises your set amount from its lowest since the sale, you’ll be told to buy in thirds."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posiciones que vendiste por completo y valores en seguimiento añadidos con cantidad 0. Cuando el precio sube lo fijado desde su mínimo tras la venta, te avisamos para comprar por tercios."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kokonaan myydyt ja seurantaan määrällä 0 lisätyt. Kun hinta nousee asettamasi verran myynnin jälkeisestä pohjasta, saat kehotuksen ostaa kolmanneksissa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Positions vendues en totalité et valeurs suivies ajoutées avec une quantité 0. Quand le prix remonte de la valeur choisie depuis son plus bas après la vente, on vous dit d’acheter par tiers."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saham yang sudah dijual habis dan daftar pantauan yang ditambahkan dengan jumlah 0. Saat harga naik sebesar yang ditetapkan dari titik terendah setelah dijual, kamu diberi tahu untuk membeli per sepertiga."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posizioni vendute del tutto e titoli osservati aggiunti con quantità 0. Quando il prezzo sale della misura scelta dal minimo dopo la vendita, ti avvisiamo di comprare a terzi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部売った銘柄と、数量0で入れた気になる銘柄です。売った後の最安値から決めた分だけ上がったら、3分の1ずつ分けて買うようお知らせします。"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aksjer du har solgt helt, og overvåkede aksjer lagt til med antall 0. Når prisen stiger det du har valgt fra bunnen etter salget, får du beskjed om å kjøpe i tredjedeler."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posities die je helemaal hebt verkocht en volglijstitems met aantal 0. Stijgt de prijs het ingestelde percentage vanaf het dieptepunt na verkoop, dan krijg je een seintje om in derden te kopen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozycje sprzedane w całości i obserwowane walory dodane z ilością 0. Gdy cena wzrośnie o ustaloną wartość od dołka po sprzedaży, przypomnimy o kupowaniu po jednej trzeciej."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posições vendidas por completo e itens de acompanhamento com quantidade 0. Quando o preço sobe o definido a partir da mínima após a venda, avisamos para comprar em terços."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Полностью проданные бумаги и бумаги из списка наблюдения с количеством 0. Когда цена вырастет на заданную величину от минимума после продажи, мы предложим покупать частями по трети."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Innehav du sålt helt och bevakade aktier tillagda med antal 0. När priset stiger det du valt från bottnen efter försäljningen får du besked att köpa i tredjedelar."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หุ้นที่ขายหมดแล้วและหุ้นที่สนใจซึ่งใส่จำนวนเป็น 0 เมื่อราคาขึ้นจากจุดต่ำสุดหลังขายตามที่ตั้งไว้ จะแจ้งให้แบ่งซื้อครั้งละหนึ่งในสาม"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamen sattığınız varlıklar ve adet 0 ile eklenen izleme listesi öğeleri. Fiyat satış sonrası dipten belirlediğiniz kadar yükselince üçte birer almanızı söyleriz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Các mã đã bán hết và mã quan tâm thêm với số lượng 0. Khi giá tăng đúng mức bạn đặt từ đáy sau khi bán, ứng dụng sẽ báo mua chia làm ba lần."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已全部卖出的标的，以及数量填 0 的关注标的。价格从卖出后的最低点上涨到设定幅度时，会提醒你分三次买入。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已全部賣出的標的，以及數量填 0 的關注標的。價格從賣出後的最低點上漲到設定幅度時，會提醒你分三次買入。"
+          }
+        }
+      }
+    },
+    "매매 원칙" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قواعد التداول"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pravidla obchodování"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handelsregler"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handelsregeln"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Κανόνες συναλλαγών"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trading rules"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trading rules"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reglas de compraventa"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaupankäyntisäännöt"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règles d’achat-vente"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aturan jual beli"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regole di compravendita"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "売買ルール"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handelsregler"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handelsregels"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zasady handlu"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regras de compra e venda"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Правила сделок"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handelsregler"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กฎการซื้อขาย"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alım satım kuralları"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nguyên tắc mua bán"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "买卖规则"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買賣規則"
+          }
+        }
+      }
+    },
+    "%@, 다시 살 때예요" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: حان وقت إعادة الشراء"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: čas znovu nakoupit"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: tid til at købe igen"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: Zeit zum Rückkauf"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: ώρα να ξαναγοράσετε"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: time to buy back"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: time to buy back"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: hora de recomprar"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: aika ostaa takaisin"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : moment de racheter"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: saatnya beli lagi"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: è ora di ricomprare"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@、買い戻す時です"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: tid for å kjøpe tilbake"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: tijd om terug te kopen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: czas odkupić"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: hora de recomprar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: пора выкупить"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: dags att köpa tillbaka"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ถึงเวลาซื้อกลับ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: geri alma zamanı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: đến lúc mua lại"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@，该买回了"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@，該買回了"
+          }
+        }
+      }
+    },
+    "%@개 종목을 다시 살 때예요" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حان وقت إعادة شراء %@ أسهم"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čas znovu nakoupit %@ titulů"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tid til at købe %@ aktier igen"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeit, %@ Positionen zurückzukaufen"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ώρα να ξαναγοράσετε %@ θέσεις"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time to buy back %@ holdings"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time to buy back %@ holdings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora de recomprar %@ valores"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aika ostaa takaisin %@ osaketta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moment de racheter %@ titres"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saatnya membeli lagi %@ saham"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "È ora di ricomprare %@ titoli"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@銘柄を買い戻す時です"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tid for å kjøpe tilbake %@ aksjer"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tijd om %@ posities terug te kopen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czas odkupić %@ walorów"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora de recomprar %@ ativos"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пора выкупить бумаг: %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dags att köpa tillbaka %@ innehav"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถึงเวลาซื้อกลับ %@ รายการ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ varlığı geri alma zamanı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đến lúc mua lại %@ mã"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有 %@ 个标的该买回了"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有 %@ 個標的該買回了"
+          }
+        }
+      }
+    },
+    "지금 %@원 · %@/3 몫을 살 때예요" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الآن %@ وون، حان وقت شراء الجزء %@/3"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teď %@ wonů · čas koupit díl %@/3"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu %@ won · tid til at købe del %@/3"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt %@ Won · Zeit für Teil %@/3"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Τώρα %@ γουόν · ώρα για το μέρος %@/3"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now %@ won · time to buy part %@/3"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now %@ won · time to buy part %@/3"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora %@ wones · toca comprar la parte %@/3"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nyt %@ wonia · aika ostaa osa %@/3"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenant %@ wons · moment d’acheter la part %@/3"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekarang %@ won · saatnya beli bagian %@/3"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ora %@ won · è ora di comprare la parte %@/3"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在%@ウォン · %@/3を買う時です"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nå %@ won · tid for å kjøpe del %@/3"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu %@ won · tijd om deel %@/3 te kopen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teraz %@ wonów · czas kupić część %@/3"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agora %@ wons · hora de comprar a parte %@/3"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сейчас %@ вон · пора купить часть %@/3"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu %@ won · dags att köpa del %@/3"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตอนนี้ %@ วอน · ถึงเวลาซื้อส่วนที่ %@/3"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu an %@ won · %@/3 kısmı alma zamanı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiện %@ won · đến lúc mua phần %@/3"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "现在 %@ 韩元 · 该买第 %@/3 份"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在 %@ 韓元 · 該買第 %@/3 份"
+          }
+        }
+      }
+    },
+    "세 번 다 샀어요. 이제 파는 원칙이 지켜요" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اشتريت الأجزاء الثلاثة. الآن تتولى قاعدة البيع الحماية."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Všechny tři díly koupeny. Teď hlídá pravidlo prodeje."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle tre dele er købt. Nu passer salgsreglen på."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle drei Teile gekauft. Jetzt übernimmt die Verkaufsregel."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αγοράσατε και τα τρία μέρη. Τώρα φυλάει ο κανόνας πώλησης."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All three parts bought. Your sell rule takes over now."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All three parts bought. Your sell rule takes over now."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya compraste las tres partes. Ahora vigila tu regla de venta."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaikki kolme osaa ostettu. Nyt myyntisääntö vartioi."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les trois parts sont achetées. Votre règle de vente prend le relais."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ketiga bagian sudah dibeli. Sekarang aturan jual yang menjaga."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hai comprato tutte e tre le parti. Ora vigila la regola di vendita."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3回とも買いました。ここからは売りルールが守ります"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle tre deler er kjøpt. Nå passer salgsregelen på."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle drie delen gekocht. Nu bewaakt je verkoopregel het."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kupiono wszystkie trzy części. Teraz pilnuje zasada sprzedaży."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As três partes foram compradas. Agora a regra de venda assume."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все три части куплены. Теперь работает правило продажи."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alla tre delar köpta. Nu vaktar säljregeln."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ซื้อครบทั้งสามส่วนแล้ว ต่อจากนี้กฎการขายจะดูแล"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Üç kısmın hepsi alındı. Artık satış kuralı devrede."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã mua đủ cả ba phần. Giờ nguyên tắc bán sẽ bảo vệ."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "三份都买好了。接下来由卖出规则守护"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "三份都買好了。接下來由賣出規則守護"
+          }
+        }
+      }
+    },
+    "판 뒤 저점 %@원에서 +%@%% · %@%% 더 오르면(%@원) 1/3 살 때" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% من القاع بعد البيع %1$@ وون، اشترِ 1/3 إذا ارتفع %3$@%% أخرى (%4$@ وون)"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@ %% od minima po prodeji %1$@ wonů · koupit 1/3 při růstu o dalších %3$@ %% (%4$@ wonů)"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@ %% fra bunden efter salg på %1$@ won · køb 1/3 ved yderligere %3$@ %% (%4$@ won)"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@ %% vom Tief nach dem Verkauf (%1$@ Won) · noch %3$@ %% bis 1/3 kaufen (%4$@ Won)"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% από το χαμηλό μετά την πώληση %1$@ γουόν · αγορά 1/3 αν ανέβει άλλο %3$@%% (%4$@ γουόν)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% from the post-sale low of %1$@ won · buy 1/3 if it rises %3$@%% more (%4$@ won)"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% from the post-sale low of %1$@ won · buy 1/3 if it rises %3$@%% more (%4$@ won)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@ %% desde el mínimo tras la venta de %1$@ wones · comprar 1/3 si sube otro %3$@ %% (%4$@ wones)"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@ %% myynnin jälkeisestä pohjasta %1$@ wonia · osta 1/3, kun nousee vielä %3$@ %% (%4$@ wonia)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@ %% depuis le plus bas après la vente (%1$@ wons) · acheter 1/3 si encore %3$@ %% de hausse (%4$@ wons)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% dari titik terendah setelah dijual %1$@ won · beli 1/3 jika naik %3$@%% lagi (%4$@ won)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@ %% dal minimo dopo la vendita di %1$@ won · compra 1/3 se sale di un altro %3$@ %% (%4$@ won)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "売った後の安値%1$@ウォンから+%2$@%% · あと%3$@%%上がったら（%4$@ウォン）1/3買い時"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@ %% fra bunnen etter salg på %1$@ won · kjøp 1/3 ved ytterligere %3$@ %% (%4$@ won)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% vanaf het dieptepunt na verkoop van %1$@ won · koop 1/3 bij nog %3$@%% stijging (%4$@ won)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% od dołka po sprzedaży %1$@ wonów · kup 1/3 przy wzroście o kolejne %3$@%% (%4$@ wonów)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% desde a mínima após a venda de %1$@ wons · comprar 1/3 se subir mais %3$@%% (%4$@ wons)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% от минимума после продажи %1$@ вон · купить 1/3 при росте ещё на %3$@%% (%4$@ вон)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@ %% från bottnen efter försäljning på %1$@ won · köp 1/3 vid ytterligare %3$@ %% (%4$@ won)"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% จากจุดต่ำสุดหลังขาย %1$@ วอน · ขึ้นอีก %3$@%% (%4$@ วอน) ซื้อ 1/3"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satış sonrası %1$@ won dipten +%%%2$@ · %%%3$@ daha yükselirse (%4$@ won) 1/3 al"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%2$@%% từ đáy sau khi bán %1$@ won · tăng thêm %3$@%% (%4$@ won) thì mua 1/3"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "较卖出后低点 %1$@ 韩元 +%2$@%% · 再涨 %3$@%%（%4$@ 韩元）买入 1/3"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "較賣出後低點 %1$@ 韓元 +%2$@%% · 再漲 %3$@%%（%4$@ 韓元）買入 1/3"
+          }
+        }
+      }
+    },
+    "1차 신호 %@원 · %@%% 더 오르면(%@원) %@/3 살 때" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإشارة الأولى %1$@ وون، اشترِ %4$@/3 إذا ارتفع %2$@%% أخرى (%3$@ وون)"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "První signál %1$@ wonů · koupit %4$@/3 při růstu o dalších %2$@ %% (%3$@ wonů)"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Første signal %1$@ won · køb %4$@/3 ved yderligere %2$@ %% (%3$@ won)"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstes Signal %1$@ Won · noch %2$@ %% bis Teil %4$@/3 (%3$@ Won)"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πρώτο σήμα %1$@ γουόν · αγορά %4$@/3 αν ανέβει άλλο %2$@%% (%3$@ γουόν)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First signal at %1$@ won · buy %4$@/3 if it rises %2$@%% more (%3$@ won)"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First signal at %1$@ won · buy %4$@/3 if it rises %2$@%% more (%3$@ won)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primera señal %1$@ wones · comprar %4$@/3 si sube otro %2$@ %% (%3$@ wones)"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ensimmäinen signaali %1$@ wonia · osta %4$@/3, kun nousee vielä %2$@ %% (%3$@ wonia)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premier signal à %1$@ wons · acheter %4$@/3 si encore %2$@ %% de hausse (%3$@ wons)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sinyal pertama %1$@ won · beli %4$@/3 jika naik %2$@%% lagi (%3$@ won)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primo segnale %1$@ won · compra %4$@/3 se sale di un altro %2$@ %% (%3$@ won)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最初のサイン%1$@ウォン · あと%2$@%%上がったら（%3$@ウォン）%4$@/3買い時"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Første signal %1$@ won · kjøp %4$@/3 ved ytterligere %2$@ %% (%3$@ won)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eerste signaal %1$@ won · koop %4$@/3 bij nog %2$@%% stijging (%3$@ won)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pierwszy sygnał %1$@ wonów · kup %4$@/3 przy wzroście o kolejne %2$@%% (%3$@ wonów)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primeiro sinal %1$@ wons · comprar %4$@/3 se subir mais %2$@%% (%3$@ wons)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Первый сигнал %1$@ вон · купить %4$@/3 при росте ещё на %2$@%% (%3$@ вон)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Första signalen %1$@ won · köp %4$@/3 vid ytterligare %2$@ %% (%3$@ won)"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สัญญาณแรก %1$@ วอน · ขึ้นอีก %2$@%% (%3$@ วอน) ซื้อ %4$@/3"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlk sinyal %1$@ won · %%%2$@ daha yükselirse (%3$@ won) %4$@/3 al"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tín hiệu đầu %1$@ won · tăng thêm %2$@%% (%3$@ won) thì mua %4$@/3"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第一次信号 %1$@ 韩元 · 再涨 %2$@%%（%3$@ 韩元）买入第 %4$@/3 份"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "第一次訊號 %1$@ 韓元 · 再漲 %2$@%%（%3$@ 韓元）買入第 %4$@/3 份"
+          }
+        }
+      }
+    },
+    "살 때 %@/3" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اشترِ %@/3"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koupit %@/3"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Køb %@/3"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaufen %@/3"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αγορά %@/3"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buy %@/3"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buy %@/3"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprar %@/3"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Osta %@/3"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acheter %@/3"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beli %@/3"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compra %@/3"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買い時 %@/3"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kjøp %@/3"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopen %@/3"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kup %@/3"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprar %@/3"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Купить %@/3"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Köp %@/3"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ซื้อ %@/3"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al %@/3"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mua %@/3"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "买入 %@/3"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買入 %@/3"
+          }
+        }
+      }
+    },
+    "기다리는 중" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بالانتظار"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čeká se"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Venter"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wartet"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Σε αναμονή"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperando"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odottaa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En attente"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menunggu"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In attesa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "待機中"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Venter"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wachten"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czeka"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aguardando"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ожидание"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Väntar"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำลังรอ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bekliyor"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang chờ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "等待中"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "等待中"
+          }
+        }
+      }
+    },
+    "%@/3 샀음" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم شراء %@/3"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koupeno %@/3"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 købt"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 gekauft"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αγοράστηκαν %@/3"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 bought"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 bought"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 comprado"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 ostettu"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 acheté"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 dibeli"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 comprato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 購入済み"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 kjøpt"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 gekocht"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kupiono %@/3"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 comprado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Куплено %@/3"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 köpt"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ซื้อแล้ว %@/3"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/3 alındı"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã mua %@/3"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已买 %@/3"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已買 %@/3"
+          }
+        }
+      }
+    },
+    "샀으면 기록하기" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سجّل الشراء"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapsat nákup"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrér købet"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kauf eintragen"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Καταγραφή αγοράς"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log the buy"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log the buy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar la compra"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kirjaa osto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noter l’achat"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catat pembelian"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registra l’acquisto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買ったら記録する"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrer kjøpet"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aankoop vastleggen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapisz zakup"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar a compra"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Записать покупку"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrera köpet"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึกการซื้อ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alımı kaydet"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ghi lại lần mua"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "记录买入"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記錄買入"
+          }
+        }
+      }
+    },
+    "판 뒤 저점에서 정한 만큼 올랐어요. 3분의 1만 다시 살 때예요" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ارتفع بالنسبة التي حددتها من القاع بعد البيع. حان وقت إعادة شراء الثلث فقط."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Od minima po prodeji vzrostla o nastavenou hodnotu. Čas koupit zpět jen třetinu."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Den er steget det valgte fra bunden efter salget. Tid til at købe kun en tredjedel tilbage."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seit dem Tief nach dem Verkauf um deinen Wert gestiegen. Zeit, nur ein Drittel zurückzukaufen."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ανέβηκε όσο ορίσατε από το χαμηλό μετά την πώληση. Ώρα να ξαναγοράσετε μόνο το ένα τρίτο."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It has risen your set amount from the post-sale low. Time to buy back just one third."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It has risen your set amount from the post-sale low. Time to buy back just one third."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ha subido lo fijado desde el mínimo tras la venta. Es hora de recomprar solo un tercio."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noussut asettamasi verran myynnin jälkeisestä pohjasta. Aika ostaa takaisin vain kolmannes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il a remonté de la valeur choisie depuis le plus bas après la vente. Moment de racheter un tiers seulement."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudah naik sebesar yang ditetapkan dari titik terendah setelah dijual. Saatnya beli lagi sepertiga saja."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "È salito della misura scelta dal minimo dopo la vendita. È ora di ricomprare solo un terzo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "売った後の安値から決めた分だけ上がりました。3分の1だけ買い戻す時です"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Den har steget det du valgte fra bunnen etter salget. Tid for å kjøpe tilbake bare en tredjedel."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestegen met je ingestelde percentage vanaf het dieptepunt na verkoop. Tijd om alleen een derde terug te kopen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wzrosła o ustaloną wartość od dołka po sprzedaży. Czas odkupić tylko jedną trzecią."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subiu o definido desde a mínima após a venda. Hora de recomprar só um terço."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цена выросла на заданную величину от минимума после продажи. Пора выкупить только треть."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Den har stigit det du valt från bottnen efter försäljningen. Dags att köpa tillbaka bara en tredjedel."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ราคาขึ้นจากจุดต่ำสุดหลังขายตามที่ตั้งไว้แล้ว ถึงเวลาซื้อกลับแค่หนึ่งในสาม"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satış sonrası dipten belirlediğiniz kadar yükseldi. Yalnızca üçte birini geri alma zamanı."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giá đã tăng đúng mức bạn đặt từ đáy sau khi bán. Đến lúc mua lại chỉ một phần ba."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已从卖出后的低点上涨到设定幅度。现在只买回三分之一"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已從賣出後的低點上漲到設定幅度。現在只買回三分之一"
+          }
+        }
+      }
+    },
+    "1차 신호보다 더 올랐어요. 3분의 1을 더 살 때예요" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ارتفع أكثر بعد الإشارة الأولى. حان وقت شراء ثلث آخر."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vystoupala nad první signál. Čas koupit další třetinu."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Den er steget videre over det første signal. Tid til at købe en tredjedel mere."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weiter über das erste Signal gestiegen. Zeit für ein weiteres Drittel."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ανέβηκε κι άλλο πάνω από το πρώτο σήμα. Ώρα να αγοράσετε άλλο ένα τρίτο."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It has climbed further past the first signal. Time to buy another third."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It has climbed further past the first signal. Time to buy another third."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ha seguido subiendo por encima de la primera señal. Es hora de comprar otro tercio."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noussut ensimmäisen signaalin yli. Aika ostaa toinen kolmannes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il a encore monté au-dessus du premier signal. Moment d’acheter un autre tiers."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudah naik lebih jauh dari sinyal pertama. Saatnya beli sepertiga lagi."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "È salito ancora oltre il primo segnale. È ora di comprare un altro terzo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最初のサインよりさらに上がりました。3分の1を買い足す時です"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Den har steget videre over det første signalet. Tid for å kjøpe en tredjedel til."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verder gestegen boven het eerste signaal. Tijd om nog een derde te kopen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wzrosła ponad pierwszy sygnał. Czas dokupić kolejną jedną trzecią."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subiu mais acima do primeiro sinal. Hora de comprar mais um terço."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цена поднялась выше первого сигнала. Пора докупить ещё треть."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Den har stigit vidare över den första signalen. Dags att köpa en tredjedel till."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ราคาขึ้นต่อจากสัญญาณแรกแล้ว ถึงเวลาซื้อเพิ่มอีกหนึ่งในสาม"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlk sinyalin daha da üzerine çıktı. Bir üçte bir daha alma zamanı."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giá đã tăng tiếp so với tín hiệu đầu. Đến lúc mua thêm một phần ba."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已比第一次信号涨得更高。该再买入三分之一"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已比第一次訊號漲得更高。該再買入三分之一"
+          }
+        }
+      }
+    },
+    "정해 둔 대로 팔 때, 다시 살 때가 됐나" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هل حان وقت البيع أو إعادة الشراء كما خططت؟"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je čas prodat nebo znovu koupit podle plánu?"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er det tid til at sælge eller købe igen, som planlagt?"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ist es Zeit zu verkaufen oder zurückzukaufen, wie geplant?"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ήρθε η ώρα να πουλήσετε ή να ξαναγοράσετε, όπως ορίσατε;"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Is it time to sell or buy back, as you planned?"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Is it time to sell or buy back, as you planned?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Toca vender o recomprar, según lo previsto?"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onko aika myydä tai ostaa takaisin suunnitelman mukaan?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Est-ce le moment de vendre ou de racheter, comme prévu ?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudah waktunya menjual atau membeli lagi sesuai rencana?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "È il momento di vendere o ricomprare, come previsto?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "決めたとおり売る時、買い戻す時が来たか"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er det tid for å selge eller kjøpe tilbake, som planlagt?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Is het tijd om te verkopen of terug te kopen, zoals gepland?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czy to czas, by sprzedać lub odkupić zgodnie z planem?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "É hora de vender ou recomprar, como planejado?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пора ли продавать или выкупать, как решили?"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Är det dags att sälja eller köpa tillbaka, som planerat?"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถึงเวลาขายหรือซื้อกลับตามที่ตั้งไว้หรือยัง"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planladığınız gibi satma ya da geri alma zamanı geldi mi?"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã đến lúc bán hoặc mua lại như đã định chưa?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按计划，是该卖出还是该买回了？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "依計畫，是該賣出還是該買回了？"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

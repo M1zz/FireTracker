@@ -372,6 +372,20 @@ final class Asset {
     // 목표가 알림을 보낸 목표가 — 목표가를 바꾸면 다시 켜진다.
     var targetAlertedFor: Double = 0
 
+    // --- 다시 사는 원칙 (다 판 종목 · 아직 안 산 관심 종목) ---
+    // 판 뒤 본 가장 낮은 값에서 이만큼(%) 오르면 3분의 1을 사라고 알린다. 0 = 끔.
+    var reentryPct: Double = 10
+    // 1차 신호 값보다 이만큼(%)씩 더 오를 때마다 나머지 3분의 1씩.
+    var reentryStepPct: Double = 5
+    // 판 뒤(관심 종목이면 지켜보기 시작한 뒤) 본 가장 낮은 1주(개) 값, 원. 0 = 아직 못 봄.
+    var troughUnitPrice: Double = 0
+    // 지금까지 알린 단계 0~3 — 0 은 1차를 기다리는 중, 3 이면 세 번 다 알렸다.
+    var reentryStage: Int = 0
+    // 1차 신호가 난 값 — 2차·3차 기준.
+    var reentryBasePrice: Double = 0
+    // 마지막 신호 때 보유 수량 — 지금 이보다 많으면 그 몫을 샀다.
+    var reentryQtyAtSignal: Double = 0
+
     var sortOrder: Int = 0
     var createdAt: Date = Date.now
 

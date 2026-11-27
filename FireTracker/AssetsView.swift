@@ -987,6 +987,9 @@ struct AssetsView: View {
         if let st = SellWatch.status(asset), st.signal != .holding {
             SellSignalChip(status: st)
         }
+        if let rs = SellWatch.reentryStatus(asset), rs.buyNow != nil {
+            ReentryChip(status: rs)
+        }
     }
 
     @ViewBuilder private func rowFlows(_ asset: Asset) -> some View {
@@ -1298,6 +1301,9 @@ struct AssetEditor: View {
     // 매도 원칙 — 목표 매도가(1주·개당, 원)와 고점 대비 하락 알림(%).
     @State private var sellTarget = ""
     @State private var stopPct: Double = 10
+    // 다시 사는 원칙 — 판 뒤 저점에서 오르면(%) 3분의 1, 그 뒤 간격(%)마다 3분의 1씩.
+    @State private var reentryPct: Double = 10
+    @State private var reentryStepPct: Double = 5
 
     // Seed all editor state directly from the asset so that opening the editor
     // does not mutate `assetClass` (which would trigger onChange and clobber the
@@ -1332,6 +1338,8 @@ struct AssetEditor: View {
         _liquidity = State(initialValue: asset?.liquidity ?? Liquidity.suggested(for: cls))
         _sellTarget = State(initialValue: asset.map { $0.sellTargetPrice > 0 ? String(Int($0.sellTargetPrice)) : "" } ?? "")
         _stopPct = State(initialValue: asset?.trailingStopPct ?? 10)
+        _reentryPct = State(initialValue: asset?.reentryPct ?? 10)
+        _reentryStepPct = State(initialValue: asset?.reentryStepPct ?? 5)
         _detailDrafts = State(initialValue: (asset?.sortedDetails ?? []).map {
             DetailDraft(name: $0.name, amount: $0.amount > 0 ? String(Int($0.amount)) : "")
         })
@@ -1509,6 +1517,7 @@ struct AssetEditor: View {
                 // 살 때 정하는 매도 원칙 — 목표가·고점 대비 하락. 닿으면 팔라고 알린다.
                 if SellWatch.supports(assetClass) {
                     sellRuleSection
+                    reentryRuleSection
                 }
 
                 // 간단 입력(새 자산 기본): 여기까지만 — 종류·이름·금액이면 끝.
@@ -1810,6 +1819,34 @@ struct AssetEditor: View {
         } footer: {
             Text("오를 땐 알리지 않아요. 고점에서 정한 만큼 빠지거나 목표가에 닿으면 ‘지금 팔 때’라고 알려 드려요. 앱을 열 때와, 앱이 쉬는 동안 iOS가 허락할 때(보통 몇 시간 간격) 시세를 확인해요 — 실시간 감시는 아니에요.")
                 .font(.caption)
+        }
+    }
+
+    // --- 다시 사는 원칙 ---
+    private var reentryRuleSection: some View {
+        Section {
+            Picker("판 뒤 저점에서 오르면 사기", selection: $reentryPct) {
+                ForEach(SellWatch.reentryChoices, id: \.self) { p in
+                    Text(p == 0 ? "알리지 않음" : "\(Fmt.number(p))% 오르면").tag(p)
+                }
+            }
+            if reentryPct > 0 {
+                Picker("나머지를 더 사는 간격", selection: $reentryStepPct) {
+                    ForEach(SellWatch.reentryStepChoices, id: \.self) { p in
+                        Text("\(Fmt.number(p))%마다").tag(p)
+                    }
+                }
+                if let a = asset, let st = SellWatch.reentryStatus(a) {
+                    ReentryProgressText(status: st)
+                        .font(.body)
+                        .foregroundStyle(Theme.textSecond)
+                }
+            }
+        } header: {
+            Text("다시 사는 원칙")
+        } footer: {
+            Text("다 팔았거나 아직 안 산 종목(수량 0)은 그 뒤 가장 낮은 값을 기억해요. 거기서 정한 만큼 오르면 3분의 1을, 그 값보다 간격만큼 더 오를 때마다 3분의 1씩 더 사라고 알려 드려요. 신호를 받고도 사지 않은 채 저점을 다시 깨면 처음부터 다시 지켜봐요.")
+                .font(.body)
         }
     }
 
@@ -2544,6 +2581,8 @@ struct AssetEditor: View {
         target.liquidity = liquidity
         target.sellTargetPrice = SellWatch.supports(assetClass) ? (Double(sellTarget) ?? 0) : 0
         target.trailingStopPct = stopPct
+        target.reentryPct = SellWatch.supports(assetClass) ? reentryPct : 0
+        target.reentryStepPct = reentryStepPct
         // For real estate, drop values that don't apply to the chosen use type
         // so a switched-away deposit/rent doesn't linger.
         if assetClass == .realEstate {
@@ -2586,9 +2625,13 @@ struct AssetEditor: View {
             target.peakUnitPrice = 0
             target.stopAlertedPeak = 0
         }
+        // 다 팔았으면 다시 사는 원칙을 처음부터 — 판 뒤 저점을 새로 잡는다.
+        if heldBefore && target.quantity <= 0 {
+            SellWatch.resetReentry(target)
+        }
         context.saveReporting(String(localized: "자산"))
         // 원칙을 걸었으면 알림 권한을 묻는다(이미 정했으면 조용히 지나감).
-        if SellWatch.isWatched(target) {
+        if SellWatch.isWatched(target) || SellWatch.isReentryWatched(target) {
             Task { await SellWatch.requestPermission() }
         }
         return target
@@ -3836,6 +3879,15 @@ struct SellSignalsView: View {
         watched.filter { $0.1.signal == .stopHit || $0.1.signal == .targetHit }
             .sorted { l, _ in l.0.key == focus }
     }
+    /// 다시 살 때를 지켜보는 종목 — 다음 값에 가까운 순서.
+    private var reentry: [(Asset, SellWatch.ReentryStatus)] {
+        assets.compactMap { a in SellWatch.reentryStatus(a).map { (a, $0) } }
+            .sorted { ($0.1.toNext ?? 1) < ($1.1.toNext ?? 1) }
+    }
+    /// 지금 살 몫이 있는 종목 — 알림 받은 종목이 맨 위.
+    private var buyNow: [(Asset, SellWatch.ReentryStatus)] {
+        reentry.filter { $0.1.buyNow != nil }.sorted { l, _ in l.0.key == focus }
+    }
 
     var body: some View {
         List {
@@ -3849,6 +3901,33 @@ struct SellSignalsView: View {
                     Text("지금 할 일 \(actionable.count)개")
                 } footer: {
                     Text("증권사 앱에서 지금 가격을 다시 보고 파세요. 판 다음엔 ‘팔았으면 기록하기’로 수량을 고쳐 두세요.")
+                }
+            }
+            if !buyNow.isEmpty {
+                Section {
+                    ForEach(buyNow, id: \.0.key) { a, st in
+                        ReentryActionRow(asset: a, status: st, highlighted: a.key == focus) { editing = a }
+                            .listRowBackground(a.key == focus ? Theme.positive.opacity(0.12) : Theme.surface)
+                    }
+                } header: {
+                    Text("지금 살 때 \(buyNow.count)개")
+                } footer: {
+                    Text("한 번에 다 사지 말고 3분의 1만 사세요. 산 다음엔 ‘샀으면 기록하기’로 매수를 남겨 두면, 산 날부터 고점을 새로 잡아 파는 원칙이 지켜요.")
+                        .font(.body)
+                }
+            }
+            if !reentry.isEmpty {
+                Section {
+                    ForEach(reentry, id: \.0.key) { a, st in
+                        Button { editing = a } label: { ReentryRow(asset: a, status: st) }
+                            .buttonStyle(.plain)
+                            .listRowBackground(Theme.surface)
+                    }
+                } header: {
+                    Text("다시 살 때를 기다리는 종목 \(reentry.count)개")
+                } footer: {
+                    Text("다 판 종목과 수량 0으로 넣은 관심 종목이에요. 판 뒤 가장 낮은 값에서 정한 만큼 오르면 3분의 1씩 나눠 사라고 알려 드려요.")
+                        .font(.body)
                 }
             }
             Section {
@@ -3886,7 +3965,7 @@ struct SellSignalsView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Theme.bg.ignoresSafeArea())
-        .navigationTitle("매도 원칙")
+        .navigationTitle("매매 원칙")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if asSheet {
@@ -3899,7 +3978,7 @@ struct SellSignalsView: View {
             AssetEditor(asset: a, nextSortOrder: assets.count)
         }
         .overlay {
-            if watched.isEmpty && unwatchable.isEmpty {
+            if watched.isEmpty && unwatchable.isEmpty && reentry.isEmpty {
                 ContentUnavailableView("지켜보는 종목이 없어요",
                                        systemImage: "bell.slash",
                                        description: Text("주식·펀드·코인을 열어 ‘팔 원칙’을 정하면 여기에 모여요."))
@@ -3989,14 +4068,21 @@ struct SellWatchCard: View {
             && $0.trailingStopPct <= 0 && $0.sellTargetPrice <= 0 }.count
     }
 
+    /// 지금 살 몫이 있는 종목.
+    private var buyNow: [(Asset, SellWatch.ReentryStatus)] {
+        assets.compactMap { a in SellWatch.reentryStatus(a).map { (a, $0) } }
+            .filter { $0.1.buyNow != nil }
+    }
+
     /// 보여 줄 게 있을 때만 카드를 띄운다.
     static func hasContent(_ assets: [Asset]) -> Bool {
-        assets.contains { SellWatch.supports($0.assetClass) && $0.amount > 0 }
+        assets.contains { (SellWatch.supports($0.assetClass) && $0.amount > 0) || SellWatch.isReentryWatched($0) }
     }
 
     var body: some View {
         let list = watched
         let alerts = list.filter { $0.1.signal != .holding }
+        let buys = buyNow
         // NavigationLink 는 List 안에서 오른쪽에 화살표를 하나 더 붙여 카드 폭을 줄인다.
         // 카드에 이미 "전체 보기 ›" 가 있으니 버튼으로 두고, navigationDestination 은
         // List(지연 컨테이너) 밖 — 카드를 담은 화면의 NavigationStack 쪽에 둔다.
@@ -4015,6 +4101,22 @@ struct SellWatchCard: View {
                             .font(.caption)
                             .foregroundStyle(Theme.textSecond)
                             .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                if !buys.isEmpty {
+                    HStack(spacing: 10) {
+                        Image(systemName: "cart.fill.badge.plus")
+                            .font(.title3)
+                            .foregroundStyle(Theme.positive)
+                        Text(buys.count == 1
+                             ? String(localized: "\(buys[0].0.name), 다시 살 때예요")
+                             : String(localized: "\(String(buys.count))개 종목을 다시 살 때예요"))
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Theme.textPrimary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    ForEach(buys.prefix(3), id: \.0.key) { a, st in
+                        ReentryRow(asset: a, status: st)
                     }
                 }
                 if alerts.isEmpty {
@@ -4078,5 +4180,142 @@ struct SellWatchCard: View {
             return String(localized: "\(list.count)개 모두 원칙 안쪽이에요 · 원칙 없는 종목 \(unruled)개")
         }
         return String(localized: "\(list.count)개 모두 원칙 안쪽이에요. 닿으면 알림으로 알려 드려요")
+    }
+}
+
+
+// MARK: - 다시 사는 원칙
+
+// 다음 몫까지 어디쯤인지 한 줄로 — 편집 화면과 목록이 같이 쓴다.
+struct ReentryProgressText: View {
+    let status: SellWatch.ReentryStatus
+    var body: some View {
+        Text(text).fixedSize(horizontal: false, vertical: true)
+    }
+    private var text: String {
+        let s = status
+        if let n = s.buyNow {
+            return String(localized: "지금 \(Fmt.krw(s.price))원 · \(String(n))/3 몫을 살 때예요")
+        }
+        guard let next = s.nextTranche, let np = s.nextPrice else {
+            return String(localized: "세 번 다 샀어요. 이제 파는 원칙이 지켜요")
+        }
+        let up = Fmt.number(((s.toNext ?? 0) * 1000).rounded() / 10)
+        if s.stage == 0 {
+            let rise = Fmt.number((s.riseFromTrough * 1000).rounded() / 10)
+            return String(localized: "판 뒤 저점 \(Fmt.krw(s.trough))원에서 +\(rise)% · \(up)% 더 오르면(\(Fmt.krw(np))원) 1/3 살 때")
+        }
+        return String(localized: "1차 신호 \(Fmt.krw(s.base))원 · \(up)% 더 오르면(\(Fmt.krw(np))원) \(String(next))/3 살 때")
+    }
+}
+
+// 다시 살 단계 칩 — 1/3 · 2/3 · 3/3.
+struct ReentryChip: View {
+    let status: SellWatch.ReentryStatus
+    var body: some View {
+        Text(label)
+            .font(.body.weight(.bold))
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .foregroundStyle(tint)
+            .background(tint.opacity(0.14), in: Capsule())
+            .fixedSize()
+    }
+    private var tint: Color { status.buyNow != nil ? Theme.positive : Theme.textSecond }
+    private var label: String {
+        if let n = status.buyNow { return String(localized: "살 때 \(String(n))/3") }
+        if status.stage == 0 { return String(localized: "기다리는 중") }
+        return String(localized: "\(String(status.stage))/3 샀음")
+    }
+}
+
+// 다시 살 때를 지켜보는 종목 한 줄.
+struct ReentryRow: View {
+    let asset: Asset
+    let status: SellWatch.ReentryStatus
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            AdaptiveRow(spacing: 6) {
+                Text(asset.name)
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                    .lineLimit(2)
+            } trailing: {
+                ReentryChip(status: status)
+            }
+            if status.stage == 0, status.pct > 0 {
+                // 저점에서 오른 만큼을 1차 선까지의 막대로.
+                RiseBar(progress: min(status.riseFromTrough / (status.pct / 100), 1))
+            }
+            ReentryProgressText(status: status)
+                .font(.body)
+                .foregroundStyle(Theme.textSecond)
+        }
+    }
+}
+
+// 저점에서 오른 정도 — 끝에 닿으면 1차로 살 때.
+struct RiseBar: View {
+    let progress: Double
+    var body: some View {
+        let p = max(0, min(progress, 1))
+        let tint: Color = p >= 1 ? Theme.positive : (p >= 0.7 ? .orange : Theme.textSecond.opacity(0.6))
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Theme.textSecond.opacity(0.15))
+                Capsule().fill(tint)
+                    .frame(width: max(geo.size.height, geo.size.width * p))
+                    .opacity(p > 0 ? 1 : 0)
+            }
+        }
+        .frame(height: 6)
+    }
+}
+
+// 지금 살 몫이 있는 종목 — 무엇을 해야 하는지 크게, 바로 기록할 수 있게.
+struct ReentryActionRow: View {
+    let asset: Asset
+    let status: SellWatch.ReentryStatus
+    var highlighted = false
+    let onRecord: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            AdaptiveRow(alignment: .firstTextBaseline) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    if highlighted {
+                        Image(systemName: "bell.badge.fill")
+                            .foregroundStyle(Theme.positive)
+                    }
+                    Text(asset.name)
+                        .font(.headline)
+                        .foregroundStyle(Theme.textPrimary)
+                        .lineLimit(2)
+                }
+            } trailing: {
+                ReentryChip(status: status)
+            }
+            Text(instruction)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(Theme.positive)
+                .fixedSize(horizontal: false, vertical: true)
+            ReentryProgressText(status: status)
+                .font(.body)
+                .foregroundStyle(Theme.textSecond)
+            Button(action: onRecord) {
+                Label("샀으면 기록하기", systemImage: "square.and.pencil")
+                    .font(.body.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+        }
+        .padding(.vertical, 4)
+    }
+
+    private var instruction: String {
+        if status.buyNow == 1 {
+            return String(localized: "판 뒤 저점에서 정한 만큼 올랐어요. 3분의 1만 다시 살 때예요")
+        }
+        return String(localized: "1차 신호보다 더 올랐어요. 3분의 1을 더 살 때예요")
     }
 }

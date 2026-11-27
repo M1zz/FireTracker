@@ -303,8 +303,135 @@ enum SellWatch {
             && (a.trailingStopPct > 0 || a.sellTargetPrice > 0)
     }
 
+    // MARK: 다시 사는 원칙 — 파는 원칙을 거꾸로
+    // 다 판 종목(또는 아직 안 산 관심 종목)은 그 뒤 가장 낮은 값을 기억한다.
+    //  · 1차: 저점에서 reentryPct 만큼 오르면 3분의 1
+    //  · 2차·3차: 1차 값보다 reentryStepPct, 그 두 배만큼 오르면 3분의 1씩
+    // 산 몫은 다시 산 날부터 고점을 새로 잡아 파는 원칙이 지킨다.
+    // 신호를 받고도 사지 않은 채 저점을 다시 깨면 처음부터 다시 지켜본다.
+
+    static let reentryChoices: [Double] = [0, 5, 10, 15, 20, 25, 30]
+    static let reentryStepChoices: [Double] = [3, 5, 7, 10, 15]
+    static let tranches = 3
+
+    private static func hasSymbolPrice(_ a: Asset) -> Bool {
+        supports(a.assetClass) && a.autoPriced
+            && !a.symbol.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    /// 마지막 신호 몫을 아직 안 샀나 — 신호 때보다 수량이 늘지 않았으면.
+    static func hasPendingBuy(_ a: Asset) -> Bool {
+        a.reentryStage >= 1 && a.quantity <= a.reentryQtyAtSignal + 1e-9
+    }
+
+    /// 다시 살 때를 지켜보는 종목 — 갖고 있지 않거나, 나눠 사는 중이거나, 산다고 알린 몫을 아직 안 산 종목.
+    static func isReentryWatched(_ a: Asset) -> Bool {
+        hasSymbolPrice(a) && a.reentryPct > 0
+            && (a.quantity <= 0 || (1..<tranches).contains(a.reentryStage) || hasPendingBuy(a))
+    }
+
+    /// 다음 몫(stage+1)을 살 값. 1차는 저점 기준, 2·3차는 1차 신호 값 기준.
+    static func reentryTrigger(stage: Int, trough: Double, base: Double, pct: Double, step: Double) -> Double? {
+        guard stage < tranches else { return nil }
+        if stage == 0 { return trough > 0 ? trough * (1 + pct / 100) : nil }
+        return base > 0 ? base * (1 + Double(stage) * step / 100) : nil
+    }
+
+    private static func lastSellPrice(_ a: Asset) -> Double? {
+        a.recentTrades.first { $0.kind == .sell && $0.unitPrice > 0 }?.unitPrice
+    }
+
+    struct ReentryStatus {
+        let price: Double
+        /// 판 뒤 저점(1차 전이면 지금 값까지 넣은 어림).
+        let trough: Double
+        /// 1차 신호 값. 0 = 아직.
+        let base: Double
+        /// 알린 단계 0~3.
+        let stage: Int
+        /// 지금 사야 할 몫(1~3). nil = 지금은 기다리는 때.
+        let buyNow: Int?
+        /// 다음 몫과 그 값.
+        let nextTranche: Int?
+        let nextPrice: Double?
+        let pct: Double
+        /// 저점에서 몇 % 올랐나(0.04 = +4%).
+        var riseFromTrough: Double { trough > 0 ? max(0, price / trough - 1) : 0 }
+        /// 다음 값까지 남은 상승 폭.
+        var toNext: Double? { nextPrice.map { price > 0 ? max(0, $0 / price - 1) : 0 } }
+    }
+
+    static func reentryStatus(_ a: Asset) -> ReentryStatus? {
+        guard isReentryWatched(a), a.unitPriceKRW > 0 else { return nil }
+        let price = a.unitPriceKRW
+        var stage = a.reentryStage
+        var base = a.reentryBasePrice
+        var trough = a.troughUnitPrice
+        // evaluate 와 같은 규칙으로 — 사지 않은 채 저점을 깼으면 처음부터.
+        if a.quantity <= 0, stage > 0, trough > 0, price < trough { stage = 0; base = 0 }
+        if stage == 0 {
+            let start = trough > 0 ? trough : (lastSellPrice(a) ?? price)
+            trough = min(start, price)
+        }
+        let step = a.reentryStepPct
+        var buyNow: Int? = stage >= 1 && a.quantity <= a.reentryQtyAtSignal + 1e-9 ? stage : nil
+        // 아직 확인 전이라도 지금 값이 다음 선을 넘었으면 그 몫이 지금 살 몫.
+        if let t = reentryTrigger(stage: stage, trough: trough, base: base, pct: a.reentryPct, step: step),
+           price >= t {
+            if stage == 0 { base = price }
+            stage += 1
+            buyNow = stage
+        }
+        let next = stage < tranches ? stage + 1 : nil
+        let nextPrice = reentryTrigger(stage: stage, trough: trough, base: base, pct: a.reentryPct, step: step)
+        return ReentryStatus(price: price, trough: trough, base: base, stage: stage, buyNow: buyNow,
+                             nextTranche: next, nextPrice: nextPrice, pct: a.reentryPct)
+    }
+
+    /// 다 팔았을 때 부른다 — 다시 사는 원칙을 처음부터.
+    static func resetReentry(_ a: Asset) {
+        a.troughUnitPrice = 0
+        a.reentryStage = 0
+        a.reentryBasePrice = 0
+        a.reentryQtyAtSignal = 0
+    }
+
+    /// 새 시세를 넣은 뒤 부른다. 저점을 갱신하고, 다음 몫을 살 값에 닿았으면 알린다.
+    static func evaluateReentry(_ a: Asset) {
+        guard isReentryWatched(a), a.unitPriceKRW > 0 else { return }
+        let price = a.unitPriceKRW
+        if a.quantity <= 0, a.reentryStage > 0, a.troughUnitPrice > 0, price < a.troughUnitPrice {
+            a.reentryStage = 0
+            a.reentryBasePrice = 0
+            a.reentryQtyAtSignal = 0
+        }
+        if a.reentryStage == 0 {
+            let start = a.troughUnitPrice > 0 ? a.troughUnitPrice : (lastSellPrice(a) ?? price)
+            a.troughUnitPrice = min(start, price)
+        }
+        guard let trigger = reentryTrigger(stage: a.reentryStage, trough: a.troughUnitPrice,
+                                           base: a.reentryBasePrice, pct: a.reentryPct,
+                                           step: a.reentryStepPct),
+              price >= trigger else { return }
+        if a.reentryStage == 0 { a.reentryBasePrice = price }
+        a.reentryStage += 1
+        a.reentryQtyAtSignal = a.quantity
+        let n = String(a.reentryStage)
+        let body: String
+        if a.reentryStage == 1 {
+            let rise = Fmt.number((((price / a.troughUnitPrice) - 1) * 1000).rounded() / 10)
+            body = String(localized: "판 뒤 저점 \(Fmt.krw(a.troughUnitPrice))원에서 \(rise)% 올랐어요(지금 \(Fmt.krw(price))원). 정해 둔 대로 3분의 1을 사 주세요.")
+        } else {
+            let rise = Fmt.number((((price / a.reentryBasePrice) - 1) * 1000).rounded() / 10)
+            body = String(localized: "1차 신호 \(Fmt.krw(a.reentryBasePrice))원보다 \(rise)% 더 올랐어요(지금 \(Fmt.krw(price))원). 정해 둔 대로 3분의 1을 더 사 주세요.")
+        }
+        notify(a, id: "buy\(n)", title: String(localized: "\(a.name) — 다시 살 때예요(\(n)/3)"), body: body,
+               lockedBody: String(localized: "정해 둔 매수 원칙에 닿았어요. 앱에서 확인해 주세요."))
+    }
+
     /// 새 시세(unitPriceKRW)를 넣은 뒤 부른다. 고점을 갱신하고, 원칙에 닿았으면 알린다.
     static func evaluate(_ a: Asset) {
+        evaluateReentry(a)
         guard isWatched(a), a.unitPriceKRW > 0 else { return }
         let price = a.unitPriceKRW
         // 처음 볼 땐 평단과 지금 값 중 큰 쪽을 고점으로 — 산 값에서 빠져도 알린다.
@@ -331,14 +458,14 @@ enum SellWatch {
         }
     }
 
-    private static func notify(_ a: Asset, id: String, title: String, body: String) {
+    private static func notify(_ a: Asset, id: String, title: String, body: String, lockedBody: String? = nil) {
         // 데모 종목으로는 알리지 않는다.
         guard !DemoData.isActive else { return }
         let content = UNMutableNotificationContent()
         content.title = title
         // 앱 잠금을 켰으면 잠금 화면에 금액을 내보이지 않는다.
         content.body = UserDefaults.standard.bool(forKey: "appLockEnabled")
-            ? String(localized: "정해 둔 매도 원칙에 닿았어요. 앱에서 확인해 주세요.") : body
+            ? (lockedBody ?? String(localized: "정해 둔 매도 원칙에 닿았어요. 앱에서 확인해 주세요.")) : body
         content.sound = .default
         content.userInfo = ["sellAssetKey": a.key.uuidString]
         let request = UNNotificationRequest(identifier: "sell-\(id)-\(a.key.uuidString)",
@@ -361,7 +488,8 @@ enum SellWatch {
         if !force, last > 0, Date().timeIntervalSince1970 - last < throttle { return }
         guard !DemoData.isActive else { return }
 
-        let assets = ((try? context.fetch(FetchDescriptor<Asset>())) ?? []).filter(isWatched)
+        let assets = ((try? context.fetch(FetchDescriptor<Asset>())) ?? [])
+            .filter { isWatched($0) || isReentryWatched($0) }
         guard !assets.isEmpty else { return }
         let settings = (try? context.fetch(FetchDescriptor<FireSettings>()))?.first ?? FireSettings()
         defaults.set(Date().timeIntervalSince1970, forKey: lastCheckKey)

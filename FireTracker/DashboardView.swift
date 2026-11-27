@@ -375,7 +375,7 @@ struct DashboardView: View {
                             FuturePreviewEntry(compact: true)
                                 .cardStyle()
                             if SellWatchCard.hasContent(assets) {
-                                section(String(localized: "매도 원칙"), String(localized: "정해 둔 대로 팔 때가 됐나")) { sellCard }
+                                section(String(localized: "매매 원칙"), String(localized: "정해 둔 대로 팔 때, 다시 살 때가 됐나")) { sellCard }
                             }
                             // 팔 때 옆에 살 때 — 모두가 무서워할 때가 더 사는 때다.
                             section(String(localized: "더 살 때"), String(localized: "시장이 무서워할수록 더 사는 때")) {
